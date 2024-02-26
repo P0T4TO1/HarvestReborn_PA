@@ -44,8 +44,8 @@ model Business {
 
   user_id      Int       @unique
   user         User      @relation(fields: [user_id], references: [user_id])
-  inventory_id Int       @unique
-  inventory    Inventory @relation(fields: [inventory_id], references: [inventory_id])
+  inventory_id Int?     @unique
+  inventory    Inventory? @relation(fields: [inventory_id], references: [inventory_id])
 }
 
 model Organization {
