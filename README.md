@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+### Proyecto Aula Equipo Zombie 6IV6
 
-## Getting Started
+# ALACENA
 
-First, run the development server:
+#### URL del proyecto:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Descripción
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Este es el codigo del proyecto aula del equipo zombie perteneciente al grupo 6IV6
+en el cual ...
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Requisitos previos
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+[//]: # "- Lenguaje de programación utilizado"
 
-## Learn More
+- Node.js 16.16.0 o superior
+- npm 8.11.0 o superior
+- MySQL 8.0.19 o superior / MongoDB
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+[//]: # "- Dependencias y librerías externas requeridas"
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- TypeScript 5.3.3 o superior
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+[//]: # "- Herramientas necesarias para la instalación y ejecución del proyecto"
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Git 2.40.0 o superior
+- Visual Studio Code 1.47.3 o superior o cualquier editor de texto
+- MySQL Workbench 8.0.19 o superior
+
+## Instalación
+
+1. Clonar el repositorio con el link del boton verde que dice "code".
+2. Entrar en el directorio del proyecto
+3. Ejecutar el siguiente comando en la terminal/cmd
+
+    ```bash
+    npm install #Para instalar dependencias.
+    ```
+4. Duplicar .env.example y renombrar la copia a .env.development. y a .env.production, dependiendo el
+   modo en el que se quiera ejecutar el servidor.
+5. Configurar las variables de entorno en el archivo .env.
+6. Ejecutar el siguiente comando en la terminal/cmd
+
+    ```bash
+    npm dev #Para ejecutar el proyecto en modo desarrollo.
+    ```
+
+Abre el [http://localhost:3000](http://localhost:3000) en tu navegador
+
+## Contribución
+
+Unicamente se aceptan contribuciones de los miembros del equipo zombie del grupo 6IV6, CECyT 9.

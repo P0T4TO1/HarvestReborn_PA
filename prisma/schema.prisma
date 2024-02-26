@@ -1,0 +1,122 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model User {
+  user_id    Int    @id @default(autoincrement())
+  user_email String @unique
+  user_pass  String
+
+  role_id Int  @unique
+  role    Role @relation(fields: [role_id], references: [role_id])
+
+  business     Business?
+  organization Organization?
+}
+
+model Role {
+  role_id   Int    @id @default(autoincrement())
+  role_name String @unique
+
+  user User?
+}
+
+model Business {
+  business_id          Int    @id @default(autoincrement())
+  businessOwnerName    String
+  businessOwnerSurname String
+  business_name        String @unique
+  business_tel         String
+
+  donations Donation[]
+
+  user_id      Int       @unique
+  user         User      @relation(fields: [user_id], references: [user_id])
+  inventory_id Int       @unique
+  inventory    Inventory @relation(fields: [inventory_id], references: [inventory_id])
+}
+
+model Organization {
+  organization_id      Int    @id @default(autoincrement())
+  organization_name    String @unique
+  organization_cluni   String @unique
+  organization_acronym String
+  organization_rfc     String @unique
+
+  donations Donation[]
+
+  user_id Int       @unique
+  user    User      @relation(fields: [user_id], references: [user_id])
+  request Request[]
+}
+
+model Products {
+  product_id         Int      @id @default(autoincrement())
+  product_name       String   @unique
+  product_amount     Int
+  product_arrive     DateTime
+  product_expiration DateTime
+  product_isSeason   Boolean  @default(false)
+
+  inventory             Inventory? @relation(fields: [inventoryInventory_id], references: [inventory_id])
+  inventoryInventory_id Int?
+
+  request    Request? @relation(fields: [request_id], references: [request_id])
+  request_id Int?
+
+  donation    Donation @relation(fields: [donation_id], references: [donation_id])
+  donation_id Int
+
+  @@index([inventoryInventory_id])
+  @@index([request_id])
+  @@index([donation_id])
+}
+
+model Inventory {
+  inventory_id           Int        @id @default(autoincrement())
+  inventory_registerDate DateTime
+  Products               Products[]
+  Business               Business?
+}
+
+model Request {
+  request_id   Int        @id @default(autoincrement())
+  request_date DateTime
+  prodcuts     Products[]
+
+  organization_id Int
+  organization    Organization @relation(fields: [organization_id], references: [organization_id])
+
+  @@index([organization_id])
+}
+
+model Donation {
+  donation_id            Int        @id @default(autoincrement())
+  donation_description   String
+  donation_creationDate  DateTime
+  donation_departureDate DateTime
+  donation_arriveDate    DateTime
+  donation_status        String
+  products               Products[]
+
+  business_id Int
+  business    Business @relation(fields: [business_id], references: [business_id])
+
+  organization_id Int
+  organization    Organization @relation(fields: [organization_id], references: [organization_id])
+
+  @@index([business_id])
+  @@index([organization_id])
+}
