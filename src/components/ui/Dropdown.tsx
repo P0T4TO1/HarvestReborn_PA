@@ -1,14 +1,12 @@
+"use client";
+
 import { FC, useState, useEffect, useRef } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export const Dropdown: FC = () => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const navigateTo = (url: string) => {
-    router.push(url).then();
-  };
 
   const handleClickOutside = (event: MouseEvent) => {
     if (
@@ -55,7 +53,7 @@ export const Dropdown: FC = () => {
             <li>
               <button
                 onClick={() => {
-                  navigateTo("/auth/login");
+                  router.push("/auth/login");
                   handleItemClick(); // Llamamos a la función handleItemClick
                 }}
                 className="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2"
@@ -66,7 +64,7 @@ export const Dropdown: FC = () => {
             <li>
               <button
                 onClick={() => {
-                  navigateTo("/auth/register");
+                  router.push("/auth/register");
 
                   handleItemClick();
                 }}

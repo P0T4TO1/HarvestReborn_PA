@@ -1,3 +1,5 @@
+"use client";
+
 import NextLink from "next/link";
 import React, { useState } from "react";
 import { Dropdown } from "./Dropdown";
