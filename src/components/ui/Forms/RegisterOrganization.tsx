@@ -1,18 +1,76 @@
 "use client";
 
-import { FC } from "react";
+import { FC, useState } from "react";
 import NextLink from "next/link";
+import { useRouter } from "next/navigation";
+import {
+  registerBusinessSchema,
+  registerOrganizationSchema,
+} from "@/validations/auth.validation";
+import { authRegisterOrganizationAction } from "@/actions/auth.action";
+import { toast } from "sonner";
 
-type FormData = {
-  name: string;
-  acronym: string;
-  cluni: string;
-  rfc: string;
-  email: string;
-  password: string;
-};
+type Errors = {
+  org_name?: string;
+  org_acro?: string;
+  org_cluni?: string;
+  org_rfc?: string;
+  org_email?: string;
+  org_pass?: string;
+} | null;
 
 export const RegisterFormOrganization: FC = () => {
+  const router = useRouter();
+  const navigateTo = (url: string) => {
+    router.push(url);
+  };
+
+  const [errors, setErrors] = useState<Errors>(null);
+  const [isMutation, setIsMutation] = useState<boolean>(false);
+
+  const clientAction = async (formData: FormData) => {
+    if (isMutation) return null;
+    setIsMutation(true);
+
+    try {
+      const data = {
+        org_name: formData.get("name") as string,
+        org_acro: formData.get("acronym") as string,
+        org_cluni: formData.get("cluni") as string,
+        org_rfc: formData.get("rfc") as string,
+        org_email: formData.get("email") as string,
+        org_pass: formData.get("password") as string,
+        org_path: window.location.pathname,
+      };
+
+      const validations = registerOrganizationSchema.safeParse(data);
+      if (!validations.success) {
+        let newErrors: Errors = {};
+
+        validations.error.issues.forEach((issue) => {
+          newErrors = { ...newErrors, [issue.path[0]]: issue.message };
+        });
+        setErrors(newErrors);
+        return null;
+      } else {
+        setErrors(null);
+      }
+
+      const res = await authRegisterOrganizationAction(data);
+      if (res.message === "Este correo ya esta registrado") {
+        setErrors({ org_email: "Este correo ya esta registrado" });
+      }
+      if (res.message === "El usuario y el negocio se registro correctamente") {
+        window.location.href = "/";
+        navigateTo("/");
+      }
+    } catch (e) {
+      console.log("[ERROR_CLIENT_ACTION]", e);
+      toast("¡Algo salio mal¡");
+    } finally {
+      setIsMutation(false);
+    }
+  };
 
   return (
     <section className="relative min-h-screen sm:flex sm:flex-row justify-center bg-transparent">
@@ -32,55 +90,79 @@ export const RegisterFormOrganization: FC = () => {
               </NextLink>
             </p>
           </div>
-          <form
-            noValidate
-            className="space-y-6"
-          >
+          <form action={clientAction} className="space-y-6">
             <div className="grid grid-rows-3 grid-flow-col gap-6">
               <div className="relative">
                 <input
                   className=" w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border  border-gray-200 rounded-lg focus:outline-none focus:border-green-700"
                   type="text"
+                  id="name"
+                  name="name"
                   placeholder="Nombre de la organizacion(OSC)"
                 />
+                {errors?.org_name && (
+                    <p className="text-red-700 text-xs">{errors?.org_name}</p>
+                )}
               </div>
 
               <div className="relative">
                 <input
                   className=" w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border  border-gray-200 rounded-lg focus:outline-none focus:border-green-700"
                   type="text"
+                  id="acronym"
+                  name="acronym"
                   placeholder="Acrónimo"
                 />
+                {errors?.org_acro && (
+                    <p className="text-red-700 text-xs">{errors?.org_acro}</p>
+                )}
               </div>
 
               <div className="relative">
                 <input
                   className=" w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border  border-gray-200 rounded-lg focus:outline-none focus:border-green-700"
                   type="text"
+                  id="cluni"
+                  name="cluni"
                   placeholder="CLUNI"
                 />
+                {errors?.org_cluni && (
+                    <p className="text-red-700 text-xs">{errors?.org_cluni}</p>
+                )}
               </div>
 
               <div className="relative">
                 <input
                   className=" w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border  border-gray-200 rounded-lg focus:outline-none focus:border-green-700"
                   type="text"
+                  id="rfc"
+                  name="rfc"
                   placeholder="RFC"
                 />
+                {errors?.org_rfc && (
+                    <p className="text-red-700 text-xs">{errors?.org_rfc}</p>
+                )}
               </div>
 
               <div className="relative">
                 <input
                   className=" w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border  border-gray-200 rounded-lg focus:outline-none focus:border-green-700"
                   type="email"
+                  id="email"
+                  name="email"
                   placeholder="Correo electrónico de la OSC"
                 />
+                {errors?.org_email && (
+                    <p className="text-red-700 text-xs">{errors?.org_email}</p>
+                )}
               </div>
 
               <div className="relative">
                 <input
                   placeholder="Contraseña"
                   type="password"
+                  id="password"
+                  name="password"
                   className="text-sm px-4 py-3 rounded-lg w-full bg-gray-200 focus:bg-gray-100 border border-gray-200 focus:outline-none focus:border-green-700"
                 />
                 <div className="flex items-center absolute inset-y-0 right-0 mr-3  text-sm leading-5 text-green-700">
@@ -92,12 +174,16 @@ export const RegisterFormOrganization: FC = () => {
                     visibility_off
                   </span>
                 </div>
+                {errors?.org_pass && (
+                    <p className="text-red-700 text-xs">{errors?.org_pass}</p>
+                )}
               </div>
             </div>
 
             <div>
               <button
                 type="submit"
+                disabled={isMutation}
                 className="w-full flex justify-center bg-green-800 hover:bg-green-700 text-gray-100 p-3  rounded-lg tracking-wide font-semibold  cursor-pointer transition ease-in duration-500"
               >
                 Registrarse

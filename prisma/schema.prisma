@@ -15,7 +15,7 @@ datasource db {
 }
 
 model User {
-  user_id    Int    @id @default(autoincrement())
+  id         String @id @default(uuid())
   user_email String @unique
   user_pass  String
 
@@ -42,9 +42,9 @@ model Business {
 
   donations Donation[]
 
-  user_id      Int       @unique
-  user         User      @relation(fields: [user_id], references: [user_id])
-  inventory_id Int?     @unique
+  user_id      String     @unique
+  user         User       @relation(fields: [user_id], references: [id])
+  inventory_id Int?       @unique
   inventory    Inventory? @relation(fields: [inventory_id], references: [inventory_id])
 }
 
@@ -57,8 +57,8 @@ model Organization {
 
   donations Donation[]
 
-  user_id Int       @unique
-  user    User      @relation(fields: [user_id], references: [user_id])
+  user_id String    @unique
+  user    User      @relation(fields: [user_id], references: [id])
   request Request[]
 }
 

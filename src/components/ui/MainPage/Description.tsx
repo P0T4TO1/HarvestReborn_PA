@@ -29,15 +29,16 @@ export const DescriptionComponent: FC = () => {
           </p>
           <div className="flex mt-6 sm:mt-8">
             <button
+              onClick={() => navigateTo("/auth/login")}
               type="button"
-              className="py-2 sm:py-3 px-4 sm:px-5 rounded-lg bg-transparent border-2 text-green-700 border-green-700 font-semibold hover:text-gray-900 text-sm sm:text-md"
+              className="py-2 sm:py-3 px-4 sm:px-5 rounded-lg bg-transparent border-2 text-green-700 border-green-700 font-semibold hover:text-gray-900 text-sm sm:text-md transition ease-in duration-[400ms]"
             >
               Únete ahora
             </button>
             <button
               onClick={() => navigateTo("/#servicios")}
               type="button"
-              className="ml-2 sm:ml-3 py-2 sm:py-3 px-4 sm:px-5 rounded-lg bg-green-700 border-2 text-gray-900 border-green-700 font-semibold hover:text-white text-sm sm:text-md"
+              className="ml-2 sm:ml-3 py-2 sm:py-3 px-4 sm:px-5 rounded-lg bg-green-700 border-2 text-gray-900 border-green-700 font-semibold hover:text-white text-sm sm:text-md transition ease-in duration-[400ms]"
             >
               Conoce más
             </button>

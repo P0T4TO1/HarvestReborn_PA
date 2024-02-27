@@ -2,10 +2,10 @@ export interface IRegisterBusiness {
     owner_name: string;
     owner_surnames: string;
     business_name: string;
+    business_tel: string;
     business_email: string;
     business_pass: string;
     business_path: string
-    business_tel: string;
 }
 
 export interface IRegisterOrganization {

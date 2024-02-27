@@ -30,13 +30,6 @@ export const ServicesComponent: FC = () => {
               benéficas para asegurar que los alimentos excedentes lleguen a
               quienes más los necesitan.
             </p>
-            <a
-              href="/"
-              aria-label=""
-              className="inline-flex items-center font-semibold transition-colors duration-200 text-gray-800 hover:text-green-600"
-            >
-              Learn more
-            </a>
           </div>
           <div className="max-w-md sm:mx-auto sm:text-center">
             <div className="flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-indigo-50 sm:mx-auto">
@@ -50,13 +43,6 @@ export const ServicesComponent: FC = () => {
               donación, lo que permite a las organizaciones benéficas ver y
               solicitar los alimentos que necesitan.
             </p>
-            <a
-              href="/"
-              aria-label=""
-              className="inline-flex items-center font-semibold transition-colors duration-200 text-gray-800 hover:text-green-600"
-            >
-              Learn more
-            </a>
           </div>
           <div className="max-w-md sm:mx-auto sm:text-center">
             <div className="flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-indigo-50 sm:mx-auto">
@@ -70,13 +56,6 @@ export const ServicesComponent: FC = () => {
               específicas de productos frescos a las recauderías, ayudando a
               satisfacer las necesidades de sus comunidades.
             </p>
-            <a
-              href="/"
-              aria-label=""
-              className="inline-flex items-center font-semibold transition-colors duration-200 text-gray-800 hover:text-green-600"
-            >
-              Learn more
-            </a>
           </div>
           <div className="max-w-md sm:mx-auto sm:text-center">
             <div className="flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-indigo-50 sm:mx-auto">
@@ -90,13 +69,6 @@ export const ServicesComponent: FC = () => {
               donaciones a través de nuestra plataforma, lo que facilita la
               organización y el control de los productos disponibles.
             </p>
-            <a
-              href="/"
-              aria-label=""
-              className="inline-flex items-center font-semibold transition-colors duration-200 text-gray-800 hover:text-green-600"
-            >
-              Learn more
-            </a>
           </div>
         </div>
       </section>

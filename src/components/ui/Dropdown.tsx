@@ -2,8 +2,11 @@
 
 import { FC, useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
+import { SUCCESS_TOAST, showToast } from "@/components/toast";
 
 export const Dropdown: FC = () => {
+  const { data: session } = useSession();
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -35,7 +38,7 @@ export const Dropdown: FC = () => {
       <div className="max-w-lg mx-auto relative" ref={dropdownRef}>
         <button
           onClick={() => setOpen(!open)}
-          className="text-white hover:text-gray-300 text-sm px-4 py-2.5 text-center inline-flex items-center"
+          className="text-white hover:text-gray-300 text-sm px-4 py-2.5 text-left inline-flex items-center"
           type="button"
           data-dropdown-toggle="dropdown"
         >
@@ -43,37 +46,78 @@ export const Dropdown: FC = () => {
         </button>
 
         <div
-          className={`bg-white text-base z-50 list-none divide-y divide-gray-100 rounded shadow my-4 ${
+          className={`bg-white text-base z-50 list-none divide-y divide-gray-100 rounded shadow my-4 min-w-40 ${
             open ? "" : "hidden"
           }`}
-          style={{ position: "absolute", top: "calc(100% - 15px)", left: -60 }}
+          style={{
+            position: "absolute",
+            top: "calc(100% - 15px)",
+            left: -110,
+          }}
           ref={dropdownRef}
         >
-          <ul className="py-1" aria-labelledby="dropdown">
-            <li>
-              <button
-                onClick={() => {
-                  router.push("/auth/login");
-                  handleItemClick(); // Llamamos a la función handleItemClick
-                }}
-                className="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2"
-              >
-                Iniciar sesión
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => {
-                  router.push("/auth/register");
+          <div className="py-1 w-full" aria-labelledby="dropdown">
+            {session ? (
+              <>
+                <div>
+                  <button
+                    onClick={() => {
+                      router.push("/profile");
+                      handleItemClick();
+                    }}
+                    className="text-sm hover:bg-gray-100 text-gray-700 flex items-center px-4 py-2 w-full h-full"
+                  >
+                    <span className="material-symbols-outlined">person</span>
+                    Perfil
+                  </button>
+                </div>
+                <hr />
+                <div>
+                  <button
+                    onClick={() =>
+                      signOut().then(async () => {
+                        showToast("Logout Successful", SUCCESS_TOAST);
+                      })
+                    }
+                    className="text-sm hover:bg-gray-100 text-gray-700 flex items-center px-4 py-2 w-full h-full"
+                  >
+                    <span className="material-symbols-outlined">logout</span>
+                    Cerrar sesión
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div>
+                  <button
+                    onClick={() => {
+                      router.push("/auth/login");
+                      handleItemClick(); // Llamamos a la función handleItemClick
+                    }}
+                    className="text-sm hover:bg-gray-100 text-gray-700 flex items-center px-4 py-2 w-full h-full"
+                  >
+                    <span className="material-symbols-outlined">login</span>
+                    Iniciar sesión
+                  </button>
+                </div>
+                <div>
+                  <button
+                    onClick={() => {
+                      router.push("/auth/register");
 
-                  handleItemClick();
-                }}
-                className="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2"
-              >
-                Registrarse
-              </button>
-            </li>
-          </ul>
+                      handleItemClick();
+                    }}
+                    className="text-sm hover:bg-gray-100 text-gray-700 flex items-center px-4 py-2 w-full h-full"
+                  >
+                    <span className="material-symbols-outlined">
+                      app_registration
+                    </span>
+                    Registrarse
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </>

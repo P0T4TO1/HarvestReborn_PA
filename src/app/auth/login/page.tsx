@@ -1,7 +1,12 @@
 import { LoginForm } from "@/components";
-import { NextPage } from "next";
+import { authOptions } from "@/lib/utils/authOptions";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
-const LoginPage: NextPage = () => {
+const LoginPage = async () => {
+  const session = await getServerSession(authOptions);
+  if (session) redirect("/");
+
   return (
     <>
       <LoginForm />

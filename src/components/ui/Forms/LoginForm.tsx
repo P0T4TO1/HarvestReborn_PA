@@ -1,17 +1,76 @@
 "use client";
 
-import { FC } from "react";
+import { FC, useState } from "react";
 
 import NextLink from "next/link";
 
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import { loginSchema } from "@/validations/auth.validation";
+import { signIn, SignInResponse } from "next-auth/react";
+import { toast } from "sonner";
 
-type FormData = {
-  email: string;
-  password: string;
-};
+type Errors = {
+  user_email?: string;
+  user_pass?: string;
+} | null;
+
 export const LoginForm: FC = () => {
+  const router = useRouter();
+  const navigateTo = (url: string) => {
+    router.push(url);
+  };
+  const [errors, setErrors] = useState<Errors>(null);
+  const [isMutation, setIsMutation] = useState<boolean>(false);
+
+  const clientAction = async (formData: FormData) => {
+    if (isMutation) return null;
+    setIsMutation(true);
+
+    try {
+      const data = {
+        user_email: formData.get("email") as string,
+        user_pass: formData.get("password") as string,
+      };
+
+      const validations = loginSchema.safeParse(data);
+      if (!validations.success) {
+        let newErrors: Errors = {};
+
+        validations.error.issues.forEach((issue) => {
+          newErrors = { ...newErrors, [issue.path[0]]: issue.message };
+        });
+        console.log(errors);
+
+        setErrors(newErrors);
+        return null;
+      } else {
+        setErrors(null);
+      }
+
+      const res: SignInResponse | undefined = await signIn("credentials", {
+        ...data,
+        redirect: false,
+      });
+
+      if (res?.error === "CredentialsSignin") {
+        setErrors({
+          user_email: "Correo o contraseña inválidos",
+          user_pass: "Correo o contraseña inválidos",
+        });
+      }
+      if (res && res.ok && res.status === 200) {
+        navigateTo("/");
+      }
+    } catch (e) {
+      console.info("[ERROR_CLIENT_ACTION]", e);
+      toast("¡Algo salio mal!");
+    } finally {
+      setIsMutation(false);
+    }
+  };
+
   return (
     <section className="relative min-h-screen sm:flex sm:flex-row justify-center bg-transparent">
       <div className="flex justify-center self-center z-10 shadow-xl">
@@ -30,20 +89,27 @@ export const LoginForm: FC = () => {
               </NextLink>
             </p>
           </div>
-          <form noValidate>
+          <form action={clientAction}>
             <div className="space-y-6">
               <div className="relative">
                 <input
                   className="w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-green-700"
                   type="email"
+                  id="email"
+                  name="email"
                   placeholder="Email"
                 />
+                {errors?.user_email && (
+                  <p className="text-red-500 text-xs">{errors?.user_email}</p>
+                )}
               </div>
 
               <div className="relative">
                 <input
                   placeholder="Contraseña"
                   type="password"
+                  id="password"
+                  name="password"
                   className="text-sm px-4 py-3 rounded-lg w-full bg-gray-200 focus:bg-gray-100 border border-gray-200 focus:outline-none focus:border-green-700"
                 />
                 <div className="flex items-center absolute inset-y-0 right-0 mr-3  text-sm leading-5 text-green-700">
@@ -55,6 +121,9 @@ export const LoginForm: FC = () => {
                     visibility_off
                   </span>
                 </div>
+                {errors?.user_pass && (
+                  <p className="text-red-700 text-xs">{errors?.user_pass}</p>
+                )}
               </div>
 
               <div className="flex items-center justify-between">
@@ -66,6 +135,7 @@ export const LoginForm: FC = () => {
               </div>
               <div>
                 <button
+                  disabled={isMutation}
                   type="submit"
                   className="w-full flex justify-center bg-green-800 hover:bg-green-700 text-gray-100 p-3  rounded-lg tracking-wide font-semibold  cursor-pointer transition ease-in duration-500"
                 >
