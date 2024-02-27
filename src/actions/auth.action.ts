@@ -142,7 +142,7 @@ export const authRegisterOrganizationAction = async ({
       message: "El usuario y el negocio se registro correctamente",
     };
   } catch (e) {
-    console.info("[ERROR_AUTH_REGISTER]", error);
+    console.info("[ERROR_AUTH_REGISTER]", e);
     return {
       data: null,
       message: "Algo salio mal",

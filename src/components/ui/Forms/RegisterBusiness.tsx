@@ -76,7 +76,7 @@ export const RegisterFormBusiness: FC = () => {
   };
 
   return (
-    <section className="relative min-h-screen sm:flex sm:flex-row justify-center bg-transparent">
+    <section className="relative min-h-screen sm:flex sm:flex-row justify-center bg-transparent pt-32">
       <div className="flex justify-center self-center z-10 w-2/5 shadow-xl">
         <div className="p-12 bg-white mx-auto rounded-3xl w-full">
           <div className="mb-7">

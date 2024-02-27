@@ -4,7 +4,6 @@ import { FC, useState } from "react";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  registerBusinessSchema,
   registerOrganizationSchema,
 } from "@/validations/auth.validation";
 import { authRegisterOrganizationAction } from "@/actions/auth.action";
@@ -61,8 +60,8 @@ export const RegisterFormOrganization: FC = () => {
         setErrors({ org_email: "Este correo ya esta registrado" });
       }
       if (res.message === "El usuario y el negocio se registro correctamente") {
-        window.location.href = "/";
-        navigateTo("/");
+        window.location.href = "/auth/login";
+        navigateTo("/auth/login");
       }
     } catch (e) {
       console.log("[ERROR_CLIENT_ACTION]", e);

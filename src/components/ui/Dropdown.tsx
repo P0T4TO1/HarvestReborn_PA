@@ -4,6 +4,7 @@ import { FC, useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { SUCCESS_TOAST, showToast } from "@/components/toast";
+import { getUserById } from "@/actions/user[id].action";
 
 export const Dropdown: FC = () => {
   const { data: session } = useSession();
@@ -46,7 +47,7 @@ export const Dropdown: FC = () => {
         </button>
 
         <div
-          className={`bg-white text-base z-50 list-none divide-y divide-gray-100 rounded shadow my-4 min-w-40 ${
+          className={`bg-white text-base z-50 list-none divide-y divide-gray-100 rounded shadow my-4 min-w-40 max-w-40 overflow-hidden break-words ${
             open ? "" : "hidden"
           }`}
           style={{
@@ -60,6 +61,16 @@ export const Dropdown: FC = () => {
             {session ? (
               <>
                 <div>
+                  <div
+                    className="text-sm text-gray-700 flex items-center px-4 py-2 w-full h-full"
+                  >
+                    <span className="material-symbols-outlined">person</span>
+                    {
+                    // @ts-ignore
+                    session.user?.user_email}
+                  </div>
+                </div>
+                <div>
                   <button
                     onClick={() => {
                       router.push("/profile");
@@ -71,6 +82,25 @@ export const Dropdown: FC = () => {
                     Perfil
                   </button>
                 </div>
+                {
+                  // @ts-ignore
+                  session.user?.role_id === 1 ? (
+                    <div>
+                      <button
+                        onClick={() => {
+                          router.push("/dashboard");
+                          handleItemClick();
+                        }}
+                        className="text-sm hover:bg-gray-100 text-gray-700 flex items-center px-4 py-2 w-full h-full"
+                      >
+                        <span className="material-symbols-outlined">
+                          dashboard
+                        </span>
+                        Dashboard
+                      </button>
+                    </div>
+                  ) : null
+                }
                 <hr />
                 <div>
                   <button
