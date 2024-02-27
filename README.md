@@ -13,7 +13,7 @@ en el cual ...
 
 [//]: # "- Lenguaje de programación utilizado"
 
-- Node.js 16.16.0 o superior
+- Node.js 18.19.0 o superior
 - npm 8.11.0 o superior
 - MySQL 8.0.19 o superior / MongoDB
 
@@ -28,7 +28,7 @@ en el cual ...
 [//]: # "- Herramientas necesarias para la instalación y ejecución del proyecto"
 
 - Git 2.40.0 o superior
-- Visual Studio Code 1.47.3 o superior o cualquier editor de texto
+- Visual Studio Code 1.47.3 o superior o cualquier editor de texto, de preferencia el IDE de Jetbrains (WebStorm).
 - MySQL Workbench 8.0.19 o superior
 
 ## Instalación
@@ -37,17 +37,34 @@ en el cual ...
 2. Entrar en el directorio del proyecto
 3. Ejecutar el siguiente comando en la terminal/cmd
 
-    ```bash
-    npm install #Para instalar dependencias.
-    ```
-4. Duplicar .env.example y renombrar la copia a .env.development. y a .env.production, dependiendo el
-   modo en el que se quiera ejecutar el servidor.
-5. Configurar las variables de entorno en el archivo .env.
-6. Ejecutar el siguiente comando en la terminal/cmd
+   ```bash
+   npm install #Para instalar dependencias.
+   ```
 
-    ```bash
-    npm dev #Para ejecutar el proyecto en modo desarrollo.
-    ```
+4. Crea el archivo .env en la raíz del proyecto con las siguientes variables de entorno
+
+   ```env
+   DATABASE_URL="mysql://USER:PASSWORD@HOST:PORT/DATABASE"
+
+   NEXTAUTH_URL="http://localhost:3000"
+   NEXTAUTH_SECRET=
+   ```
+
+5. Agrega a MySQL la base de datos con el nombre que se haya configurado en el archivo .env
+6. Ejecuta los siguientes comandos para crear las tablas en la base de datos
+
+   ```bash
+   npx prisma db push
+   npx prisma generate
+   ```
+
+   1. Si se modifica el modelo de la base de datos, ejecuta de nuevo los comando anteriores.
+
+7. Ejecutar el siguiente comando en la terminal/cmd para ejecutar el proyecto en modo desarrollo.
+
+   ```bash
+   npm dev 
+   ```
 
 Abre el [http://localhost:3000](http://localhost:3000) en tu navegador
 
