@@ -52,7 +52,7 @@ export const registerOrganizationSchema = z.object({
     .string({ required_error: "Este campo es obligatorio" })
     .min(13, { message: "Este dato debe tener mínimo 13 caracteres" })
     .max(13, { message: "Este dato debe tener máximo 13 caracteres" }),
-    // .refine((value) => /^[a-zA-Z]{3,4}(\d{6})((\D|\d){2,3})?$/.test(value)),
+  // .refine((value) => /^[a-zA-Z]{3,4}(\d{6})((\D|\d){2,3})?$/.test(value)),
   org_email: z
     .string({ required_error: "El correo es obligatorio" })
     .email({ message: "Correo invalido" })
@@ -68,7 +68,7 @@ export const loginSchema = z.object({
     .string({ required_error: "El correo es obligatorio" })
     .email({ message: "Correo invalido" })
     .max(100, { message: "El correo debe tener menos de 100 caracteres" }),
-  user_pass: z
+  user_password: z
     .string({ required_error: "La contraseña es obligatoria" })
     .min(3, { message: "La contraseña debe tener mínimo 3 caracteres" })
     .max(100, { message: "La contraseña debe tener menos de 100 caracteres" }),

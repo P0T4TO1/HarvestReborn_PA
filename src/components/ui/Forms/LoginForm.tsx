@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useState } from "react";
+import { FC, useState, useContext } from "react";
 
 import NextLink from "next/link";
 
@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { loginSchema } from "@/validations/auth.validation";
 import { signIn, SignInResponse } from "next-auth/react";
 import { toast } from "sonner";
+import { AuthContext } from "@/context/auth";
 
 type Errors = {
   user_email?: string;
@@ -18,6 +19,7 @@ type Errors = {
 
 export const LoginForm: FC = () => {
   const router = useRouter();
+  const { loginUser } = useContext(AuthContext);
   const navigateTo = (url: string) => {
     router.push(url);
   };
@@ -31,7 +33,7 @@ export const LoginForm: FC = () => {
     try {
       const data = {
         user_email: formData.get("email") as string,
-        user_pass: formData.get("password") as string,
+        user_password: formData.get("password") as string,
       };
 
       const validations = loginSchema.safeParse(data);
@@ -41,12 +43,21 @@ export const LoginForm: FC = () => {
         validations.error.issues.forEach((issue) => {
           newErrors = { ...newErrors, [issue.path[0]]: issue.message };
         });
-        console.log(errors);
 
         setErrors(newErrors);
         return null;
       } else {
         setErrors(null);
+      }
+
+      const result = await loginUser(data.user_email, data.user_password);
+
+      if (!result) {
+        setErrors({
+          user_email: "Correo o contraseña inválidos",
+          user_pass: "Correo o contraseña inválidos",
+        });
+        return null;
       }
 
       const res: SignInResponse | undefined = await signIn("credentials", {

@@ -4,7 +4,6 @@ import { FC, useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { SUCCESS_TOAST, showToast } from "@/components/toast";
-import { getUserById } from "@/actions/user[id].action";
 
 export const Dropdown: FC = () => {
   const { data: session } = useSession();
@@ -64,7 +63,6 @@ export const Dropdown: FC = () => {
                   <div
                     className="text-sm text-gray-700 flex items-center px-4 py-2 w-full h-full"
                   >
-                    <span className="material-symbols-outlined">person</span>
                     {
                     // @ts-ignore
                     session.user?.user_email}
@@ -73,7 +71,7 @@ export const Dropdown: FC = () => {
                 <div>
                   <button
                     onClick={() => {
-                      router.push("/profile");
+                      router.push("/user/profile");
                       handleItemClick();
                     }}
                     className="text-sm hover:bg-gray-100 text-gray-700 flex items-center px-4 py-2 w-full h-full"

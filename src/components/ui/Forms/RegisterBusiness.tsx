@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useState } from "react";
+import { FC, useContext, useState } from "react";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -10,6 +10,7 @@ import { registerBusinessSchema } from "@/validations/auth.validation";
 import { authRegisterBusinessAction } from "@/actions/auth.action";
 
 import { toast } from "sonner";
+import { AuthContext } from "@/context/auth";
 
 type Errors = {
   owner_name?: string;
@@ -29,6 +30,8 @@ export const RegisterFormBusiness: FC = () => {
   const [errors, setErrors] = useState<Errors>(null);
   const [isMutation, setIsMutation] = useState<boolean>(false);
 
+  const { registerUserBusiness } = useContext(AuthContext);
+
   const clientAction = async (formData: FormData) => {
     if (isMutation) return null;
     setIsMutation(true);
@@ -41,7 +44,7 @@ export const RegisterFormBusiness: FC = () => {
         business_tel: formData.get("telephone") as string,
         business_email: formData.get("email") as string,
         business_pass: formData.get("password") as string,
-        business_path: window.location.pathname,
+        role_id: "2",
       };
 
       const validations = registerBusinessSchema.safeParse(data);
@@ -57,14 +60,22 @@ export const RegisterFormBusiness: FC = () => {
         setErrors(null);
       }
 
-      const res = await authRegisterBusinessAction(data);
-      if (res.message === "Este correo ya esta registrado") {
-        setErrors({ business_email: "Este correo ya esta registrado" });
-      }
-      if (
-        res.message === "El usuario y el negocio se registraron correctamente"
-      ) {
-        window.location.href = "/auth/login";
+      const res = await registerUserBusiness(
+        data.owner_name,
+        data.owner_surnames,
+        data.business_tel,
+        data.business_name,
+        data.business_email,
+        data.business_pass
+      );
+      if (res.hasError) {
+        if (res.message === "Este correo ya esta registrado") {
+          setErrors({ business_email: "Este correo ya esta registrado" });
+        }
+        toast(res.message);
+        return;
+      } else {
+        toast("¡Registro exitoso!");
         navigateTo("/auth/login");
       }
     } catch (e) {

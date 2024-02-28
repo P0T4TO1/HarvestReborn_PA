@@ -15,22 +15,24 @@ datasource db {
 }
 
 model User {
-  id         String @id @default(uuid())
-  user_email String @unique
-  user_pass  String
+  id            String @id @default(uuid())
+  user_email    String @unique
+  user_password String
 
-  role_id Int  @unique
+  role_id Int
   role    Role @relation(fields: [role_id], references: [role_id])
 
   business     Business?
   organization Organization?
+
+  @@index([role_id])
 }
 
 model Role {
   role_id   Int    @id @default(autoincrement())
   role_name String @unique
 
-  user User?
+  user User[]
 }
 
 model Business {

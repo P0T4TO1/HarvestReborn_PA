@@ -2,10 +2,13 @@
 
 import { IRegisterBusiness, IRegisterOrganization } from "@/interfaces";
 import prisma from "@/lib/prisma";
-import { hash } from "bcrypt";
+import { hash, compare } from "bcrypt";
 import { error } from "console";
 import { revalidatePath } from "next/cache";
-
+import { jwt } from "@/lib/utils";
+export function registerUserBusiness(req: any, res: any) {
+  throw new Error("Function not implemented.");
+}
 export const authRegisterBusinessAction = async ({
   owner_name,
   owner_surnames,
@@ -32,7 +35,7 @@ export const authRegisterBusinessAction = async ({
     const user = await prisma.user.create({
       data: {
         user_email: business_email,
-        user_pass: await hash(business_pass, 10),
+        user_password: await hash(business_pass, 10),
         role_id: 2,
         business: {
           create: {
@@ -45,30 +48,26 @@ export const authRegisterBusinessAction = async ({
       },
     });
 
-    // console.log("se registro User");
-
-    // const business = await prisma.business.create({
-    //   data: {
-    //     businessOwnerName: owner_name,
-    //     businessOwnerSurname: owner_surnames,
-    //     business_name: business_name,
-    //     business_tel,
-    //     user_id: await prisma.user
-    //       .findUnique({
-    //         where: {
-    //           user_email: business_email,
-    //         },
-    //       })
-    //       .then(),
-    //   },
-    // });
-
     console.log("El usuario y el negocio se registraron correctamente");
+    const { id, role_id } = user;
+    const token = jwt.signToken(id, business_email);
 
-    return {
-      data: { user },
-      message: "El usuario y el negocio se registraron correctamente",
-    };
+    return new Response(
+      JSON.stringify({
+        status: 200,
+        token,
+        user: {
+          email: business_email,
+          role: role_id.toString(),
+          name: business_name,
+        },
+      }),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (e) {
     console.info("[ERROR_AUTH_REGISTER]", error);
     return {
@@ -89,7 +88,6 @@ export const authRegisterOrganizationAction = async ({
   org_pass,
   org_path,
 }: IRegisterOrganization) => {
-  console.log("entro a la accion")
   try {
     const emailAlreadyExists = await prisma.user.findUnique({
       where: {
@@ -106,7 +104,7 @@ export const authRegisterOrganizationAction = async ({
     const user = await prisma.user.create({
       data: {
         user_email: org_email,
-        user_pass: await hash(org_pass, 10),
+        user_password: await hash(org_pass, 10),
         role_id: 3,
         organization: {
           create: {
@@ -119,28 +117,26 @@ export const authRegisterOrganizationAction = async ({
       },
     });
 
-    // const organization = await prisma.organization.create({
-    //   data: {
-    //     organization_name: org_name,
-    //     organization_cluni: org_cluni,
-    //     organization_acronym: org_acro,
-    //     organization_rfc: org_rfc,
-    //     user_id: await prisma.user
-    //       .findUnique({
-    //         where: {
-    //           user_email: org_email,
-    //         },
-    //       })
-    //       .then(),
-    //   },
-    // });
-
     console.log("El usuario y el negocio se registro correctamente");
+    const { id, role_id } = user;
+    const token = jwt.signToken(id, org_email);
 
-    return {
-      data: { user },
-      message: "El usuario y el negocio se registro correctamente",
-    };
+    return new Response(
+      JSON.stringify({
+        status: 200,
+        token,
+        user: {
+          email: org_email,
+          role: role_id.toString(),
+          name: org_name,
+        },
+      }),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (e) {
     console.info("[ERROR_AUTH_REGISTER]", e);
     return {

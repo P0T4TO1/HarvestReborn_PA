@@ -12,7 +12,7 @@ export const authOptions: NextAuthOptions = {
           type: "email",
           placeholder: "example@gmail.com",
         },
-        user_pass: {
+        user_password: {
           label: "Password",
           type: "password",
           placeholder: "Password",
@@ -21,8 +21,8 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         if (!credentials) return null;
 
-        const { user_email, user_pass } = credentials;
-        if (!user_email || !user_email) return null;
+        const { user_email, user_password } = credentials;
+        if (!user_email || !user_password) return null;
 
         const user = await prisma.user.findUnique({
           where: {
@@ -31,7 +31,7 @@ export const authOptions: NextAuthOptions = {
         });
         if (!user) return null;
 
-        const passwordCorrect = await compare(user_pass, user.user_pass);
+        const passwordCorrect = await compare(user_password, user.user_password);
         if (!passwordCorrect) return null;
         console.log("Inicio de sesión correcto")
         return user;
@@ -59,6 +59,7 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: "/auth/login",
+    newUser: "/auth/register",
   },
   secret: process.env.NEXTAUTH_SECRET,
   debug: process.env.NODE_ENV === "development",

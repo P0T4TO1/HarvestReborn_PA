@@ -1,4 +1,3 @@
-import { FC } from "react";
 import { authOptions } from "@/lib/utils/authOptions";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";

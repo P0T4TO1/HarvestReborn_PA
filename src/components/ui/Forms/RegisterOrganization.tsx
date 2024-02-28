@@ -1,13 +1,12 @@
 "use client";
 
-import { FC, useState } from "react";
+import { FC, useContext, useState } from "react";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  registerOrganizationSchema,
-} from "@/validations/auth.validation";
+import { registerOrganizationSchema } from "@/validations/auth.validation";
 import { authRegisterOrganizationAction } from "@/actions/auth.action";
 import { toast } from "sonner";
+import { AuthContext } from "@/context/auth";
 
 type Errors = {
   org_name?: string;
@@ -27,6 +26,8 @@ export const RegisterFormOrganization: FC = () => {
   const [errors, setErrors] = useState<Errors>(null);
   const [isMutation, setIsMutation] = useState<boolean>(false);
 
+  const { registerUserOrganization } = useContext(AuthContext);
+
   const clientAction = async (formData: FormData) => {
     if (isMutation) return null;
     setIsMutation(true);
@@ -39,7 +40,6 @@ export const RegisterFormOrganization: FC = () => {
         org_rfc: formData.get("rfc") as string,
         org_email: formData.get("email") as string,
         org_pass: formData.get("password") as string,
-        org_path: window.location.pathname,
       };
 
       const validations = registerOrganizationSchema.safeParse(data);
@@ -55,12 +55,23 @@ export const RegisterFormOrganization: FC = () => {
         setErrors(null);
       }
 
-      const res = await authRegisterOrganizationAction(data);
-      if (res.message === "Este correo ya esta registrado") {
-        setErrors({ org_email: "Este correo ya esta registrado" });
-      }
-      if (res.message === "El usuario y el negocio se registro correctamente") {
-        window.location.href = "/auth/login";
+      const res = await registerUserOrganization(
+        data.org_name,
+        data.org_acro,
+        data.org_cluni,
+        data.org_rfc,
+        data.org_email,
+        data.org_pass
+      );
+
+      if (res.hasError) {
+        if (res.message === "Este correo ya esta registrado") {
+          setErrors({ org_email: "Este correo ya esta registrado" });
+        }
+        toast(res.message);
+        return;
+      } else {
+        toast("¡Registro exitoso!");
         navigateTo("/auth/login");
       }
     } catch (e) {
@@ -100,7 +111,7 @@ export const RegisterFormOrganization: FC = () => {
                   placeholder="Nombre de la organizacion(OSC)"
                 />
                 {errors?.org_name && (
-                    <p className="text-red-700 text-xs">{errors?.org_name}</p>
+                  <p className="text-red-700 text-xs">{errors?.org_name}</p>
                 )}
               </div>
 
@@ -113,7 +124,7 @@ export const RegisterFormOrganization: FC = () => {
                   placeholder="Acrónimo"
                 />
                 {errors?.org_acro && (
-                    <p className="text-red-700 text-xs">{errors?.org_acro}</p>
+                  <p className="text-red-700 text-xs">{errors?.org_acro}</p>
                 )}
               </div>
 
@@ -126,7 +137,7 @@ export const RegisterFormOrganization: FC = () => {
                   placeholder="CLUNI"
                 />
                 {errors?.org_cluni && (
-                    <p className="text-red-700 text-xs">{errors?.org_cluni}</p>
+                  <p className="text-red-700 text-xs">{errors?.org_cluni}</p>
                 )}
               </div>
 
@@ -139,7 +150,7 @@ export const RegisterFormOrganization: FC = () => {
                   placeholder="RFC"
                 />
                 {errors?.org_rfc && (
-                    <p className="text-red-700 text-xs">{errors?.org_rfc}</p>
+                  <p className="text-red-700 text-xs">{errors?.org_rfc}</p>
                 )}
               </div>
 
@@ -152,7 +163,7 @@ export const RegisterFormOrganization: FC = () => {
                   placeholder="Correo electrónico de la OSC"
                 />
                 {errors?.org_email && (
-                    <p className="text-red-700 text-xs">{errors?.org_email}</p>
+                  <p className="text-red-700 text-xs">{errors?.org_email}</p>
                 )}
               </div>
 
@@ -174,7 +185,7 @@ export const RegisterFormOrganization: FC = () => {
                   </span>
                 </div>
                 {errors?.org_pass && (
-                    <p className="text-red-700 text-xs">{errors?.org_pass}</p>
+                  <p className="text-red-700 text-xs">{errors?.org_pass}</p>
                 )}
               </div>
             </div>
