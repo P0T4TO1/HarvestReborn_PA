@@ -7,6 +7,7 @@ import { IBusiness, IOrganization, IUser } from "@/interfaces";
 import { AuthContext } from "@/context/auth";
 import { hrApi } from "@/api";
 import { NextResponse } from "next/server";
+import { log } from "console";
 
 type Errors = {
   user_email?: string;
@@ -34,7 +35,6 @@ export const ProfileForm: FC<Props> = ({
   userDataOrg,
   userData,
 }) => {
-  const router = useRouter();
   const { user } = useContext(AuthContext);
 
   const [isEditing, setIsEditing] = useState(false);
@@ -44,8 +44,6 @@ export const ProfileForm: FC<Props> = ({
   const [userProfile, setUserProfile] = useState<
     IUser | IOrganization | IBusiness
   >(userData || userDataOrg || userDataBusiness);
-  const Id = user?._id;
-  console.log(userProfile);
 
   useEffect(() => {
     if (userData || userDataOrg || userDataBusiness) {
@@ -112,35 +110,35 @@ export const ProfileForm: FC<Props> = ({
 
   return (
     <section className="bg-white w-full flex flex-col gap-5 px-3 md:px-16 lg:px-28 md:flex-row text-[#161931] min-h-screen pt-32">
-      {/*<aside className="hidden py-4 md:w-1/3 lg:w-1/4 md:block">*/}
-      {/*  <div className="flex flex-col gap-2 p-4 text-sm border-r border-indigo-100 top-12">*/}
-      {/*    <h2 className="pl-3 mb-4 text-2xl font-semibold">Settings</h2>*/}
-      {/*    <a*/}
-      {/*      href="#"*/}
-      {/*      className="flex items-center px-3 py-2.5 font-bold bg-white  text-indigo-900 border rounded-full"*/}
-      {/*    >*/}
-      {/*      Pubic Profile*/}
-      {/*    </a>*/}
-      {/*    <a*/}
-      {/*      href="#"*/}
-      {/*      className="flex items-center px-3 py-2.5 font-semibold  hover:text-indigo-900 hover:border hover:rounded-full"*/}
-      {/*    >*/}
-      {/*      Account Settings*/}
-      {/*    </a>*/}
-      {/*    <a*/}
-      {/*      href="#"*/}
-      {/*      className="flex items-center px-3 py-2.5 font-semibold hover:text-indigo-900 hover:border hover:rounded-full  "*/}
-      {/*    >*/}
-      {/*      Notifications*/}
-      {/*    </a>*/}
-      {/*    <a*/}
-      {/*      href="#"*/}
-      {/*      className="flex items-center px-3 py-2.5 font-semibold hover:text-indigo-900 hover:border hover:rounded-full  "*/}
-      {/*    >*/}
-      {/*      PRO Account*/}
-      {/*    </a>*/}
-      {/*  </div>*/}
-      {/*</aside>*/}
+      <aside className="hidden py-4 md:w-1/3 lg:w-1/4 md:block">
+        <div className="flex flex-col gap-2 p-4 text-sm border-r border-indigo-100 top-12">
+          <h2 className="pl-3 mb-4 text-2xl font-semibold">Settings</h2>
+          <a
+            href="#"
+            className="flex items-center px-3 py-2.5 font-bold bg-white  text-indigo-900 border rounded-full"
+          >
+            Pubic Profile
+          </a>
+          <a
+            href="#"
+            className="flex items-center px-3 py-2.5 font-semibold  hover:text-indigo-900 hover:border hover:rounded-full"
+          >
+            Account Settings
+          </a>
+          <a
+            href="#"
+            className="flex items-center px-3 py-2.5 font-semibold hover:text-indigo-900 hover:border hover:rounded-full  "
+          >
+            Notifications
+          </a>
+          <a
+            href="#"
+            className="flex items-center px-3 py-2.5 font-semibold hover:text-indigo-900 hover:border hover:rounded-full  "
+          >
+            PRO Account
+          </a>
+        </div>
+      </aside>
       <main className="w-full min-h-screen py-1 md:w-2/3 lg:w-3/4">
         <div className="p-2 md:p-4">
           <div className="w-full px-6 pb-8 mt-8 sm:max-w-xl sm:rounded-lg">

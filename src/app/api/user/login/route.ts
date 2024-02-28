@@ -15,21 +15,6 @@ type Data =
       };
     };
 
-// export default function handler(
-//   req: NextApiRequest,
-//   res: NextApiResponse<Data>
-// ) {
-//   switch (req.method) {
-//     case "POST":
-//       return loginUser(req, res);
-//
-//     default:
-//       res.status(400).json({
-//         message: "Bad request",
-//       });
-//   }
-// }
-
 export async function loginUser(
   req: NextApiRequest,
   res: NextApiResponse<Data>

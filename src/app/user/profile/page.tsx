@@ -13,11 +13,13 @@ import { NextPage } from "next";
 
 const Profile: NextPage = () => {
   const { user } = useContext(AuthContext);
-  const id = user?._id as string;
+  const id = user?.id as string;
+  console.log(id)
 
   const { userData, isLoading } = useProfile(id, {
     refreshInterval: 15 * 1000,
   });
+  console.log(userData)
   return (
     <>
       <ProfileForm

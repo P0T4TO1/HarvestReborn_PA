@@ -5,27 +5,9 @@ import { NextResponse } from "next/server";
 
 type Data = { message: string } | any;
 
-// export default function handler(
-//   req: NextApiRequest,
-//   res: NextApiResponse<Data>
-// ) {
-//   switch (req.method) {
-//     case "GET":
-//       return getProfile(req, res);
-//
-//     case "PUT":
-//       return putProfile(req, res);
-//
-//     default:
-//       return res.status(400).json({
-//         message: "Bad request",
-//       });
-//   }
-// }
-
-const getProfile = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+export async function getProfile (req: NextApiRequest, res: NextApiResponse<Data>) {
   const { searchParams } = new URL(req.url as string);
-  const _id = searchParams.get("_id");
+  const id = searchParams.get("id");
 
   const session: any = await getSession({ req });
   if (!session) {
@@ -35,7 +17,7 @@ const getProfile = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     );
   }
 
-  if (!_id)
+  if (!id)
     return NextResponse.json(
       { message: "Falta Id del usuario" },
       { status: 400 }
@@ -43,7 +25,7 @@ const getProfile = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
   const profile = await prisma.user.findUnique({
     where: {
-      id: _id,
+      id: id,
     },
   });
 
@@ -52,13 +34,12 @@ const getProfile = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       { message: "No existe usuario por ese id" },
       { status: 400 }
     );
-
   return NextResponse.json(profile, { status: 200 });
 };
 
 const putProfile = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const {
-    _id = "",
+    id = "",
     owner_name = "",
     owner_surnames = "",
     business_name = "",
@@ -70,7 +51,7 @@ const putProfile = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     org_cluni = "",
     org_rfc = "",
   } = (await new Response(req.body).json()) as {
-    _id: string;
+    id: string;
     owner_name: string;
     owner_surnames: string;
     business_name: string;
@@ -92,7 +73,7 @@ const putProfile = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     );
   }
 
-  if (!_id)
+  if (!id)
     return NextResponse.json(
       { message: "Falta Id del usuario" },
       { status: 400 }
@@ -100,7 +81,7 @@ const putProfile = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
   const profile = await prisma.user.findUnique({
     where: {
-      id: _id,
+      id: id,
     },
   });
 
@@ -113,7 +94,7 @@ const putProfile = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   if (owner_name && owner_surnames && business_name && business_tel) {
     await prisma.user.update({
       where: {
-        id: _id,
+        id: id,
       },
       data: {
         user_email: email,
@@ -131,7 +112,7 @@ const putProfile = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     if (org_name && org_acro && org_cluni && org_rfc) {
       await prisma.user.update({
         where: {
-          id: _id,
+          id: id,
         },
         data: {
           user_email: email,
