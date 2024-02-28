@@ -1,6 +1,6 @@
 ### Proyecto Aula Equipo Zombie 6IV6
 
-# ALACENA
+# Harvest Reborn
 
 #### URL del proyecto:
 
@@ -63,7 +63,7 @@ en el cual ...
 7. Ejecutar el siguiente comando en la terminal/cmd para ejecutar el proyecto en modo desarrollo.
 
    ```bash
-   npm dev 
+   npm run dev
    ```
 
 Abre el [http://localhost:3000](http://localhost:3000) en tu navegador
