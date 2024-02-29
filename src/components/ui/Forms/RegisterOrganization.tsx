@@ -13,6 +13,7 @@ type Errors = {
   org_acro?: string;
   org_cluni?: string;
   org_rfc?: string;
+  org_tel?: string;
   org_email?: string;
   org_pass?: string;
 } | null;
@@ -28,6 +29,8 @@ export const RegisterFormOrganization: FC = () => {
 
   const { registerUserOrganization } = useContext(AuthContext);
 
+  const [visible, setVisible] = useState<boolean>(false);
+
   const clientAction = async (formData: FormData) => {
     if (isMutation) return null;
     setIsMutation(true);
@@ -38,6 +41,7 @@ export const RegisterFormOrganization: FC = () => {
         org_acro: formData.get("acronym") as string,
         org_cluni: formData.get("cluni") as string,
         org_rfc: formData.get("rfc") as string,
+        org_tel: formData.get("phone") as string,
         org_email: formData.get("email") as string,
         org_pass: formData.get("password") as string,
       };
@@ -60,6 +64,7 @@ export const RegisterFormOrganization: FC = () => {
         data.org_acro,
         data.org_cluni,
         data.org_rfc,
+        data.org_tel,
         data.org_email,
         data.org_pass
       );
@@ -83,8 +88,8 @@ export const RegisterFormOrganization: FC = () => {
   };
 
   return (
-    <section className="relative min-h-screen sm:flex sm:flex-row justify-center bg-transparent">
-      <div className="flex justify-center self-center z-10 w-1/2 shadow-xl">
+    <section className="relative min-h-screen sm:flex sm:flex-row justify-center bg-transparent pt-24">
+      <div className="flex justify-center self-center z-10 md:w-full lg:w-2/5 shadow-xl">
         <div className="p-12 bg-white mx-auto rounded-3xl w-full">
           <div className="mb-7">
             <h3 className="font-semibold text-2xl text-gray-800">
@@ -101,7 +106,7 @@ export const RegisterFormOrganization: FC = () => {
             </p>
           </div>
           <form action={clientAction} className="space-y-6">
-            <div className="grid grid-rows-3 grid-flow-col gap-6">
+            <div className="grid grid-rows-2 grid-flow-col gap-6">
               <div className="relative">
                 <input
                   className=" w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border  border-gray-200 rounded-lg focus:outline-none focus:border-green-700"
@@ -132,19 +137,6 @@ export const RegisterFormOrganization: FC = () => {
                 <input
                   className=" w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border  border-gray-200 rounded-lg focus:outline-none focus:border-green-700"
                   type="text"
-                  id="cluni"
-                  name="cluni"
-                  placeholder="CLUNI"
-                />
-                {errors?.org_cluni && (
-                  <p className="text-red-700 text-xs">{errors?.org_cluni}</p>
-                )}
-              </div>
-
-              <div className="relative">
-                <input
-                  className=" w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border  border-gray-200 rounded-lg focus:outline-none focus:border-green-700"
-                  type="text"
                   id="rfc"
                   name="rfc"
                   placeholder="RFC"
@@ -154,6 +146,34 @@ export const RegisterFormOrganization: FC = () => {
                 )}
               </div>
 
+              <div className="relative">
+                <input
+                  className=" w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border  border-gray-200 rounded-lg focus:outline-none focus:border-green-700"
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  placeholder="Teléfono de la OSC"
+                />
+                {errors?.org_tel && (
+                  <p className="text-red-700 text-xs">{errors?.org_tel}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="relative">
+              <input
+                className=" w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border  border-gray-200 rounded-lg focus:outline-none focus:border-green-700"
+                type="text"
+                id="cluni"
+                name="cluni"
+                placeholder="CLUNI"
+              />
+              {errors?.org_cluni && (
+                <p className="text-red-700 text-xs">{errors?.org_cluni}</p>
+              )}
+            </div>
+
+            <div className="grid grid-cols-2 grid-flow-row gap-6">
               <div className="relative">
                 <input
                   className=" w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border  border-gray-200 rounded-lg focus:outline-none focus:border-green-700"
@@ -170,19 +190,24 @@ export const RegisterFormOrganization: FC = () => {
               <div className="relative">
                 <input
                   placeholder="Contraseña"
-                  type="password"
+                  type={`${visible ? "text" : "password"}`}
                   id="password"
                   name="password"
                   className="text-sm px-4 py-3 rounded-lg w-full bg-gray-200 focus:bg-gray-100 border border-gray-200 focus:outline-none focus:border-green-700"
                 />
-                <div className="flex items-center absolute inset-y-0 right-0 mr-3  text-sm leading-5 text-green-700">
-                  <span className="material-symbols-outlined cursor-pointer">
-                    visibility
-                  </span>
-
-                  <span className="material-symbols-outlined cursor-pointer hidden">
-                    visibility_off
-                  </span>
+                <div
+                  onClick={() => setVisible(!visible)}
+                  className="flex items-center absolute inset-y-0 right-0 mr-3  text-sm leading-5 text-green-700"
+                >
+                  {visible ? (
+                    <span className="material-symbols-outlined">
+                      visibility_off
+                    </span>
+                  ) : (
+                    <span className="material-symbols-outlined">
+                      visibility
+                    </span>
+                  )}
                 </div>
                 {errors?.org_pass && (
                   <p className="text-red-700 text-xs">{errors?.org_pass}</p>
@@ -214,6 +239,7 @@ export const RegisterFormOrganization: FC = () => {
               <span className="h-px w-full bg-gray-400"></span>
             </div>
           </form>
+
           <div className="mt-7 text-center text-gray-500 text-xs">
             <p className="text-xs">
               Una vez registrado, aceptas nuestros{" "}

@@ -1,13 +1,11 @@
 "use client";
 
 import { FC, useContext, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { profileSchema } from "@/validations/profile.validation";
-import { IBusiness, IOrganization, IUser } from "@/interfaces";
+import { IUser } from "@/interfaces";
 import { AuthContext } from "@/context/auth";
 import { hrApi } from "@/api";
 import { NextResponse } from "next/server";
-import { log } from "console";
 
 type Errors = {
   user_email?: string;
@@ -24,32 +22,29 @@ type Errors = {
   org_rfc?: string;
 } | null;
 
-interface Props {
-  userDataBusiness: IBusiness;
-  userDataOrg: IOrganization;
-  userData: IUser;
-}
-
-export const ProfileForm: FC<Props> = ({
-  userDataBusiness,
-  userDataOrg,
-  userData,
-}) => {
+export const ProfileForm: FC = () => {
   const { user } = useContext(AuthContext);
 
   const [isEditing, setIsEditing] = useState(false);
   const [errors, setErrors] = useState<Errors>(null);
   const [isMutation, setIsMutation] = useState<boolean>(false);
 
-  const [userProfile, setUserProfile] = useState<
-    IUser | IOrganization | IBusiness
-  >(userData || userDataOrg || userDataBusiness);
+  const [profile, setProfile] = useState<IUser>({
+    id: "",
+    role_id: 0,
+    user_email: "",
+    user_password: "",
+  });
 
   useEffect(() => {
-    if (userData || userDataOrg || userDataBusiness) {
-      setUserProfile(userData || userDataOrg || userDataBusiness);
-    }
-  }, [userData, userDataOrg, userDataBusiness]);
+    const getUserProfile = async () => {
+      const res = await hrApi.get(`/user/profile?id=${user?.id}`);
+      if (res) {
+        return setProfile(res.data);
+      }
+    };
+    getUserProfile().then();
+  }, [user?.id, profile]);
 
   const onUpdateProfile = async (formData: FormData) => {
     if (isMutation) return null;
@@ -84,10 +79,7 @@ export const ProfileForm: FC<Props> = ({
       }
 
       const res = await hrApi
-        .put("/user/profile", {
-          ...userProfile,
-          data,
-        })
+        .put("/user/profile", { data })
         .then(() => {
           setIsEditing(false);
           return NextResponse.json(
@@ -101,6 +93,9 @@ export const ProfileForm: FC<Props> = ({
           setErrors(err);
           return null;
         });
+      if (res) {
+        return res;
+      }
     } catch (e) {
       console.error(e);
     } finally {
@@ -160,7 +155,7 @@ export const ProfileForm: FC<Props> = ({
             <button
               type="button"
               onClick={() => setIsEditing(!isEditing)}
-              className="mt-6 flex justify-center bg-green-800 hover:bg-green-700 text-gray-100 p-3  rounded-lg tracking-wide font-semibold  cursor-pointer transition ease-in duration-500"
+              className="mt-6 flex justify-center bg-green-800 hover:bg-green-700 text-gray-100 p-3 text-xs rounded-lg tracking-wide font-semibold  cursor-pointer transition ease-in duration-500"
             >
               {isEditing ? "Cancelar" : "Editar"}
             </button>
@@ -170,101 +165,281 @@ export const ProfileForm: FC<Props> = ({
                 action={onUpdateProfile}
                 className="items-center mt-8 sm:mt-14 text-[#202142]"
               >
-                <div className="flex flex-col items-center w-full mb-2 space-x-0 space-y-2 sm:flex-row sm:space-x-4 sm:space-y-0 sm:mb-6">
-                  <div className="w-full">
-                    <div className="relative">
-                      <input
-                        className=" w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-green-700"
-                        type="text"
-                        id="name"
-                        name="name"
-                        placeholder="Nombres(s)"
-                        disabled={!isEditing}
-                        value={!isEditing ? userProfile?.user_email : undefined}
-                        defaultValue={!isEditing ? userProfile?.user_email : undefined}
-                      />
-                      {errors?.owner_name && (
-                        <p className="text-red-700 text-xs">
-                          {errors?.owner_name}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="w-full">
-                    <label
-                      htmlFor="last_name"
-                      className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
-                    >
-                      Your last name
-                    </label>
-                    <input
-                      type="text"
-                      id="last_name"
-                      className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                      placeholder="Your last name"
-                      required
-                      disabled={!isEditing}
-                    />
-                  </div>
-                </div>
-
                 <div className="mb-2 sm:mb-6">
                   <label
                     htmlFor="email"
-                    className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
+                    className="block mb-2 text-sm font-medium text-indigo-900"
                   >
-                    Your email
+                    Email
                   </label>
                   <input
                     type="email"
                     id="email"
                     className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                    placeholder="your.email@mail.com"
-                    required
+                    placeholder="Correo electrónico"
+                    value={profile?.user_email}
+                    defaultValue={profile?.user_email}
                     disabled={!isEditing}
                   />
                 </div>
 
-                <div className="mb-2 sm:mb-6">
-                  <label
-                    htmlFor="profession"
-                    className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
-                  >
-                    Profession
-                  </label>
-                  <input
-                    type="text"
-                    id="profession"
-                    className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                    placeholder="your profession"
-                    required
-                    disabled={!isEditing}
-                  />
-                </div>
+                {user?.role_id === 2 && (
+                  <>
+                    <div className="flex flex-col items-center w-full mb-2 space-x-0 space-y-2 sm:flex-row sm:space-x-4 sm:space-y-0 sm:mb-6">
+                      <div className="w-full">
+                        <label
+                          htmlFor="name"
+                          className="block mb-2 text-sm font-medium text-indigo-900"
+                        >
+                          Nombres
+                        </label>
+                        <input
+                          type="text"
+                          id="name"
+                          className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                          placeholder="Nombre(s)"
+                          value={profile?.business?.businessOwnerName}
+                          defaultValue={profile?.business?.businessOwnerName}
+                          disabled={!isEditing}
+                        />
+                      </div>
 
-                <div className="mb-6">
-                  <label
-                    htmlFor="message"
-                    className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
-                  >
-                    Bio
-                  </label>
-                  <textarea
-                    id="message"
-                    rows={4}
-                    className="block p-2.5 w-full text-sm text-indigo-900 bg-indigo-50 rounded-lg border border-indigo-300 focus:ring-indigo-500 focus:border-indigo-500 "
-                    placeholder="Write your bio here..."
-                    disabled={!isEditing}
-                  ></textarea>
-                </div>
+                      <div className="w-full">
+                        <label
+                          htmlFor="last_name"
+                          className="block mb-2 text-sm font-medium text-indigo-900"
+                        >
+                          Apellidos
+                        </label>
+                        <input
+                          type="text"
+                          id="last_name"
+                          className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                          placeholder="Apellidos"
+                          value={profile?.business?.businessOwnerSurname}
+                          defaultValue={profile?.business?.businessOwnerSurname}
+                          disabled={!isEditing}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-center w-full mb-2 space-x-0 space-y-2 sm:flex-row sm:space-x-4 sm:space-y-0 sm:mb-6">
+                      <div className="w-full">
+                        <label
+                          htmlFor="business_name"
+                          className="block mb-2 text-sm font-medium text-indigo-900"
+                        >
+                          Nombre del Negocio
+                        </label>
+                        <input
+                          type="text"
+                          id="business_name"
+                          className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                          placeholder="Nombre del Negocio"
+                          value={profile?.business?.business_name}
+                          defaultValue={profile?.business?.business_name}
+                          disabled={!isEditing}
+                        />
+                      </div>
+
+                      <div className="w-full">
+                        <label
+                          htmlFor="tel"
+                          className="block mb-2 text-sm font-medium text-indigo-900"
+                        >
+                          Teléfono del Negocio
+                        </label>
+                        <input
+                          type="text"
+                          id="tel"
+                          className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                          placeholder="Teléfono del Negocio"
+                          value={profile?.business?.business_tel}
+                          defaultValue={profile?.business?.business_tel}
+                          disabled={!isEditing}
+                        />
+                      </div>
+                    </div>
+                    <div className="mb-2 sm:mb-6">
+                      <label
+                        htmlFor="direction"
+                        className="block mb-2 text-sm font-medium text-indigo-900"
+                      >
+                        Dirección del Negocio
+                      </label>
+                      <input
+                        type="text"
+                        id="direction"
+                        className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                        placeholder="Dirección del Negocio"
+                        value={profile?.business?.business_direction}
+                        defaultValue={profile?.business?.business_direction}
+                        disabled={!isEditing}
+                      />
+                    </div>
+
+                    <div className="mb-6">
+                      <label
+                        htmlFor="message"
+                        className="block mb-2 text-sm font-medium text-indigo-900"
+                      >
+                        Descripción
+                      </label>
+                      <textarea
+                        id="message"
+                        rows={4}
+                        className="block p-2.5 w-full text-sm text-indigo-900 bg-indigo-50 rounded-lg border border-indigo-300 focus:ring-indigo-500 focus:border-indigo-500 "
+                        placeholder="Escribe una descripción..."
+                        value={profile?.business?.business_description}
+                        defaultValue={profile?.business?.business_description}
+                        disabled={!isEditing}
+                      ></textarea>
+                    </div>
+                  </>
+                )}
+
+                {user?.role_id === 3 && (
+                  <>
+                    <div className="w-full">
+                      <label
+                        htmlFor="cluni"
+                        className="block mb-2 text-sm font-medium text-indigo-900"
+                      >
+                        CLUNI
+                      </label>
+                      <input
+                        type="text"
+                        id="cluni"
+                        className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                        placeholder="CLUNI"
+                        value={profile?.organization?.organization_cluni}
+                        defaultValue={profile?.organization?.organization_cluni}
+                        disabled={!isEditing}
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 grid-flow-row gap-6 mt-6">
+                      <div className="w-full">
+                        <label
+                          htmlFor="name"
+                          className="block mb-2 text-sm font-medium text-indigo-900"
+                        >
+                          Nombre de la Organización
+                        </label>
+                        <input
+                          type="text"
+                          id="name"
+                          className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                          placeholder="Nombre de la Organización"
+                          value={profile?.organization?.organization_name}
+                          defaultValue={
+                            profile?.organization?.organization_name
+                          }
+                          disabled={!isEditing}
+                        />
+                      </div>
+                      <div className="w-full">
+                        <label
+                          htmlFor="acro"
+                          className="block mb-2 text-sm font-medium text-indigo-900"
+                        >
+                          Siglas de la Organización
+                        </label>
+                        <input
+                          type="text"
+                          id="acro"
+                          className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                          placeholder="Siglas de la Organización"
+                          value={profile?.organization?.organization_acronym}
+                          defaultValue={
+                            profile?.organization?.organization_acronym
+                          }
+                          disabled={!isEditing}
+                        />
+                      </div>
+                      <div className="mb-2 sm:mb-6">
+                        <label
+                          htmlFor="name"
+                          className="block mb-2 text-sm font-medium text-indigo-900"
+                        >
+                          Nombre de la Organización
+                        </label>
+                        <input
+                          type="text"
+                          id="rfc"
+                          className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                          placeholder="RFC"
+                          value={profile?.organization?.organization_rfc}
+                          defaultValue={profile?.organization?.organization_rfc}
+                          disabled={!isEditing}
+                        />
+                      </div>
+                      <div className="w-full">
+                        <label
+                          htmlFor="tel"
+                          className="block mb-2 text-sm font-medium text-indigo-900"
+                        >
+                          Siglas de la Organización
+                        </label>
+                        <input
+                          type="text"
+                          id="tel"
+                          className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                          placeholder="Siglas de la Organización"
+                          value={profile?.organization?.organization_tel}
+                          defaultValue={profile?.organization?.organization_tel}
+                          disabled={!isEditing}
+                        />
+                      </div>
+                    </div>
+                    <div className="mb-2 sm:mb-6">
+                      <label
+                        htmlFor="direction"
+                        className="block mb-2 text-sm font-medium text-indigo-900"
+                      >
+                        Dirección de la Organización
+                      </label>
+                      <input
+                        type="text"
+                        id="direction"
+                        className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                        placeholder="Dirección del Negocio"
+                        value={profile?.organization?.organization_direction}
+                        defaultValue={
+                          profile?.organization?.organization_direction
+                        }
+                        disabled={!isEditing}
+                      />
+                    </div>
+
+                    <div className="mb-6">
+                      <label
+                        htmlFor="message"
+                        className="block mb-2 text-sm font-medium text-indigo-900"
+                      >
+                        Descripción
+                      </label>
+                      <textarea
+                        id="message"
+                        rows={4}
+                        className="block p-2.5 w-full text-sm text-indigo-900 bg-indigo-50 rounded-lg border border-indigo-300 focus:ring-indigo-500 focus:border-indigo-500 "
+                        placeholder="Escribe una descripción..."
+                        value={profile?.organization?.organization_description}
+                        defaultValue={
+                          profile?.organization?.organization_description
+                        }
+                        disabled={!isEditing}
+                      ></textarea>
+                    </div>
+                  </>
+                )}
 
                 <div className="flex justify-end">
                   <button
                     type="submit"
-                    className="text-white bg-indigo-700  hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800"
+                    disabled={isMutation}
+                    className="flex justify-center bg-green-800 hover:bg-green-700 text-gray-100 p-3 text-sm rounded-lg tracking-wide font-semibold  cursor-pointer transition ease-in duration-500"
                   >
-                    Save
+                    Guardar
                   </button>
                 </div>
               </form>

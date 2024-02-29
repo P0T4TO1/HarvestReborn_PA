@@ -1,11 +1,15 @@
 "use client";
 
 import NextLink from "next/link";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Dropdown } from "./Dropdown";
+import { useSession } from "next-auth/react";
+import { AuthContext } from "@/context/auth";
 
 export const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { data: session } = useSession();
+  const { user } = useContext(AuthContext);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -19,7 +23,7 @@ export const Navbar = () => {
             <button
               type="button"
               onClick={toggleMobileMenu}
-              className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-200 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+              className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-200 hover:bg-green-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
             >
               <span className="absolute -inset-0.5"></span>
               <span className="sr-only">Abrir/cerrar menú</span>
@@ -42,24 +46,69 @@ export const Navbar = () => {
             </div>
             <div className="hidden sm:ml-8 sm:block">
               <div className="flex space-x-4">
-                <NextLink
-                  href={"/#"}
-                  className="text-gray-200 hover:text-gray-300 rounded-md px-3 py-2 text-base font-semibold"
-                >
-                  Inicio
-                </NextLink>
-                <NextLink
-                  href={"/#servicios"}
-                  className="text-gray-200 hover:text-gray-300 rounded-md px-3 py-2 text-base font-semibold"
-                >
-                  Cómo funciona
-                </NextLink>
-                <NextLink
-                  href={"/#aboutUs"}
-                  className="text-gray-200 hover:text-gray-300 px-3 py-2 text-base font-semibold"
-                >
-                  Acerca de nosotros
-                </NextLink>
+                {session ? (
+                  <>
+                    <NextLink
+                      href={"/home"}
+                      className="text-gray-200 hover:text-gray-300 rounded-md px-3 py-2 text-base font-semibold"
+                    >
+                      Inicio
+                    </NextLink>
+
+                    {user?.role_id === 2 ? (
+                      <>
+                        <NextLink
+                          href={"/inventory"}
+                          className="text-gray-200 hover:text-gray-300 rounded-md px-3 py-2 text-base font-semibold"
+                        >
+                          Inventario
+                        </NextLink>
+                        <NextLink
+                          href={"/organizations"}
+                          className="text-gray-200 hover:text-gray-300 rounded-md px-3 py-2 text-base font-semibold"
+                        >
+                          Organizaciones
+                        </NextLink>
+                      </>
+                    ) : (
+                      <>
+                        <NextLink
+                          href={"/business"}
+                          className="text-gray-200 hover:text-gray-300 rounded-md px-3 py-2 text-base font-semibold"
+                        >
+                          Negocios
+                        </NextLink>
+                        <NextLink
+                          href={"/my_requests"}
+                          className="text-gray-200 hover:text-gray-300 rounded-md px-3 py-2 text-base font-semibold"
+                        >
+                          Solicitudes
+                        </NextLink>
+                      </>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <NextLink
+                      href={"/#"}
+                      className="text-gray-200 hover:text-gray-300 rounded-md px-3 py-2 text-base font-semibold"
+                    >
+                      Inicio
+                    </NextLink>
+                    <NextLink
+                      href={"/#servicios"}
+                      className="text-gray-200 hover:text-gray-300 rounded-md px-3 py-2 text-base font-semibold"
+                    >
+                      Cómo funciona
+                    </NextLink>
+                    <NextLink
+                      href={"/#aboutUs"}
+                      className="text-gray-200 hover:text-gray-300 px-3 py-2 text-base font-semibold"
+                    >
+                      Acerca de nosotros
+                    </NextLink>
+                  </>
+                )}
               </div>
             </div>
           </div>

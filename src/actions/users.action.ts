@@ -57,6 +57,7 @@ export const getUserByEmail = async (user_email: string, role_id: number) => {
 
 export const editUser = async (data: IUser | IOrganization | IBusiness) => {
   try {
+    // @ts-ignore
     if (data.role_id === 1) {
       const user = await prisma.user.update({
         where: {
@@ -72,6 +73,7 @@ export const editUser = async (data: IUser | IOrganization | IBusiness) => {
         data: user,
         message: "El usuario se modifico correctamente",
       };
+      // @ts-ignore
     } else if (data.role_id === 2) {
       if ("org_name" in data) {
         const user = await prisma.user.update({

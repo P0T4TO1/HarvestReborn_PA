@@ -1,6 +1,6 @@
+
 import useSWR, { SWRConfiguration } from "swr";
 import { IUser, IBusiness, IOrganization } from "@/interfaces";
-import { hrApi } from "@/api";
 
 export const useUser = (url: string, config: SWRConfiguration = {}) => {
   const { data, error } = useSWR<IUser[]>(`/api${url}`, config);
@@ -12,15 +12,10 @@ export const useUser = (url: string, config: SWRConfiguration = {}) => {
   };
 };
 
-export const useProfile = async (id: string, config: SWRConfiguration = {}) => {
-  console.log(id, "id")
-  const { data } = await hrApi.get("/user/profile", {
-
-  });
-  console.log(data)
-
+export const useProfile = (id: string, config: SWRConfiguration = {}) => {
+  const { data } = useSWR<IUser | IBusiness | IOrganization>(`/api/user/profile?id=${id}`, config);
+  console.log(data, "data from useProfile");
   return {
     userData: data || {},
-  
   };
 };

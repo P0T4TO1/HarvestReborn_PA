@@ -14,6 +14,7 @@ datasource db {
   relationMode = "prisma"
 }
 
+// Model user
 model User {
   id            String @id @default(uuid())
   user_email    String @unique
@@ -22,12 +23,19 @@ model User {
   role_id Int
   role    Role @relation(fields: [role_id], references: [role_id])
 
+  userStatus_id Int
+  userStatus    userStatus @relation(fields: [userStatus_id], references: [userStatus_id])
+
   business     Business?
   organization Organization?
+  history      History?
+  supRequests  supRequest[]
 
   @@index([role_id])
+  @@index([userStatus_id])
 }
 
+// Model role
 model Role {
   role_id   Int    @id @default(autoincrement())
   role_name String @unique
@@ -35,57 +43,67 @@ model Role {
   user User[]
 }
 
+// Model Business
 model Business {
-  business_id          Int    @id @default(autoincrement())
+  business_id          Int     @id @default(autoincrement())
   businessOwnerName    String
   businessOwnerSurname String
-  business_name        String @unique
+  business_name        String  @unique
   business_tel         String
+  business_direction   String?
+  business_description String?
 
   donations Donation[]
 
-  user_id      String     @unique
-  user         User       @relation(fields: [user_id], references: [id])
+  user_id String? @unique
+  user    User?   @relation(fields: [user_id], references: [id])
+
   inventory_id Int?       @unique
   inventory    Inventory? @relation(fields: [inventory_id], references: [inventory_id])
 }
 
+// Model Organization
 model Organization {
-  organization_id      Int    @id @default(autoincrement())
-  organization_name    String @unique
-  organization_cluni   String @unique
-  organization_acronym String
-  organization_rfc     String @unique
+  organization_id          Int     @id @default(autoincrement())
+  organization_name        String  @unique
+  organization_cluni       String  @unique
+  organization_acronym     String
+  organization_rfc         String  @unique
+  organization_tel         String
+  organization_direction   String?
+  organization_description String?
 
-  donations Donation[]
+  donations        Donation[]
+  donationRequests donationRequest[]
 
-  user_id String    @unique
-  user    User      @relation(fields: [user_id], references: [id])
-  request Request[]
+  user_id String? @unique
+  user    User?   @relation(fields: [user_id], references: [id])
 }
 
+// Model Products
 model Products {
   product_id         Int      @id @default(autoincrement())
   product_name       String   @unique
-  product_amount     Int
-  product_arrive     DateTime
-  product_expiration DateTime
+  product_amount     Int      @default(0)
+  product_arrive     DateTime @default(now())
+  product_expiration DateTime @default(now())
   product_isSeason   Boolean  @default(false)
 
   inventory             Inventory? @relation(fields: [inventoryInventory_id], references: [inventory_id])
   inventoryInventory_id Int?
 
-  request    Request? @relation(fields: [request_id], references: [request_id])
-  request_id Int?
+  donationRequest    donationRequest? @relation(fields: [donationRequest_id], references: [drequest_id])
+  donationRequest_id Int?
 
-  donation    Donation @relation(fields: [donation_id], references: [donation_id])
-  donation_id Int
+  donation    Donation? @relation(fields: [donation_id], references: [donation_id])
+  donation_id Int?
 
   @@index([inventoryInventory_id])
-  @@index([request_id])
+  @@index([donationRequest_id])
   @@index([donation_id])
 }
 
+// Model Inventory
 model Inventory {
   inventory_id           Int        @id @default(autoincrement())
   inventory_registerDate DateTime
@@ -93,10 +111,13 @@ model Inventory {
   Business               Business?
 }
 
-model Request {
-  request_id   Int        @id @default(autoincrement())
-  request_date DateTime
-  prodcuts     Products[]
+// Model donationRequest
+model donationRequest {
+  drequest_id   Int      @id @default(autoincrement())
+  drequest_date DateTime
+
+  prodcuts Products[]
+  donation Donation[]
 
   organization_id Int
   organization    Organization @relation(fields: [organization_id], references: [organization_id])
@@ -104,6 +125,7 @@ model Request {
   @@index([organization_id])
 }
 
+// Model Donation
 model Donation {
   donation_id            Int        @id @default(autoincrement())
   donation_description   String
@@ -119,6 +141,74 @@ model Donation {
   organization_id Int
   organization    Organization @relation(fields: [organization_id], references: [organization_id])
 
+  history_id Int
+  history    History @relation(fields: [history_id], references: [history_id])
+
+  donationRequest_id Int
+  donationRequest    donationRequest @relation(fields: [donationRequest_id], references: [drequest_id])
+
+  donationStatus_id Int
+  donationStatus    donationStatus @relation(fields: [donationStatus_id], references: [donationStatus_id])
+
   @@index([business_id])
   @@index([organization_id])
+  @@index([history_id])
+  @@index([donationStatus_id])
+  @@index([donationRequest_id])
+}
+
+// Model History
+model History {
+  history_id           Int      @id @default(autoincrement())
+  history_creationDate DateTime
+  history_description  String
+  history_type         String
+
+  user_id String @unique
+  user    User   @relation(fields: [user_id], references: [id])
+
+  donations Donation[]
+}
+
+// Model donationStatus
+model donationStatus {
+  donationStatus_id   Int     @id @default(autoincrement())
+  donationStatus_name String  @unique
+  donationStatus_desc String?
+
+  donations Donation[]
+}
+
+// Model supRequestStatus
+model supRequestStatus {
+  supRequestStatus_id   Int     @id @default(autoincrement())
+  supRequestStatus_name String  @unique
+  supRequestStatus_desc String?
+
+  supRequests supRequest[]
+}
+
+// Model userStatus
+model userStatus {
+  userStatus_id   Int     @id @default(autoincrement())
+  userStatus_name String  @unique
+  userStatus_desc String?
+
+  users User[]
+}
+
+// Model supRequest
+model supRequest {
+  supRequest_id           Int      @id @default(autoincrement())
+  supRequest_name         String   @unique
+  supRequest_desc         String?
+  supRequest_creationDate DateTime
+
+  user_id String @unique
+  user    User   @relation(fields: [user_id], references: [id])
+
+  supRequestStatus_id Int
+  supRequestStatus    supRequestStatus @relation(fields: [supRequestStatus_id], references: [supRequestStatus_id])
+
+  @@index([supRequestStatus_id])
 }

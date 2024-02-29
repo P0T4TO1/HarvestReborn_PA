@@ -33,6 +33,7 @@ export const authRegisterBusinessAction = async ({
     }
 
     const user = await prisma.user.create({
+      // @ts-ignore
       data: {
         user_email: business_email,
         user_password: await hash(business_pass, 10),
@@ -107,6 +108,7 @@ export const authRegisterOrganizationAction = async ({
         user_password: await hash(org_pass, 10),
         role_id: 3,
         organization: {
+          // @ts-ignore
           create: {
             organization_name: org_name,
             organization_cluni: org_cluni,

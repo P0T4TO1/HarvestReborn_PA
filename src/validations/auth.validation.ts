@@ -53,6 +53,10 @@ export const registerOrganizationSchema = z.object({
     .min(13, { message: "Este dato debe tener mínimo 13 caracteres" })
     .max(13, { message: "Este dato debe tener máximo 13 caracteres" }),
   // .refine((value) => /^[a-zA-Z]{3,4}(\d{6})((\D|\d){2,3})?$/.test(value)),
+  org_tel: z
+    .string({ required_error: "El teléfono es obligatorio" })
+    .min(10, { message: "El numero telefónico tener mínimo 10 números" })
+    .max(10, { message: "El numero telefónico debe tener máximo 10 números" }),
   org_email: z
     .string({ required_error: "El correo es obligatorio" })
     .email({ message: "Correo invalido" })

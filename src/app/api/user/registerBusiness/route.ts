@@ -61,6 +61,7 @@ export async function registerUserBusiness(
         user_email: business_email,
         user_password: await hash(business_pass, 10),
         role_id: 2,
+        userStatus_id: 1,
         business: {
           create: {
             businessOwnerName: owner_name,

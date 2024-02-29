@@ -2,8 +2,10 @@
 
 import { FC } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export const DescriptionComponent: FC = () => {
+  const { data: session } = useSession();
   const router = useRouter();
 
   const navigateTo = (url: string) => {
@@ -28,13 +30,24 @@ export const DescriptionComponent: FC = () => {
             verduras en la Ciudad de México
           </p>
           <div className="flex mt-6 sm:mt-8">
-            <button
-              onClick={() => navigateTo("/auth/login")}
-              type="button"
-              className="py-2 sm:py-3 px-4 sm:px-5 rounded-lg bg-transparent border-2 text-green-700 border-green-700 font-semibold hover:text-gray-900 text-sm sm:text-md transition ease-in duration-[400ms]"
-            >
-              Únete ahora
-            </button>
+            {session ? (
+              <button
+                onClick={() => navigateTo("/user/dashboard")}
+                type="button"
+                className="py-2 sm:py-3 px-4 sm:px-5 rounded-lg bg-transparent border-2 text-green-700 border-green-700 font-semibold hover:text-gray-900 text-sm sm:text-md transition ease-in duration-[400ms]"
+              >
+                Dashboard
+              </button>
+            ) : (
+              <button
+                onClick={() => navigateTo("/auth/login")}
+                type="button"
+                className="py-2 sm:py-3 px-4 sm:px-5 rounded-lg bg-transparent border-2 text-green-700 border-green-700 font-semibold hover:text-gray-900 text-sm sm:text-md transition ease-in duration-[400ms]"
+              >
+                Únete ahora
+              </button>
+            )}
+
             <button
               onClick={() => navigateTo("/#servicios")}
               type="button"

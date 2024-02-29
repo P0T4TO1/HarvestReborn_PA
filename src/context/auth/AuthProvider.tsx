@@ -109,6 +109,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     org_acro: string,
     org_cluni: string,
     org_rfc: string,
+    org_tel: string,
     org_email: string,
     org_pass: string
   ): Promise<{ hasError: boolean; message?: string }> => {
@@ -118,6 +119,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         org_acro,
         org_cluni,
         org_rfc,
+        org_tel,
         org_email,
         org_pass,
       });
@@ -152,7 +154,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     Cookies.remove("country");
     Cookies.remove("phone");
 
-    signOut();
+    signOut().then();
     // router.reload();
     // Cookies.remove('token');
   };

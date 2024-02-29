@@ -1,6 +1,36 @@
 export interface IUser {
-    id: string;
+  id: string;
+  role_id: number;
+  user_email: string;
+  user_password: string;
+
+  business?: {
+    id?: string;
+
+    user_id?: string;
     user_email: string;
     user_password: string;
-    role_id: number;
+
+    businessOwnerName: string;
+    businessOwnerSurname: string;
+    business_name: string;
+    business_tel: string;
+    business_direction?: string;
+    business_description?: string;
+  };
+  organization?: {
+    id?: string;
+
+    user_id?: string;
+    user_email: string;
+    user_password: string;
+
+    organization_name: string;
+    organization_cluni: string;
+    organization_acronym: string;
+    organization_rfc: string;
+    organization_tel: string;
+    organization_direction?: string;
+    organization_description?: string;
+  };
 }

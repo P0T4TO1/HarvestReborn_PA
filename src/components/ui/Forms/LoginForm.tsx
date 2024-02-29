@@ -26,6 +26,8 @@ export const LoginForm: FC = () => {
   const [errors, setErrors] = useState<Errors>(null);
   const [isMutation, setIsMutation] = useState<boolean>(false);
 
+  const [visible, setVisible] = useState<boolean>(false);
+
   const clientAction = async (formData: FormData) => {
     if (isMutation) return null;
     setIsMutation(true);
@@ -72,7 +74,7 @@ export const LoginForm: FC = () => {
         });
       }
       if (res && res.ok && res.status === 200) {
-        navigateTo("/");
+        navigateTo("/home");
       }
     } catch (e) {
       console.info("[ERROR_CLIENT_ACTION]", e);
@@ -118,20 +120,25 @@ export const LoginForm: FC = () => {
               <div className="relative">
                 <input
                   placeholder="Contraseña"
-                  type="password"
+                  type={`${visible ? "text" : "password"}`}
                   id="password"
                   name="password"
                   className="text-sm px-4 py-3 rounded-lg w-full bg-gray-200 focus:bg-gray-100 border border-gray-200 focus:outline-none focus:border-green-700"
                 />
-                <div className="flex items-center absolute inset-y-0 right-0 mr-3  text-sm leading-5 text-green-700">
-                  <span className="material-symbols-outlined cursor-pointer">
-                    visibility
-                  </span>
-
-                  <span className="material-symbols-outlined cursor-pointer hidden">
-                    visibility_off
-                  </span>
-                </div>
+                <button
+                  onClick={() => setVisible(!visible)}
+                  className="flex items-center absolute inset-y-0 right-0 mr-3  text-sm leading-5 text-green-700"
+                >
+                  {visible ? (
+                    <span className="material-symbols-outlined">
+                      visibility_off
+                    </span>
+                  ) : (
+                    <span className="material-symbols-outlined">
+                      visibility
+                    </span>
+                  )}
+                </button>
                 {errors?.user_pass && (
                   <p className="text-red-700 text-xs">{errors?.user_pass}</p>
                 )}

@@ -16,6 +16,7 @@ type Data =
         org_acro: string;
         org_cluni: string;
         org_rfc: string;
+        org_tel: string;
         org_email: string;
         org_pass: string;
       };
@@ -30,6 +31,7 @@ export async function registerUserOrganization(
     org_acro = "",
     org_cluni = "",
     org_rfc = "",
+    org_tel = "",
     org_email = "",
     org_pass = "",
   } = (await new Response(req.body).json()) as {
@@ -37,6 +39,7 @@ export async function registerUserOrganization(
     org_acro: string;
     org_cluni: string;
     org_rfc: string;
+    org_tel: string;
     org_email: string;
     org_pass: string;
   };
@@ -61,12 +64,14 @@ export async function registerUserOrganization(
         user_email: org_email,
         user_password: await hash(org_pass, 10),
         role_id: 3,
+        userStatus_id: 1,
         organization: {
           create: {
             organization_name: org_name,
             organization_cluni: org_cluni,
             organization_acronym: org_acro,
             organization_rfc: org_rfc,
+            organization_tel: org_tel,
           },
         },
       },

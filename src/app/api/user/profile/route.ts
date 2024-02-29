@@ -2,20 +2,24 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { IUser } from "@/interfaces";
 
 type Data = { message: string } | any;
 
-export async function getProfile (req: NextApiRequest, res: NextApiResponse<Data>) {
+export async function getProfile(
+  req: NextApiRequest,
+  res: NextApiResponse<Data>
+) {
   const { searchParams } = new URL(req.url as string);
   const id = searchParams.get("id");
 
-  const session: any = await getSession({ req });
-  if (!session) {
-    return NextResponse.json(
-      { message: "Debe de estar autenticado para hacer esto" },
-      { status: 401 }
-    );
-  }
+  // const session: any = await getSession({ req });
+  // if (!session) {
+  //   return NextResponse.json(
+  //     { message: "Debe de estar autenticado para hacer esto" },
+  //     { status: 401 }
+  //   );
+  // }
 
   if (!id)
     return NextResponse.json(
@@ -28,14 +32,30 @@ export async function getProfile (req: NextApiRequest, res: NextApiResponse<Data
       id: id,
     },
   });
-
   if (!profile)
     return NextResponse.json(
       { message: "No existe usuario por ese id" },
       { status: 400 }
     );
-  return NextResponse.json(profile, { status: 200 });
-};
+
+  if (profile?.role_id === 2) {
+    const business = await prisma.business.findUnique({
+      where: {
+        user_id: profile.id,
+      },
+    });
+    return NextResponse.json({ ...profile, business }, { status: 200 });
+  } else if (profile?.role_id === 3) {
+    const organization = await prisma.organization.findUnique({
+      where: {
+        user_id: profile.id,
+      },
+    });
+    return NextResponse.json({ ...profile, organization }, { status: 200 });
+  }
+
+  return NextResponse.json({ ...profile }, { status: 200 });
+}
 
 const putProfile = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const {

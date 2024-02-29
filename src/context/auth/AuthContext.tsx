@@ -21,6 +21,7 @@ interface ContextProps {
     org_acro: string,
     org_cluni: string,
     org_rfc: string,
+    org_tel: string,
     org_email: string,
     org_pass: string
   ) => Promise<{ hasError: boolean; message?: string }>;

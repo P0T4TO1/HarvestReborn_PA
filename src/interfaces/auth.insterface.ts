@@ -13,6 +13,7 @@ export interface IRegisterOrganization {
   org_acro: string;
   org_cluni: string;
   org_rfc: string;
+  org_tel: string;
   org_email: string;
   org_pass: string;
   org_path: string;

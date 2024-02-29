@@ -3,7 +3,7 @@
 import { FC, useState, useEffect, useRef, useContext } from "react";
 import { AuthContext } from "@/context/auth";
 import { useRouter } from "next/navigation";
-import { useSession, signOut, getSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { SUCCESS_TOAST, showToast } from "@/components/toast";
 
 export const Dropdown: FC = () => {
@@ -11,7 +11,6 @@ export const Dropdown: FC = () => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
-  console.log(session);
 
   const { user } = useContext(AuthContext);
 
@@ -26,7 +25,7 @@ export const Dropdown: FC = () => {
 
   const handleItemClick = () => {
     if (window.innerWidth <= 640) {
-      setOpen(false);
+      setOpen(!open);
     }
   };
 
@@ -50,7 +49,7 @@ export const Dropdown: FC = () => {
         </button>
 
         <div
-          className={`bg-white text-base z-50 list-none divide-y divide-gray-100 rounded shadow my-4 min-w-40 max-w-40 overflow-hidden break-words ${
+          className={`bg-white text-base z-50 list-none divide-y divide-gray-100 rounded shadow my-4 min-w-40 max-w-40 overflow-hidden ${
             open ? "" : "hidden"
           }`}
           style={{
@@ -64,16 +63,9 @@ export const Dropdown: FC = () => {
             {session ? (
               <>
                 <div>
-                  <div
-                    className="text-sm text-gray-700 flex items-center px-4 py-2 w-full h-full"
-                  >
-                    {user?.user_email}
-                  </div>
-                </div>
-                <div>
                   <button
                     onClick={() => {
-                      router.push(`user/profile?id=${user?.id}`);
+                      router.push(`/user/profile?id=${user?.id}`);
                       handleItemClick();
                     }}
                     className="text-sm hover:bg-gray-100 text-gray-700 flex items-center px-4 py-2 w-full h-full"
@@ -82,24 +74,56 @@ export const Dropdown: FC = () => {
                     Perfil
                   </button>
                 </div>
-                {
-                  user?.role_id === 1 ? (
-                    <div>
+                <div>
+                  {user?.role_id === 2 ? (
+                    <>
                       <button
                         onClick={() => {
-                          router.push("/dashboard");
+                          router.push(`/inventory`);
                           handleItemClick();
                         }}
                         className="text-sm hover:bg-gray-100 text-gray-700 flex items-center px-4 py-2 w-full h-full"
                       >
                         <span className="material-symbols-outlined">
-                          dashboard
+                          inventory
                         </span>
-                        Dashboard
+                        Mi inventario
                       </button>
-                    </div>
-                  ) : null
-                }
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => {
+                          router.push(`/my_requests`);
+                          handleItemClick();
+                        }}
+                        className="text-sm hover:bg-gray-100 text-gray-700 flex items-center px-4 py-2 w-full h-full"
+                      >
+                        <span className="material-symbols-outlined">
+                          inventory
+                        </span>
+                        Mis solicitudes
+                      </button>
+                    </>
+                  )}
+                </div>
+
+                {user?.role_id === 1 ? (
+                  <div>
+                    <button
+                      onClick={() => {
+                        router.push("/dashboard");
+                        handleItemClick();
+                      }}
+                      className="text-sm hover:bg-gray-100 text-gray-700 flex items-center px-4 py-2 w-full h-full"
+                    >
+                      <span className="material-symbols-outlined">
+                        dashboard
+                      </span>
+                      Dashboard
+                    </button>
+                  </div>
+                ) : null}
                 <hr />
                 <div>
                   <button
