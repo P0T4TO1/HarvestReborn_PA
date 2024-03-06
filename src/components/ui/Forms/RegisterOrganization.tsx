@@ -4,9 +4,9 @@ import { FC, useContext, useState } from "react";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import { registerOrganizationSchema } from "@/validations/auth.validation";
-import { authRegisterOrganizationAction } from "@/actions/auth.action";
 import { toast } from "sonner";
 import { AuthContext } from "@/context/auth";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 type Errors = {
   org_name?: string;
@@ -18,11 +18,24 @@ type Errors = {
   org_pass?: string;
 } | null;
 
+interface IFormData {
+  name: string;
+  acronym: string;
+  cluni: string;
+  rfc: string;
+  tel: string;
+  email: string;
+  password: string;
+}
+
 export const RegisterFormOrganization: FC = () => {
   const router = useRouter();
   const navigateTo = (url: string) => {
     router.push(url);
   };
+
+  const methods = useForm<IFormData>();
+  const { handleSubmit, register } = methods;
 
   const [errors, setErrors] = useState<Errors>(null);
   const [isMutation, setIsMutation] = useState<boolean>(false);
@@ -31,21 +44,12 @@ export const RegisterFormOrganization: FC = () => {
 
   const [visible, setVisible] = useState<boolean>(false);
 
-  const clientAction = async (formData: FormData) => {
+  const clientAction: SubmitHandler<IFormData> = async (data) => {
+
     if (isMutation) return null;
     setIsMutation(true);
 
     try {
-      const data = {
-        org_name: formData.get("name") as string,
-        org_acro: formData.get("acronym") as string,
-        org_cluni: formData.get("cluni") as string,
-        org_rfc: formData.get("rfc") as string,
-        org_tel: formData.get("phone") as string,
-        org_email: formData.get("email") as string,
-        org_pass: formData.get("password") as string,
-      };
-
       const validations = registerOrganizationSchema.safeParse(data);
       if (!validations.success) {
         let newErrors: Errors = {};
@@ -59,21 +63,21 @@ export const RegisterFormOrganization: FC = () => {
         setErrors(null);
       }
 
-      const res = await registerUserOrganization(
-        data.org_name,
-        data.org_acro,
-        data.org_cluni,
-        data.org_rfc,
-        data.org_tel,
-        data.org_email,
-        data.org_pass
+      const { hasError, message } = await registerUserOrganization(
+        data.name,
+        data.acronym,
+        data.cluni,
+        data.rfc,
+        data.tel,
+        data.email,
+        data.password
       );
 
-      if (res.hasError) {
-        if (res.message === "Este correo ya esta registrado") {
+      if (hasError) {
+        if (message === "Este correo ya esta registrado") {
           setErrors({ org_email: "Este correo ya esta registrado" });
         }
-        toast(res.message);
+        toast(message);
         return;
       } else {
         toast("¡Registro exitoso!");
@@ -105,15 +109,15 @@ export const RegisterFormOrganization: FC = () => {
               </NextLink>
             </p>
           </div>
-          <form action={clientAction} className="space-y-6">
+          <form onSubmit={handleSubmit(clientAction)} className="space-y-6">
             <div className="grid grid-rows-2 grid-flow-col gap-6">
               <div className="relative">
                 <input
                   className=" w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border  border-gray-200 rounded-lg focus:outline-none focus:border-green-700"
                   type="text"
                   id="name"
-                  name="name"
                   placeholder="Nombre de la organizacion(OSC)"
+                  {...register("name")}
                 />
                 {errors?.org_name && (
                   <p className="text-red-700 text-xs">{errors?.org_name}</p>
@@ -125,8 +129,8 @@ export const RegisterFormOrganization: FC = () => {
                   className=" w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border  border-gray-200 rounded-lg focus:outline-none focus:border-green-700"
                   type="text"
                   id="acronym"
-                  name="acronym"
                   placeholder="Acrónimo"
+                  {...register("acronym")}
                 />
                 {errors?.org_acro && (
                   <p className="text-red-700 text-xs">{errors?.org_acro}</p>
@@ -138,8 +142,8 @@ export const RegisterFormOrganization: FC = () => {
                   className=" w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border  border-gray-200 rounded-lg focus:outline-none focus:border-green-700"
                   type="text"
                   id="rfc"
-                  name="rfc"
                   placeholder="RFC"
+                  {...register("rfc")}
                 />
                 {errors?.org_rfc && (
                   <p className="text-red-700 text-xs">{errors?.org_rfc}</p>
@@ -151,8 +155,8 @@ export const RegisterFormOrganization: FC = () => {
                   className=" w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border  border-gray-200 rounded-lg focus:outline-none focus:border-green-700"
                   type="tel"
                   id="phone"
-                  name="phone"
                   placeholder="Teléfono de la OSC"
+                  {...register("tel")}
                 />
                 {errors?.org_tel && (
                   <p className="text-red-700 text-xs">{errors?.org_tel}</p>
@@ -165,8 +169,8 @@ export const RegisterFormOrganization: FC = () => {
                 className=" w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border  border-gray-200 rounded-lg focus:outline-none focus:border-green-700"
                 type="text"
                 id="cluni"
-                name="cluni"
                 placeholder="CLUNI"
+                {...register("cluni")}
               />
               {errors?.org_cluni && (
                 <p className="text-red-700 text-xs">{errors?.org_cluni}</p>
@@ -179,8 +183,8 @@ export const RegisterFormOrganization: FC = () => {
                   className=" w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border  border-gray-200 rounded-lg focus:outline-none focus:border-green-700"
                   type="email"
                   id="email"
-                  name="email"
                   placeholder="Correo electrónico de la OSC"
+                  {...register("email")}
                 />
                 {errors?.org_email && (
                   <p className="text-red-700 text-xs">{errors?.org_email}</p>
@@ -192,12 +196,12 @@ export const RegisterFormOrganization: FC = () => {
                   placeholder="Contraseña"
                   type={`${visible ? "text" : "password"}`}
                   id="password"
-                  name="password"
                   className="text-sm px-4 py-3 rounded-lg w-full bg-gray-200 focus:bg-gray-100 border border-gray-200 focus:outline-none focus:border-green-700"
+                  {...register("password")}
                 />
                 <div
                   onClick={() => setVisible(!visible)}
-                  className="flex items-center absolute inset-y-0 right-0 mr-3  text-sm leading-5 text-green-700"
+                  className="flex items-center absolute inset-y-0 right-0 mr-3 cursor-pointer text-sm leading-5 text-green-700"
                 >
                   {visible ? (
                     <span className="material-symbols-outlined">

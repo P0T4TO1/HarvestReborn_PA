@@ -48,7 +48,7 @@ model Business {
   business_id          Int     @id @default(autoincrement())
   businessOwnerName    String
   businessOwnerSurname String
-  business_name        String  @unique
+  business_name        String
   business_tel         String
   business_direction   String?
   business_description String?
@@ -58,8 +58,8 @@ model Business {
   user_id String? @unique
   user    User?   @relation(fields: [user_id], references: [id])
 
-  inventory_id Int?       @unique
-  inventory    Inventory? @relation(fields: [inventory_id], references: [inventory_id])
+  inventory_id Int       @unique
+  inventory    Inventory @relation(fields: [inventory_id], references: [inventory_id])
 }
 
 // Model Organization
@@ -82,15 +82,13 @@ model Organization {
 
 // Model Products
 model Products {
-  product_id         Int      @id @default(autoincrement())
-  product_name       String   @unique
-  product_amount     Int      @default(0)
-  product_arrive     DateTime @default(now())
-  product_expiration DateTime @default(now())
-  product_isSeason   Boolean  @default(false)
+  product_id          Int     @id @default(autoincrement())
+  product_name        String  @unique
+  product_description String?
+  product_image       String
+  product_isSeason    Boolean @default(false)
 
-  inventory             Inventory? @relation(fields: [inventoryInventory_id], references: [inventory_id])
-  inventoryInventory_id Int?
+  inventories Inventory[]
 
   donationRequest    donationRequest? @relation(fields: [donationRequest_id], references: [drequest_id])
   donationRequest_id Int?
@@ -98,7 +96,11 @@ model Products {
   donation    Donation? @relation(fields: [donation_id], references: [donation_id])
   donation_id Int?
 
-  @@index([inventoryInventory_id])
+  amount     Amount[]
+  price      Price[]
+  arrive     Arrive[]
+  expiration Expiration[]
+
   @@index([donationRequest_id])
   @@index([donation_id])
 }
@@ -106,7 +108,8 @@ model Products {
 // Model Inventory
 model Inventory {
   inventory_id           Int        @id @default(autoincrement())
-  inventory_registerDate DateTime
+  inventory_name         String
+  inventory_registerDate DateTime   @default(now())
   Products               Products[]
   Business               Business?
 }
@@ -211,4 +214,28 @@ model supRequest {
   supRequestStatus    supRequestStatus @relation(fields: [supRequestStatus_id], references: [supRequestStatus_id])
 
   @@index([supRequestStatus_id])
+}
+
+model Amount {
+  amount_id Int        @id @default(autoincrement())
+  amount    Int
+  products  Products[]
+}
+
+model Price {
+  price_id Int        @id @default(autoincrement())
+  price    Float
+  products Products[]
+}
+
+model Arrive {
+  arrive_id Int        @id @default(autoincrement())
+  arrive    DateTime
+  products  Products[]
+}
+
+model Expiration {
+  expiration_id Int        @id @default(autoincrement())
+  expiration    DateTime
+  products      Products[]
 }

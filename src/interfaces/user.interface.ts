@@ -3,9 +3,10 @@ export interface IUser {
   role_id: number;
   user_email: string;
   user_password: string;
+  userStatus_id: number;
 
   business?: {
-    id?: string;
+    business_id: number;
 
     user_id?: string;
     user_email: string;
@@ -17,6 +18,8 @@ export interface IUser {
     business_tel: string;
     business_direction?: string;
     business_description?: string;
+
+    inventory_id?: number;
   };
   organization?: {
     id?: string;

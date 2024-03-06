@@ -27,23 +27,27 @@ export const ProfileForm: FC = () => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [errors, setErrors] = useState<Errors>(null);
+  const [error, setError] = useState(false);
   const [isMutation, setIsMutation] = useState<boolean>(false);
+  const [loading, setLoading] = useState(true);
 
   const [profile, setProfile] = useState<IUser>({
     id: "",
     role_id: 0,
     user_email: "",
     user_password: "",
+    userStatus_id: user?.userStatus_id as any,
   });
 
   useEffect(() => {
-    const getUserProfile = async () => {
-      const res = await hrApi.get(`/user/profile?id=${user?.id}`);
-      if (res) {
-        return setProfile(res.data);
+    hrApi.get(`/user/profile?id=${user?.id}`).then((res) => {
+      if (res.status === 200) {
+        setProfile(res.data);
+      } else {
+        setError(true);
       }
-    };
-    getUserProfile().then();
+      setLoading(false);
+    });
   }, [user?.id, profile]);
 
   const onUpdateProfile = async (formData: FormData) => {
@@ -160,290 +164,306 @@ export const ProfileForm: FC = () => {
               {isEditing ? "Cancelar" : "Editar"}
             </button>
 
-            <div className="grid max-w-2xl mx-auto">
-              <form
-                action={onUpdateProfile}
-                className="items-center mt-8 sm:mt-14 text-[#202142]"
-              >
-                <div className="mb-2 sm:mb-6">
-                  <label
-                    htmlFor="email"
-                    className="block mb-2 text-sm font-medium text-indigo-900"
-                  >
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                    placeholder="Correo electrónico"
-                    value={profile?.user_email}
-                    defaultValue={profile?.user_email}
-                    disabled={!isEditing}
-                  />
-                </div>
+            {loading ? (
+              <p>Cargando...</p>
+            ) : error ? (
+              <p>Hubo un error</p>
+            ) : (
+              <div className="grid max-w-2xl mx-auto">
+                <form
+                  action={onUpdateProfile}
+                  className="items-center mt-8 sm:mt-14 text-[#202142]"
+                >
+                  <div className="mb-2 sm:mb-6">
+                    <label
+                      htmlFor="email"
+                      className="block mb-2 text-sm font-medium text-indigo-900"
+                    >
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                      placeholder="Correo electrónico"
+                      value={profile?.user_email}
+                      defaultValue={profile?.user_email}
+                      disabled={!isEditing}
+                    />
+                  </div>
 
-                {user?.role_id === 2 && (
-                  <>
-                    <div className="flex flex-col items-center w-full mb-2 space-x-0 space-y-2 sm:flex-row sm:space-x-4 sm:space-y-0 sm:mb-6">
-                      <div className="w-full">
-                        <label
-                          htmlFor="name"
-                          className="block mb-2 text-sm font-medium text-indigo-900"
-                        >
-                          Nombres
-                        </label>
-                        <input
-                          type="text"
-                          id="name"
-                          className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                          placeholder="Nombre(s)"
-                          value={profile?.business?.businessOwnerName}
-                          defaultValue={profile?.business?.businessOwnerName}
-                          disabled={!isEditing}
-                        />
+                  {user?.role_id === 2 && (
+                    <>
+                      <div className="flex flex-col items-center w-full mb-2 space-x-0 space-y-2 sm:flex-row sm:space-x-4 sm:space-y-0 sm:mb-6">
+                        <div className="w-full">
+                          <label
+                            htmlFor="name"
+                            className="block mb-2 text-sm font-medium text-indigo-900"
+                          >
+                            Nombres
+                          </label>
+                          <input
+                            type="text"
+                            id="name"
+                            className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                            placeholder="Nombre(s)"
+                            value={profile?.business?.businessOwnerName}
+                            defaultValue={profile?.business?.businessOwnerName}
+                            disabled={!isEditing}
+                          />
+                        </div>
+
+                        <div className="w-full">
+                          <label
+                            htmlFor="last_name"
+                            className="block mb-2 text-sm font-medium text-indigo-900"
+                          >
+                            Apellidos
+                          </label>
+                          <input
+                            type="text"
+                            id="last_name"
+                            className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                            placeholder="Apellidos"
+                            value={profile?.business?.businessOwnerSurname}
+                            defaultValue={
+                              profile?.business?.businessOwnerSurname
+                            }
+                            disabled={!isEditing}
+                          />
+                        </div>
                       </div>
+                      <div className="flex flex-col items-center w-full mb-2 space-x-0 space-y-2 sm:flex-row sm:space-x-4 sm:space-y-0 sm:mb-6">
+                        <div className="w-full">
+                          <label
+                            htmlFor="business_name"
+                            className="block mb-2 text-sm font-medium text-indigo-900"
+                          >
+                            Nombre del Negocio
+                          </label>
+                          <input
+                            type="text"
+                            id="business_name"
+                            className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                            placeholder="Nombre del Negocio"
+                            value={profile?.business?.business_name}
+                            defaultValue={profile?.business?.business_name}
+                            disabled={!isEditing}
+                          />
+                        </div>
 
-                      <div className="w-full">
-                        <label
-                          htmlFor="last_name"
-                          className="block mb-2 text-sm font-medium text-indigo-900"
-                        >
-                          Apellidos
-                        </label>
-                        <input
-                          type="text"
-                          id="last_name"
-                          className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                          placeholder="Apellidos"
-                          value={profile?.business?.businessOwnerSurname}
-                          defaultValue={profile?.business?.businessOwnerSurname}
-                          disabled={!isEditing}
-                        />
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-center w-full mb-2 space-x-0 space-y-2 sm:flex-row sm:space-x-4 sm:space-y-0 sm:mb-6">
-                      <div className="w-full">
-                        <label
-                          htmlFor="business_name"
-                          className="block mb-2 text-sm font-medium text-indigo-900"
-                        >
-                          Nombre del Negocio
-                        </label>
-                        <input
-                          type="text"
-                          id="business_name"
-                          className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                          placeholder="Nombre del Negocio"
-                          value={profile?.business?.business_name}
-                          defaultValue={profile?.business?.business_name}
-                          disabled={!isEditing}
-                        />
-                      </div>
-
-                      <div className="w-full">
-                        <label
-                          htmlFor="tel"
-                          className="block mb-2 text-sm font-medium text-indigo-900"
-                        >
-                          Teléfono del Negocio
-                        </label>
-                        <input
-                          type="text"
-                          id="tel"
-                          className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                          placeholder="Teléfono del Negocio"
-                          value={profile?.business?.business_tel}
-                          defaultValue={profile?.business?.business_tel}
-                          disabled={!isEditing}
-                        />
-                      </div>
-                    </div>
-                    <div className="mb-2 sm:mb-6">
-                      <label
-                        htmlFor="direction"
-                        className="block mb-2 text-sm font-medium text-indigo-900"
-                      >
-                        Dirección del Negocio
-                      </label>
-                      <input
-                        type="text"
-                        id="direction"
-                        className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                        placeholder="Dirección del Negocio"
-                        value={profile?.business?.business_direction}
-                        defaultValue={profile?.business?.business_direction}
-                        disabled={!isEditing}
-                      />
-                    </div>
-
-                    <div className="mb-6">
-                      <label
-                        htmlFor="message"
-                        className="block mb-2 text-sm font-medium text-indigo-900"
-                      >
-                        Descripción
-                      </label>
-                      <textarea
-                        id="message"
-                        rows={4}
-                        className="block p-2.5 w-full text-sm text-indigo-900 bg-indigo-50 rounded-lg border border-indigo-300 focus:ring-indigo-500 focus:border-indigo-500 "
-                        placeholder="Escribe una descripción..."
-                        value={profile?.business?.business_description}
-                        defaultValue={profile?.business?.business_description}
-                        disabled={!isEditing}
-                      ></textarea>
-                    </div>
-                  </>
-                )}
-
-                {user?.role_id === 3 && (
-                  <>
-                    <div className="w-full">
-                      <label
-                        htmlFor="cluni"
-                        className="block mb-2 text-sm font-medium text-indigo-900"
-                      >
-                        CLUNI
-                      </label>
-                      <input
-                        type="text"
-                        id="cluni"
-                        className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                        placeholder="CLUNI"
-                        value={profile?.organization?.organization_cluni}
-                        defaultValue={profile?.organization?.organization_cluni}
-                        disabled={!isEditing}
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-2 grid-flow-row gap-6 mt-6">
-                      <div className="w-full">
-                        <label
-                          htmlFor="name"
-                          className="block mb-2 text-sm font-medium text-indigo-900"
-                        >
-                          Nombre de la Organización
-                        </label>
-                        <input
-                          type="text"
-                          id="name"
-                          className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                          placeholder="Nombre de la Organización"
-                          value={profile?.organization?.organization_name}
-                          defaultValue={
-                            profile?.organization?.organization_name
-                          }
-                          disabled={!isEditing}
-                        />
-                      </div>
-                      <div className="w-full">
-                        <label
-                          htmlFor="acro"
-                          className="block mb-2 text-sm font-medium text-indigo-900"
-                        >
-                          Siglas de la Organización
-                        </label>
-                        <input
-                          type="text"
-                          id="acro"
-                          className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                          placeholder="Siglas de la Organización"
-                          value={profile?.organization?.organization_acronym}
-                          defaultValue={
-                            profile?.organization?.organization_acronym
-                          }
-                          disabled={!isEditing}
-                        />
+                        <div className="w-full">
+                          <label
+                            htmlFor="tel"
+                            className="block mb-2 text-sm font-medium text-indigo-900"
+                          >
+                            Teléfono del Negocio
+                          </label>
+                          <input
+                            type="text"
+                            id="tel"
+                            className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                            placeholder="Teléfono del Negocio"
+                            value={profile?.business?.business_tel}
+                            defaultValue={profile?.business?.business_tel}
+                            disabled={!isEditing}
+                          />
+                        </div>
                       </div>
                       <div className="mb-2 sm:mb-6">
                         <label
-                          htmlFor="name"
+                          htmlFor="direction"
                           className="block mb-2 text-sm font-medium text-indigo-900"
                         >
-                          Nombre de la Organización
+                          Dirección del Negocio
                         </label>
                         <input
                           type="text"
-                          id="rfc"
+                          id="direction"
                           className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                          placeholder="RFC"
-                          value={profile?.organization?.organization_rfc}
-                          defaultValue={profile?.organization?.organization_rfc}
+                          placeholder="Dirección del Negocio"
+                          value={profile?.business?.business_direction}
+                          defaultValue={profile?.business?.business_direction}
                           disabled={!isEditing}
                         />
                       </div>
+
+                      <div className="mb-6">
+                        <label
+                          htmlFor="message"
+                          className="block mb-2 text-sm font-medium text-indigo-900"
+                        >
+                          Descripción
+                        </label>
+                        <textarea
+                          id="message"
+                          rows={4}
+                          className="block p-2.5 w-full text-sm text-indigo-900 bg-indigo-50 rounded-lg border border-indigo-300 focus:ring-indigo-500 focus:border-indigo-500 "
+                          placeholder="Escribe una descripción..."
+                          value={profile?.business?.business_description}
+                          defaultValue={profile?.business?.business_description}
+                          disabled={!isEditing}
+                        ></textarea>
+                      </div>
+                    </>
+                  )}
+
+                  {user?.role_id === 3 && (
+                    <>
                       <div className="w-full">
                         <label
-                          htmlFor="tel"
+                          htmlFor="cluni"
                           className="block mb-2 text-sm font-medium text-indigo-900"
                         >
-                          Siglas de la Organización
+                          CLUNI
                         </label>
                         <input
                           type="text"
-                          id="tel"
+                          id="cluni"
                           className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                          placeholder="Siglas de la Organización"
-                          value={profile?.organization?.organization_tel}
-                          defaultValue={profile?.organization?.organization_tel}
+                          placeholder="CLUNI"
+                          value={profile?.organization?.organization_cluni}
+                          defaultValue={
+                            profile?.organization?.organization_cluni
+                          }
                           disabled={!isEditing}
                         />
                       </div>
-                    </div>
-                    <div className="mb-2 sm:mb-6">
-                      <label
-                        htmlFor="direction"
-                        className="block mb-2 text-sm font-medium text-indigo-900"
-                      >
-                        Dirección de la Organización
-                      </label>
-                      <input
-                        type="text"
-                        id="direction"
-                        className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                        placeholder="Dirección del Negocio"
-                        value={profile?.organization?.organization_direction}
-                        defaultValue={
-                          profile?.organization?.organization_direction
-                        }
-                        disabled={!isEditing}
-                      />
-                    </div>
 
-                    <div className="mb-6">
-                      <label
-                        htmlFor="message"
-                        className="block mb-2 text-sm font-medium text-indigo-900"
-                      >
-                        Descripción
-                      </label>
-                      <textarea
-                        id="message"
-                        rows={4}
-                        className="block p-2.5 w-full text-sm text-indigo-900 bg-indigo-50 rounded-lg border border-indigo-300 focus:ring-indigo-500 focus:border-indigo-500 "
-                        placeholder="Escribe una descripción..."
-                        value={profile?.organization?.organization_description}
-                        defaultValue={
-                          profile?.organization?.organization_description
-                        }
-                        disabled={!isEditing}
-                      ></textarea>
-                    </div>
-                  </>
-                )}
+                      <div className="grid grid-cols-2 grid-flow-row gap-6 mt-6">
+                        <div className="w-full">
+                          <label
+                            htmlFor="name"
+                            className="block mb-2 text-sm font-medium text-indigo-900"
+                          >
+                            Nombre de la Organización
+                          </label>
+                          <input
+                            type="text"
+                            id="name"
+                            className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                            placeholder="Nombre de la Organización"
+                            value={profile?.organization?.organization_name}
+                            defaultValue={
+                              profile?.organization?.organization_name
+                            }
+                            disabled={!isEditing}
+                          />
+                        </div>
+                        <div className="w-full">
+                          <label
+                            htmlFor="acro"
+                            className="block mb-2 text-sm font-medium text-indigo-900"
+                          >
+                            Siglas de la Organización
+                          </label>
+                          <input
+                            type="text"
+                            id="acro"
+                            className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                            placeholder="Siglas de la Organización"
+                            value={profile?.organization?.organization_acronym}
+                            defaultValue={
+                              profile?.organization?.organization_acronym
+                            }
+                            disabled={!isEditing}
+                          />
+                        </div>
+                        <div className="mb-2 sm:mb-6">
+                          <label
+                            htmlFor="name"
+                            className="block mb-2 text-sm font-medium text-indigo-900"
+                          >
+                            Nombre de la Organización
+                          </label>
+                          <input
+                            type="text"
+                            id="rfc"
+                            className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                            placeholder="RFC"
+                            value={profile?.organization?.organization_rfc}
+                            defaultValue={
+                              profile?.organization?.organization_rfc
+                            }
+                            disabled={!isEditing}
+                          />
+                        </div>
+                        <div className="w-full">
+                          <label
+                            htmlFor="tel"
+                            className="block mb-2 text-sm font-medium text-indigo-900"
+                          >
+                            Siglas de la Organización
+                          </label>
+                          <input
+                            type="text"
+                            id="tel"
+                            className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                            placeholder="Siglas de la Organización"
+                            value={profile?.organization?.organization_tel}
+                            defaultValue={
+                              profile?.organization?.organization_tel
+                            }
+                            disabled={!isEditing}
+                          />
+                        </div>
+                      </div>
+                      <div className="mb-2 sm:mb-6">
+                        <label
+                          htmlFor="direction"
+                          className="block mb-2 text-sm font-medium text-indigo-900"
+                        >
+                          Dirección de la Organización
+                        </label>
+                        <input
+                          type="text"
+                          id="direction"
+                          className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                          placeholder="Dirección del Negocio"
+                          value={profile?.organization?.organization_direction}
+                          defaultValue={
+                            profile?.organization?.organization_direction
+                          }
+                          disabled={!isEditing}
+                        />
+                      </div>
 
-                <div className="flex justify-end">
-                  <button
-                    type="submit"
-                    disabled={isMutation}
-                    className="flex justify-center bg-green-800 hover:bg-green-700 text-gray-100 p-3 text-sm rounded-lg tracking-wide font-semibold  cursor-pointer transition ease-in duration-500"
-                  >
-                    Guardar
-                  </button>
-                </div>
-              </form>
-            </div>
+                      <div className="mb-6">
+                        <label
+                          htmlFor="message"
+                          className="block mb-2 text-sm font-medium text-indigo-900"
+                        >
+                          Descripción
+                        </label>
+                        <textarea
+                          id="message"
+                          rows={4}
+                          className="block p-2.5 w-full text-sm text-indigo-900 bg-indigo-50 rounded-lg border border-indigo-300 focus:ring-indigo-500 focus:border-indigo-500 "
+                          placeholder="Escribe una descripción..."
+                          value={
+                            profile?.organization?.organization_description
+                          }
+                          defaultValue={
+                            profile?.organization?.organization_description
+                          }
+                          disabled={!isEditing}
+                        ></textarea>
+                      </div>
+                    </>
+                  )}
+
+                  <div className="flex justify-end">
+                    <button
+                      type="submit"
+                      disabled={isMutation}
+                      className="flex justify-center bg-green-800 hover:bg-green-700 text-gray-100 p-3 text-sm rounded-lg tracking-wide font-semibold  cursor-pointer transition ease-in duration-500"
+                    >
+                      Guardar
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
           </div>
         </div>
       </main>

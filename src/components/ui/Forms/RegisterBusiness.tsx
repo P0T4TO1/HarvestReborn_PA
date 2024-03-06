@@ -7,10 +7,10 @@ import { useRouter } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import { registerBusinessSchema } from "@/validations/auth.validation";
-import { authRegisterBusinessAction } from "@/actions/auth.action";
 
 import { toast } from "sonner";
 import { AuthContext } from "@/context/auth";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 type Errors = {
   owner_name?: string;
@@ -21,11 +21,23 @@ type Errors = {
   business_pass?: string;
 } | null;
 
+interface IFormData {
+  name: string;
+  surnames: string;
+  business_name: string;
+  telephone: string;
+  email: string;
+  password: string;
+}
+
 export const RegisterFormBusiness: FC = () => {
   const router = useRouter();
   const navigateTo = (url: string) => {
     router.push(url);
   };
+
+  const methods = useForm<IFormData>();
+  const { handleSubmit, register } = methods;
 
   const [errors, setErrors] = useState<Errors>(null);
   const [isMutation, setIsMutation] = useState<boolean>(false);
@@ -34,21 +46,11 @@ export const RegisterFormBusiness: FC = () => {
 
   const [visible, setVisible] = useState<boolean>(false);
 
-  const clientAction = async (formData: FormData) => {
+  const clientAction: SubmitHandler<IFormData> = async (data) => {
     if (isMutation) return null;
     setIsMutation(true);
 
     try {
-      const data = {
-        owner_name: formData.get("name") as string,
-        owner_surnames: formData.get("surnames") as string,
-        business_name: formData.get("business_name") as string,
-        business_tel: formData.get("telephone") as string,
-        business_email: formData.get("email") as string,
-        business_pass: formData.get("password") as string,
-        role_id: "2",
-      };
-
       const validations = registerBusinessSchema.safeParse(data);
       if (!validations.success) {
         let newErrors: Errors = {};
@@ -63,12 +65,12 @@ export const RegisterFormBusiness: FC = () => {
       }
 
       const res = await registerUserBusiness(
-        data.owner_name,
-        data.owner_surnames,
-        data.business_tel,
+        data.name,
+        data.surnames,
+        data.telephone,
         data.business_name,
-        data.business_email,
-        data.business_pass
+        data.email,
+        data.password
       );
       if (res.hasError) {
         if (res.message === "Este correo ya esta registrado") {
@@ -77,6 +79,7 @@ export const RegisterFormBusiness: FC = () => {
         toast(res.message);
         return;
       } else {
+        console.log("[REGISTER_BUSINESS]", res, "Registro exitoso");
         toast("¡Registro exitoso!");
         navigateTo("/auth/login");
       }
@@ -106,15 +109,15 @@ export const RegisterFormBusiness: FC = () => {
               </NextLink>
             </p>
           </div>
-          <form action={clientAction} className="space-y-6">
+          <form onSubmit={handleSubmit(clientAction)} className="space-y-6">
             <div className="grid grid-rows-3 grid-flow-col gap-6">
               <div className="relative">
                 <input
                   className=" w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border  border-gray-200 rounded-lg focus:outline-none focus:border-green-700"
                   type="text"
                   id="name"
-                  name="name"
                   placeholder="Nombres(s)"
+                  {...register("name")}
                 />
                 {errors?.owner_name && (
                   <p className="text-red-700 text-xs">{errors?.owner_name}</p>
@@ -126,8 +129,8 @@ export const RegisterFormBusiness: FC = () => {
                   className=" w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border  border-gray-200 rounded-lg focus:outline-none focus:border-green-700"
                   type="text"
                   id="surnames"
-                  name="surnames"
                   placeholder="Apellidos"
+                  {...register("surnames")}
                 />
                 {errors?.owner_surnames && (
                   <p className="text-red-700 text-xs">
@@ -141,8 +144,8 @@ export const RegisterFormBusiness: FC = () => {
                   className=" w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border  border-gray-200 rounded-lg focus:outline-none focus:border-green-700"
                   type="text"
                   id="business_name"
-                  name="business_name"
                   placeholder="Nombre del negocio"
+                  {...register("business_name")}
                 />
                 {errors?.business_name && (
                   <p className="text-red-700 text-xs">
@@ -156,8 +159,8 @@ export const RegisterFormBusiness: FC = () => {
                   className=" w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border  border-gray-200 rounded-lg focus:outline-none focus:border-green-700"
                   type="text"
                   id="telephone"
-                  name="telephone"
                   placeholder="Número telefónico"
+                  {...register("telephone")}
                 />
                 {errors?.business_tel && (
                   <p className="text-red-700 text-xs">{errors?.business_tel}</p>
@@ -169,8 +172,8 @@ export const RegisterFormBusiness: FC = () => {
                   className=" w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border  border-gray-200 rounded-lg focus:outline-none focus:border-green-700"
                   type="email"
                   id="email"
-                  name="email"
                   placeholder="Correo electrónico"
+                  {...register("email")}
                 />
                 {errors?.business_email && (
                   <p className="text-red-700 text-xs">
@@ -184,12 +187,13 @@ export const RegisterFormBusiness: FC = () => {
                   placeholder="Contraseña"
                   type={`${visible ? "text" : "password"}`}
                   id="password"
-                  name="password"
                   className="text-sm px-4 py-3 rounded-lg w-full bg-gray-200 focus:bg-gray-100 border border-gray-200 focus:outline-none focus:border-green-700"
+                  {...register("password")}
                 />
                 <button
                   onClick={() => setVisible(!visible)}
-                  className="flex items-center absolute inset-y-0 right-0 mr-3  text-sm leading-5 text-green-700"
+                  type="button"
+                  className="flex items-center absolute inset-y-0 right-0 mr-3 cursor-pointer text-sm leading-5 text-green-700"
                 >
                   {visible ? (
                     <span className="material-symbols-outlined">

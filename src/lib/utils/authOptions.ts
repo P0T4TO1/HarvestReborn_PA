@@ -26,14 +26,36 @@ export const authOptions: NextAuthOptions = {
 
         const user = await prisma.user.findUnique({
           where: {
-            user_email
+            user_email,
           },
         });
         if (!user) return null;
 
-        const passwordCorrect = await compare(user_password, user.user_password);
+        if (user.role_id === 2) {
+          const business = await prisma.business.findFirst({
+            where: {
+              user_id: user.id,
+            },
+          });
+          if (!business) return null;
+          return { ...user, business };
+        } else if (user.role_id === 3) {
+          const organization = await prisma.organization.findFirst({
+            where: {
+              user_id: user.id,
+            },
+          });
+          if (!organization) return null;
+          return { ...user, organization };
+        }
+
+        const passwordCorrect = await compare(
+          user_password,
+          user.user_password
+        );
         if (!passwordCorrect) return null;
-        console.log("Inicio de sesión correcto")
+        console.log("Inicio de sesión correcto", user);
+
         return user;
       },
     }),

@@ -25,7 +25,6 @@ const AUTH_INITIAL_STATE: AuthState = {
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE);
   const { data, status } = useSession();
-  const router = useRouter();
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -56,6 +55,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     email: string,
     password: string
   ): Promise<boolean> => {
+    console.log("data", email, password);
     try {
       const { data } = await hrApi.post("/user/login", { email, password });
       const { token, user } = data;

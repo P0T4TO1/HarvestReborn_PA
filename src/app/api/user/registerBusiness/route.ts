@@ -68,6 +68,11 @@ export async function registerUserBusiness(
             businessOwnerSurname: owner_surnames,
             business_name,
             business_tel,
+            inventory: {
+              create: {
+                inventory_name: "Inventario principal",
+              },
+            },
           },
         },
       },
@@ -76,6 +81,8 @@ export async function registerUserBusiness(
     const { id, role_id } = newUser;
 
     const token = jwt.signToken(id, business_email);
+
+    console.log("Se ha registrado un nuevo usuario", newUser);
 
     return NextResponse.json({
       token,

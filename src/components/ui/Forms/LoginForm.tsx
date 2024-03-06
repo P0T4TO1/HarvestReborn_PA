@@ -11,11 +11,17 @@ import { loginSchema } from "@/validations/auth.validation";
 import { signIn, SignInResponse } from "next-auth/react";
 import { toast } from "sonner";
 import { AuthContext } from "@/context/auth";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 type Errors = {
   user_email?: string;
   user_pass?: string;
 } | null;
+
+interface IFormData {
+  user_email: string;
+  user_password: string;
+}
 
 export const LoginForm: FC = () => {
   const router = useRouter();
@@ -23,21 +29,20 @@ export const LoginForm: FC = () => {
   const navigateTo = (url: string) => {
     router.push(url);
   };
+
+  const methods = useForm<IFormData>();
+  const { handleSubmit, register } = methods;
+
   const [errors, setErrors] = useState<Errors>(null);
   const [isMutation, setIsMutation] = useState<boolean>(false);
 
   const [visible, setVisible] = useState<boolean>(false);
 
-  const clientAction = async (formData: FormData) => {
+  const clientAction: SubmitHandler<IFormData> = async (data) => {
     if (isMutation) return null;
     setIsMutation(true);
 
     try {
-      const data = {
-        user_email: formData.get("email") as string,
-        user_password: formData.get("password") as string,
-      };
-
       const validations = loginSchema.safeParse(data);
       if (!validations.success) {
         let newErrors: Errors = {};
@@ -102,15 +107,15 @@ export const LoginForm: FC = () => {
               </NextLink>
             </p>
           </div>
-          <form action={clientAction}>
+          <form onSubmit={handleSubmit(clientAction)}>
             <div className="space-y-6">
               <div className="relative">
                 <input
                   className="w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-green-700"
                   type="email"
                   id="email"
-                  name="email"
                   placeholder="Email"
+                  {...register("user_email")}
                 />
                 {errors?.user_email && (
                   <p className="text-red-500 text-xs">{errors?.user_email}</p>
@@ -122,12 +127,12 @@ export const LoginForm: FC = () => {
                   placeholder="Contraseña"
                   type={`${visible ? "text" : "password"}`}
                   id="password"
-                  name="password"
                   className="text-sm px-4 py-3 rounded-lg w-full bg-gray-200 focus:bg-gray-100 border border-gray-200 focus:outline-none focus:border-green-700"
+                  {...register("user_password")}
                 />
-                <button
+                <div
                   onClick={() => setVisible(!visible)}
-                  className="flex items-center absolute inset-y-0 right-0 mr-3  text-sm leading-5 text-green-700"
+                  className="flex items-center absolute inset-y-0 right-0 mr-3 cursor-pointer text-sm leading-5 text-green-700"
                 >
                   {visible ? (
                     <span className="material-symbols-outlined">
@@ -138,7 +143,7 @@ export const LoginForm: FC = () => {
                       visibility
                     </span>
                   )}
-                </button>
+                </div>
                 {errors?.user_pass && (
                   <p className="text-red-700 text-xs">{errors?.user_pass}</p>
                 )}
@@ -169,7 +174,7 @@ export const LoginForm: FC = () => {
               </div>
               <div className="flex justify-center gap-5 w-full ">
                 <button
-                  type="submit"
+                  type="button"
                   className="w-full flex items-center justify-center mb-6 md:mb-0 border border-gray-300 hover:border-gray-500 hover:text-yellow-700 text-sm text-gray-500 p-3  rounded-lg tracking-wide font-medium  cursor-pointer transition ease-in duration-500"
                 >
                   <FcGoogle className="mr-2" />
@@ -177,7 +182,7 @@ export const LoginForm: FC = () => {
                 </button>
 
                 <button
-                  type="submit"
+                  type="button"
                   className="w-full flex items-center justify-center mb-6 md:mb-0 border border-gray-300 hover:border-gray-500 hover:text-blue-700 text-sm text-gray-500 p-3  rounded-lg tracking-wide font-medium  cursor-pointer transition ease-in duration-500 px-"
                 >
                   <FaFacebook className="mr-2 text-blue-700" />

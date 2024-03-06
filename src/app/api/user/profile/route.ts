@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { IUser } from "@/interfaces";
 
 type Data = { message: string } | any;
 
