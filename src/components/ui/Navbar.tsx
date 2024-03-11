@@ -55,7 +55,7 @@ export const Navbar = () => {
                       Inicio
                     </NextLink>
 
-                    {user?.role_id === 2 ? (
+                    {user?.id_rol === 2 ? (
                       <>
                         <NextLink
                           href={"/inventory"}
@@ -64,25 +64,46 @@ export const Navbar = () => {
                           Inventario
                         </NextLink>
                         <NextLink
-                          href={"/organizations"}
+                          href={"/orders"}
                           className="text-gray-200 hover:text-gray-300 rounded-md px-3 py-2 text-base font-semibold"
                         >
-                          Organizaciones
+                          Pedidos
                         </NextLink>
                       </>
-                    ) : (
+                    ) : user?.id_rol === 3 ? (
                       <>
                         <NextLink
-                          href={"/business"}
+                          href={"/negocios"}
                           className="text-gray-200 hover:text-gray-300 rounded-md px-3 py-2 text-base font-semibold"
                         >
                           Negocios
                         </NextLink>
                         <NextLink
-                          href={"/my_requests"}
+                          href={"/mis-solicitudes"}
                           className="text-gray-200 hover:text-gray-300 rounded-md px-3 py-2 text-base font-semibold"
                         >
                           Solicitudes
+                        </NextLink>
+                      </>
+                    ) : (
+                      <>
+                        <NextLink
+                          href={"/#"}
+                          className="text-gray-200 hover:text-gray-300 rounded-md px-3 py-2 text-base font-semibold"
+                        >
+                          Inicio
+                        </NextLink>
+                        <NextLink
+                          href={"/#servicios"}
+                          className="text-gray-200 hover:text-gray-300 rounded-md px-3 py-2 text-base font-semibold"
+                        >
+                          Dashboard
+                        </NextLink>
+                        <NextLink
+                          href={"/#aboutUs"}
+                          className="text-gray-200 hover:text-gray-300 px-3 py-2 text-base font-semibold"
+                        >
+                          Tickets
                         </NextLink>
                       </>
                     )}

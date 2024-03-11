@@ -21,9 +21,9 @@ export async function loginUser(
 ) {
   const { email = "", password = "" } = await new Response(req.body).json();
 
-  const user = await prisma?.user.findUnique({
+  const user = await prisma?.m_user.findUnique({
     where: {
-      user_email: email,
+      email,
     },
   });
 
@@ -33,13 +33,13 @@ export async function loginUser(
     });
   }
 
-  if (!bcrypt.compareSync(password, user.user_password!)) {
+  if (!bcrypt.compareSync(password, user.password!)) {
     return NextResponse.json({
       message: "Correo o contraseña no válidos - Password",
     });
   }
 
-  const { role_id, id } = user;
+  const { id, id_rol } = user;
 
   const token = jwt.signToken(id, email);
 
@@ -47,7 +47,7 @@ export async function loginUser(
     token,
     user: {
       email,
-      role: role_id.toString(),
+      role: id_rol.toString(),
       name: "random name",
     },
   });

@@ -1,27 +1,26 @@
 import type { NextApiRequest } from "next";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import nextFontLocalFontLoader from "next/dist/compiled/@next/font/dist/local/loader";
 
-export async function getProductByInventory(
+export async function getInventoryById(
   req: NextApiRequest,
   { params }: { params: { id: string } }
 ) {
-  // const { searchParams } = new URL(req.url as string);
-  // const inventory_id = searchParams.get("inventory_id");
-
   if (!params.id)
     return NextResponse.json(
       { message: "Falta Id del inventario" },
       { status: 400 }
     );
 
-  const products = await prisma.products.findMany({
+  const products = await prisma.m_lote.findMany({
     where: {
-      inventories: {
-        some: {
-          inventory_id: parseInt(params.id, 10),
-        },
+      inventario: {
+        id_inventario: parseInt(params.id, 10),
       },
+    },
+    include: {
+      producto: true,
     },
   });
 
@@ -32,9 +31,15 @@ export async function addProductToInventory(
   req: NextApiRequest,
   { params }: { params: { id: string } }
 ) {
-  const { id, amount, expiration, arriveDate, inventory_id } =
-    await new Response(req.body).json();
-  console.log(req.body, id, amount, expiration, inventory_id, arriveDate);
+  const {
+    id,
+    cantidad_producto,
+    fecha_entrada,
+    fecha_vencimiento,
+    precio_kg,
+    monto_total,
+    inventory_id,
+  } = await new Response(req.body).json();
 
   if (!params.id)
     return NextResponse.json(
@@ -42,7 +47,15 @@ export async function addProductToInventory(
       { status: 400 }
     );
 
-  if (!id || !amount || !expiration || !inventory_id) {
+  if (
+    !id ||
+    !cantidad_producto ||
+    !fecha_entrada ||
+    !fecha_vencimiento ||
+    !precio_kg ||
+    !monto_total ||
+    !inventory_id
+  ) {
     return NextResponse.json(
       { message: "Faltan datos del producto" },
       { status: 400 }
@@ -50,29 +63,21 @@ export async function addProductToInventory(
   }
 
   try {
-    const product = await prisma.products.update({
-      where: {
-        product_id: parseInt(id, 10),
-      },
+    const product = await prisma.m_lote.create({
       data: {
-        inventories: {
+        cantidad_producto: parseInt(cantidad_producto, 10),
+        fecha_entrada: new Date(fecha_vencimiento).toISOString(),
+        fecha_vencimiento: new Date(fecha_vencimiento).toISOString(),
+        precio_kg: parseFloat(precio_kg),
+        monto_total: parseFloat(monto_total),
+        inventario: {
           connect: {
-            inventory_id: parseInt(inventory_id, 10),
+            id_inventario: inventory_id,
           },
         },
-        amount: {
-          create: {
-            amount: parseInt(amount, 10),
-          },
-        },
-        expiration: {
-          create: {
-            expiration: new Date(expiration),
-          },
-        },
-        arrive: {
-          create: {
-            arrive: new Date(arriveDate),
+        producto: {
+          connect: {
+            id_producto: id,
           },
         },
       },
@@ -88,4 +93,35 @@ export async function addProductToInventory(
   }
 }
 
-export { getProductByInventory as GET, addProductToInventory as POST };
+export async function deleteProductFromInventory(
+  req: NextApiRequest,
+  { params }: { params: { id: string } }
+) {
+  if (!params.id)
+    return NextResponse.json(
+      { message: "Falta Id del producto" },
+      { status: 400 }
+    );
+
+  try {
+    const product = await prisma.m_lote.delete({
+      where: {
+        id_lote: parseInt(params.id, 10),
+      },
+    });
+
+    return NextResponse.json(product, { status: 200 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { message: "Error al borrar producto del inventario" },
+      { status: 500 }
+    );
+  }
+}
+
+export {
+  getInventoryById as GET,
+  addProductToInventory as POST,
+  deleteProductFromInventory as DELETE,
+};

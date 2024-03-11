@@ -1,22 +1,11 @@
+import { Category } from "@/interfaces";
+
 interface IProduct {
-  product_name: string;
-  product_image: string;
-  product_isSeason: boolean;
-  amount: {
-    create: {
-      amount: number;
-    };
-  };
-  arrive: {
-    create: {
-      arrive: Date;
-    };
-  };
-  expiration: {
-    create: {
-      expiration: Date;
-    };
-  };
+  nombre_producto: string;
+  imagen_producto: string;
+  descripcion?: string;
+  enTemporada: boolean;
+  categoria: Category;
 }
 
 interface seedData {
@@ -26,244 +15,95 @@ interface seedData {
 export const initialData: seedData = {
   products: [
     {
-      product_name: "Jitomate",
-      product_image: "/images/products/jitomate.png",
-      product_isSeason: true,
-      amount: {
-        create: {
-          amount: 10,
-        },
-      },
-      arrive: {
-        create: {
-          arrive: new Date(),
-        },
-      },
-      expiration: {
-        create: {
-          expiration: new Date(),
-        },
-      },
+      nombre_producto: "Jitomate",
+      imagen_producto: "/images/products/jitomate.png",
+      descripcion: "Jitomate rojo",
+      enTemporada: true,
+      categoria: Category.VERDURA,
     },
     {
-      product_name: "Pepino",
-      product_image: "/images/products/pepino.png",
-      product_isSeason: true,
-      amount: {
-        create: {
-          amount: 10,
-        },
-      },
-      arrive: {
-        create: {
-          arrive: new Date(),
-        },
-      },
-      expiration: {
-        create: {
-          expiration: new Date(),
-        },
-      },
+      nombre_producto: "Pepino",
+      imagen_producto: "/images/products/pepino.png",
+      descripcion: "Pepino verde",
+      enTemporada: true,
+      categoria: Category.VERDURA,
     },
     {
-      product_name: "Cebolla",
-      product_image: "/images/products/cebolla.png",
-      product_isSeason: true,
-      amount: {
-        create: {
-          amount: 10,
-        },
-      },
-      arrive: {
-        create: {
-          arrive: new Date(),
-        },
-      },
-      expiration: {
-        create: {
-          expiration: new Date(),
-        },
-      },
+      nombre_producto: "Calabaza",
+      imagen_producto: "/images/products/calabaza.png",
+      descripcion: "Calabaza naranja",
+      enTemporada: true,
+      categoria: Category.VERDURA,
     },
     {
-      product_name: "Cebolla morada",
-      product_image: "/images/products/cebolla_morada.png",
-      product_isSeason: true,
-      amount: {
-        create: {
-          amount: 10,
-        },
-      },
-      arrive: {
-        create: {
-          arrive: new Date(),
-        },
-      },
-      expiration: {
-        create: {
-          expiration: new Date(),
-        },
-      },
+      nombre_producto: "Papa",
+      imagen_producto: "/images/products/papa.png",
+      descripcion: "Papa blanca",
+      enTemporada: true,
+      categoria: Category.VERDURA,
     },
     {
-      product_name: "Zanahoria",
-      product_image: "/images/products/zanahoria.png",
-      product_isSeason: true,
-      amount: {
-        create: {
-          amount: 10,
-        },
-      },
-      arrive: {
-        create: {
-          arrive: new Date(),
-        },
-      },
-      expiration: {
-        create: {
-          expiration: new Date(),
-        },
-      },
+      nombre_producto: "Cebolla",
+      imagen_producto: "/images/products/cebolla.png",
+      descripcion: "Cebolla blanca",
+      enTemporada: true,
+      categoria: Category.VERDURA,
     },
     {
-      product_name: "Papa",
-      product_image: "/images/products/papa.png",
-      product_isSeason: true,
-      amount: {
-        create: {
-          amount: 10,
-        },
-      },
-      arrive: {
-        create: {
-          arrive: new Date(),
-        },
-      },
-      expiration: {
-        create: {
-          expiration: new Date(),
-        },
-      },
+      nombre_producto: "Cebolla Morada",
+      imagen_producto: "/images/products/cebolla_morada.png",
+      descripcion: "Cebolla morada",
+      enTemporada: true,
+      categoria: Category.VERDURA,
     },
     {
-      product_name: "Lechuga romana",
-      product_image: "/images/products/lechuga_romana.png",
-      product_isSeason: true,
-      amount: {
-        create: {
-          amount: 10,
-        },
-      },
-      arrive: {
-        create: {
-          arrive: new Date(),
-        },
-      },
-      expiration: {
-        create: {
-          expiration: new Date(),
-        },
-      },
+      nombre_producto: "Chile Serrano",
+      imagen_producto: "/images/products/chile_serrano.png",
+      descripcion: "Chile Serrano",
+      enTemporada: true,
+      categoria: Category.VERDURA,
     },
     {
-      product_name: "Lechuga orejona",
-      product_image: "/images/products/lechuga_orejona.png",
-      product_isSeason: true,
-      amount: {
-        create: {
-          amount: 10,
-        },
-      },
-      arrive: {
-        create: {
-          arrive: new Date(),
-        },
-      },
-      expiration: {
-        create: {
-          expiration: new Date(),
-        },
-      },
+      nombre_producto: "Elote",
+      imagen_producto: "/images/products/elote.png",
+      descripcion: "Elote amarillo",
+      enTemporada: true,
+      categoria: Category.VERDURA,
     },
     {
-      product_name: "Espinaca",
-      product_image: "/images/products/espinaca.png",
-      product_isSeason: true,
-      amount: {
-        create: {
-          amount: 10,
-        },
-      },
-      arrive: {
-        create: {
-          arrive: new Date(),
-        },
-      },
-      expiration: {
-        create: {
-          expiration: new Date(),
-        },
-      },
+      nombre_producto: "Espinaca",
+      imagen_producto: "/images/products/espinaca.png",
+      descripcion: "Espinaca verde",
+      enTemporada: true,
+      categoria: Category.VERDURA,
     },
     {
-      product_name: "Calabaza",
-      product_image: "/images/products/calabaza.png",
-      product_isSeason: true,
-      amount: {
-        create: {
-          amount: 10,
-        },
-      },
-      arrive: {
-        create: {
-          arrive: new Date(),
-        },
-      },
-      expiration: {
-        create: {
-          expiration: new Date(),
-        },
-      },
+      nombre_producto: "Lechuga Romana",
+      imagen_producto: "/images/products/lechuga_romana.png",
+      descripcion: "Lechuga verde",
+      enTemporada: true,
+      categoria: Category.VERDURA,
     },
     {
-      product_name: "Elote",
-      product_image: "/images/products/elote.png",
-      product_isSeason: true,
-      amount: {
-        create: {
-          amount: 10,
-        },
-      },
-      arrive: {
-        create: {
-          arrive: new Date(),
-        },
-      },
-      expiration: {
-        create: {
-          expiration: new Date(),
-        },
-      },
+      nombre_producto: "Lechuga Orejona",
+      imagen_producto: "/images/products/lechuga_orejona.png",
+      descripcion: "Lechuga verde",
+      enTemporada: true,
+      categoria: Category.VERDURA,
     },
     {
-      product_name: "Chile serrano",
-      product_image: "/images/products/chile_serrano.png",
-      product_isSeason: true,
-      amount: {
-        create: {
-          amount: 10,
-        },
-      },
-      arrive: {
-        create: {
-          arrive: new Date(),
-        },
-      },
-      expiration: {
-        create: {
-          expiration: new Date(),
-        },
-      },
+      nombre_producto: "Zanahoria",
+      imagen_producto: "/images/products/zanahoria.png",
+      descripcion: "Zanahoria naranja",
+      enTemporada: true,
+      categoria: Category.VERDURA,
+    },
+    {
+      nombre_producto: "Brócoli",
+      imagen_producto: "/images/products/brocoli.png",
+      descripcion: "Brócoli verde",
+      enTemporada: true,
+      categoria: Category.VERDURA,
     },
   ],
 };

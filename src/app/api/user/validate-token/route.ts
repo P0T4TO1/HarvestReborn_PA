@@ -42,9 +42,9 @@ const checkJWT = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     });
   }
 
-  const user = await prisma?.user.findUnique({
+  const user = await prisma?.m_user.findUnique({
     where: {
-      id: userId,
+      id_user: userId,
     },
   });
 
@@ -52,13 +52,13 @@ const checkJWT = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     return res.status(400).json({ message: "No existe usuario con ese id" });
   }
 
-  const { id, user_email, role_id } = user;
+  const { id_user, email, id_rol } = user;
 
   return NextResponse.json({
-    token: jwt.signToken(id, user_email),
+    token: jwt.signToken(id_user, email),
     user: {
-      email: user_email,
-      role: role_id.toString(),
+      email,
+      role: id_rol.toString(),
     },
   });
 };

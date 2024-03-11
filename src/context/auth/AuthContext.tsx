@@ -8,24 +8,54 @@ interface ContextProps {
   user?: IUser;
 
   loginUser: (email: string, password: string) => Promise<boolean>;
-  registerUserBusiness: (
-    owner_name: string,
-    owner_surnames: string,
-    business_name: string,
-    business_tel: string,
-    business_email: string,
-    business_pass: string
+
+  registerContext: (
+    email: string,
+    password: string,
+    tipo: string,
+    nombre: string,
+    apellidos: string,
+    fecha_nacimiento: string,
+    nombreNegocio: string,
+    telefono: string,
+    calle: string,
+    colonia: string,
+    cp: string
   ) => Promise<{ hasError: boolean; message?: string }>;
-  registerUserOrganization: (
-    org_name: string,
-    org_acro: string,
-    org_cluni: string,
-    org_rfc: string,
-    org_tel: string,
-    org_email: string,
-    org_pass: string
-  ) => Promise<{ hasError: boolean; message?: string }>;
+
   logout: () => void;
+
+  userData: { email: string; password: string };
+  personalData: {
+    nombre: string;
+    apellidos: string;
+    fecha_nacimiento: string;
+    tipo: string;
+  };
+  contactData: {
+    nombreNegocio: string;
+    telefono: string;
+    calle: string;
+    colonia: string;
+    cp: string;
+  };
+  indexActive: number;
+
+  setUserData: (userData: { email: string; password: string }) => void;
+  setPersonalData: (data: {
+    nombre: string;
+    apellidos: string;
+    fecha_nacimiento: string;
+    tipo: string;
+  }) => void;
+  setContactData: (data: {
+    nombreNegocio: string;
+    telefono: string;
+    calle: string;
+    colonia: string;
+    cp: string;
+  }) => void;
+  setIndexActive: (index: number) => void;
 }
 
 export const AuthContext = createContext({} as ContextProps);

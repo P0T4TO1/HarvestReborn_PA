@@ -75,7 +75,7 @@ export const Dropdown: FC = () => {
                   </button>
                 </div>
                 <div>
-                  {user?.role_id === 2 ? (
+                  {user?.id_rol === 2 ? (
                     <>
                       <button
                         onClick={() => {
@@ -108,7 +108,7 @@ export const Dropdown: FC = () => {
                   )}
                 </div>
 
-                {user?.role_id === 1 ? (
+                {user?.id_rol === 1 ? (
                   <div>
                     <button
                       onClick={() => {

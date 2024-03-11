@@ -6,7 +6,7 @@ export async function getAllProducts(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const products = await prisma.products.findMany();
+  const products = await prisma.m_producto.findMany();
 
   return NextResponse.json(products, { status: 200 });
 }

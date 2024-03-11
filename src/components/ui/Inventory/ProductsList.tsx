@@ -1,10 +1,11 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { hrApi } from "@/api";
-import { Product } from "@/interfaces";
+import { ILote } from "@/interfaces";
 import { AuthContext } from "@/context/auth";
+import { Select, SelectItem, Input } from "@nextui-org/react";
 
 export const ProductsList = () => {
   const router = useRouter();
@@ -13,26 +14,51 @@ export const ProductsList = () => {
   };
   const { user } = useContext(AuthContext);
 
-  const [products, setProducts] = useState<Product[]>([]);
+  const [lotes, setLotes] = useState<ILote[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [open, setOpen] = useState(false);
-  console.log(user);
+  const [openSelected, setOpenSelected] = useState(false);
+
+  const [search, setSearch] = useState("");
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearch(event.target.value);
+  };
+
+  const results = !search
+    ? lotes
+    : lotes.filter((dato) =>
+        dato.producto?.nombre_producto
+          .toLowerCase()
+          .includes(search.toLocaleLowerCase())
+      );
 
   useEffect(() => {
-    hrApi.get(`/inventory/${user?.business?.inventory_id}`).then((res) => {
+    hrApi.get(`/inventory/${user?.negocio?.id_negocio}`).then((res) => {
       if (res.status === 200) {
-        setProducts(res.data);
+        setLotes(res.data);
       } else {
         setError(true);
         console.log("Error al obtener productos", res.data);
       }
       setLoading(false);
     });
-  }, [user?.business?.inventory_id]);
+  }, [user?.negocio?.id_negocio]);
+
+  const handleDelete = (id: number) => {
+    hrApi.delete(`/inventory/${id}`).then((res) => {
+      if (res.status === 200) {
+        setLotes(lotes.filter((lote) => lote.id_producto !== id));
+        router.refresh();
+      } else {
+        console.log("Error al borrar producto", res.data);
+      }
+    });
+  };
 
   return (
-    <div className="container pt-16 px-16">
+    <div className="container p-24">
       <h1 className="font-bebas-neue uppercase text-4xl font-black flex flex-col leading-none text-green-900">
         Tú inventario
         <span className="text-xl text-gray-900 font-semibold">
@@ -41,29 +67,69 @@ export const ProductsList = () => {
       </h1>
       <button
         onClick={() => navigateTo("/inventory/add-product")}
-        className="mt-4 flex justify-center bg-green-800 hover:bg-green-700 text-gray-100 p-3 text-sm rounded-lg tracking-wide font-semibold  cursor-pointer transition ease-in duration-500"
+        className="mt-4 ml-2 flex justify-center bg-green-800 hover:bg-green-700 text-gray-100 p-3 text-sm rounded-lg tracking-wide font-semibold  cursor-pointer transition ease-in duration-500"
       >
         <span className="material-symbols-outlined">add_circle</span>
         <span className="ml-2">Agregar productos</span>
       </button>
-      <div>
-        <input
-          type="text"
-          placeholder="Buscar productos"
-          className="mt-4 p-2 border-2 border-gray-300 rounded-lg"
-        />
+
+      <div className="flex">
+        <div className="flex flex-1 justify-center sm:justify-start">
+          <div className="mt-4 p-2">
+            <Input
+              isClearable
+              size="md"
+              radius="lg"
+              placeholder="Buscar productos..."
+              type="text"
+              startContent={
+                <span className="material-symbols-outlined">search</span>
+              }
+              defaultValue={search}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+        <div className="absolute inset-y-0 right-0 flex items-end pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 flex-col">
+          <Select
+            placeholder="Filtrar por"
+            className="w-60"
+            onChange={(e) => console.log(e)}
+          >
+            <SelectItem value="0" key="0">
+              -- --
+            </SelectItem>
+            <SelectItem value="1" key="1">
+              Nombre
+            </SelectItem>
+            <SelectItem value="2" key="2">
+              Fecha de entrada
+            </SelectItem>
+            <SelectItem value="3" key="3">
+              Fecha de vencimiento
+            </SelectItem>
+            <SelectItem value="4" key="4">
+              Cantidad
+            </SelectItem>
+          </Select>
+        </div>
       </div>
-      <ul className="mt-8 grid grid-cols-4 gap-4">
+
+      <ul className="mt-8 grid grid-cols-4">
         {loading ? (
           <p>Cargando...</p>
         ) : error ? (
           <p>Hubo un error</p>
         ) : (
-          products.map((product) => (
-            <li key={product.product_id} className="p-4 flex">
+          results.map((lote) => (
+            <li key={lote.id_producto} className="p-2 flex">
               <div className="product">
                 <div className="left-side bg-[#87b663]">
-                  <img src={product.product_image} alt="" className="image" />
+                  <img
+                    src={lote.producto.imagen_producto}
+                    alt=""
+                    className="image"
+                  />
                 </div>
                 <div
                   className={`setting-modal-container ${
@@ -73,19 +139,31 @@ export const ProductsList = () => {
                   <button className="edit-btn setting-modal-btn">
                     Editar producto
                   </button>
-                  <button className="delete-btn setting-modal-btn">
+                  <button
+                    onClick={() => handleDelete(lote.id_lote)}
+                    className="delete-btn setting-modal-btn"
+                  >
                     Borrar producto
                   </button>
                 </div>
 
                 <div className="right-side flex flex-col">
                   <h2 className="name text-md font-semibold text-center text-gray-700">
-                    {product.product_name}
+                    {lote.producto.nombre_producto}
                   </h2>
                   <div className="flex flex-col items-center">
                     <p className="text-center text-gray-700">Quedan </p>
                     <span className="font-bold">
-                      {product.product_amount} kg
+                      {lote.cantidad_producto} kg
+                    </span>
+                    <p className="text-center text-gray-700">Llegó el</p>
+                    <span className="font-semibold">
+                      {lote.fecha_entrada
+                        .split("T")[0]
+                        .split("-")
+                        .reverse()
+                        .join("/")
+                        .slice(0, 5)}
                     </span>
                   </div>
                   <div className="setting-icon-container">

@@ -1,70 +1,78 @@
 import * as z from "zod";
 
-export const registerBusinessSchema = z.object({
-  name: z
+export const registerUserDataSchema = z
+  .object({
+    email: z
+      .string({ required_error: "El correo es obligatorio" })
+      .email({ message: "Correo invalido" })
+      .max(100, { message: "El correo debe tener menos de 100 caracteres" }),
+    password: z
+      .string({ required_error: "La contraseña es obligatoria" })
+      .min(3, { message: "La contraseña debe tener mínimo 3 caracteres" })
+      .max(100, {
+        message: "La contraseña debe tener menos de 100 caracteres",
+      }),
+    confirmPassword: z
+      .string({
+        required_error: "La confirmación de la contraseña es obligatoria",
+      })
+      .min(3, {
+        message:
+          "La confirmación de la contraseña debe tener mínimo 3 caracteres",
+      })
+      .max(100, {
+        message:
+          "La confirmación de la contraseña debe tener menos de 100 caracteres",
+      }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Las contraseñas no coinciden",
+    path: ["confirmPassword"],
+  });
+
+export const registerPersonalDataSchema = z.object({
+  nombre: z
     .string({ required_error: "El nombre es obligatorio" })
     .min(3, { message: "El nombre debe tener mínimo 3 caracteres" })
-    .max(100, { message: "El nombre debe tener menos de 100 caracteres" })
-    .refine(
-      (value) => /^[a-zA-Z]+[-'s]?[a-zA-Z ]+$/.test(value),
-      "Ingrese solo caracteres del alfabeto"
-    ),
-  surnames: z
-    .string({ required_error: "Este campo es obligatorio" })
-    .min(3, { message: "Este dato debe tener mínimo 3 caracteres" })
-    .max(100, { message: "Este dato debe tener menos de 100 caracteres" }),
-  business_name: z
-    .string({ required_error: "Este campo es obligatorio" })
-    .min(3, { message: "Este dato debe tener mínimo 3 caracteres" })
-    .max(100, { message: "Este dato debe tener menos de 100 caracteres" }),
-  telephone: z
-    .string({ required_error: "El teléfono es obligatorio" })
-    .min(10, { message: "El numero telefónico tener mínimo 10 números" })
-    .max(10, { message: "El numero telefónico debe tener máximo 10 números" }),
-  email: z
-    .string({ required_error: "El correo es obligatorio" })
-    .email({ message: "Correo invalido" })
-    .max(100, { message: "El correo debe tener menos de 100 caracteres" }),
-  password: z
-    .string({ required_error: "La contraseña es obligatoria" })
-    .min(3, { message: "La contraseña debe tener mínimo 3 caracteres" })
-    .max(100, { message: "La contraseña debe tener menos de 100 caracteres" }),
+    .max(100, { message: "El nombre debe tener menos de 100 caracteres" }),
+  apellidos: z
+    .string({ required_error: "Los apellidos son obligatorios" })
+    .min(3, { message: "Los apellidos deben tener mínimo 3 caracteres" })
+    .max(100, { message: "Los apellidos deben tener menos de 100 caracteres" }),
+  fecha_nacimiento: z.string({
+    required_error: "La fecha de nacimiento es obligatoria",
+  }),
+  dia_nacimiento: z.string({ required_error: "El día es obligatorio" }),
+  mes_nacimiento: z.string({ required_error: "El mes es obligatorio" }),
+  year_nacimiento: z.string({ required_error: "El año es obligatorio" }),
+  tipo: z.string({ required_error: "El tipo es obligatorio" }),
 });
 
-export const registerOrganizationSchema = z.object({
-  name: z
-    .string({ required_error: "El nombre es requerido" })
-    .min(3, { message: "El nombre debe tener mínimo 3 caracteres" })
-    .max(100, { message: "El nombre debe tener menos de 100 caracteres" })
-    .refine(
-      (value) => /^[a-zA-Z]+[-'s]?[a-zA-Z ]+$/.test(value),
-      "Ingrese solo caracteres del alfabeto"
-    ),
-  acronym: z
-    .string({ required_error: "Este campo es obligatorio" })
-    .min(3, { message: "Este dato debe tener mínimo 3 caracteres" })
-    .max(10, { message: "Este dato debe tener máximo 10 caracteres" }),
-  cluni: z
-    .string({ required_error: "Este campo es obligatorio" })
-    .min(3, { message: "Este dato debe tener mínimo 3 caracteres" })
-    .max(20, { message: "Este dato debe tener máximo 20 caracteres" }),
-  rfc: z
-    .string({ required_error: "Este campo es obligatorio" })
-    .min(13, { message: "Este dato debe tener mínimo 13 caracteres" })
-    .max(13, { message: "Este dato debe tener máximo 13 caracteres" }),
-  // .refine((value) => /^[a-zA-Z]{3,4}(\d{6})((\D|\d){2,3})?$/.test(value)),
-  tel: z
-    .string({ required_error: "El teléfono es obligatorio" })
-    .min(10, { message: "El numero telefónico tener mínimo 10 números" })
-    .max(10, { message: "El numero telefónico debe tener máximo 10 números" }),
-  email: z
-    .string({ required_error: "El correo es obligatorio" })
-    .email({ message: "Correo invalido" })
-    .max(100, { message: "El correo debe tener menos de 100 caracteres" }),
-  password: z
-    .string({ required_error: "La contraseña es obligatoria" })
-    .min(3, { message: "La contraseña debe tener mínimo 3 caracteres" })
-    .max(100, { message: "La contraseña debe tener menos de 100 caracteres" }),
+export const registerContactDataSchema = z.object({
+  nombreNegocio: z
+    .string()
+    .min(3, {
+      message: "El nombre del negocio debe tener mínimo 3 caracteres",
+    })
+    .max(100, {
+      message: "El nombre del negocio debe tener menos de 100 caracteres",
+    }),
+  telefono: z
+    .string({ required_error: "El telefono es obligatorio" })
+    .min(10, { message: "El telefono debe tener mínimo 10 caracteres" })
+    .max(10, { message: "El telefono debe tener menos de 10 caracteres" }),
+  calle: z
+    .string({ required_error: "La calle es obligatoria" })
+    .min(3, { message: "La calle debe tener mínimo 3 caracteres" })
+    .max(100, { message: "La calle debe tener menos de 100 caracteres" }),
+  colonia: z
+    .string({ required_error: "La colonia es obligatoria" })
+    .min(3, { message: "La colonia debe tener mínimo 3 caracteres" })
+    .max(100, { message: "La colonia debe tener menos de 100 caracteres" }),
+  cp: z
+    .string({ required_error: "El codigo postal es obligatorio" })
+    .min(5, { message: "El codigo postal debe tener mínimo 5 caracteres" })
+    .max(5, { message: "El codigo postal debe tener menos de 5 caracteres" }),
 });
 
 export const loginSchema = z.object({

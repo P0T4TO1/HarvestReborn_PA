@@ -1,6 +1,5 @@
 import { FC, useContext, useEffect, useState } from "react";
 
-import { Product } from "@/interfaces";
 import { hrApi } from "@/api";
 
 export const AllProductsList = () => {

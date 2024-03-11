@@ -15,14 +15,44 @@ import { hrApi } from "@/api";
 export interface AuthState {
   isLoggedIn: boolean;
   user?: IUser;
+  userData: { email: string; password: string };
+  personalData: {
+    nombre: string;
+    apellidos: string;
+    fecha_nacimiento: string;
+    tipo: string;
+  };
+  contactData: {
+    nombreNegocio: string;
+    telefono: string;
+    calle: string;
+    colonia: string;
+    cp: string;
+  };
+  indexActive: number;
 }
 
 const AUTH_INITIAL_STATE: AuthState = {
   isLoggedIn: false,
   user: undefined,
+  userData: { email: "", password: "" },
+  personalData: {
+    nombre: "",
+    apellidos: "",
+    fecha_nacimiento: "",
+    tipo: "",
+  },
+  contactData: {
+    nombreNegocio: "",
+    telefono: "",
+    calle: "",
+    colonia: "",
+    cp: "",
+  },
+  indexActive: 1,
 };
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE);
   const { data, status } = useSession();
 
@@ -31,10 +61,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       dispatch({ type: "[Auth] - Login", payload: data?.user as IUser });
     }
   }, [status, data]);
-
-  // useEffect(() => {
-  //     checkToken();
-  // }, [])
 
   const checkToken = async () => {
     if (!Cookies.get("token")) {
@@ -55,7 +81,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     email: string,
     password: string
   ): Promise<boolean> => {
-    console.log("data", email, password);
     try {
       const { data } = await hrApi.post("/user/login", { email, password });
       const { token, user } = data;
@@ -67,61 +92,32 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const registerUserBusiness = async (
-    owner_name: string,
-    owner_surnames: string,
-    business_name: string,
-    business_tel: string,
-    business_email: string,
-    business_pass: string
+  const registerContext = async (
+    email: string,
+    password: string,
+    tipo: string,
+    nombre: string,
+    apellidos: string,
+    fecha_nacimiento: string,
+    nombreNegocio: string,
+    telefono: string,
+    calle: string,
+    colonia: string,
+    cp: string
   ): Promise<{ hasError: boolean; message?: string }> => {
     try {
-      const { data } = await hrApi.post("/user/registerBusiness", {
-        owner_name,
-        owner_surnames,
-        business_name,
-        business_tel,
-        business_email,
-        business_pass,
-      });
-      const { token, user } = data;
-      Cookies.set("token", token);
-      dispatch({ type: "[Auth] - Login", payload: user });
-      return {
-        hasError: false,
-      };
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        return {
-          hasError: true,
-          message: error.response?.data.message,
-        };
-      }
-      return {
-        hasError: true,
-        message: "No se pudo crear el usuario - intente de nuevo",
-      };
-    }
-  };
-
-  const registerUserOrganization = async (
-    org_name: string,
-    org_acro: string,
-    org_cluni: string,
-    org_rfc: string,
-    org_tel: string,
-    org_email: string,
-    org_pass: string
-  ): Promise<{ hasError: boolean; message?: string }> => {
-    try {
-      const { data } = await hrApi.post("/user/registerOrganization", {
-        org_name,
-        org_acro,
-        org_cluni,
-        org_rfc,
-        org_tel,
-        org_email,
-        org_pass,
+      const { data } = await hrApi.post("/user/register", {
+        email,
+        password,
+        tipo,
+        nombre,
+        apellidos,
+        fecha_nacimiento,
+        nombreNegocio,
+        telefono,
+        calle,
+        colonia,
+        cp,
       });
       const { token, user } = data;
       Cookies.set("token", token);
@@ -159,6 +155,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // Cookies.remove('token');
   };
 
+  const setUserData = (userData: { email: string; password: string }) => {
+    dispatch({ type: "[Auth] - SetUserData", payload: userData });
+  };
+
+  const setPersonalData = (data: any) => {
+    dispatch({ type: "[Auth] - SetPersonalData", payload: data });
+  };
+
+  const setContactData = (data: any) => {
+    dispatch({ type: "[Auth] - SetContactData", payload: data });
+  };
+
+  const setIndexActive = (index: number): void => {
+    dispatch({ type: '[Auth] - SetIndexActive', payload: index });
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -166,9 +178,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         // Methods
         loginUser,
-        registerUserBusiness,
-        registerUserOrganization,
+        registerContext,
         logout,
+        userData: state.userData,
+        personalData: state.personalData,
+        contactData: state.contactData,
+        indexActive : state.indexActive,
+        setUserData,
+        setPersonalData,
+        setContactData,
+        setIndexActive,
       }}
     >
       {children}

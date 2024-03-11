@@ -24,37 +24,34 @@ export const authOptions: NextAuthOptions = {
         const { user_email, user_password } = credentials;
         if (!user_email || !user_password) return null;
 
-        const user = await prisma.user.findUnique({
+        const user = await prisma.m_user.findUnique({
           where: {
-            user_email,
+            email: user_email,
           },
         });
         if (!user) return null;
 
-        if (user.role_id === 2) {
-          const business = await prisma.business.findFirst({
-            where: {
-              user_id: user.id,
-            },
-          });
-          if (!business) return null;
-          return { ...user, business };
-        } else if (user.role_id === 3) {
-          const organization = await prisma.organization.findFirst({
-            where: {
-              user_id: user.id,
-            },
-          });
-          if (!organization) return null;
-          return { ...user, organization };
-        }
-
-        const passwordCorrect = await compare(
-          user_password,
-          user.user_password
-        );
+        const passwordCorrect = await compare(user_password, user.password);
         if (!passwordCorrect) return null;
         console.log("Inicio de sesión correcto", user);
+
+        if (user.id_rol === 2) {
+          const negocio = await prisma.m_negocio.findFirst({
+            where: {
+              dueneg: {
+                id_user: user.id,
+              },
+            },
+          });
+          return { ...user, negocio };
+        } else if (user.id_rol === 3) {
+          const cliente = await prisma.d_cliente.findFirst({
+            where: {
+              id_user: user.id,
+            },
+          });
+          return { ...user, cliente };
+        }
 
         return user;
       },

@@ -12,6 +12,7 @@ import { signIn, SignInResponse } from "next-auth/react";
 import { toast } from "sonner";
 import { AuthContext } from "@/context/auth";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { Input } from "@nextui-org/input";
 
 type Errors = {
   user_email?: string;
@@ -43,6 +44,7 @@ export const LoginForm: FC = () => {
     setIsMutation(true);
 
     try {
+      console.log("entro aqui clientAction");
       const validations = loginSchema.safeParse(data);
       if (!validations.success) {
         let newErrors: Errors = {};
@@ -110,8 +112,7 @@ export const LoginForm: FC = () => {
           <form onSubmit={handleSubmit(clientAction)}>
             <div className="space-y-6">
               <div className="relative">
-                <input
-                  className="w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-green-700"
+                <Input
                   type="email"
                   id="email"
                   placeholder="Email"
@@ -123,27 +124,29 @@ export const LoginForm: FC = () => {
               </div>
 
               <div className="relative">
-                <input
+                <Input
                   placeholder="Contraseña"
                   type={`${visible ? "text" : "password"}`}
                   id="password"
-                  className="text-sm px-4 py-3 rounded-lg w-full bg-gray-200 focus:bg-gray-100 border border-gray-200 focus:outline-none focus:border-green-700"
                   {...register("user_password")}
+                  endContent={
+                    <button
+                      type="button"
+                      onClick={() => setVisible(!visible)}
+                      className="flex items-center absolute inset-y-0 right-0 mr-3 cursor-pointer text-sm leading-5 text-green-700"
+                    >
+                      {visible ? (
+                        <span className="material-symbols-outlined">
+                          visibility_off
+                        </span>
+                      ) : (
+                        <span className="material-symbols-outlined">
+                          visibility
+                        </span>
+                      )}
+                    </button>
+                  }
                 />
-                <div
-                  onClick={() => setVisible(!visible)}
-                  className="flex items-center absolute inset-y-0 right-0 mr-3 cursor-pointer text-sm leading-5 text-green-700"
-                >
-                  {visible ? (
-                    <span className="material-symbols-outlined">
-                      visibility_off
-                    </span>
-                  ) : (
-                    <span className="material-symbols-outlined">
-                      visibility
-                    </span>
-                  )}
-                </div>
                 {errors?.user_pass && (
                   <p className="text-red-700 text-xs">{errors?.user_pass}</p>
                 )}

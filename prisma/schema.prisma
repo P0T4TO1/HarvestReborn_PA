@@ -14,228 +14,279 @@ datasource db {
   relationMode = "prisma"
 }
 
-// Model user
-model User {
-  id            String @id @default(uuid())
-  user_email    String @unique
-  user_password String
+model m_user {
+  id       String @id @default(uuid())
+  password String
+  email    String @unique
+  estado   Estado @default(ACTIVO)
 
-  role_id Int
-  role    Role @relation(fields: [role_id], references: [role_id])
+  id_rol Int
+  rol    c_rol @relation(fields: [id_rol], references: [id_rol])
 
-  userStatus_id Int
-  userStatus    userStatus @relation(fields: [userStatus_id], references: [userStatus_id])
+  cliente       d_cliente[]
+  duenonegocio  d_duenonegocio[]
+  historial     c_historial[]
+  ticketSoporte m_ticketSoporte[]
+  participantes d_participantes[]
+  chat          m_chat[]
+  mensajes      d_mensajes[]
 
-  business     Business?
-  organization Organization?
-  history      History?
-  supRequests  supRequest[]
-
-  @@index([role_id])
-  @@index([userStatus_id])
+  @@index([id_rol])
 }
 
-// Model role
-model Role {
-  role_id   Int    @id @default(autoincrement())
-  role_name String @unique
-
-  user User[]
+enum Estado {
+  ACTIVO
+  INACTIVO
 }
 
-// Model Business
-model Business {
-  business_id          Int     @id @default(autoincrement())
-  businessOwnerName    String
-  businessOwnerSurname String
-  business_name        String
-  business_tel         String
-  business_direction   String?
-  business_description String?
+model c_rol {
+  id_rol     Int    @id @default(autoincrement())
+  nombre_rol String
 
-  donations Donation[]
-
-  user_id String? @unique
-  user    User?   @relation(fields: [user_id], references: [id])
-
-  inventory_id Int       @unique
-  inventory    Inventory @relation(fields: [inventory_id], references: [inventory_id])
+  user m_user[]
 }
 
-// Model Organization
-model Organization {
-  organization_id          Int     @id @default(autoincrement())
-  organization_name        String  @unique
-  organization_cluni       String  @unique
-  organization_acronym     String
-  organization_rfc         String  @unique
-  organization_tel         String
-  organization_direction   String?
-  organization_description String?
+model d_cliente {
+  id_cliente        Int      @id @default(autoincrement())
+  nombre_cliente    String
+  apellidos_cliente String
+  telefono_cliente  String
+  fecha_nacimiento  DateTime
+  nombre_negocio    String?
+  direccion_negocio String?
 
-  donations        Donation[]
-  donationRequests donationRequest[]
+  id_user String
+  user    m_user    @relation(fields: [id_user], references: [id])
+  orden   d_orden[]
 
-  user_id String? @unique
-  user    User?   @relation(fields: [user_id], references: [id])
+  @@index([id_user])
 }
 
-// Model Products
-model Products {
-  product_id          Int     @id @default(autoincrement())
-  product_name        String  @unique
-  product_description String?
-  product_image       String
-  product_isSeason    Boolean @default(false)
+model d_duenonegocio {
+  id_dueneg        Int      @id @default(autoincrement())
+  nombre_dueneg    String
+  apellidos_dueneg String
+  fecha_nacimiento DateTime
 
-  inventories Inventory[]
+  id_user String
+  user    m_user @relation(fields: [id_user], references: [id])
 
-  donationRequest    donationRequest? @relation(fields: [donationRequest_id], references: [drequest_id])
-  donationRequest_id Int?
+  negocio m_negocio?
 
-  donation    Donation? @relation(fields: [donation_id], references: [donation_id])
-  donation_id Int?
-
-  amount     Amount[]
-  price      Price[]
-  arrive     Arrive[]
-  expiration Expiration[]
-
-  @@index([donationRequest_id])
-  @@index([donation_id])
+  @@index([id_user])
 }
 
-// Model Inventory
-model Inventory {
-  inventory_id           Int        @id @default(autoincrement())
-  inventory_name         String
-  inventory_registerDate DateTime   @default(now())
-  Products               Products[]
-  Business               Business?
+model m_negocio {
+  id_negocio        Int     @id @default(autoincrement())
+  nombre_negocio    String
+  direccion_negocio String
+  telefono_negocio  String
+  email_negocio     String?
+
+  id_dueneg Int            @unique
+  dueneg    d_duenonegocio @relation(fields: [id_dueneg], references: [id_dueneg])
+
+  inventario    c_inventario?
+  orden         d_orden[]
+  prodcutoOrden m_prodcutoOrden[]
+
+  @@index([id_dueneg])
 }
 
-// Model donationRequest
-model donationRequest {
-  drequest_id   Int      @id @default(autoincrement())
-  drequest_date DateTime
+model c_inventario {
+  id_inventario Int @id @default(autoincrement())
 
-  prodcuts Products[]
-  donation Donation[]
+  id_negocio Int       @unique
+  negocio    m_negocio @relation(fields: [id_negocio], references: [id_negocio])
 
-  organization_id Int
-  organization    Organization @relation(fields: [organization_id], references: [organization_id])
-
-  @@index([organization_id])
+  lote m_lote[]
 }
 
-// Model Donation
-model Donation {
-  donation_id            Int        @id @default(autoincrement())
-  donation_description   String
-  donation_creationDate  DateTime
-  donation_departureDate DateTime
-  donation_arriveDate    DateTime
-  donation_status        String
-  products               Products[]
+model m_lote {
+  id_lote           Int      @id @default(autoincrement())
+  cantidad_producto Int
+  fecha_entrada     DateTime
+  fecha_vencimiento DateTime
+  precio_kg         Float
+  monto_total       Float
 
-  business_id Int
-  business    Business @relation(fields: [business_id], references: [business_id])
+  id_inventario Int
+  inventario    c_inventario @relation(fields: [id_inventario], references: [id_inventario])
 
-  organization_id Int
-  organization    Organization @relation(fields: [organization_id], references: [organization_id])
+  id_producto Int
+  producto    m_producto @relation(fields: [id_producto], references: [id_producto])
 
-  history_id Int
-  history    History @relation(fields: [history_id], references: [history_id])
+  id_proveedor Int?
+  proveedor    c_proveedor? @relation(fields: [id_proveedor], references: [id_proveedor])
 
-  donationRequest_id Int
-  donationRequest    donationRequest @relation(fields: [donationRequest_id], references: [drequest_id])
-
-  donationStatus_id Int
-  donationStatus    donationStatus @relation(fields: [donationStatus_id], references: [donationStatus_id])
-
-  @@index([business_id])
-  @@index([organization_id])
-  @@index([history_id])
-  @@index([donationStatus_id])
-  @@index([donationRequest_id])
+  @@index([id_inventario])
+  @@index([id_producto])
+  @@index([id_proveedor])
 }
 
-// Model History
-model History {
-  history_id           Int      @id @default(autoincrement())
-  history_creationDate DateTime
-  history_description  String
-  history_type         String
+model m_producto {
+  id_producto     Int       @id @default(autoincrement())
+  nombre_producto String
+  imagen_producto String
+  descripcion     String?
+  enTemporada     Boolean
+  categoria       Categoria @default(VERDURA)
 
-  user_id String @unique
-  user    User   @relation(fields: [user_id], references: [id])
-
-  donations Donation[]
+  lote          m_lote[]
+  prodcutoOrden m_prodcutoOrden[]
 }
 
-// Model donationStatus
-model donationStatus {
-  donationStatus_id   Int     @id @default(autoincrement())
-  donationStatus_name String  @unique
-  donationStatus_desc String?
-
-  donations Donation[]
+enum Categoria {
+  FRUTA
+  VERDURA
 }
 
-// Model supRequestStatus
-model supRequestStatus {
-  supRequestStatus_id   Int     @id @default(autoincrement())
-  supRequestStatus_name String  @unique
-  supRequestStatus_desc String?
+model c_proveedor {
+  id_proveedor       Int    @id @default(autoincrement())
+  nombre_proveedor   String
+  telefono_proveedor String
+  email_proveedor    String
 
-  supRequests supRequest[]
+  lote m_lote[]
 }
 
-// Model userStatus
-model userStatus {
-  userStatus_id   Int     @id @default(autoincrement())
-  userStatus_name String  @unique
-  userStatus_desc String?
+model m_prodcutoOrden {
+  id_productoOrden Int   @id @default(autoincrement())
+  cantidad_orden   Int
+  monto_subtotal   Float
+  monto_total      Float
 
-  users User[]
+  id_orden Int
+  orden    d_orden @relation(fields: [id_orden], references: [id_orden])
+
+  id_producto Int
+  producto    m_producto @relation(fields: [id_producto], references: [id_producto])
+
+  id_negocio Int
+  negocio    m_negocio @relation(fields: [id_negocio], references: [id_negocio])
+
+  @@index([id_orden])
+  @@index([id_producto])
+  @@index([id_negocio])
 }
 
-// Model supRequest
-model supRequest {
-  supRequest_id           Int      @id @default(autoincrement())
-  supRequest_name         String   @unique
-  supRequest_desc         String?
-  supRequest_creationDate DateTime
+model d_orden {
+  id_orden       Int      @id @default(autoincrement())
+  fecha_orden    DateTime
+  hora_orden     DateTime
+  monto_subtotal Float
+  monto_total    Float
+  estado_orden   Estado   @default(ACTIVO)
 
-  user_id String @unique
-  user    User   @relation(fields: [user_id], references: [id])
+  id_cliente Int
+  cliente    d_cliente @relation(fields: [id_cliente], references: [id_cliente])
 
-  supRequestStatus_id Int
-  supRequestStatus    supRequestStatus @relation(fields: [supRequestStatus_id], references: [supRequestStatus_id])
+  id_historial Int
+  historial    c_historial @relation(fields: [id_historial], references: [id_historial])
 
-  @@index([supRequestStatus_id])
+  productoOrden m_prodcutoOrden[]
+  negocio       m_negocio         @relation(fields: [id_negocio], references: [id_negocio])
+  id_negocio    Int
+
+  @@index([id_cliente])
+  @@index([id_historial])
+  @@index([id_negocio])
 }
 
-model Amount {
-  amount_id Int        @id @default(autoincrement())
-  amount    Int
-  products  Products[]
+model c_historial {
+  id_historial Int @id @default(autoincrement())
+
+  id_user String
+  user    m_user @relation(fields: [id_user], references: [id])
+
+  orden d_orden[]
+
+  @@index([id_user])
 }
 
-model Price {
-  price_id Int        @id @default(autoincrement())
-  price    Float
-  products Products[]
+model m_ticketSoporte {
+  id_ticket      Int      @id @default(autoincrement())
+  nombre_usuario String
+  descripcion    String
+  images         String
+  fecha_creacion DateTime
+  fecha_cierre   DateTime
+  estado_ticket  Estado   @default(ACTIVO)
+
+  id_user String
+  user    m_user @relation(fields: [id_user], references: [id])
+
+  @@index([id_user])
 }
 
-model Arrive {
-  arrive_id Int        @id @default(autoincrement())
-  arrive    DateTime
-  products  Products[]
+model d_faqRespuestas {
+  id_faqRespuesta Int @id @default(autoincrement())
+
+  id_prefrec Int
+  pregunta   c_preguntasFrecuentes @relation(fields: [id_prefrec], references: [id_prefrec])
+
+  respuesta String
+
+  @@index([id_prefrec])
 }
 
-model Expiration {
-  expiration_id Int        @id @default(autoincrement())
-  expiration    DateTime
-  products      Products[]
+model c_preguntasFrecuentes {
+  id_prefrec Int @id @default(autoincrement())
+
+  pregunta String
+
+  respuestas d_faqRespuestas[]
+}
+
+model d_participantes {
+  id_participantes Int @id @default(autoincrement())
+
+  id_user String
+  user    m_user @relation(fields: [id_user], references: [id])
+
+  id_chat Int
+  chat    m_chat @relation(fields: [id_chat], references: [id_chat])
+
+  @@index([id_user])
+  @@index([id_chat])
+}
+
+model m_chat {
+  id_chat        Int      @id @default(autoincrement())
+  nombre_chat    String
+  fecha_creacion DateTime
+
+  id_user_creator String
+  user            m_user @relation(fields: [id_user_creator], references: [id])
+
+  participantes d_participantes[]
+  mensajes      d_mensajes[]
+
+  @@index([id_user_creator])
+}
+
+model d_mensajes {
+  id_mensajes    Int          @id @default(autoincrement())
+  cuerpo_mensaje String       @db.VarChar(400)
+  tipo_mensaje   tipo_mensaje @default(TEXTO)
+  leido          Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+  deletedAt      DateTime?
+
+  id_chat Int
+  chat    m_chat @relation(fields: [id_chat], references: [id_chat])
+
+  id_user String
+  user    m_user @relation(fields: [id_user], references: [id])
+
+  @@index([id_chat])
+  @@index([id_user])
+}
+
+enum tipo_mensaje {
+  TEXTO
+  IMAGEN
+  VIDEO
+  AUDIO
+  DOCUMENTO
 }
