@@ -3,7 +3,7 @@
 import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { IProduct } from "@/interfaces";
 import { hrApi } from "@/api";
-import { Modal } from "@/components/ui/Modal";
+import { Modal, ProductCard } from "@/components";
 import { AuthContext } from "@/context/auth";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { NextResponse } from "next/server";
@@ -217,21 +217,6 @@ export const AddProduct = () => {
           </div>
         </div>
 
-        {/*<div className="flex flex-2">*/}
-        {/*  <Input*/}
-        {/*    isClearable*/}
-        {/*    size="md"*/}
-        {/*    radius="lg"*/}
-        {/*    placeholder="Buscar productos..."*/}
-        {/*    type="text"*/}
-        {/*    startContent={*/}
-        {/*      <span className="material-symbols-outlined">search</span>*/}
-        {/*    }*/}
-        {/*    defaultValue={search}*/}
-        {/*    onChange={handleChange}*/}
-        {/*  />*/}
-        {/*</div>*/}
-
         <ul className="mt-8 grid grid-cols-4 gap-4">
           {loading ? (
             <p>Cargando...</p>
@@ -240,27 +225,16 @@ export const AddProduct = () => {
           ) : (
             results.map((product) => (
               <li key={product.id_producto} className={`p-4 flex`}>
-                <div className="product">
-                  <div className="left-side bg-[#87b663]">
-                    <img
-                      src={product.imagen_producto}
-                      alt=""
-                      className="image"
-                    />
-                  </div>
-                  <div className="right-side">
-                    <h2 className="name text-xl font-semibold text-center text-gray-700">
-                      {product.nombre_producto}
-                    </h2>
-                    <div className="setting-icon-container">
-                      <button onClick={() => showModal(product.id_producto)}>
-                        <span className="material-symbols-outlined setting-icon">
-                          add_circle
-                        </span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                <ProductCard
+                  product={product}
+                  route={"add-product"}
+                >
+                  <button onClick={() => showModal(product.id_producto)}>
+                    <span className="material-symbols-outlined setting-icon">
+                      add_circle
+                    </span>
+                  </button>
+                </ProductCard>
               </li>
             ))
           )}

@@ -6,6 +6,7 @@ import { hrApi } from "@/api";
 import { ILote } from "@/interfaces";
 import { AuthContext } from "@/context/auth";
 import { Select, SelectItem, Input } from "@nextui-org/react";
+import { ProductCard } from "@/components";
 
 export const ProductsList = () => {
   const router = useRouter();
@@ -17,9 +18,6 @@ export const ProductsList = () => {
   const [lotes, setLotes] = useState<ILote[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [openSelected, setOpenSelected] = useState(false);
-
   const [search, setSearch] = useState("");
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -46,8 +44,8 @@ export const ProductsList = () => {
     });
   }, [user?.negocio?.id_negocio]);
 
-  const handleDelete = (id: number) => {
-    hrApi.delete(`/inventory/${id}`).then((res) => {
+  const handleDelete = async (id: number) => {
+    await hrApi.delete(`/inventory/${id}`).then((res) => {
       if (res.status === 200) {
         setLotes(lotes.filter((lote) => lote.id_producto !== id));
         router.refresh();
@@ -123,58 +121,22 @@ export const ProductsList = () => {
         ) : (
           results.map((lote) => (
             <li key={lote.id_producto} className="p-2 flex">
-              <div className="product">
-                <div className="left-side bg-[#87b663]">
-                  <img
-                    src={lote.producto.imagen_producto}
-                    alt=""
-                    className="image"
-                  />
-                </div>
-                <div
-                  className={`setting-modal-container ${
-                    open ? "show-setting-modal" : ""
-                  }`}
+              <ProductCard lote={lote} route={"product-list"} >
+                <button
+                  className="edit-btn setting-modal-btn"
+                  onClick={() =>
+                    navigateTo(`/inventory/edit-product/${lote.id_producto}`)
+                  }
                 >
-                  <button className="edit-btn setting-modal-btn">
-                    Editar producto
-                  </button>
-                  <button
-                    onClick={() => handleDelete(lote.id_lote)}
-                    className="delete-btn setting-modal-btn"
-                  >
-                    Borrar producto
-                  </button>
-                </div>
-
-                <div className="right-side flex flex-col">
-                  <h2 className="name text-md font-semibold text-center text-gray-700">
-                    {lote.producto.nombre_producto}
-                  </h2>
-                  <div className="flex flex-col items-center">
-                    <p className="text-center text-gray-700">Quedan </p>
-                    <span className="font-bold">
-                      {lote.cantidad_producto} kg
-                    </span>
-                    <p className="text-center text-gray-700">Llegó el</p>
-                    <span className="font-semibold">
-                      {lote.fecha_entrada
-                        .split("T")[0]
-                        .split("-")
-                        .reverse()
-                        .join("/")
-                        .slice(0, 5)}
-                    </span>
-                  </div>
-                  <div className="setting-icon-container">
-                    <button onClick={() => setOpen(!open)}>
-                      <span className="material-symbols-outlined setting-icon">
-                        settings
-                      </span>
-                    </button>
-                  </div>
-                </div>
-              </div>
+                  Editar producto
+                </button>
+                <button
+                  className="delete-btn setting-modal-btn"
+                  onClick={() => handleDelete(lote.id_lote)}
+                >
+                  Borrar producto
+                </button>
+              </ProductCard>
             </li>
           ))
         )}

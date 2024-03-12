@@ -3,12 +3,11 @@
 import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/context/auth";
-import { INegocio, IInventario, ILote, IProduct } from "@/interfaces";
+import { INegocio } from "@/interfaces";
 import { hrApi } from "@/api";
-import { useParams } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-import { Modal } from "@/components/ui/Modal";
 import { Input } from "@nextui-org/input";
+import { ProductCard } from "@/components";
 
 export const NegocioInfo = () => {
   const router = useRouter();
@@ -124,20 +123,8 @@ export const NegocioInfo = () => {
           <ul className="mt-8 grid grid-cols-4">
             {results?.map((lote) => (
               <li key={lote.id_producto} className="p-2 flex">
-                <div className="product">
-                  <div className="left-side bg-[#87b663]">
-                    <img
-                      src={lote.producto.imagen_producto}
-                      alt=""
-                      className="image"
-                    />
-                  </div>
-                  <div
-                    className={`setting-modal-container ${
-                      open ? "show-setting-modal" : ""
-                    }`}
-                  >
-                    <Input
+                <ProductCard lote={lote} route={"negocio-info"}>
+                  <Input
                       className="setting-modal-btn"
                       placeholder="Cantidad kg"
                       type="number"
@@ -146,30 +133,8 @@ export const NegocioInfo = () => {
                       onChange={(e) => {
                         console.log(e.target.value);
                       }}
-                    />
-                  </div>
-                  <div className="right-side flex flex-col">
-                    <h2 className="name text-md font-semibold text-center text-gray-700">
-                      {lote.producto.nombre_producto}
-                    </h2>
-                    <div className="flex flex-col items-center">
-                      <p className="text-center text-gray-700">Quedan </p>
-                      <span className="font-bold">
-                        {lote.cantidad_producto} kg
-                      </span>
-                      <span className="text-xl font-bold text-emerald-600">
-                        ${lote.precio_kg} kg
-                      </span>
-                    </div>
-                    <div className="setting-icon-container">
-                      <button onClick={() => setOpen(!open)}>
-                        <span className="material-symbols-outlined setting-icon">
-                          add_circle
-                        </span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                  />
+                </ProductCard>
               </li>
             ))}
           </ul>

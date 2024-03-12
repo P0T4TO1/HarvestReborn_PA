@@ -48,6 +48,7 @@ en el cual ...
 
    NEXTAUTH_URL="http://localhost:3000"
    NEXTAUTH_SECRET=
+   JWT_SECRET_SEED=
    ```
 
 5. Agrega a MySQL la base de datos con el nombre que se haya configurado en el archivo .env

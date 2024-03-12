@@ -9,12 +9,6 @@ import { Select, SelectItem } from "@nextui-org/react";
 import NextLink from "next/link";
 
 export const NegociosList = () => {
-  const router = useRouter();
-  const navigateTo = (path: string) => {
-    router.push(path);
-  };
-
-  const { user } = useContext(AuthContext);
   const [negocios, setNegocios] = useState<INegocio[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -90,7 +84,7 @@ export const NegociosList = () => {
         ) : (
           results.map((negocio) => (
             <div
-              className="max-w-2xl bg-emerald-600 shadow-lg rounded-lg"
+              className="max-w-2xl bg-emerald-600 shadow-lg rounded-lg mt-4"
               key={negocio.id_negocio}
             >
               <div className="px-6 py-5">

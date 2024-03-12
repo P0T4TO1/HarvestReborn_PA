@@ -6,6 +6,8 @@ import { Estado, IUser } from "@/interfaces";
 import { AuthContext } from "@/context/auth";
 import { hrApi } from "@/api";
 import { NextResponse } from "next/server";
+import { Select, SelectItem } from "@nextui-org/react";
+import { Input } from "@nextui-org/input";
 
 type Errors = {
   email?: string;
@@ -14,6 +16,9 @@ type Errors = {
   nombre_dueneg?: string;
   apellidos_dueneg?: string;
   fecha_nacimiento_d?: string;
+  dia_nacimiento_d?: string;
+  mes_nacimiento_d?: string;
+  year_nacimiento_d?: string;
   nombre_negocio?: string;
   direccion_negocio?: string;
   telefono_negocio?: string;
@@ -23,9 +28,27 @@ type Errors = {
   apellidos_cliente?: string;
   telefono_cliente?: string;
   fecha_nacimiento_c?: string;
+  dia_nacimiento_c?: string;
+  mes_nacimiento_c?: string;
+  year_nacimiento_c?: string;
   nombre_negocio_c?: string;
   direccion_negocio_c?: string;
 } | null;
+
+const months = {
+  "01": "Enero",
+  "02": "Febrero",
+  "03": "Marzo",
+  "04": "Abril",
+  "05": "Mayo",
+  "06": "Junio",
+  "07": "Julio",
+  "08": "Agosto",
+  "09": "Septiembre",
+  "10": "Octubre",
+  "11": "Noviembre",
+  "12": "Diciembre",
+};
 
 export const ProfileForm: FC = () => {
   const { user } = useContext(AuthContext);
@@ -35,6 +58,15 @@ export const ProfileForm: FC = () => {
   const [error, setError] = useState(false);
   const [isMutation, setIsMutation] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
+  const [fecNac, setFecNac] = useState<{
+    day: string;
+    month: string;
+    year: string;
+  }>({
+    day: "",
+    month: "",
+    year: "",
+  });
 
   const [profile, setProfile] = useState<IUser>({
     id: "",
@@ -130,7 +162,7 @@ export const ProfileForm: FC = () => {
       </aside>
       <main className="w-full min-h-screen py-1 md:w-2/3 lg:w-3/4">
         <div className="p-2 md:p-4">
-          <div className="w-full px-6 pb-8 mt-8 sm:max-w-xl sm:rounded-lg">
+          <div className="w-full pb-8 mt-8 sm:max-w-3xl sm:rounded-lg">
             <h2 className="text-2xl font-bold sm:text-xl">
               Perfil de Usuario
               {user?.id_rol === 2 ? (
@@ -163,7 +195,7 @@ export const ProfileForm: FC = () => {
             ) : error ? (
               <p>Hubo un error</p>
             ) : (
-              <div className="grid max-w-2xl mx-auto">
+              <div className="grid max-w-3xl mx-auto">
                 <form
                   action={onUpdateProfile}
                   className="items-center mt-8 sm:mt-14 text-[#202142]"
@@ -402,25 +434,24 @@ export const ProfileForm: FC = () => {
 
                   {user?.id_rol === 3 && (
                     <>
-                      <div className="w-full">
-                        <label
-                          htmlFor="cluni"
-                          className="block mb-2 text-sm font-medium text-indigo-900"
-                        >
-                          Nombre(s)
-                        </label>
-                        <input
-                          type="text"
-                          id="nombre"
-                          className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                          placeholder="Nombre(s)"
-                          value={profile?.cliente?.nombre_cliente}
-                          defaultValue={profile?.cliente?.nombre_cliente}
-                          disabled={!isEditing}
-                        />
-                      </div>
-
                       <div className="grid grid-cols-2 grid-flow-row gap-6 mt-6">
+                        <div className="w-full">
+                          <label
+                            htmlFor="cluni"
+                            className="block mb-2 text-sm font-medium text-indigo-900"
+                          >
+                            Nombre(s)
+                          </label>
+                          <input
+                            type="text"
+                            id="nombre"
+                            className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                            placeholder="Nombre(s)"
+                            value={profile?.cliente?.nombre_cliente}
+                            defaultValue={profile?.cliente?.nombre_cliente}
+                            disabled={!isEditing}
+                          />
+                        </div>
                         <div className="w-full">
                           <label
                             htmlFor="apellidos"
@@ -446,51 +477,109 @@ export const ProfileForm: FC = () => {
                             Número de Teléfono
                           </label>
                           <input
-                            type="date"
-                            id="fecha_nacimiento_c"
-                            className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                            placeholder="Siglas de la Organización"
-                            value={profile?.cliente?.fecha_nacimiento}
-                            defaultValue={profile?.cliente?.fecha_nacimiento}
-                            disabled={!isEditing}
-                          />
-                        </div>
-                        <div className="mb-2 sm:mb-6">
-                          <label
-                            htmlFor="name"
-                            className="block mb-2 text-sm font-medium text-indigo-900"
-                          >
-                            Nombre de la Organización
-                          </label>
-                          <input
                             type="text"
                             id="tel_c"
                             className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                            placeholder="Número de Teléfono"
+                            placeholder="Número de teléfono"
                             value={profile?.cliente?.telefono_cliente}
                             defaultValue={profile?.cliente?.telefono_cliente}
                             disabled={!isEditing}
                           />
                         </div>
-                        <div className="w-full">
-                          <label
-                            htmlFor="nombre_negocio_c"
-                            className="block mb-2 text-sm font-medium text-indigo-900"
-                          >
-                            Nombre del Negocio(si aplica)
-                          </label>
-                          <input
-                            type="text"
-                            id="nombre_negocio_c"
-                            className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                            placeholder="Siglas de la Organización"
-                            value={profile?.cliente?.nombre_negocio}
-                            defaultValue={profile?.cliente?.nombre_negocio}
-                            disabled={!isEditing}
-                          />
+                        <div>
+                          <div className="relative">
+                            <p className="ml-2 mb-2 text-sm text-indigo-900 font-medium">
+                              Fecha de nacimiento
+                            </p>
+                          </div>
+                          <div className="grid grid-cols-3 gap-4">
+                            <div className="relative">
+                              <Input
+                                radius="sm"
+                                id="dia_nacimiento"
+                                type="text"
+                                placeholder="Día"
+                                onChange={(e) => {
+                                  setFecNac({ ...fecNac, day: e.target.value });
+                                }}
+                                defaultValue={(profile?.cliente?.fecha_nacimiento)?.toString().split("-")[2].split("T")[0]}
+                                value={(profile?.cliente?.fecha_nacimiento)?.toString().split("-")[2].split("T")[0]}
+                                disabled={!isEditing}
+                              />
+                              {errors?.dia_nacimiento_c && (
+                                <p className="text-red-700 text-xs">
+                                  {errors?.dia_nacimiento_c}
+                                </p>
+                              )}
+                            </div>
+                            <div className="relative">
+                              <Select
+                                radius="sm"
+                                id="mes_nacimiento"
+                                placeholder="Mes"
+                                onChange={(e) => {
+                                  setFecNac({
+                                    ...fecNac,
+                                    month: e.target.value,
+                                  });
+                                }}
+                                disabled={!isEditing}
+                              >
+                                {Object.entries(months).map(([key, value]) => (
+                                  <SelectItem value={key} key={key}>
+                                    {value}
+                                  </SelectItem>
+                                ))}
+                              </Select>
+                              {errors?.mes_nacimiento_c && (
+                                <p className="text-red-700 text-xs">
+                                  {errors?.mes_nacimiento_c}
+                                </p>
+                              )}
+                            </div>
+                            <div className="relative">
+                              <Input
+                                radius="sm"
+                                id="año_nacimiento"
+                                type="text"
+                                placeholder="Año"
+                                onChange={(e) => {
+                                  setFecNac({
+                                    ...fecNac,
+                                    year: e.target.value,
+                                  });
+                                }}
+                                defaultValue={(profile?.cliente?.fecha_nacimiento)?.toString().split("-")[0]}
+                                value={(profile?.cliente?.fecha_nacimiento)?.toString().split("-")[0]}
+                                disabled={!isEditing}
+                              />
+                              {errors?.year_nacimiento_c && (
+                                <p className="text-red-700 text-xs">
+                                  {errors?.year_nacimiento_c}
+                                </p>
+                              )}
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <div className="mb-2 sm:mb-6">
+                      <div className="my-2 sm:my-6 w-full">
+                        <label
+                          htmlFor="nombre_negocio_c"
+                          className="block mb-2 text-sm font-medium text-indigo-900"
+                        >
+                          Nombre del Negocio(si aplica)
+                        </label>
+                        <input
+                          type="text"
+                          id="nombre_negocio_c"
+                          className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                          placeholder="Siglas de la Organización"
+                          value={profile?.cliente?.nombre_negocio}
+                          defaultValue={profile?.cliente?.nombre_negocio}
+                          disabled={!isEditing}
+                        />
+                      </div>
+                      <div className="my-2 sm:my-6 w-full">
                         <label
                           htmlFor="direction_c"
                           className="block mb-2 text-sm font-medium text-indigo-900"

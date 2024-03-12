@@ -1,70 +1,93 @@
 "use client";
 
-import { FC, useState } from "react";
-import { Product } from "@/interfaces";
+import { FC, useState, ReactNode } from "react";
+import { ILote, IProduct } from "@/interfaces";
 
 interface Props {
-  product: Product;
+  children: ReactNode;
+  lote?: ILote;
+  product?: IProduct;
+  route: string;
 }
 
-export const ProductCard: FC<Props> = ({ product }) => {
-  const [open, setOpen] = useState(false);
+export const ProductCard: FC<Props> = ({ lote, product, children, route }) => {
+  const [openCards, setOpenCards] = useState<boolean>(false);
 
   return (
     <>
-      <section className="flex relative justify-center overflow-hidden min-h-screen py-20">
-        <div className="container mx-auto px-4 sm:px-8 md:px-16 lg:px-32 flex flex-col relative py-8 sm:py-16 h-full w-full">
-          <div>
-            <div className="mt-12">
-              <div className="flex flex-wrap items-center gap-8">
-                <div className="product">
-                  <div className="left-side bg-[#87b663]">
-                    <img
-                      src="https://raw.githubusercontent.com/r-e-d-ant/bmc-bakery-static-version/997d7db57078eb3621cff9aa546cc0c2e515d922/assets/images/flour.svg"
-                      alt=""
-                      className="image"
-                    />
-                    <h2 className="name">{product.product_name}</h2>
-                  </div>
-
-                  <div
-                    className={`setting-modal-container ${
-                      open ? "show-setting-modal" : " "
-                    }`}
-                  >
-                    <button className="edit-btn setting-modal-btn">
-                      Editar producto
-                    </button>
-                    <button className="delete-btn setting-modal-btn">
-                      Borrar producto
-                    </button>
-                  </div>
-
-                  <div className="right-side">
-                    <div className="setting-icon-container">
-                      <button onClick={() => setOpen(!open)}>
-                        <span className="material-symbols-outlined setting-icon">
-                          settings
-                        </span>
-                      </button>
-                    </div>
-
-                    {product.product_amount && (
-                      <h3 className="weight">
-                        <p className="reste">Quedan</p>
-                        <p className="amount">
-                          {product.product_amount}
-                          <i>Kg</i>
-                        </p>
-                      </h3>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div className="product">
+        <div className="left-side bg-[#87b663]">
+          <img
+            src={
+              route === "add-product"
+                ? product?.imagen_producto
+                : lote?.producto.imagen_producto
+            }
+            alt=""
+            className="image"
+          />
         </div>
-      </section>
+        <div
+          className={`setting-modal-container ${
+            openCards ? "show-setting-modal" : ""
+          }`}
+        >
+          {children}
+        </div>
+
+        <div className="right-side flex flex-col">
+          <h2 className="name text-md font-semibold text-center text-gray-700">
+            {route === "add-product"
+              ? product?.nombre_producto
+              : lote?.producto.nombre_producto}
+          </h2>
+          {route === "product-list" ? (
+            <>
+              <div className="flex flex-col items-center">
+                <p className="text-center text-gray-700">Quedan </p>
+                <span className="font-bold">{lote?.cantidad_producto} kg</span>
+                <p className="text-center text-gray-700">Llegó el</p>
+                <span className="font-semibold">
+                  {lote?.fecha_entrada
+                    .split("T")[0]
+                    .split("-")
+                    .reverse()
+                    .join("/")
+                    .slice(0, 5)}
+                </span>
+              </div>
+              <div className="setting-icon-container">
+                <button onClick={() => setOpenCards(!openCards)}>
+                  <span className="material-symbols-outlined setting-icon">
+                    settings
+                  </span>
+                </button>
+              </div>
+            </>
+          ) : route === "add-product" ? (
+            product && <div className="setting-icon-container">{children}</div>
+          ) : route === "negocio-info" ? (
+            <>
+              <div className="flex flex-col items-center">
+                <p className="text-center text-gray-700">Quedan </p>
+                <span className="font-bold">{lote?.cantidad_producto} kg</span>
+                <span className="text-xl font-bold text-emerald-600">
+                  ${lote?.precio_kg} kg
+                </span>
+              </div>
+              <div className="setting-icon-container">
+                <button onClick={() => setOpenCards(!openCards)}>
+                  <span className="material-symbols-outlined setting-icon">
+                    add_circle
+                  </span>
+                </button>
+              </div>
+            </>
+          ) : null}
+        </div>
+      </div>
     </>
   );
 };
+
+export default ProductCard;

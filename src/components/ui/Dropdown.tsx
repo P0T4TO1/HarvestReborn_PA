@@ -79,7 +79,7 @@ export const Dropdown: FC = () => {
                     <>
                       <button
                         onClick={() => {
-                          router.push(`/inventory`);
+                          router.push("/inventory");
                           handleItemClick();
                         }}
                         className="text-sm hover:bg-gray-100 text-gray-700 flex items-center px-4 py-2 w-full h-full"
@@ -94,7 +94,7 @@ export const Dropdown: FC = () => {
                     <>
                       <button
                         onClick={() => {
-                          router.push(`/my_requests`);
+                          router.push("/orders");
                           handleItemClick();
                         }}
                         className="text-sm hover:bg-gray-100 text-gray-700 flex items-center px-4 py-2 w-full h-full"
@@ -102,7 +102,7 @@ export const Dropdown: FC = () => {
                         <span className="material-symbols-outlined">
                           inventory
                         </span>
-                        Mis solicitudes
+                        Mis pedidos
                       </button>
                     </>
                   )}
