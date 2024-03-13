@@ -52,14 +52,6 @@ export const ContactDataForm = () => {
       } else {
         setErrors(null);
       }
-      console.log(personalData.fecha_nacimiento, "fecha_nacimiento");
-      console.log(
-        new Date(personalData.fecha_nacimiento)
-          .toISOString()
-          .slice(0, -5)
-          .replace("T", " "),
-        "fecha_nacimiento"
-      );
 
       setContactData(data);
 

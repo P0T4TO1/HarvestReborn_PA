@@ -7,22 +7,12 @@ import { AuthContext } from "@/context/auth";
 import { hrApi } from "@/api";
 import { NextResponse } from "next/server";
 import { Select, SelectItem } from "@nextui-org/react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { Input } from "@nextui-org/input";
 
 type Errors = {
   email?: string;
   password?: string;
-
-  nombre_dueneg?: string;
-  apellidos_dueneg?: string;
-  fecha_nacimiento_d?: string;
-  dia_nacimiento_d?: string;
-  mes_nacimiento_d?: string;
-  year_nacimiento_d?: string;
-  nombre_negocio?: string;
-  direccion_negocio?: string;
-  telefono_negocio?: string;
-  email_negocio?: string;
 
   nombre_cliente?: string;
   apellidos_cliente?: string;
@@ -33,7 +23,45 @@ type Errors = {
   year_nacimiento_c?: string;
   nombre_negocio_c?: string;
   direccion_negocio_c?: string;
+  calle_c?: string;
+  colonia_c?: string;
+  cp_c?: string;
+
+  nombre_dueneg?: string;
+  apellidos_dueneg?: string;
+  fecha_nacimiento_d?: string;
+  dia_nacimiento_d?: string;
+  mes_nacimiento_d?: string;
+  year_nacimiento_d?: string;
+  nombre_negocio_d?: string;
+  direccion_negocio_d?: string;
+  calle_d?: string;
+  colonia_d?: string;
+  cp_d?: string;
+  telefono_negocio_d?: string;
+  email_negocio?: string;
 } | null;
+
+interface IFormData {
+  email: string;
+  password: string;
+
+  nombre_cliente: string;
+  apellidos_cliente: string;
+  telefono_cliente: string;
+  fecha_nacimiento_d: string;
+  nombre_negocio_c?: string;
+  direccion_negocio_c?: string;
+
+  nombre_dueneg: string;
+  apellidos_dueneg: string;
+  fecha_nacimiento_c: string;
+
+  nombre_negocio_d: string;
+  direccion_negocio_d: string;
+  telefono_negocio: string;
+  email_negocio?: string;
+}
 
 const months = {
   "01": "Enero",
@@ -52,6 +80,7 @@ const months = {
 
 export const ProfileForm: FC = () => {
   const { user } = useContext(AuthContext);
+  const { register, handleSubmit } = useForm<IFormData>();
 
   const [isEditing, setIsEditing] = useState(false);
   const [errors, setErrors] = useState<Errors>(null);
@@ -59,6 +88,16 @@ export const ProfileForm: FC = () => {
   const [isMutation, setIsMutation] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
   const [fecNac, setFecNac] = useState<{
+    day: string;
+    month: string;
+    year: string;
+  }>({
+    day: "",
+    month: "",
+    year: "",
+  });
+
+  const [fecNacC, setFecNacC] = useState<{
     day: string;
     month: string;
     year: string;
@@ -87,24 +126,11 @@ export const ProfileForm: FC = () => {
     });
   }, [user?.id, profile]);
 
-  const onUpdateProfile = async (formData: FormData) => {
+  const onUpdateProfile: SubmitHandler<IFormData> = async (data) => {
     if (isMutation) return null;
     setIsMutation(true);
 
     try {
-      const data = {
-        user_email: formData.get("email") as string,
-        user_password: formData.get("password") as string,
-        business_name: formData.get("business_name") as string,
-        business_tel: formData.get("business_tel") as string,
-        owner_name: formData.get("owner_name") as string,
-        owner_surnames: formData.get("owner_surnames") as string,
-        org_name: formData.get("name") as string,
-        org_acro: formData.get("acronym") as string,
-        org_cluni: formData.get("cluni") as string,
-        org_rfc: formData.get("rfc") as string,
-      };
-
       const validations = profileSchema.safeParse(data);
       if (!validations.success) {
         let newErrors: Errors = {};
@@ -197,7 +223,7 @@ export const ProfileForm: FC = () => {
             ) : (
               <div className="grid max-w-3xl mx-auto">
                 <form
-                  action={onUpdateProfile}
+                  onSubmit={handleSubmit(onUpdateProfile)}
                   className="items-center mt-8 sm:mt-14 text-[#202142]"
                 >
                   <div className="mb-2 sm:mb-6">
@@ -215,6 +241,7 @@ export const ProfileForm: FC = () => {
                       value={profile?.email}
                       defaultValue={profile?.email}
                       disabled={!isEditing}
+                      {...register("email")}
                     />
                   </div>
 
@@ -236,6 +263,7 @@ export const ProfileForm: FC = () => {
                             value={profile?.dueneg?.nombre_dueneg}
                             defaultValue={profile?.dueneg?.nombre_dueneg}
                             disabled={!isEditing}
+                            {...register("nombre_dueneg")}
                           />
                         </div>
 
@@ -254,24 +282,102 @@ export const ProfileForm: FC = () => {
                             value={profile?.dueneg?.apellidos_dueneg}
                             defaultValue={profile?.dueneg?.apellidos_dueneg}
                             disabled={!isEditing}
+                            {...register("apellidos_dueneg")}
                           />
                         </div>
                         <div className="w-full">
-                          <label
-                            htmlFor="last_name"
-                            className="block mb-2 text-sm font-medium text-indigo-900"
-                          >
-                            Fecha de Nacimiento
-                          </label>
-                          <input
-                            type="date"
-                            id="fecha_nacimiento"
-                            className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                            placeholder="Fecha de Nacimiento"
-                            value={profile?.dueneg?.fecha_nacimiento}
-                            defaultValue={profile?.dueneg?.fecha_nacimiento}
-                            disabled={!isEditing}
-                          />
+                          <div className="relative">
+                            <p className="ml-2 mb-2 text-sm text-indigo-900 font-medium">
+                              Fecha de nacimiento
+                            </p>
+                          </div>
+                          <div className="grid grid-cols-3 gap-4">
+                            <div className="relative">
+                              <Input
+                                radius="sm"
+                                id="dia_nacimiento"
+                                type="text"
+                                placeholder="Día"
+                                onChange={(e) => {
+                                  setFecNac({ ...fecNac, day: e.target.value });
+                                }}
+                                defaultValue={
+                                  profile?.dueneg?.fecha_nacimiento
+                                    ?.toString()
+                                    .split("-")[2]
+                                    .split("T")[0]
+                                }
+                                value={
+                                  profile?.dueneg?.fecha_nacimiento
+                                    ?.toString()
+                                    .split("-")[2]
+                                    .split("T")[0]
+                                }
+                                disabled={!isEditing}
+                              />
+                              {errors?.dia_nacimiento_c && (
+                                <p className="text-red-700 text-xs">
+                                  {errors?.dia_nacimiento_c}
+                                </p>
+                              )}
+                            </div>
+                            <div className="relative">
+                              <Select
+                                radius="sm"
+                                id="mes_nacimiento"
+                                placeholder="Mes"
+                                onChange={(e) => {
+                                  setFecNac({
+                                    ...fecNac,
+                                    month: e.target.value,
+                                  });
+                                }}
+                                disabled={!isEditing}
+                                defaultSelectedKeys={(profile?.dueneg?.fecha_nacimiento)?.split("-")[2]}
+                              >
+                                {Object.entries(months).map(([key, value]) => (
+                                  <SelectItem value={key} key={key}>
+                                    {value}
+                                  </SelectItem>
+                                ))}
+                              </Select>
+                              {errors?.mes_nacimiento_c && (
+                                <p className="text-red-700 text-xs">
+                                  {errors?.mes_nacimiento_c}
+                                </p>
+                              )}
+                            </div>
+                            <div className="relative">
+                              <Input
+                                radius="sm"
+                                id="año_nacimiento"
+                                type="text"
+                                placeholder="Año"
+                                onChange={(e) => {
+                                  setFecNac({
+                                    ...fecNac,
+                                    year: e.target.value,
+                                  });
+                                }}
+                                defaultValue={
+                                  profile?.dueneg?.fecha_nacimiento
+                                    ?.toString()
+                                    .split("-")[0]
+                                }
+                                value={
+                                  profile?.dueneg?.fecha_nacimiento
+                                    ?.toString()
+                                    .split("-")[0]
+                                }
+                                disabled={!isEditing}
+                              />
+                              {errors?.year_nacimiento_c && (
+                                <p className="text-red-700 text-xs">
+                                  {errors?.year_nacimiento_c}
+                                </p>
+                              )}
+                            </div>
+                          </div>
                         </div>
                       </div>
                       <div className="flex flex-col items-center w-full mb-2 space-x-0 space-y-2 sm:flex-row sm:space-x-4 sm:space-y-0 sm:mb-6">
@@ -292,6 +398,7 @@ export const ProfileForm: FC = () => {
                               profile?.dueneg?.negocio?.nombre_negocio
                             }
                             disabled={!isEditing}
+                            {...register("nombre_negocio_d")}
                           />
                         </div>
 
@@ -312,6 +419,7 @@ export const ProfileForm: FC = () => {
                               profile?.dueneg?.negocio?.telefono_negocio
                             }
                             disabled={!isEditing}
+                            {...register("telefono_negocio")}
                           />
                         </div>
                       </div>
@@ -427,6 +535,7 @@ export const ProfileForm: FC = () => {
                           value={profile?.dueneg?.negocio?.email_negocio}
                           defaultValue={profile?.dueneg?.negocio?.email_negocio}
                           disabled={!isEditing}
+                          {...register("email_negocio")}
                         />
                       </div>
                     </>
@@ -450,6 +559,7 @@ export const ProfileForm: FC = () => {
                             value={profile?.cliente?.nombre_cliente}
                             defaultValue={profile?.cliente?.nombre_cliente}
                             disabled={!isEditing}
+                            {...register("nombre_cliente")}
                           />
                         </div>
                         <div className="w-full">
@@ -467,6 +577,7 @@ export const ProfileForm: FC = () => {
                             value={profile?.cliente?.apellidos_cliente}
                             defaultValue={profile?.cliente?.apellidos_cliente}
                             disabled={!isEditing}
+                            {...register("apellidos_cliente")}
                           />
                         </div>
                         <div className="w-full">
@@ -484,6 +595,7 @@ export const ProfileForm: FC = () => {
                             value={profile?.cliente?.telefono_cliente}
                             defaultValue={profile?.cliente?.telefono_cliente}
                             disabled={!isEditing}
+                            {...register("telefono_cliente")}
                           />
                         </div>
                         <div>
@@ -500,10 +612,20 @@ export const ProfileForm: FC = () => {
                                 type="text"
                                 placeholder="Día"
                                 onChange={(e) => {
-                                  setFecNac({ ...fecNac, day: e.target.value });
+                                  setFecNac({ ...fecNacC, day: e.target.value });
                                 }}
-                                defaultValue={(profile?.cliente?.fecha_nacimiento)?.toString().split("-")[2].split("T")[0]}
-                                value={(profile?.cliente?.fecha_nacimiento)?.toString().split("-")[2].split("T")[0]}
+                                defaultValue={
+                                  profile?.cliente?.fecha_nacimiento
+                                    ?.toString()
+                                    .split("-")[2]
+                                    .split("T")[0]
+                                }
+                                value={
+                                  profile?.cliente?.fecha_nacimiento
+                                    ?.toString()
+                                    .split("-")[2]
+                                    .split("T")[0]
+                                }
                                 disabled={!isEditing}
                               />
                               {errors?.dia_nacimiento_c && (
@@ -518,8 +640,8 @@ export const ProfileForm: FC = () => {
                                 id="mes_nacimiento"
                                 placeholder="Mes"
                                 onChange={(e) => {
-                                  setFecNac({
-                                    ...fecNac,
+                                  setFecNacC({
+                                    ...fecNacC,
                                     month: e.target.value,
                                   });
                                 }}
@@ -544,13 +666,21 @@ export const ProfileForm: FC = () => {
                                 type="text"
                                 placeholder="Año"
                                 onChange={(e) => {
-                                  setFecNac({
-                                    ...fecNac,
+                                  setFecNacC({
+                                    ...fecNacC,
                                     year: e.target.value,
                                   });
                                 }}
-                                defaultValue={(profile?.cliente?.fecha_nacimiento)?.toString().split("-")[0]}
-                                value={(profile?.cliente?.fecha_nacimiento)?.toString().split("-")[0]}
+                                defaultValue={
+                                  profile?.cliente?.fecha_nacimiento
+                                    ?.toString()
+                                    .split("-")[0]
+                                }
+                                value={
+                                  profile?.cliente?.fecha_nacimiento
+                                    ?.toString()
+                                    .split("-")[0]
+                                }
                                 disabled={!isEditing}
                               />
                               {errors?.year_nacimiento_c && (
@@ -577,6 +707,7 @@ export const ProfileForm: FC = () => {
                           value={profile?.cliente?.nombre_negocio}
                           defaultValue={profile?.cliente?.nombre_negocio}
                           disabled={!isEditing}
+                          {...register("nombre_negocio_c")}
                         />
                       </div>
                       <div className="my-2 sm:my-6 w-full">
@@ -594,6 +725,7 @@ export const ProfileForm: FC = () => {
                           value={profile?.cliente?.direccion_negocio}
                           defaultValue={profile?.cliente?.direccion_negocio}
                           disabled={!isEditing}
+                          {...register("direccion_negocio_c")}
                         />
                       </div>
                     </>

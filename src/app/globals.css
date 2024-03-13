@@ -49,6 +49,12 @@ body {
     width: 275px;
   }
 }
+@media screen and (min-width: 368px) {
+  .product {
+    width: 225px;
+  }
+}
+
 .product .image {
   max-width: 4rem;
 }
