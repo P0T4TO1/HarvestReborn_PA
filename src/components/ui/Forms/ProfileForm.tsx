@@ -133,6 +133,7 @@ export const ProfileForm: FC = () => {
     try {
       const validations = profileSchema.safeParse(data);
       if (!validations.success) {
+        console.log("error", validations.error.issues)
         let newErrors: Errors = {};
 
         validations.error.issues.forEach((issue) => {
@@ -238,7 +239,6 @@ export const ProfileForm: FC = () => {
                       id="email"
                       className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
                       placeholder="Correo electrónico"
-                      value={profile?.email}
                       defaultValue={profile?.email}
                       disabled={!isEditing}
                       {...register("email")}
@@ -260,7 +260,6 @@ export const ProfileForm: FC = () => {
                             id="name"
                             className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
                             placeholder="Nombre(s)"
-                            value={profile?.dueneg?.nombre_dueneg}
                             defaultValue={profile?.dueneg?.nombre_dueneg}
                             disabled={!isEditing}
                             {...register("nombre_dueneg")}
@@ -279,7 +278,6 @@ export const ProfileForm: FC = () => {
                             id="last_name"
                             className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
                             placeholder="Apellidos"
-                            value={profile?.dueneg?.apellidos_dueneg}
                             defaultValue={profile?.dueneg?.apellidos_dueneg}
                             disabled={!isEditing}
                             {...register("apellidos_dueneg")}
@@ -302,12 +300,6 @@ export const ProfileForm: FC = () => {
                                   setFecNac({ ...fecNac, day: e.target.value });
                                 }}
                                 defaultValue={
-                                  profile?.dueneg?.fecha_nacimiento
-                                    ?.toString()
-                                    .split("-")[2]
-                                    .split("T")[0]
-                                }
-                                value={
                                   profile?.dueneg?.fecha_nacimiento
                                     ?.toString()
                                     .split("-")[2]
@@ -364,11 +356,6 @@ export const ProfileForm: FC = () => {
                                     ?.toString()
                                     .split("-")[0]
                                 }
-                                value={
-                                  profile?.dueneg?.fecha_nacimiento
-                                    ?.toString()
-                                    .split("-")[0]
-                                }
                                 disabled={!isEditing}
                               />
                               {errors?.year_nacimiento_c && (
@@ -393,7 +380,6 @@ export const ProfileForm: FC = () => {
                             id="business_name"
                             className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
                             placeholder="Nombre del Negocio"
-                            value={profile?.dueneg?.negocio?.nombre_negocio}
                             defaultValue={
                               profile?.dueneg?.negocio?.nombre_negocio
                             }
@@ -414,7 +400,6 @@ export const ProfileForm: FC = () => {
                             id="tel"
                             className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
                             placeholder="Teléfono del Negocio"
-                            value={profile?.dueneg?.negocio?.telefono_negocio}
                             defaultValue={
                               profile?.dueneg?.negocio?.telefono_negocio
                             }
@@ -435,7 +420,6 @@ export const ProfileForm: FC = () => {
                           id="direction"
                           className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
                           placeholder="Dirección del Negocio"
-                          value={profile?.dueneg?.negocio?.direccion_negocio}
                           defaultValue={
                             profile?.dueneg?.negocio?.direccion_negocio
                           }
@@ -455,11 +439,6 @@ export const ProfileForm: FC = () => {
                             id="calle_numero"
                             className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
                             placeholder="Calle y número"
-                            value={
-                              profile?.dueneg?.negocio?.direccion_negocio?.split(
-                                ","
-                              )[0]
-                            }
                             defaultValue={
                               profile?.dueneg?.negocio?.direccion_negocio?.split(
                                 ","
@@ -480,11 +459,6 @@ export const ProfileForm: FC = () => {
                             id="colonia"
                             className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
                             placeholder="Colonia"
-                            value={
-                              profile?.dueneg?.negocio?.direccion_negocio?.split(
-                                ","
-                              )[1]
-                            }
                             defaultValue={
                               profile?.dueneg?.negocio?.direccion_negocio?.split(
                                 ","
@@ -505,11 +479,6 @@ export const ProfileForm: FC = () => {
                             id="cp"
                             className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
                             placeholder="Código Postal"
-                            value={
-                              profile?.dueneg?.negocio?.direccion_negocio?.split(
-                                ","
-                              )[2]
-                            }
                             defaultValue={
                               profile?.dueneg?.negocio?.direccion_negocio?.split(
                                 ","
@@ -532,7 +501,6 @@ export const ProfileForm: FC = () => {
                           id="direction"
                           className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
                           placeholder="Email del Negocio"
-                          value={profile?.dueneg?.negocio?.email_negocio}
                           defaultValue={profile?.dueneg?.negocio?.email_negocio}
                           disabled={!isEditing}
                           {...register("email_negocio")}
@@ -556,7 +524,6 @@ export const ProfileForm: FC = () => {
                             id="nombre"
                             className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
                             placeholder="Nombre(s)"
-                            value={profile?.cliente?.nombre_cliente}
                             defaultValue={profile?.cliente?.nombre_cliente}
                             disabled={!isEditing}
                             {...register("nombre_cliente")}
@@ -574,7 +541,6 @@ export const ProfileForm: FC = () => {
                             id="apellidos"
                             className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
                             placeholder="Apellidos"
-                            value={profile?.cliente?.apellidos_cliente}
                             defaultValue={profile?.cliente?.apellidos_cliente}
                             disabled={!isEditing}
                             {...register("apellidos_cliente")}
@@ -592,7 +558,6 @@ export const ProfileForm: FC = () => {
                             id="tel_c"
                             className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
                             placeholder="Número de teléfono"
-                            value={profile?.cliente?.telefono_cliente}
                             defaultValue={profile?.cliente?.telefono_cliente}
                             disabled={!isEditing}
                             {...register("telefono_cliente")}
@@ -620,13 +585,8 @@ export const ProfileForm: FC = () => {
                                     .split("-")[2]
                                     .split("T")[0]
                                 }
-                                value={
-                                  profile?.cliente?.fecha_nacimiento
-                                    ?.toString()
-                                    .split("-")[2]
-                                    .split("T")[0]
-                                }
                                 disabled={!isEditing}
+                                required={false}
                               />
                               {errors?.dia_nacimiento_c && (
                                 <p className="text-red-700 text-xs">
@@ -646,6 +606,7 @@ export const ProfileForm: FC = () => {
                                   });
                                 }}
                                 disabled={!isEditing}
+                                required={false}
                               >
                                 {Object.entries(months).map(([key, value]) => (
                                   <SelectItem value={key} key={key}>
@@ -676,11 +637,7 @@ export const ProfileForm: FC = () => {
                                     ?.toString()
                                     .split("-")[0]
                                 }
-                                value={
-                                  profile?.cliente?.fecha_nacimiento
-                                    ?.toString()
-                                    .split("-")[0]
-                                }
+                                required={false}
                                 disabled={!isEditing}
                               />
                               {errors?.year_nacimiento_c && (
@@ -704,7 +661,6 @@ export const ProfileForm: FC = () => {
                           id="nombre_negocio_c"
                           className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
                           placeholder="Siglas de la Organización"
-                          value={profile?.cliente?.nombre_negocio}
                           defaultValue={profile?.cliente?.nombre_negocio}
                           disabled={!isEditing}
                           {...register("nombre_negocio_c")}
@@ -722,7 +678,6 @@ export const ProfileForm: FC = () => {
                           id="direction"
                           className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
                           placeholder="Dirección del Negocio"
-                          value={profile?.cliente?.direccion_negocio}
                           defaultValue={profile?.cliente?.direccion_negocio}
                           disabled={!isEditing}
                           {...register("direccion_negocio_c")}
