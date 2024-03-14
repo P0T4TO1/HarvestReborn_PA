@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Navbar, Footer } from "@/components";
+import { NavbarComponent, Footer } from "@/components";
 import { ReactNode } from "react";
 import Providers from "@/components/providers";
 import { Toaster } from "sonner";
@@ -25,7 +25,7 @@ export default function RootLayout({
         <Providers>
           <AuthProvider>
             <Toaster position="top-center" richColors />
-            <Navbar />
+            <NavbarComponent />
             {children}
             <Footer />
           </AuthProvider>

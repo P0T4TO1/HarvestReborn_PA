@@ -65,7 +65,6 @@ export const AddProduct = () => {
   };
 
   const addProduct: SubmitHandler<IFormData> = async (data) => {
-    console.log(data);
     try {
       const res = await hrApi
         .post(`/inventory/${productId}`, {

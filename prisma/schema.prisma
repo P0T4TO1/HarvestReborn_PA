@@ -56,7 +56,7 @@ model d_cliente {
   direccion_negocio String?
 
   id_user String
-  user    m_user    @relation(fields: [id_user], references: [id])
+  user    m_user    @relation(fields: [id_user], references: [id], onDelete: Cascade)
   orden   d_orden[]
 
   @@index([id_user])

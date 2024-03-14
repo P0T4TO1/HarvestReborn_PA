@@ -44,7 +44,6 @@ export const LoginForm: FC = () => {
     setIsMutation(true);
 
     try {
-      console.log("entro aqui clientAction");
       const validations = loginSchema.safeParse(data);
       if (!validations.success) {
         let newErrors: Errors = {};

@@ -1,11 +1,10 @@
-import type { NextApiRequest } from "next";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { hash } from "bcrypt";
 
 import { jwt } from "@/lib/utils";
 import prisma from "@/lib/prisma";
 
-export async function registerUser(req: NextApiRequest) {
+async function registerUser(req: NextRequest, res: NextResponse) {
   const {
     email = "",
     password = "",
@@ -49,12 +48,14 @@ export async function registerUser(req: NextApiRequest) {
       );
     }
 
+    const ceo: number = email === "jaretgarciagomez@gmail.com" ? 1 : 2 || 3;
+
     if (tipo === "cliente") {
       const newUser = await prisma.m_user.create({
         data: {
           email,
           password: await hash(password, 10),
-          id_rol: 3,
+          id_rol: ceo === 1 ? 1 : 3,
           cliente: {
             create: [
               {
@@ -88,7 +89,7 @@ export async function registerUser(req: NextApiRequest) {
         data: {
           email,
           password: await hash(password, 10),
-          id_rol: 2,
+          id_rol: ceo === 1 ? 1 : 2,
           duenonegocio: {
             create: [
               {

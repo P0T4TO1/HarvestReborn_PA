@@ -1,11 +1,7 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function getAllNegocios(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function getAllNegocios(req: NextRequest, res: NextResponse) {
   const negocios = await prisma.m_negocio.findMany({
     include: {
       inventario: {

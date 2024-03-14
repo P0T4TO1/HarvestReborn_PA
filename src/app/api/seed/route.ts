@@ -1,19 +1,23 @@
-import type { NextApiResponse, NextApiRequest } from "next";
 import prisma from "@/lib/prisma";
 import { seedDatabase } from "@/lib/utils";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 type Data = {
   message: string;
 };
 
-export async function initialData(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
+async function initialData(req: NextRequest, res: NextResponse) {
   if (process.env.NODE_ENV === "production") {
-    return res.status(401).json({ message: "No tiene acceso a este API" });
+    return NextResponse.json({ message: "Not allowed" }, { status: 405 });
   }
+  //
+  // await prisma.d_cliente.deleteMany();
+  // await prisma.m_lote.deleteMany();
+  // await prisma.m_lote.deleteMany();
+  // await prisma.c_inventario.deleteMany();
+  // await prisma.m_negocio.deleteMany();
+  // await prisma.d_duenonegocio.deleteMany();
+  // await prisma.m_user.deleteMany();
   // await prisma.c_rol.deleteMany();
   // await prisma.c_rol.createMany({
   //   data: [

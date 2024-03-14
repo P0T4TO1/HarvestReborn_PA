@@ -1,17 +1,13 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function getAllProducts(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function getAllProducts(req: NextRequest, res: NextResponse) {
   const products = await prisma.m_producto.findMany();
 
   return NextResponse.json(products, { status: 200 });
 }
 
-export async function createProduct(req: NextApiRequest, res: NextApiResponse) {
+async function createProduct(req: NextRequest, res: NextResponse) {
   const {
     name,
     amount,
@@ -36,33 +32,19 @@ export async function createProduct(req: NextApiRequest, res: NextApiResponse) {
     );
   }
 
-  const product = await prisma.products.create({
+  const product = await prisma.m_producto.create({
     data: {
-      product_name: name,
-      product_isSeason: isSeasonal,
-      product_image: imageURL,
-      amount: {
-        create: {
-          amount: amount,
-        },
-      },
-      expiration: {
-        create: {
-          expiration: new Date(expiration),
-        },
-      },
-      arrive: {
-        create: {
-          arrive: new Date(arriveDate),
-        },
-      },
+      nombre_producto: name,
+      enTemporada: isSeasonal,
+      imagen_producto: imageURL,
+      categoria: "FRUTA",
     },
   });
 
   return NextResponse.json(product, { status: 200 });
 }
 
-export async function updateProduct(req: NextApiRequest, res: NextApiResponse) {
+async function updateProduct(req: NextRequest, res: NextResponse) {
   const { id, name, amount, arriveDate, expiration, isSeasonal } =
     await new Response(req.body).json();
 
@@ -73,20 +55,20 @@ export async function updateProduct(req: NextApiRequest, res: NextApiResponse) {
     );
   }
 
-  const product = await prisma.products.update({
+  const product = await prisma.m_producto.update({
     where: {
-      product_id: parseInt(id, 10),
+      id_producto: parseInt(id, 10),
     },
     data: {
-      product_name: name,
-      product_isSeason: isSeasonal,
+      nombre_producto: name,
+      enTemporada: isSeasonal,
     },
   });
 
   return NextResponse.json(product, { status: 200 });
 }
 
-export async function deleteProduct(req: NextApiRequest, res: NextApiResponse) {
+async function deleteProduct(req: NextRequest, res: NextResponse) {
   const { id } = await new Response(req.body).json();
 
   if (!id) {
@@ -96,9 +78,9 @@ export async function deleteProduct(req: NextApiRequest, res: NextApiResponse) {
     );
   }
 
-  const product = await prisma.products.delete({
+  const product = await prisma.m_producto.delete({
     where: {
-      product_id: parseInt(id, 10),
+      id_producto: parseInt(id, 10),
     },
   });
 

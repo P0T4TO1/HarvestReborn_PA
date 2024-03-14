@@ -33,6 +33,9 @@ export const ProductsList = () => {
       );
 
   useEffect(() => {
+    if (!user?.negocio?.id_negocio) {
+      return;
+    }
     hrApi.get(`/inventory/${user?.negocio?.id_negocio}`).then((res) => {
       if (res.status === 200) {
         setLotes(res.data);
@@ -121,7 +124,7 @@ export const ProductsList = () => {
         ) : (
           results.map((lote) => (
             <li key={lote.id_producto} className="p-2 flex">
-              <ProductCard lote={lote} route={"product-list"} >
+              <ProductCard lote={lote} route={"product-list"}>
                 <button
                   className="edit-btn setting-modal-btn"
                   onClick={() =>

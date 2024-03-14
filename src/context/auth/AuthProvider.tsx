@@ -149,6 +149,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     Cookies.remove("city");
     Cookies.remove("country");
     Cookies.remove("phone");
+    Cookies.remove("email");
+    Cookies.remove("user");
 
     signOut().then();
     // router.reload();

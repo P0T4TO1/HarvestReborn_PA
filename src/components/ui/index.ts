@@ -6,3 +6,4 @@ export * from "./Forms";
 export * from "./Inventory";
 export * from "./Negocios";
 export * from "./Modal";
+export * from "./Admin";

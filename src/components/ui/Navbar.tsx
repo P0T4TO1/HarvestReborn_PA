@@ -1,173 +1,163 @@
 "use client";
 
-import NextLink from "next/link";
 import React, { useContext, useState } from "react";
-import { Dropdown } from "./Dropdown";
+import { DropdownComponent } from "@/components";
 import { useSession } from "next-auth/react";
 import { AuthContext } from "@/context/auth";
+import Image from "next/image";
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  NavbarMenuToggle,
+  NavbarMenu,
+  NavbarMenuItem,
+  Link,
+  Button,
+} from "@nextui-org/react";
 
-export const Navbar = () => {
+export const NavbarComponent = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { data: session } = useSession();
   const { user } = useContext(AuthContext);
 
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
-  };
-
   return (
-    <nav className="bg-green-800 w-full z-30 fixed">
-      <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-        <div className="relative flex h-20 items-center justify-between">
-          <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-            <button
-              type="button"
-              onClick={toggleMobileMenu}
-              className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-200 hover:bg-green-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
-            >
-              <span className="absolute -inset-0.5"></span>
-              <span className="sr-only">Abrir/cerrar menú</span>
+    <>
+      <Navbar onMenuOpenChange={setMobileMenuOpen} className="bg-green-800">
+        <NavbarContent>
+          <NavbarMenuToggle
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            className="sm:hidden"
+          />
+          <NavbarBrand>
+            <Image
+              src="/images/logo.png"
+              alt="Harvest Reborn"
+              width={80}
+              height={80}
+            />
+          </NavbarBrand>
+        </NavbarContent>
 
-              {/* Cambiamos el icono dependiendo del estado del menú */}
-              {mobileMenuOpen ? (
-                <span className="material-symbols-outlined">menu_open</span>
+        <NavbarContent className="hidden sm:flex gap-4" justify="center">
+          {session ? (
+            <>
+              <NavbarItem>
+                <Link className="text-gray-300" href={"/home"}>
+                  Inicio
+                </Link>
+              </NavbarItem>
+              {user?.id_rol === 2 ? (
+                <>
+                  <NavbarItem>
+                    <Link className="text-gray-300" href="/inventory">
+                      Inventario
+                    </Link>
+                  </NavbarItem>
+                  <NavbarItem>
+                    <Link className="text-gray-300" href={"/orders"}>
+                      Pedidos
+                    </Link>
+                  </NavbarItem>
+                </>
+              ) : user?.id_rol === 3 ? (
+                <>
+                  <NavbarItem>
+                    <Link className="text-gray-300" href="/negocios">
+                      Negocios
+                    </Link>
+                  </NavbarItem>
+                  <NavbarItem>
+                    <Link className="text-gray-300" href={"/orders"}>
+                      Mis pedidos
+                    </Link>
+                  </NavbarItem>
+                </>
               ) : (
-                <span className="material-symbols-outlined">menu</span>
+                <>
+                  <NavbarItem>
+                    <Link className="text-gray-300" href={"/admin/dashboard"}>
+                      Dashboard
+                    </Link>
+                  </NavbarItem>
+                  <NavbarItem>
+                    <Link className="text-gray-300" href={"/admin/tickets"}>
+                      Tickets
+                    </Link>
+                  </NavbarItem>
+                </>
               )}
-            </button>
-          </div>
-          <div className="flex flex-1 items-center justify-center sm:items-center sm:justify-start">
-            <div className="flex flex-shrink-0 items-center">
-              <img
-                className="h-24 w-auto"
-                src="/images/logo.png"
-                alt="Harvest Reborn"
-              />
-            </div>
-            <div className="hidden sm:ml-8 sm:block">
-              <div className="flex space-x-4">
-                {session ? (
-                  <>
-                    <NextLink
-                      href={"/home"}
-                      className="text-gray-200 hover:text-gray-300 rounded-md px-3 py-2 text-base font-semibold"
-                    >
-                      Inicio
-                    </NextLink>
+            </>
+          ) : (
+            <>
+              <NavbarItem>
+                <Link className="text-gray-300" href="/#">
+                  Inicio
+                </Link>
+              </NavbarItem>
+              <NavbarItem>
+                <Link className="text-gray-300" href="/#servicios">
+                  Cómo funciona
+                </Link>
+              </NavbarItem>
+              <NavbarItem>
+                <Link className="text-gray-300" href="/#aboutUs">
+                  Acerca de nosotros
+                </Link>
+              </NavbarItem>
+            </>
+          )}
+        </NavbarContent>
+        <NavbarContent justify="end">
+          <NavbarItem>
+            <DropdownComponent />
+          </NavbarItem>
+        </NavbarContent>
 
-                    {user?.id_rol === 2 ? (
-                      <>
-                        <NextLink
-                          href={"/inventory"}
-                          className="text-gray-200 hover:text-gray-300 rounded-md px-3 py-2 text-base font-semibold"
-                        >
-                          Inventario
-                        </NextLink>
-                        <NextLink
-                          href={"/orders"}
-                          className="text-gray-200 hover:text-gray-300 rounded-md px-3 py-2 text-base font-semibold"
-                        >
-                          Pedidos
-                        </NextLink>
-                      </>
-                    ) : user?.id_rol === 3 ? (
-                      <>
-                        <NextLink
-                          href={"/negocios"}
-                          className="text-gray-200 hover:text-gray-300 rounded-md px-3 py-2 text-base font-semibold"
-                        >
-                          Negocios
-                        </NextLink>
-                        <NextLink
-                          href={"/orders"}
-                          className="text-gray-200 hover:text-gray-300 rounded-md px-3 py-2 text-base font-semibold"
-                        >
-                          Mis pedidos
-                        </NextLink>
-                      </>
-                    ) : (
-                      <>
-                        <NextLink
-                          href={"/#"}
-                          className="text-gray-200 hover:text-gray-300 rounded-md px-3 py-2 text-base font-semibold"
-                        >
-                          Inicio
-                        </NextLink>
-                        <NextLink
-                          href={"/#servicios"}
-                          className="text-gray-200 hover:text-gray-300 rounded-md px-3 py-2 text-base font-semibold"
-                        >
-                          Dashboard
-                        </NextLink>
-                        <NextLink
-                          href={"/#aboutUs"}
-                          className="text-gray-200 hover:text-gray-300 px-3 py-2 text-base font-semibold"
-                        >
-                          Tickets
-                        </NextLink>
-                      </>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <NextLink
-                      href={"/#"}
-                      className="text-gray-200 hover:text-gray-300 rounded-md px-3 py-2 text-base font-semibold"
-                    >
-                      Inicio
-                    </NextLink>
-                    <NextLink
-                      href={"/#servicios"}
-                      className="text-gray-200 hover:text-gray-300 rounded-md px-3 py-2 text-base font-semibold"
-                    >
-                      Cómo funciona
-                    </NextLink>
-                    <NextLink
-                      href={"/#aboutUs"}
-                      className="text-gray-200 hover:text-gray-300 px-3 py-2 text-base font-semibold"
-                    >
-                      Acerca de nosotros
-                    </NextLink>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-          <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            <div>
-              <Dropdown />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Utilizamos el estado `mobileMenuOpen` para controlar la visibilidad del menú */}
-      <div
-        className={`sm:hidden ${mobileMenuOpen ? "" : "hidden"}`}
-        id="mobile-menu"
-      >
-        <div className="space-y-1 px-2 pb-3 pt-2">
-          <NextLink
-            href={"/#"}
-            className="text-gray-300 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
-            aria-current="page"
-          >
-            Inicio
-          </NextLink>
-          <NextLink
-            href={"/#servicios"}
-            className="text-gray-300 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
-          >
-            ¿Como funciona?
-          </NextLink>
-          <NextLink
-            href={"/#aboutUs"}
-            className="text-gray-300 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
-          >
-            Acerca de nosotros
-          </NextLink>
-        </div>
-      </div>
-    </nav>
+        <NavbarMenu>
+          {session ? (
+            <>
+              <NavbarMenuItem>
+                <Link color="foreground" href={"/auth/logout"}>
+                  Cerrar sesión
+                </Link>
+              </NavbarMenuItem>
+            </>
+          ) : (
+            <>
+              <NavbarMenuItem>
+                <Link color="foreground" href={"/#"}>
+                  Inicio
+                </Link>
+              </NavbarMenuItem>
+              <NavbarMenuItem>
+                <Link color="foreground" href="/#servicios">
+                  Cómo funciona
+                </Link>
+              </NavbarMenuItem>
+              <NavbarMenuItem>
+                <Link color="foreground" href="/#aboutUs">
+                  Acerca de nosotros
+                </Link>
+              </NavbarMenuItem>
+              <NavbarMenuItem>
+                <hr />
+              </NavbarMenuItem>
+              <NavbarMenuItem>
+                <Link color="foreground" href={"/auth/login"}>
+                  Iniciar sesión
+                </Link>
+              </NavbarMenuItem>
+              <NavbarMenuItem>
+                <Link color="foreground" href={"/auth/register"}>
+                  Regístrate
+                </Link>
+              </NavbarMenuItem>
+            </>
+          )}
+        </NavbarMenu>
+      </Navbar>
+    </>
   );
 };

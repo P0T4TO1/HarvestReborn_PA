@@ -1,14 +1,12 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-export async function getProductById(
-  req: NextApiRequest,
-  { params }: { params: { id: string } }
+async function getProductById(
+  request: Request,
+  { params }: { params: { id: string } },
+  req: NextRequest,
+  res: NextResponse
 ) {
-  const { searchParams } = new URL(req.url as string);
-  const id = searchParams.get("id");
-
   if (!params.id) {
     return NextResponse.json(
       { message: "Falta Id del producto" },

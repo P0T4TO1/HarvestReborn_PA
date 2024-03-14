@@ -1,8 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcrypt";
-
 import { jwt } from "@/lib/utils";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 type Data =
   | { message: string }
@@ -15,10 +13,7 @@ type Data =
       };
     };
 
-export async function loginUser(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
+async function loginUser(req: NextRequest, res: NextResponse) {
   const { email = "", password = "" } = await new Response(req.body).json();
 
   const user = await prisma?.m_user.findUnique({
