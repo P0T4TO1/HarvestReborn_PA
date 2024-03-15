@@ -14,7 +14,7 @@ export const RegisterForm: FC = () => {
 
   return (
     <section className="relative min-h-screen sm:flex flex-col items-center justify-center bg-transparent">
-      <div className={`flex justify-center z-10 shadow-xl ${indexActive === 1 ? "xl:w-[396px] sm:w-full md:w-[428px]" : "w-2/6"}`}>
+      <div className={`flex justify-center z-10 shadow-xl ${indexActive === 1 ? "xl:w-[396px] sm:w-full md:w-[428px]" : "xl:w-2/6 sm:w-full md:w-[620px]"}`}>
         <div className="p-12 bg-white mx-auto rounded-3xl w-full">
           <div className="mb-7 text-center">
             <p className="text-gray-700 text-4xl">

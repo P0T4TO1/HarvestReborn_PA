@@ -8,15 +8,9 @@ const AddProductPage = async () => {
   if (!session) redirect("/");
 
   return (
-    <div className="pt-32 px-16 min-h-screen w-full">
-      <h1 className="font-bebas-neue uppercase text-4xl font-black flex flex-col leading-none text-green-900">
-        Agregar productos
-      </h1>
-      <p className="text-xl text-gray-900 font-semibold">
-        Aquí puedes agregar productos a tu inventario
-      </p>
+    <section className="flex flex-col relative overflow-hidden min-h-screen">
       <AddProduct />
-    </div>
+    </section>
   );
 };
 

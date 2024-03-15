@@ -20,6 +20,7 @@ interface ContextProps {
     telefono: string,
     calle: string,
     colonia: string,
+    alcaldia: string,
     cp: string
   ) => Promise<{ hasError: boolean; message?: string }>;
 

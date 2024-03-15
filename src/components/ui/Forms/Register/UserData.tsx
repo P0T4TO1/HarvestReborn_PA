@@ -41,7 +41,6 @@ export const UserDataForm = () => {
       } else {
         setErrors(null);
       }
-      console.log(data.email)
 
       const res = await searchUserByEmail(data.email);
 

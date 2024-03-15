@@ -8,7 +8,7 @@ const InventoryPage = async () => {
   if (!session) redirect("/");
   return (
     <>
-      <section className="flex relative justify-center overflow-hidden min-h-screen py-20">
+      <section className="flex flex-col relative overflow-hidden min-h-screen">
         <ProductsList />
       </section>
     </>

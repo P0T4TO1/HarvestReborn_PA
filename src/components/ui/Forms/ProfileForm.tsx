@@ -6,7 +6,7 @@ import { Estado, IUser } from "@/interfaces";
 import { AuthContext } from "@/context/auth";
 import { hrApi } from "@/api";
 import { NextResponse } from "next/server";
-import { Select, SelectItem } from "@nextui-org/react";
+import { CircularProgress, Select, SelectItem } from "@nextui-org/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Input } from "@nextui-org/input";
 
@@ -116,6 +116,9 @@ export const ProfileForm: FC = () => {
   });
 
   useEffect(() => {
+    if (!user?.id) {
+      return;
+    }
     hrApi.get(`/user/profile/${user?.id}`).then((res) => {
       if (res.status === 200) {
         setProfile(res.data);
@@ -133,7 +136,7 @@ export const ProfileForm: FC = () => {
     try {
       const validations = profileSchema.safeParse(data);
       if (!validations.success) {
-        console.log("error", validations.error.issues)
+        console.log("error", validations.error.issues);
         let newErrors: Errors = {};
 
         validations.error.issues.forEach((issue) => {
@@ -172,7 +175,7 @@ export const ProfileForm: FC = () => {
   };
 
   return (
-    <section className="bg-white w-full flex flex-col gap-5 px-3 md:px-16 lg:px-28 md:flex-row text-[#161931] min-h-screen pt-32">
+    <section className="bg-white w-full flex flex-col gap-5 px-3 md:px-16 lg:px-28 md:flex-row text-[#161931] min-h-screen">
       <aside className="hidden py-4 md:w-1/3 lg:w-1/4 md:block">
         <div className="flex flex-col gap-2 p-4 text-sm border-r border-indigo-100 top-12">
           <h2 className="pl-3 mb-4 text-2xl font-semibold">Settings</h2>
@@ -218,7 +221,7 @@ export const ProfileForm: FC = () => {
             </button>
 
             {loading ? (
-              <p>Cargando...</p>
+              <CircularProgress size="lg" aria-label="Loading..." className="mt-4"/>
             ) : error ? (
               <p>Hubo un error</p>
             ) : (
@@ -228,17 +231,11 @@ export const ProfileForm: FC = () => {
                   className="items-center mt-8 sm:mt-14 text-[#202142]"
                 >
                   <div className="mb-2 sm:mb-6">
-                    <label
-                      htmlFor="email"
-                      className="block mb-2 text-sm font-medium text-indigo-900"
-                    >
-                      Email
-                    </label>
-                    <input
+                    <Input
+                      isDisabled={!isEditing}
                       type="email"
-                      id="email"
-                      className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                      placeholder="Correo electrónico"
+                      label="Correo electrónico"
+                      className="w-full"
                       defaultValue={profile?.email}
                       disabled={!isEditing}
                       {...register("email")}
@@ -248,44 +245,30 @@ export const ProfileForm: FC = () => {
                   {user?.id_rol === 2 && (
                     <>
                       <div className="flex flex-col items-center w-full mb-2 space-x-0 space-y-2 sm:flex-row sm:space-x-4 sm:space-y-0 sm:mb-6">
-                        <div className="w-full">
-                          <label
-                            htmlFor="name"
-                            className="block mb-2 text-sm font-medium text-indigo-900"
-                          >
-                            Nombres
-                          </label>
-                          <input
+                        <div className="w-full pt-4">
+                          <Input
                             type="text"
-                            id="name"
-                            className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                            placeholder="Nombre(s)"
+                            className="w-full"
+                            label="Nombre(s)"
                             defaultValue={profile?.dueneg?.nombre_dueneg}
-                            disabled={!isEditing}
+                            isDisabled={!isEditing}
                             {...register("nombre_dueneg")}
                           />
                         </div>
 
-                        <div className="w-full">
-                          <label
-                            htmlFor="last_name"
-                            className="block mb-2 text-sm font-medium text-indigo-900"
-                          >
-                            Apellidos
-                          </label>
-                          <input
+                        <div className="w-full pt-4">
+                          <Input
                             type="text"
-                            id="last_name"
-                            className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                            placeholder="Apellidos"
+                            className="w-full"
+                            label="Apellidos"
                             defaultValue={profile?.dueneg?.apellidos_dueneg}
-                            disabled={!isEditing}
+                            isDisabled={!isEditing}
                             {...register("apellidos_dueneg")}
                           />
                         </div>
                         <div className="w-full">
                           <div className="relative">
-                            <p className="ml-2 mb-2 text-sm text-indigo-900 font-medium">
+                            <p className="ml-2 mb-2 text-sm text-gray-400 font-medium">
                               Fecha de nacimiento
                             </p>
                           </div>
@@ -305,7 +288,7 @@ export const ProfileForm: FC = () => {
                                     .split("-")[2]
                                     .split("T")[0]
                                 }
-                                disabled={!isEditing}
+                                isDisabled={!isEditing}
                               />
                               {errors?.dia_nacimiento_c && (
                                 <p className="text-red-700 text-xs">
@@ -324,8 +307,12 @@ export const ProfileForm: FC = () => {
                                     month: e.target.value,
                                   });
                                 }}
-                                disabled={!isEditing}
-                                defaultSelectedKeys={(profile?.dueneg?.fecha_nacimiento)?.split("-")[2]}
+                                isDisabled={!isEditing}
+                                defaultSelectedKeys={
+                                  profile?.dueneg?.fecha_nacimiento?.split(
+                                    "-"
+                                  )[2]
+                                }
                               >
                                 {Object.entries(months).map(([key, value]) => (
                                   <SelectItem value={key} key={key}>
@@ -356,7 +343,7 @@ export const ProfileForm: FC = () => {
                                     ?.toString()
                                     .split("-")[0]
                                 }
-                                disabled={!isEditing}
+                                isDisabled={!isEditing}
                               />
                               {errors?.year_nacimiento_c && (
                                 <p className="text-red-700 text-xs">
@@ -369,140 +356,104 @@ export const ProfileForm: FC = () => {
                       </div>
                       <div className="flex flex-col items-center w-full mb-2 space-x-0 space-y-2 sm:flex-row sm:space-x-4 sm:space-y-0 sm:mb-6">
                         <div className="w-full">
-                          <label
-                            htmlFor="business_name"
-                            className="block mb-2 text-sm font-medium text-indigo-900"
-                          >
-                            Nombre del Negocio
-                          </label>
-                          <input
+                          <Input
                             type="text"
-                            id="business_name"
-                            className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                            placeholder="Nombre del Negocio"
+                            className="w-full"
+                            label="Nombre del Negocio"
                             defaultValue={
                               profile?.dueneg?.negocio?.nombre_negocio
                             }
-                            disabled={!isEditing}
+                            isDisabled={!isEditing}
                             {...register("nombre_negocio_d")}
                           />
                         </div>
 
                         <div className="w-full">
-                          <label
-                            htmlFor="tel"
-                            className="block mb-2 text-sm font-medium text-indigo-900"
-                          >
-                            Teléfono del Negocio
-                          </label>
-                          <input
+                          <Input
                             type="text"
-                            id="tel"
-                            className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                            placeholder="Teléfono del Negocio"
+                            className="w-full"
+                            label="Teléfono del Negocio"
                             defaultValue={
                               profile?.dueneg?.negocio?.telefono_negocio
                             }
-                            disabled={!isEditing}
+                            isDisabled={!isEditing}
                             {...register("telefono_negocio")}
                           />
                         </div>
                       </div>
                       <div className="mb-2 sm:mb-6">
-                        <label
-                          htmlFor="direction"
-                          className="block mb-2 text-sm font-medium text-indigo-900"
-                        >
-                          Dirección del Negocio
-                        </label>
-                        <input
+                        <Input
                           type="text"
-                          id="direction"
-                          className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                          placeholder="Dirección del Negocio"
+                          className="w-full"
+                          label="Dirección del Negocio"
                           defaultValue={
                             profile?.dueneg?.negocio?.direccion_negocio
                           }
-                          disabled
+                          isDisabled
                         />
                       </div>
                       <div className="flex flex-col items-center w-full mb-2 space-x-0 space-y-2 sm:flex-row sm:space-x-4 sm:space-y-0 sm:mb-6">
                         <div>
-                          <label
-                            htmlFor="Calle_numero"
-                            className="block mb-2 text-sm font-medium text-indigo-900"
-                          >
-                            Calle y número
-                          </label>
-                          <input
+                          <Input
                             type="text"
-                            id="calle_numero"
-                            className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                            placeholder="Calle y número"
+                            className="w-full"
+                            label="Calle y número"
                             defaultValue={
                               profile?.dueneg?.negocio?.direccion_negocio?.split(
                                 ","
                               )[0]
                             }
-                            disabled={!isEditing}
+                            isDisabled={!isEditing}
                           />
                         </div>
                         <div className="mb-2 sm:mb-6">
-                          <label
-                            htmlFor="colonia"
-                            className="block mb-2 text-sm font-medium text-indigo-900"
-                          >
-                            Colonia
-                          </label>
-                          <input
+                          <Input
                             type="text"
-                            id="colonia"
-                            className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                            placeholder="Colonia"
+                            className="w-full"
+                            label="Colonia"
                             defaultValue={
                               profile?.dueneg?.negocio?.direccion_negocio?.split(
                                 ","
                               )[1]
                             }
-                            disabled={!isEditing}
+                            isDisabled={!isEditing}
                           />
                         </div>
                         <div className="mb-2 sm:mb-6">
-                          <label
-                            htmlFor="cp"
-                            className="block mb-2 text-sm font-medium text-indigo-900"
-                          >
-                            Código Postal
-                          </label>
-                          <input
+                          <Input
                             type="text"
-                            id="cp"
-                            className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                            placeholder="Código Postal"
+                            className="w-full"
+                            label="Colonia"
                             defaultValue={
                               profile?.dueneg?.negocio?.direccion_negocio?.split(
                                 ","
                               )[2]
                             }
-                            disabled={!isEditing}
+                            isDisabled={!isEditing}
+                          />
+                        </div>
+                        <div className="mb-2 sm:mb-6">
+                          <Input
+                            type="text"
+                            className="w-full"
+                            label="Código Postal"
+                            defaultValue={
+                              profile?.dueneg?.negocio?.direccion_negocio?.split(
+                                ","
+                              )[3]
+                            }
+                            isDisabled={!isEditing}
                           />
                         </div>
                       </div>
 
                       <div className="mb-6">
-                        <label
-                          htmlFor="email-negocio"
-                          className="block mb-2 text-sm font-medium text-indigo-900"
-                        >
-                          Email del Negocio
-                        </label>
-                        <input
-                          type="text"
-                          id="direction"
-                          className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                          placeholder="Email del Negocio"
+                        <Input
+                          type="email"
+                          className="w-full"
+                          label="Email del Negocio"
                           defaultValue={profile?.dueneg?.negocio?.email_negocio}
-                          disabled={!isEditing}
+                          isDisabled={!isEditing}
                           {...register("email_negocio")}
                         />
                       </div>
@@ -577,7 +528,10 @@ export const ProfileForm: FC = () => {
                                 type="text"
                                 placeholder="Día"
                                 onChange={(e) => {
-                                  setFecNac({ ...fecNacC, day: e.target.value });
+                                  setFecNac({
+                                    ...fecNacC,
+                                    day: e.target.value,
+                                  });
                                 }}
                                 defaultValue={
                                   profile?.cliente?.fecha_nacimiento

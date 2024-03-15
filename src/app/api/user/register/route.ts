@@ -16,6 +16,7 @@ async function registerUser(req: NextRequest, res: NextResponse) {
     telefono = "",
     calle = "",
     colonia = "",
+    alcaldia = "",
     cp = "",
   } = (await new Response(req.body).json()) as {
     email: string;
@@ -28,6 +29,7 @@ async function registerUser(req: NextRequest, res: NextResponse) {
     telefono: string;
     calle: string;
     colonia: string;
+    alcaldia: string;
     cp: string;
   };
 
@@ -64,7 +66,8 @@ async function registerUser(req: NextRequest, res: NextResponse) {
                 telefono_cliente: telefono,
                 fecha_nacimiento: new Date(fecha_nacimiento),
                 nombre_negocio: nombreNegocio || "",
-                direccion_negocio: calle.concat(", ", colonia, ", ", cp) || "",
+                direccion_negocio:
+                  calle.concat(", ", colonia, ", ", alcaldia, ", ", cp) || "",
               },
             ],
           },
@@ -100,7 +103,9 @@ async function registerUser(req: NextRequest, res: NextResponse) {
                   create: {
                     nombre_negocio: nombreNegocio,
                     telefono_negocio: telefono,
-                    direccion_negocio: calle.concat(", ", colonia, ", ", cp),
+                    direccion_negocio:
+                      calle.concat(", ", colonia, ", ", alcaldia, ", ", cp) ||
+                      "",
                     inventario: {
                       create: {},
                     },

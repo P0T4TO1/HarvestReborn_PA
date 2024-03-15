@@ -76,7 +76,7 @@ async function addProductToInventory(
     const product = await prisma.m_lote.create({
       data: {
         cantidad_producto: parseInt(cantidad_producto, 10),
-        fecha_entrada: new Date(fecha_vencimiento).toISOString(),
+        fecha_entrada: new Date(fecha_entrada).toISOString(),
         fecha_vencimiento: new Date(fecha_vencimiento).toISOString(),
         precio_kg: parseFloat(precio_kg),
         monto_total: parseFloat(monto_total),

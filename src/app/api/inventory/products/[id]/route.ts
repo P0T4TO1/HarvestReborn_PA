@@ -7,20 +7,27 @@ async function getProductById(
   req: NextRequest,
   res: NextResponse
 ) {
-  if (!params.id) {
+  try {
+    if (!params.id) {
+      return NextResponse.json(
+        { message: "Falta Id del producto" },
+        { status: 400 }
+      );
+    }
+
+    const product = await prisma.m_producto.findUnique({
+      where: {
+        id_producto: parseInt(params.id as string, 10),
+      },
+    });
+
+    return NextResponse.json(product, { status: 200 });
+  } catch (error) {
     return NextResponse.json(
-      { message: "Falta Id del producto" },
-      { status: 400 }
+      { message: "Error al buscar el inventario" },
+      { status: 500 }
     );
   }
-
-  const product = await prisma.m_producto.findUnique({
-    where: {
-      id_producto: parseInt(params.id as string, 10),
-    },
-  });
-
-  return NextResponse.json(product, { status: 200 });
 }
 
 export { getProductById as GET };

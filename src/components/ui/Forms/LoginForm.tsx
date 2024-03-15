@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { AuthContext } from "@/context/auth";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Input } from "@nextui-org/input";
+import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
 
 type Errors = {
   user_email?: string;
@@ -80,11 +81,12 @@ export const LoginForm: FC = () => {
         });
       }
       if (res && res.ok && res.status === 200) {
+        toast("¡Bienvenido!", SUCCESS_TOAST);
         navigateTo("/home");
       }
     } catch (e) {
       console.info("[ERROR_CLIENT_ACTION]", e);
-      toast("¡Algo salio mal!");
+      toast("¡Algo salio mal!", DANGER_TOAST);
     } finally {
       setIsMutation(false);
     }

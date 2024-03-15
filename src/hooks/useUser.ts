@@ -18,7 +18,6 @@ export const useProfile = async (id: string, config: SWRConfiguration = {}) => {
 };
 
 export const searchUserByEmail = async (email: string) => {
-  console.log(email)
   const res = await hrApi.get(`/user/search?email=${email}`);
   return res.data;
 };

@@ -103,6 +103,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     telefono: string,
     calle: string,
     colonia: string,
+    alcaldia: string,
     cp: string
   ): Promise<{ hasError: boolean; message?: string }> => {
     try {
@@ -117,6 +118,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         telefono,
         calle,
         colonia,
+        alcaldia,
         cp,
       });
       const { token, user } = data;

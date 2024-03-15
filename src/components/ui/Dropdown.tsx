@@ -39,22 +39,49 @@ export const DropdownComponent: FC = () => {
               <p className="font-semibold">Inicio sesión como:</p>
               <p className="font-semibold">{user?.email}</p>
             </DropdownItem>
-            <DropdownItem key="settings" href={`/user/profile?id=${user?.id}`}>
-              Perfil
+            <DropdownItem
+              key="settings"
+              href={`/user/profile?id=${user?.id}`}
+              startContent={
+                <span className="material-symbols-outlined">settings</span>
+              }
+            >
+              Cuenta
             </DropdownItem>
             {user?.id_rol === 2 ? (
-              <DropdownItem key="inventory" href={"/inventory"}>
+              <DropdownItem
+                key="inventory"
+                href={"/inventory"}
+                startContent={
+                  <span className="material-symbols-outlined">inventory_2</span>
+                }
+              >
                 Mi inventario
               </DropdownItem>
             ) : user?.id_rol === 3 ? (
-              <DropdownItem key="orders" href={"/orders"}>
+              <DropdownItem
+                key="orders"
+                href={"/orders"}
+                startContent={
+                  <span className="material-symbols-outlined">orders</span>
+                }
+              >
                 Mis pedidos
               </DropdownItem>
             ) : (
-              <DropdownItem key="dashboard" href={"/dashboard"}>
+              <DropdownItem
+                key="dashboard"
+                href={"/dashboard"}
+                startContent={
+                  <span className="material-symbols-outlined">dashboard</span>
+                }
+              >
                 Dashboard
               </DropdownItem>
             )}
+            <DropdownItem key="br" color="default">
+              <hr />
+            </DropdownItem>
             <DropdownItem
               key="logout"
               color="danger"
@@ -63,6 +90,9 @@ export const DropdownComponent: FC = () => {
                   showToast("Logout Successful", SUCCESS_TOAST);
                 });
               }}
+              startContent={
+                <span className="material-symbols-outlined">logout</span>
+              }
             >
               Cerrar sesión
             </DropdownItem>

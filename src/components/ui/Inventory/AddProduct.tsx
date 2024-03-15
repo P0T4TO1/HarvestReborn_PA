@@ -3,12 +3,23 @@
 import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { IProduct } from "@/interfaces";
 import { hrApi } from "@/api";
-import { Modal, ProductCard } from "@/components";
+import { ProductCard } from "@/components";
 import { AuthContext } from "@/context/auth";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { NextResponse } from "next/server";
 import { toast } from "sonner";
-import { Input } from "@nextui-org/react";
+import {
+  Input,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  useDisclosure,
+  CircularProgress,
+} from "@nextui-org/react";
+import { productSchema } from "@/validations/products.validation";
+import { SUCCESS_TOAST } from "@/components/toast";
 
 interface IFormData {
   id_producto: number;
@@ -20,15 +31,24 @@ interface IFormData {
   inventory_id: number;
 }
 
+type Errors = {
+  cantidad_producto?: number;
+  fecha_entrada?: string;
+  fecha_vencimiento?: string;
+  precio_kg?: number;
+} | null;
+
 export const AddProduct = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [show, setShow] = useState(false);
   const [search, setSearch] = useState("");
-
+  const [errors, setErrors] = useState<Errors>(null);
   const [productId, setProductId] = useState<number>();
+  const [product, setProduct] = useState<IProduct>();
+  const [isEditing, setIsEditing] = useState(false);
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const { user } = useContext(AuthContext);
 
   const methods = useForm<IFormData>();
@@ -55,17 +75,21 @@ export const AddProduct = () => {
     });
   }, []);
 
-  const hideModal = () => {
-    setShow(false);
-  };
-
-  const showModal = (id: number) => {
-    setProductId(id);
-    setShow(true);
-  };
-
   const addProduct: SubmitHandler<IFormData> = async (data) => {
     try {
+      const validations = productSchema.safeParse(data);
+      if (!validations.success) {
+        let newErrors: Errors = {};
+
+        validations.error.issues.forEach((issue) => {
+          newErrors = { ...newErrors, [issue.path[0]]: issue.message };
+        });
+        setErrors(newErrors);
+        return null;
+      } else {
+        setErrors(null);
+      }
+
       const res = await hrApi
         .post(`/inventory/${productId}`, {
           id: productId,
@@ -77,14 +101,9 @@ export const AddProduct = () => {
           inventory_id: user?.negocio?.id_negocio,
         })
         .then(() => {
-          hideModal();
-          toast("¡Se agregó el producto a tu inventario!");
-          return NextResponse.json(
-            {
-              message: "Producto agregado a tu inventario",
-            },
-            { status: 200 }
-          );
+          toast("Producto agregado a tu inventario", SUCCESS_TOAST);
+          onClose();
+          return true;
         })
         .catch((err) => {
           console.log(err);
@@ -102,89 +121,62 @@ export const AddProduct = () => {
 
   return (
     <>
-      <div className="container pt-16 px-16">
-        <Modal
-          show={show}
-          handleClose={hideModal}
-          title={"Añadir producto a tu inventario"}
-        >
-          <div className="relative bg-white rounded-b-lg shadow">
-            <div className="p-4 md:p-5 space-y-4">
+      <div className="p-24">
+        <h1 className="font-bebas-neue uppercase text-4xl font-black flex flex-col leading-none text-green-900">
+          Agregar productos
+        </h1>
+        <p className="text-xl text-gray-900 font-semibold">
+          Aquí puedes agregar productos a tu inventario
+        </p>
+
+        <Modal backdrop="blur" isOpen={isOpen} onClose={onClose}>
+          <ModalContent>
+            {(onClose) => (
               <form onSubmit={handleSubmit(addProduct)}>
-                <div>
-                  <label
-                    htmlFor="product-amount"
-                    className="block text-sm font-medium text-gray-600"
-                  >
-                    Cantidad en kg
-                  </label>
-                  <input
+                <ModalHeader className="flex flex-col gap-1 mt-4">
+                  Añadir {product?.nombre_producto} a tu inventario
+                </ModalHeader>
+                <ModalBody>
+                  <Input
+                    label="Cantidad en kg"
                     type="number"
-                    id="product-amount"
-                    className="mt-1 p-2 block w-full border-2 border-gray-300 rounded-lg"
                     {...register("cantidad_producto")}
+                    errorMessage={errors?.cantidad_producto}
                   />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="product-price"
-                    className="block text-sm font-medium text-gray-600"
-                  >
-                    Precio por kg
-                  </label>
-                  <input
+                  <Input
+                    label="Precio por kg"
                     type="number"
-                    id="product-price"
-                    className="mt-1 p-2 block w-full border-2 border-gray-300 rounded-lg"
                     {...register("precio_kg")}
+                    errorMessage={errors?.precio_kg}
                   />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="product-arrive"
-                    className="block text-sm font-medium text-gray-600"
-                  >
-                    Fecha de llegada
-                  </label>
-                  <input
+                  <Input
+                    label="Fecha de llegada"
                     type="date"
-                    id="product-arrive"
-                    className="mt-1 p-2 block w-full border-2 border-gray-300 rounded-lg"
                     defaultValue={new Date().toISOString().split("T")[0]}
                     {...register("fecha_entrada")}
+                    errorMessage={errors?.fecha_entrada}
                   />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="product-amount"
-                    className="block text-sm font-medium text-gray-600"
-                  >
-                    Fecha de duración aproximada en estado fresco
-                  </label>
-                  <input
+                  <Input
+                    label="Fecha de duración aproximada en estado fresco"
                     type="date"
-                    id="product-expiration"
-                    className="mt-1 p-2 block w-full border-2 border-gray-300 rounded-lg"
                     {...register("fecha_vencimiento")}
+                    errorMessage={errors?.fecha_vencimiento}
                   />
-                </div>
-                <div className="flex items-center pt-4 border-t border-gray-200 rounded-b">
-                  <button
-                    type="submit"
-                    className="flex justify-center bg-green-800 hover:bg-green-700 text-gray-100 p-3 text-sm rounded-lg tracking-wide font-semibold  cursor-pointer transition ease-in duration-500"
-                  >
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="danger" variant="light" onPress={onClose}>
+                    Cerrar
+                  </Button>
+                  <Button type="submit" className="bg-green-600">
                     Agregar
-                  </button>
-                </div>
+                  </Button>
+                </ModalFooter>
               </form>
-            </div>
-          </div>
+            )}
+          </ModalContent>
         </Modal>
 
-        <div className="flex">
+        <div className="flex mt-12">
           <div className="flex flex-col flex-1 justify-center sm:justify-start">
             <h1 className="font-bebas-neue uppercase text-xl font-black flex flex-col leading-none text-green-900">
               Todos los productos registrados
@@ -218,17 +210,20 @@ export const AddProduct = () => {
 
         <ul className="mt-8 grid grid-cols-4 gap-4">
           {loading ? (
-            <p>Cargando...</p>
+            <CircularProgress size="lg" aria-label="Loading..." />
           ) : error ? (
             <p>Hubo un error</p>
           ) : (
             results.map((product) => (
               <li key={product.id_producto} className={`p-4 flex`}>
-                <ProductCard
-                  product={product}
-                  route={"add-product"}
-                >
-                  <button onClick={() => showModal(product.id_producto)}>
+                <ProductCard product={product} route={"add-product"}>
+                  <button
+                    onClick={() => {
+                      setProduct(product);
+                      setProductId(product.id_producto);
+                      onOpen();
+                    }}
+                  >
                     <span className="material-symbols-outlined setting-icon">
                       add_circle
                     </span>

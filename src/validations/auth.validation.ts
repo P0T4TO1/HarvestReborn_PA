@@ -69,10 +69,14 @@ export const registerContactDataSchema = z.object({
     .string({ required_error: "La colonia es obligatoria" })
     .min(3, { message: "La colonia debe tener mínimo 3 caracteres" })
     .max(100, { message: "La colonia debe tener menos de 100 caracteres" }),
+  alcaldia: z
+    .string({ required_error: "La alcaldia es obligatoria" })
+    .min(3, { message: "La alcaldia debe tener mínimo 3 caracteres" })
+    .max(100, { message: "La alcaldia debe tener menos de 100 caracteres" }),
   cp: z
-    .string({ required_error: "El codigo postal es obligatorio" })
-    .min(5, { message: "El codigo postal debe tener mínimo 5 caracteres" })
-    .max(5, { message: "El codigo postal debe tener menos de 5 caracteres" }),
+    .string({ required_error: "El código postal es obligatorio" })
+    .min(5, { message: "El código postal debe tener mínimo 5 caracteres" })
+    .max(5, { message: "El código postal debe tener menos de 5 caracteres" }),
 });
 
 export const loginSchema = z.object({

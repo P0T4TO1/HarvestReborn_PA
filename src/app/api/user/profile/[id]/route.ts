@@ -48,4 +48,37 @@ async function getProfile(
   return NextResponse.json({ ...profile }, { status: 200 });
 }
 
+async function updateProfile(
+  request: Request,
+  { params }: { params: { id: string } },
+  req: NextRequest,
+  res: NextResponse
+) {
+  const body = await request.json();
+  const {
+    nombre,
+    apellido,
+    telefono,
+    email,
+    direccion,
+    id_rol,
+    id_duenonegocio,
+    id_cliente,
+  } = body;
+
+  if (!params.id)
+    return NextResponse.json(
+      { message: "Falta Id del usuario" },
+      { status: 400 }
+    );
+
+  try {
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Error al actualizar usuario" },
+      { status: 400 }
+    );
+  }
+}
+
 export { getProfile as GET };

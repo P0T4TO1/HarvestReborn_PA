@@ -5,8 +5,37 @@ import { useRouter } from "next/navigation";
 import { hrApi } from "@/api";
 import { ILote } from "@/interfaces";
 import { AuthContext } from "@/context/auth";
-import { Select, SelectItem, Input } from "@nextui-org/react";
-import { ProductCard } from "@/components";
+import { DANGER_TOAST, ProductCard, SUCCESS_TOAST } from "@/components";
+import {
+  Select,
+  SelectItem,
+  Input,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  useDisclosure,
+  CircularProgress,
+} from "@nextui-org/react";
+import { toast } from "sonner";
+import { useForm } from "react-hook-form";
+
+type Errors = {
+  cantidad_producto?: number;
+  fecha_entrada?: string;
+  fecha_vencimiento?: string;
+  precio_kg?: number;
+} | null;
+
+interface IFormData {
+  cantidad_producto: number;
+  fecha_entrada: Date;
+  fecha_vencimiento: Date;
+  precio_kg: number;
+  monto_total: number;
+}
 
 export const ProductsList = () => {
   const router = useRouter();
@@ -14,11 +43,18 @@ export const ProductsList = () => {
     router.push(path);
   };
   const { user } = useContext(AuthContext);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [lotes, setLotes] = useState<ILote[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [errors, setErrors] = useState<Errors>(null);
   const [search, setSearch] = useState("");
+  const [lote, setLote] = useState<ILote>();
+  const [isEditing, setIsEditing] = useState(false);
+
+  const methods = useForm<IFormData>();
+  const { handleSubmit, register } = methods;
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
@@ -47,19 +83,131 @@ export const ProductsList = () => {
     });
   }, [user?.negocio?.id_negocio]);
 
+  const getLote = async (id: number) => {
+    await hrApi.get(`/inventory/lote/${id}`).then((res) => {
+      if (res.status === 200) {
+        setLote(res.data);
+      } else {
+        setError(true);
+        console.log("Error al obtener producto", res.data);
+      }
+      setLoading(false);
+    });
+  };
+
+  const onSubmit = async (data: IFormData) => {
+    console.log(data, lote);
+    await hrApi
+      .put(`/inventory/lote/${lote?.id_lote}`, {
+        ...lote,
+        ...data,
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          toast("Producto actualizado", SUCCESS_TOAST);
+          window.location.reload();
+          onClose();
+        } else {
+          toast("Hubo un error al actualizar el producto", DANGER_TOAST);
+          console.log("Error al actualizar producto", res.data);
+        }
+      });
+  };
+
   const handleDelete = async (id: number) => {
     await hrApi.delete(`/inventory/${id}`).then((res) => {
       if (res.status === 200) {
         setLotes(lotes.filter((lote) => lote.id_producto !== id));
-        router.refresh();
+        window.location.reload();
       } else {
+        toast("Hubo un error al borrar el producto", DANGER_TOAST);
         console.log("Error al borrar producto", res.data);
       }
     });
   };
 
   return (
-    <div className="container p-24">
+    <div className="p-24">
+      <Modal backdrop="blur" isOpen={isOpen} onClose={onClose}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              {loading ? (
+                <CircularProgress size="lg" aria-label="Loading..." />
+              ) : (
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <ModalHeader className="flex flex-col">
+                    Editar {lote?.producto?.nombre_producto}
+                    <Button
+                      type="button"
+                      className="mt-2"
+                      onClick={() => setIsEditing(!isEditing)}
+                      startContent={
+                        <span className="material-symbols-outlined">
+                          edit_square
+                        </span>
+                      }
+                    >
+                      Editar
+                    </Button>
+                  </ModalHeader>
+                  <ModalBody>
+                    <Input
+                      label="Cantidad en kg"
+                      type="number"
+                      {...register("cantidad_producto")}
+                      errorMessage={errors?.cantidad_producto}
+                      defaultValue={lote?.cantidad_producto?.toString()}
+                      isDisabled={!isEditing}
+                    />
+                    <Input
+                      label="Precio por kg"
+                      type="number"
+                      {...register("precio_kg")}
+                      errorMessage={errors?.precio_kg}
+                      defaultValue={lote?.precio_kg?.toString()}
+                      isDisabled={!isEditing}
+                    />
+                    <Input
+                      label="Fecha de llegada"
+                      type="date"
+                      {...register("fecha_entrada")}
+                      errorMessage={errors?.fecha_entrada}
+                      defaultValue={
+                        new Date(lote?.fecha_vencimiento || "")
+                          .toISOString()
+                          .split("T")[0]
+                      }
+                      isDisabled={!isEditing}
+                    />
+                    <Input
+                      label="Fecha de duración aproximada en estado fresco"
+                      type="date"
+                      {...register("fecha_vencimiento")}
+                      errorMessage={errors?.fecha_vencimiento}
+                      defaultValue={
+                        new Date(lote?.fecha_vencimiento || "")
+                          .toISOString()
+                          .split("T")[0]
+                      }
+                      isDisabled={!isEditing}
+                    />
+                  </ModalBody>
+                  <ModalFooter>
+                    <Button color="danger" variant="light" onPress={onClose}>
+                      Cerrar
+                    </Button>
+                    <Button type="submit" className="bg-green-600">
+                      Actualizar
+                    </Button>
+                  </ModalFooter>
+                </form>
+              )}
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+
       <h1 className="font-bebas-neue uppercase text-4xl font-black flex flex-col leading-none text-green-900">
         Tú inventario
         <span className="text-xl text-gray-900 font-semibold">
@@ -118,7 +266,7 @@ export const ProductsList = () => {
 
       <ul className="mt-8 grid grid-cols-4">
         {loading ? (
-          <p>Cargando...</p>
+          <CircularProgress size="lg" aria-label="Loading..." />
         ) : error ? (
           <p>Hubo un error</p>
         ) : (
@@ -127,9 +275,11 @@ export const ProductsList = () => {
               <ProductCard lote={lote} route={"product-list"}>
                 <button
                   className="edit-btn setting-modal-btn"
-                  onClick={() =>
-                    navigateTo(`/inventory/edit-product/${lote.id_producto}`)
-                  }
+                  onClick={() => {
+                    getLote(lote.id_lote).then(() => {});
+                    setLoading(true);
+                    onOpen();
+                  }}
                 >
                   Editar producto
                 </button>
