@@ -12,8 +12,7 @@ async function initialData(req: NextRequest, res: NextResponse) {
   }
   //
   // await prisma.d_cliente.deleteMany();
-  // await prisma.m_lote.deleteMany();
-  // await prisma.m_lote.deleteMany();
+  await prisma.m_lote.deleteMany();
   // await prisma.c_inventario.deleteMany();
   // await prisma.m_negocio.deleteMany();
   // await prisma.d_duenonegocio.deleteMany();

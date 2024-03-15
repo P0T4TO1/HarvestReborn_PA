@@ -3,7 +3,6 @@ const nextConfig = {
   images: {
     domains: ["res.cloudinary.com", "i.ibb.co"],
   },
-  basePath: "/app",
 };
 
 export default nextConfig;
