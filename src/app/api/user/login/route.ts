@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import { jwt } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 
 type Data =
   | { message: string }
@@ -16,7 +17,7 @@ type Data =
 async function loginUser(req: NextRequest, res: NextResponse) {
   const { email = "", password = "" } = await new Response(req.body).json();
 
-  const user = await prisma?.m_user.findUnique({
+  const user = await prisma.m_user.findUnique({
     where: {
       email,
     },
