@@ -54,17 +54,54 @@ async function updateProfile(
   req: NextRequest,
   res: NextResponse
 ) {
-  const body = await request.json();
+  // const body = await request.json();
+  // const {
+  //   email,
+  //   nombre_cliente,
+  //   apellidos_cliente,
+  //   telefono_cliente,
+  //   fecha_nacimiento_d,
+  //   nombre_negocio_c,
+  //   direccion_negocio_c,
+  //   nombre_dueneg,
+  //   apellidos_dueneg,
+  //   fecha_nacimiento_c,
+  //   nombre_negocio_d,
+  //   direccion_negocio_d,
+  //   telefono_negocio,
+  //   email_negocio,
+  // } = body;
   const {
-    nombre,
-    apellido,
-    telefono,
-    email,
-    direccion,
-    id_rol,
-    id_duenonegocio,
-    id_cliente,
-  } = body;
+    email = "",
+    nombre_cliente = "",
+    apellidos_cliente = "",
+    telefono_cliente = "",
+    fecha_nacimiento_d = "",
+    nombre_negocio_c = "",
+    direccion_negocio_c = "",
+    nombre_dueneg = "",
+    apellidos_dueneg = "",
+    fecha_nacimiento_c = "",
+    nombre_negocio_d = "",
+    direccion_negocio_d = "",
+    telefono_negocio = "",
+    email_negocio = "",
+  } = (await new Response(request.body).json()) as {
+    email: string;
+    nombre_cliente: string;
+    apellidos_cliente: string;
+    telefono_cliente: string;
+    fecha_nacimiento_d: string;
+    nombre_negocio_c: string;
+    direccion_negocio_c: string;
+    nombre_dueneg: string;
+    apellidos_dueneg: string;
+    fecha_nacimiento_c: string;
+    nombre_negocio_d: string;
+    direccion_negocio_d: string;
+    telefono_negocio: string;
+    email_negocio: string;
+  };
 
   if (!params.id)
     return NextResponse.json(
@@ -73,6 +110,57 @@ async function updateProfile(
     );
 
   try {
+    if (nombre_negocio_d && direccion_negocio_d && telefono_negocio) {
+      await prisma.m_user.update({
+        where: {
+          id: params.id,
+        },
+        data: {
+          email,
+          duenonegocio: {
+            update: {
+              where: {
+                id_dueneg: parseInt(params.id),
+              },
+              data: {
+                nombre_dueneg: nombre_dueneg,
+                apellidos_dueneg: apellidos_dueneg,
+                fecha_nacimiento: new Date(fecha_nacimiento_c),
+                negocio: {
+                  update: {
+                    nombre_negocio: nombre_negocio_d,
+                    telefono_negocio: telefono_negocio,
+                    direccion_negocio: direccion_negocio_d,
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+    } else if (nombre_negocio_c && direccion_negocio_c) {
+      await prisma.m_user.update({
+        where: {
+          id: params.id,
+        },
+        data: {
+          email,
+          cliente: {
+            update: {
+              where: {
+                id_cliente: parseInt(params.id),
+              },
+              data: {
+                nombre_cliente: nombre_cliente,
+                apellidos_cliente: apellidos_cliente,
+                telefono_cliente: telefono_cliente,
+                fecha_nacimiento: new Date(fecha_nacimiento_d),
+              },
+            },
+          },
+        },
+      });
+    }
   } catch (error) {
     return NextResponse.json(
       { message: "Error al actualizar usuario" },
@@ -81,4 +169,4 @@ async function updateProfile(
   }
 }
 
-export { getProfile as GET };
+export { getProfile as GET, updateProfile as PUT };

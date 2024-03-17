@@ -70,7 +70,7 @@ const SUCCESS_TOAST = createCustomToast({
   className:
     "w-[300px] [&>div]:justify-start border-[2px] border-[#54C95E] shadow-md shadow-[#277C30]",
   position: "top-right",
-  duration: 5000,
+  duration: 2000,
 });
 const DANGER_TOAST = createCustomToast({
   style: {
@@ -81,7 +81,7 @@ const DANGER_TOAST = createCustomToast({
   className:
     "w-[300px] [&>div]:justify-start border-2 border-[#D84A4D] shadow-md shadow-[#D84A4D]",
   position: "top-right",
-  duration: 5000,
+  duration: 2000,
 });
 
 const WARNING_TOAST = createCustomToast({
@@ -93,7 +93,7 @@ const WARNING_TOAST = createCustomToast({
   className:
     "w-[300px] [&>div]:justify-start border-2 border-[#FEB100] shadow-md shadow-[#FEB100]",
   position: "top-right",
-  duration: 5000,
+  duration: 2000,
 });
 
 const LOADING_TOAST = createCustomToast({

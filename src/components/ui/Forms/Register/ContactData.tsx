@@ -8,7 +8,7 @@ import { registerContactDataSchema } from "@/validations/auth.validation";
 import { useRouter } from "next/navigation";
 import { Input } from "@nextui-org/input";
 import axios from "axios";
-import { SUCCESS_TOAST } from "@/components/toast";
+import {DANGER_TOAST, SUCCESS_TOAST} from "@/components/toast";
 
 type Errors = {
   nombreNegocio?: string;
@@ -111,12 +111,12 @@ export const ContactDataForm = () => {
         return;
       } else {
         console.log("[REGISTER_BUSINESS]", res, "Registro exitoso");
-        toast("¡Registro exitoso!");
+        toast("¡Registro exitoso!", SUCCESS_TOAST);
         navigateTo("/auth/login");
         setIndexActive(1);
       }
     } catch (error) {
-      toast.error("Error al registrar usuario", SUCCESS_TOAST);
+      toast.error("Error al registrar usuario", DANGER_TOAST);
     }
   };
 
@@ -170,7 +170,7 @@ export const ContactDataForm = () => {
               type="text"
               id="colonia"
               placeholder="Colonia"
-              disabled
+              isDisabled
               defaultValue={colonia}
               value={colonia}
               {...register("colonia")}
@@ -197,7 +197,7 @@ export const ContactDataForm = () => {
               type="text"
               id="alcaldia"
               placeholder="Alcaldía"
-              disabled
+              isDisabled
               defaultValue={alcaldia}
               value={alcaldia}
               {...register("alcaldia")}

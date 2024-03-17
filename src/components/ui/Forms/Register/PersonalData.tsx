@@ -134,6 +134,7 @@ export const PersonalDataForm = () => {
             </div>
             <div className="relative">
               <Select
+                isRequired
                 radius="sm"
                 id="mes_nacimiento"
                 placeholder="Mes"

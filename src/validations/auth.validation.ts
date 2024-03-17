@@ -42,9 +42,19 @@ export const registerPersonalDataSchema = z.object({
   fecha_nacimiento: z.string({
     required_error: "La fecha de nacimiento es obligatoria",
   }),
-  dia_nacimiento: z.string({ required_error: "El día es obligatorio" }),
+  dia_nacimiento: z
+    .string({ required_error: "El día es obligatorio" })
+    .min(2, {
+      message: "El día debe tener mínimo 2 caracteres",
+    })
+    .max(2, { message: "El día debe tener menos de 2 caracteres" }),
   mes_nacimiento: z.string({ required_error: "El mes es obligatorio" }),
-  year_nacimiento: z.string({ required_error: "El año es obligatorio" }),
+  year_nacimiento: z
+    .string({ required_error: "El año es obligatorio" })
+    .min(4, {
+      message: "El año debe tener mínimo 4 caracteres",
+    })
+    .max(4, { message: "El año debe tener menos de 4 caracteres" }),
   tipo: z.string({ required_error: "El tipo es obligatorio" }),
 });
 
