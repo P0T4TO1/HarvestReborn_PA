@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { jwt } from "@/lib/utils";
+import { signToken } from "@/lib/utils/jwt";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
@@ -37,7 +37,7 @@ async function loginUser(req: NextRequest, res: NextResponse) {
 
   const { id, id_rol } = user;
 
-  const token = jwt.signToken(id, email);
+  const token = signToken(id, email);
 
   return NextResponse.json({
     token,

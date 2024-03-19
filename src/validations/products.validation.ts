@@ -1,12 +1,12 @@
-import * as zo from "zod";
+import { z } from "zod";
 
-export const productSchema = zo.object({
-  cantidad_producto: zo.string({ required_error: "La cantidad es requerida" }),
-  precio_kg: zo.string({ required_error: "El precio es requerido" }),
-  fecha_entrada: zo.string({
+export const productSchema = z.object({
+  cantidad_producto: z.string({ required_error: "La cantidad es requerida" }),
+  precio_kg: z.string({ required_error: "El precio es requerido" }),
+  fecha_entrada: z.string({
     required_error: "La fecha de entrada es requerida",
   }),
-  fecha_vencimiento: zo.string({
+  fecha_vencimiento: z.string({
     required_error: "La fecha de vencimiento es requerida",
   }),
 });

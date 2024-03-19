@@ -8,24 +8,10 @@ async function getAllProducts(req: NextRequest, res: NextResponse) {
 }
 
 async function createProduct(req: NextRequest, res: NextResponse) {
-  const {
-    name,
-    amount,
-    arriveDate,
-    expiration,
-    isSeasonal,
-    imageURL,
-    inventory_id,
-  } = await new Response(req.body).json();
+  const { nombre_producto, imagen_producto, descripcion, enTemporada, categoria } =
+    await new Response(req.body).json();
 
-  if (
-    !name ||
-    !amount ||
-    !arriveDate ||
-    !expiration ||
-    !isSeasonal ||
-    !inventory_id
-  ) {
+  if (!nombre_producto || !imagen_producto || !enTemporada || !categoria) {
     return NextResponse.json(
       { message: "Faltan datos del producto" },
       { status: 400 }
@@ -34,10 +20,11 @@ async function createProduct(req: NextRequest, res: NextResponse) {
 
   const product = await prisma.m_producto.create({
     data: {
-      nombre_producto: name,
-      enTemporada: isSeasonal,
-      imagen_producto: imageURL,
-      categoria: "FRUTA",
+      nombre_producto,
+      imagen_producto,
+      descripcion: descripcion || "",
+      enTemporada,
+      categoria,
     },
   });
 

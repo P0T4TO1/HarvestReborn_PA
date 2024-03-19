@@ -140,11 +140,11 @@ export const ProfileForm: FC = () => {
         ...data,
       };
       data.dueneg = {
-        ...profile.dueneg,
+        ...profile.duenonegocio,
         ...data.dueneg,
       };
       data.dueneg.negocio = {
-        ...profile.dueneg?.negocio,
+        ...profile.duenonegocio?.negocio,
         ...data.dueneg.negocio,
       };
       data.cliente = {
@@ -270,7 +270,7 @@ export const ProfileForm: FC = () => {
                             type="text"
                             className="w-full"
                             label="Nombre(s)"
-                            defaultValue={profile?.dueneg?.nombre_dueneg}
+                            defaultValue={profile?.duenonegocio?.nombre_dueneg}
                             isDisabled={!isEditing}
                             {...register("dueneg.nombre_dueneg")}
                             aria-label={"Nombre del dueño"}
@@ -282,7 +282,7 @@ export const ProfileForm: FC = () => {
                             type="text"
                             className="w-full"
                             label="Apellidos"
-                            defaultValue={profile?.dueneg?.apellidos_dueneg}
+                            defaultValue={profile?.duenonegocio?.apellidos_dueneg}
                             isDisabled={!isEditing}
                             {...register("dueneg.apellidos_dueneg")}
                             aria-label={"Apellidos del dueño"}
@@ -305,7 +305,7 @@ export const ProfileForm: FC = () => {
                                   setFecNac({ ...fecNac, day: e.target.value });
                                 }}
                                 defaultValue={
-                                  profile?.dueneg?.fecha_nacimiento
+                                  profile?.duenonegocio?.fecha_nacimiento
                                     ?.toString()
                                     .split("-")[2]
                                     .split("T")[0]
@@ -347,7 +347,7 @@ export const ProfileForm: FC = () => {
                                   });
                                 }}
                                 defaultValue={
-                                  profile?.dueneg?.fecha_nacimiento
+                                  profile?.duenonegocio?.fecha_nacimiento
                                     ?.toString()
                                     .split("-")[0]
                                 }
@@ -365,7 +365,7 @@ export const ProfileForm: FC = () => {
                             className="w-full"
                             label="Nombre del Negocio"
                             defaultValue={
-                              profile?.dueneg?.negocio?.nombre_negocio
+                              profile?.duenonegocio?.negocio?.nombre_negocio
                             }
                             isDisabled={!isEditing}
                             {...register("dueneg.negocio.nombre_negocio")}
@@ -379,7 +379,7 @@ export const ProfileForm: FC = () => {
                             className="w-full"
                             label="Teléfono del Negocio"
                             defaultValue={
-                              profile?.dueneg?.negocio?.telefono_negocio
+                              profile?.duenonegocio?.negocio?.telefono_negocio
                             }
                             isDisabled={!isEditing}
                             {...register("dueneg.negocio.telefono_negocio")}
@@ -393,7 +393,7 @@ export const ProfileForm: FC = () => {
                           className="w-full"
                           label="Dirección del Negocio"
                           defaultValue={
-                            profile?.dueneg?.negocio?.direccion_negocio
+                            profile?.duenonegocio?.negocio?.direccion_negocio
                           }
                           isDisabled
                           aria-label={"Dirección del negocio"}
@@ -406,7 +406,7 @@ export const ProfileForm: FC = () => {
                             className="w-full"
                             label="Calle y número"
                             defaultValue={
-                              profile?.dueneg?.negocio?.direccion_negocio?.split(
+                              profile?.duenonegocio?.negocio?.direccion_negocio?.split(
                                 ","
                               )[0]
                             }
@@ -420,7 +420,7 @@ export const ProfileForm: FC = () => {
                             className="w-full"
                             label="Colonia"
                             defaultValue={
-                              profile?.dueneg?.negocio?.direccion_negocio?.split(
+                              profile?.duenonegocio?.negocio?.direccion_negocio?.split(
                                 ","
                               )[1]
                             }
@@ -434,7 +434,7 @@ export const ProfileForm: FC = () => {
                             className="w-full"
                             label="Alcaldía"
                             defaultValue={
-                              profile?.dueneg?.negocio?.direccion_negocio?.split(
+                              profile?.duenonegocio?.negocio?.direccion_negocio?.split(
                                 ","
                               )[2]
                             }
@@ -448,7 +448,7 @@ export const ProfileForm: FC = () => {
                             className="w-full"
                             label="Código Postal"
                             defaultValue={
-                              profile?.dueneg?.negocio?.direccion_negocio?.split(
+                              profile?.duenonegocio?.negocio?.direccion_negocio?.split(
                                 ","
                               )[3]
                             }
@@ -463,7 +463,7 @@ export const ProfileForm: FC = () => {
                           type="email"
                           className="w-full"
                           label="Email del Negocio"
-                          defaultValue={profile?.dueneg?.negocio?.email_negocio}
+                          defaultValue={profile?.duenonegocio?.negocio?.email_negocio}
                           isDisabled={!isEditing}
                           {...register("dueneg.negocio.email_negocio")}
                           aria-label={"Email del negocio"}

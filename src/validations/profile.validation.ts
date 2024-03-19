@@ -1,21 +1,21 @@
-import * as zod from "zod";
+import { z } from "zod";
 
-export const profileSchema = zod.object({
-  email: zod
+export const profileSchema = z.object({
+  email: z
     .string()
     .email({ message: "Correo invalido" })
     .max(100, { message: "El correo debe tener menos de 100 caracteres" }),
-  password: zod
+  password: z
     .string({ required_error: "La contraseña es obligatoria" })
     .min(3, { message: "La contraseña debe tener mínimo 3 caracteres" })
     .max(100, { message: "La contraseña debe tener menos de 100 caracteres" }),
-  nombre_dueneg: zod
+  nombre_dueneg: z
     .string()
     .min(3, { message: "El nombre debe tener mínimo 3 caracteres" })
     .max(100, {
       message: "El nombre debe tener menos de 100 caracteres",
     }),
-  apellidos_dueneg: zod
+  apellidos_dueneg: z
     .string()
     .min(3, {
       message: "Los apellidos deben tener mínimo 3 caracteres",
@@ -23,7 +23,7 @@ export const profileSchema = zod.object({
     .max(100, {
       message: "Los apellidos deben tener menos de 100 caracteres",
     }),
-  dia_nacimiento_d: zod
+  dia_nacimiento_d: z
     .string()
     .min(2, {
       message: "El dia de nacimiento debe tener mínimo 2 caracteres",
@@ -31,7 +31,7 @@ export const profileSchema = zod.object({
     .max(2, {
       message: "El dia de nacimiento debe tener menos de 2 caracteres",
     }),
-  mes_nacimiento_d: zod
+  mes_nacimiento_d: z
     .string()
     .min(3, {
       message: "El mes de nacimiento debe contener minimo 3 caracteres",
@@ -39,7 +39,7 @@ export const profileSchema = zod.object({
     .max(20, {
       message: "El nombre del propietario debe tener menos de 20 caracteres",
     }),
-  year_nacimiento_d: zod
+  year_nacimiento_d: z
     .string()
     .min(4, {
       message: "El año debe tener minimo 4 caracteres",
@@ -47,7 +47,7 @@ export const profileSchema = zod.object({
     .max(4, {
       message: "El nombre del propietario debe tener menos de 4 caracteres",
     }),
-  nombre_negocio_d: zod
+  nombre_negocio_d: z
     .string()
     .min(3, {
       message: "El nombre del negocio debe tener mínimo 3 caracteres",
@@ -55,7 +55,7 @@ export const profileSchema = zod.object({
     .max(100, {
       message: "El nombre del negocio debe tener menos de 100 caracteres",
     }),
-  calle_d: zod
+  calle_d: z
     .string()
     .min(3, {
       message: "La calle debe tener mínimo 3 caracteres",
@@ -63,7 +63,7 @@ export const profileSchema = zod.object({
     .max(100, {
       message: "La calle debe tener menos de 100 caracteres",
     }),
-  colonia_d: zod
+  colonia_d: z
     .string()
     .min(3, {
       message: "La colonia debe tener mínimo 3 caracteres",
@@ -71,7 +71,7 @@ export const profileSchema = zod.object({
     .max(100, {
       message: "La colonia debe tener menos de 100 caracteres",
     }),
-  cp_d: zod
+  cp_d: z
     .string()
     .min(3, {
       message: "El codigo postal debe tener mínimo 3 caracteres",
@@ -79,7 +79,7 @@ export const profileSchema = zod.object({
     .max(100, {
       message: "El codigo postal debe tener menos de 100 caracteres",
     }),
-  telefono_negocio_d: zod
+  telefono_negocio_d: z
     .string()
     .min(10, {
       message: "El telefono debe tener mínimo 10 caracteres",
@@ -87,18 +87,18 @@ export const profileSchema = zod.object({
     .max(10, {
       message: "El telefono debe tener menos de 10 caracteres",
     }),
-  email_negocio: zod
+  email_negocio: z
     .string()
     .email({ message: "Correo invalido" })
     .max(100, { message: "El correo debe tener menos de 100 caracteres" }),
 
-  nombre_cliente: zod
+  nombre_cliente: z
     .string()
     .min(3, { message: "El nombre debe tener mínimo 3 caracteres" })
     .max(100, {
       message: "El nombre debe tener menos de 100 caracteres",
     }),
-  apellidos_cliente: zod
+  apellidos_cliente: z
     .string()
     .min(3, {
       message: "Los apellidos deben tener mínimo 3 caracteres",
@@ -106,7 +106,7 @@ export const profileSchema = zod.object({
     .max(100, {
       message: "Los apellidos deben tener menos de 100 caracteres",
     }),
-  telefono_cliente: zod
+  telefono_cliente: z
     .string()
     .min(10, {
       message: "El telefono debe tener mínimo 10 caracteres",
@@ -114,7 +114,7 @@ export const profileSchema = zod.object({
     .max(10, {
       message: "El telefono debe tener menos de 10 caracteres",
     }),
-  dia_nacimiento_c: zod
+  dia_nacimiento_c: z
     .string()
     .min(2, {
       message: "El dia de nacimiento debe tener mínimo 2 caracteres",
@@ -122,7 +122,7 @@ export const profileSchema = zod.object({
     .max(2, {
       message: "El dia de nacimiento debe tener menos de 2 caracteres",
     }),
-  mes_nacimiento_c: zod
+  mes_nacimiento_c: z
     .string()
     .min(3, {
       message: "El mes de nacimiento debe contener minimo 3 caracteres",
@@ -130,7 +130,7 @@ export const profileSchema = zod.object({
     .max(20, {
       message: "El nombre del propietario debe tener menos de 20 caracteres",
     }),
-  year_nacimiento_c: zod
+  year_nacimiento_c: z
     .string()
     .min(4, {
       message: "El año debe tener minimo 4 caracteres",
@@ -138,7 +138,7 @@ export const profileSchema = zod.object({
     .max(4, {
       message: "El nombre del propietario debe tener menos de 4 caracteres",
     }),
-  nombre_negocio_c: zod
+  nombre_negocio_c: z
     .string()
     .min(3, {
       message: "El nombre del negocio debe tener mínimo 3 caracteres",
@@ -146,7 +146,7 @@ export const profileSchema = zod.object({
     .max(100, {
       message: "El nombre del negocio debe tener menos de 100 caracteres",
     }),
-  calle_c: zod
+  calle_c: z
     .string()
     .min(3, {
       message: "La calle debe tener mínimo 3 caracteres",
@@ -154,7 +154,7 @@ export const profileSchema = zod.object({
     .max(100, {
       message: "La calle debe tener menos de 100 caracteres",
     }),
-  colonia_c: zod
+  colonia_c: z
     .string()
     .min(3, {
       message: "La colonia debe tener mínimo 3 caracteres",
@@ -162,7 +162,7 @@ export const profileSchema = zod.object({
     .max(100, {
       message: "La colonia debe tener menos de 100 caracteres",
     }),
-  cp_c: zod
+  cp_c: z
     .string()
     .min(3, {
       message: "El codigo postal debe tener mínimo 3 caracteres",

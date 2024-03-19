@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/auth";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";

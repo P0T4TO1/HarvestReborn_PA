@@ -8,7 +8,7 @@ import { registerContactDataSchema } from "@/validations/auth.validation";
 import { useRouter } from "next/navigation";
 import { Input } from "@nextui-org/input";
 import axios from "axios";
-import {DANGER_TOAST, SUCCESS_TOAST} from "@/components/toast";
+import { DANGER_TOAST, SUCCESS_TOAST } from "@/components/toast";
 
 type Errors = {
   nombreNegocio?: string;
@@ -29,10 +29,21 @@ interface IFormData {
 }
 
 interface IResponse {
-  response: {
-    asentamiento: string;
-    municipio: string;
-  };
+  c_cve_ciudad: string;
+  d_codigo: string;
+  d_asenta: string;
+  d_tipo_asenta: string;
+  D_mnpio: string;
+  d_estado: string;
+  d_ciudad: string;
+  d_CP: string;
+  c_estado: string;
+  c_oficina: string;
+  c_CP: string;
+  c_tipo_asenta: string;
+  c_mnpio: string;
+  id_asenta_cpcons: string;
+  d_zona: string;
 }
 
 export const ContactDataForm = () => {
@@ -54,22 +65,33 @@ export const ContactDataForm = () => {
 
   useEffect(() => {
     if (postalCode.length === 5) {
-      const res = axios
-        .get(
-          `https://api.copomex.com/query/info_cp/${postalCode}?token=${process.env.NEXT_PUBLIC_COPOMEX_API_KEY}`
-        )
-        .then((res) => {
-          if (res) {
-            res.data.map((item: IResponse) => {
-              const coloniaString = item.response.asentamiento;
-              const municipioString = item.response.municipio;
-              setColonia(coloniaString);
-              setAlcaldia(municipioString);
-            });
+      axios.get("/CP_CDMX.json").then((direction) => {
+        if (direction) {
+          if (
+            direction.data.some(
+              (item: IResponse) => item.d_codigo === postalCode
+            )
+          ) {
+            setErrors({ cp: " " });
           } else {
+            setErrors({ cp: "Código postal no encontrado" });
             return;
           }
-        });
+          direction.data.map((item: IResponse) => {
+            if (item.d_codigo !== postalCode) {
+              return;
+            } else {
+              const coloniaString = item.d_asenta;
+              const municipioString = item.D_mnpio;
+              setErrors({ cp: " " });
+              setColonia(coloniaString);
+              setAlcaldia(municipioString);
+            }
+          });
+        } else {
+          return;
+        }
+      });
     }
   }, [postalCode]);
 

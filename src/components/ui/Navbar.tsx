@@ -14,31 +14,61 @@ import {
   NavbarMenu,
   NavbarMenuItem,
   Link,
-  Button,
 } from "@nextui-org/react";
+import { UiContext } from "@/context/ui";
 
 export const NavbarComponent = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { data: session } = useSession();
   const { user } = useContext(AuthContext);
+  const { toggleSideMenu, isMenuOpen } = useContext(UiContext);
 
   return (
     <>
-      <Navbar onMenuOpenChange={setMobileMenuOpen} className="bg-green-800">
-        <NavbarContent>
-          <NavbarMenuToggle
-            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-            className="sm:hidden"
-          />
-          <NavbarBrand>
-            <Image
-              src="/images/logo.png"
-              alt="Harvest Reborn"
-              width={80}
-              height={80}
+      <Navbar onMenuOpenChange={setMobileMenuOpen} className="bg-green-800 z-[40]">
+        {user?.id_rol === 1 ? (
+          <NavbarContent>
+            <button onClick={toggleSideMenu} className="md:hidden">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6 text-white"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                />
+              </svg>
+            </button>
+            <NavbarBrand>
+              <Image
+                src="/images/logo.png"
+                alt="Harvest Reborn"
+                width={80}
+                height={80}
+              />
+            </NavbarBrand>
+          </NavbarContent>
+        ) : (
+          <NavbarContent>
+            <NavbarMenuToggle
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              className="sm:hidden"
             />
-          </NavbarBrand>
-        </NavbarContent>
+            <NavbarBrand>
+              <Image
+                src="/images/logo.png"
+                alt="Harvest Reborn"
+                width={80}
+                height={80}
+              />
+            </NavbarBrand>
+          </NavbarContent>
+        )}
 
         <NavbarContent className="hidden sm:flex gap-4" justify="center">
           {session ? (
@@ -118,6 +148,51 @@ export const NavbarComponent = () => {
         <NavbarMenu>
           {session ? (
             <>
+              <NavbarMenuItem>
+                <Link color="foreground" href={"/home"}>
+                  Inicio
+                </Link>
+              </NavbarMenuItem>
+              {user?.id_rol === 2 ? (
+                <>
+                  <NavbarMenuItem>
+                    <Link className="text-gray-300" href="/inventory">
+                      Inventario
+                    </Link>
+                  </NavbarMenuItem>
+                  <NavbarMenuItem>
+                    <Link className="text-gray-300" href={"/orders"}>
+                      Pedidos
+                    </Link>
+                  </NavbarMenuItem>
+                </>
+              ) : user?.id_rol === 3 ? (
+                <>
+                  <NavbarMenuItem>
+                    <Link className="text-gray-300" href="/negocios">
+                      Negocios
+                    </Link>
+                  </NavbarMenuItem>
+                  <NavbarMenuItem>
+                    <Link className="text-gray-300" href={"/orders"}>
+                      Mis pedidos
+                    </Link>
+                  </NavbarMenuItem>
+                </>
+              ) : (
+                <>
+                  <NavbarMenuItem>
+                    <Link className="text-gray-300" href={"/admin/dashboard"}>
+                      Dashboard
+                    </Link>
+                  </NavbarMenuItem>
+                  <NavbarMenuItem>
+                    <Link className="text-gray-300" href={"/admin/tickets"}>
+                      Tickets
+                    </Link>
+                  </NavbarMenuItem>
+                </>
+              )}
               <NavbarMenuItem>
                 <Link color="foreground" href={"/auth/logout"}>
                   Cerrar sesión

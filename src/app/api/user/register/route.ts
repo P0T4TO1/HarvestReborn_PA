@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import { hash } from "bcrypt";
 
-import { jwt } from "@/lib/utils";
+import { signToken } from "@/lib/utils/jwt";
 import prisma from "@/lib/prisma";
 
 async function registerUser(req: NextRequest, res: NextResponse) {
@@ -59,23 +59,21 @@ async function registerUser(req: NextRequest, res: NextResponse) {
           password: await hash(password, 10),
           id_rol: ceo === 1 ? 1 : 3,
           cliente: {
-            create: [
-              {
-                nombre_cliente: nombre,
-                apellidos_cliente: apellidos,
-                telefono_cliente: telefono,
-                fecha_nacimiento: new Date(fecha_nacimiento),
-                nombre_negocio: nombreNegocio || "",
-                direccion_negocio:
-                  calle.concat(", ", colonia, ", ", alcaldia, ", ", cp) || "",
-              },
-            ],
+            create: {
+              nombre_cliente: nombre,
+              apellidos_cliente: apellidos,
+              telefono_cliente: telefono,
+              fecha_nacimiento: new Date(fecha_nacimiento),
+              nombre_negocio: nombreNegocio || "",
+              direccion_negocio:
+                calle.concat(", ", colonia, ", ", alcaldia, ", ", cp) || "",
+            },
           },
         },
       });
       const { id } = newUser;
 
-      const token = jwt.signToken(id, email);
+      const token = signToken(id, email);
       return NextResponse.json(
         {
           token,
@@ -94,31 +92,28 @@ async function registerUser(req: NextRequest, res: NextResponse) {
           password: await hash(password, 10),
           id_rol: ceo === 1 ? 1 : 2,
           duenonegocio: {
-            create: [
-              {
-                nombre_dueneg: nombre,
-                apellidos_dueneg: apellidos,
-                fecha_nacimiento: new Date(fecha_nacimiento),
-                negocio: {
-                  create: {
-                    nombre_negocio: nombreNegocio,
-                    telefono_negocio: telefono,
-                    direccion_negocio:
-                      calle.concat(", ", colonia, ", ", alcaldia, ", ", cp) ||
-                      "",
-                    inventario: {
-                      create: {},
-                    },
+            create: {
+              nombre_dueneg: nombre,
+              apellidos_dueneg: apellidos,
+              fecha_nacimiento: new Date(fecha_nacimiento),
+              negocio: {
+                create: {
+                  nombre_negocio: nombreNegocio,
+                  telefono_negocio: telefono,
+                  direccion_negocio:
+                    calle.concat(", ", colonia, ", ", alcaldia, ", ", cp) || "",
+                  inventario: {
+                    create: {},
                   },
                 },
               },
-            ],
+            },
           },
         },
       });
       const { id } = newUser;
 
-      const token = jwt.signToken(id, email);
+      const token = signToken(id, email);
       return NextResponse.json(
         {
           token,

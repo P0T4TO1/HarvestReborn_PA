@@ -27,7 +27,7 @@ async function getProfile(
     );
 
   if (profile?.id_rol === 2) {
-    const dueneg = await prisma.d_duenonegocio.findFirst({
+    const duenonegocio = await prisma.d_duenonegocio.findFirst({
       where: {
         id_user: profile.id,
       },
@@ -35,7 +35,7 @@ async function getProfile(
         negocio: true,
       },
     });
-    return NextResponse.json({ ...profile, dueneg }, { status: 200 });
+    return NextResponse.json({ ...profile, duenonegocio }, { status: 200 });
   } else if (profile?.id_rol === 3) {
     const cliente = await prisma.d_cliente.findFirst({
       where: {

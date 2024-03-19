@@ -7,8 +7,8 @@ import Image from "next/image";
 export const Footer = () => {
   return (
     <>
-      <footer className="relative bg-blueGray-200 pt-8 pb-6">
-        <hr className="my-6 border-blueGray-300" />
+      <footer className="relative bg-blueGray-200 pb-6">
+        <hr className="mb-6 border-blueGray-300" />
         <div className="container mx-auto px-4 pt-8">
           <div className="flex flex-wrap text-left lg:text-left">
             <div className="w-full lg:w-6/12 px-4">

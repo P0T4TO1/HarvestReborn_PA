@@ -1,4 +1,4 @@
-import * as z from "zod";
+import { z } from "zod";
 
 export const registerUserDataSchema = z
   .object({
@@ -30,33 +30,123 @@ export const registerUserDataSchema = z
     path: ["confirmPassword"],
   });
 
-export const registerPersonalDataSchema = z.object({
-  nombre: z
-    .string({ required_error: "El nombre es obligatorio" })
-    .min(3, { message: "El nombre debe tener mínimo 3 caracteres" })
-    .max(100, { message: "El nombre debe tener menos de 100 caracteres" }),
-  apellidos: z
-    .string({ required_error: "Los apellidos son obligatorios" })
-    .min(3, { message: "Los apellidos deben tener mínimo 3 caracteres" })
-    .max(100, { message: "Los apellidos deben tener menos de 100 caracteres" }),
-  fecha_nacimiento: z.string({
-    required_error: "La fecha de nacimiento es obligatoria",
-  }),
-  dia_nacimiento: z
-    .string({ required_error: "El día es obligatorio" })
-    .min(2, {
-      message: "El día debe tener mínimo 2 caracteres",
-    })
-    .max(2, { message: "El día debe tener menos de 2 caracteres" }),
-  mes_nacimiento: z.string({ required_error: "El mes es obligatorio" }),
-  year_nacimiento: z
-    .string({ required_error: "El año es obligatorio" })
-    .min(4, {
-      message: "El año debe tener mínimo 4 caracteres",
-    })
-    .max(4, { message: "El año debe tener menos de 4 caracteres" }),
-  tipo: z.string({ required_error: "El tipo es obligatorio" }),
-});
+export const registerPersonalDataSchema = z
+  .object({
+    nombre: z
+      .string({ required_error: "El nombre es obligatorio" })
+      .min(3, { message: "El nombre debe tener mínimo 3 caracteres" })
+      .max(100, { message: "El nombre debe tener menos de 100 caracteres" }),
+    apellidos: z
+      .string({ required_error: "Los apellidos son obligatorios" })
+      .min(3, { message: "Los apellidos deben tener mínimo 3 caracteres" })
+      .max(100, {
+        message: "Los apellidos deben tener menos de 100 caracteres",
+      }),
+    fecha_nacimiento: z.string({
+      required_error: "La fecha de nacimiento es obligatoria",
+    }),
+    dia_nacimiento: z
+      .string({ required_error: "El día es obligatorio" })
+      .min(2, {
+        message: "El día debe tener mínimo 2 caracteres",
+      })
+      .max(2, { message: "El día debe tener menos de 2 caracteres" }),
+    mes_nacimiento: z.string({ required_error: "El mes es obligatorio" }),
+    year_nacimiento: z
+      .string({ required_error: "El año es obligatorio" })
+      .min(4, {
+        message: "El año debe tener mínimo 4 caracteres",
+      })
+      .max(4, { message: "El año debe tener menos de 4 caracteres" }),
+    tipo: z.string({ required_error: "El tipo es obligatorio" }),
+  })
+  .superRefine((data, ctx) => {
+    const mayorEdad = new Date().getFullYear() - 18;
+
+    const { dia_nacimiento, mes_nacimiento, year_nacimiento } = data;
+    if (
+      parseInt(mes_nacimiento) === 1 ||
+      parseInt(mes_nacimiento) === 3 ||
+      parseInt(mes_nacimiento) === 5 ||
+      parseInt(mes_nacimiento) === 7 ||
+      parseInt(mes_nacimiento) === 8 ||
+      parseInt(mes_nacimiento) === 10 ||
+      parseInt(mes_nacimiento) === 12
+    ) {
+      if (parseInt(dia_nacimiento) > 31) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.too_big,
+          maximum: 31,
+          type: "string",
+          inclusive: true,
+          message: "El día no puede ser mayor a 31",
+          path: ["dia_nacimiento"],
+        });
+      }
+    } else if (
+      parseInt(mes_nacimiento) === 4 ||
+      parseInt(mes_nacimiento) === 6 ||
+      parseInt(mes_nacimiento) === 9 ||
+      parseInt(mes_nacimiento) === 11
+    ) {
+      if (parseInt(dia_nacimiento) > 30) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.too_big,
+          maximum: 30,
+          type: "string",
+          inclusive: true,
+          message: "El día no puede ser mayor a 30",
+          path: ["dia_nacimiento"],
+        });
+      }
+    } else if (parseInt(mes_nacimiento) === 2) {
+      if (parseInt(year_nacimiento) % 4 === 0) {
+        if (parseInt(dia_nacimiento) > 29) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.too_big,
+            maximum: 29,
+            type: "string",
+            inclusive: true,
+            message: "El día no puede ser mayor a 29",
+            path: ["dia_nacimiento"],
+          });
+        }
+      } else {
+        if (parseInt(dia_nacimiento) > 28) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.too_big,
+            maximum: 28,
+            type: "string",
+            inclusive: true,
+            message: "El día no puede ser mayor a 28",
+            path: ["dia_nacimiento"],
+          });
+        }
+      }
+    }
+    if (parseInt(mes_nacimiento) > 12) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.too_big,
+        maximum: 12,
+        type: "string",
+        inclusive: true,
+        message: "El mes no puede ser mayor a 12",
+        path: ["mes_nacimiento"],
+      });
+    }
+    if (parseInt(year_nacimiento) > mayorEdad) {
+      console.log(mayorEdad, "mayorEdad");
+      ctx.addIssue({
+        code: z.ZodIssueCode.too_small,
+        minimum: mayorEdad,
+        type: "string",
+        inclusive: true,
+        message: "Debes ser mayor de edad para registrarte",
+        path: ["year_nacimiento"],
+      });
+    }
+    return null;
+  });
 
 export const registerContactDataSchema = z.object({
   nombreNegocio: z
@@ -66,7 +156,8 @@ export const registerContactDataSchema = z.object({
     })
     .max(100, {
       message: "El nombre del negocio debe tener menos de 100 caracteres",
-    }),
+    })
+    .optional(),
   telefono: z
     .string({ required_error: "El telefono es obligatorio" })
     .min(10, { message: "El telefono debe tener mínimo 10 caracteres" })

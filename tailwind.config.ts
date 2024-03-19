@@ -1,7 +1,8 @@
 import type { Config } from "tailwindcss";
 import { nextui } from "@nextui-org/react";
 
-const config: Config = {
+const config = {
+  darkMode: ["class"],
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -9,6 +10,7 @@ const config: Config = {
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
     "./node_modules/tailwind-datepicker-react/dist/**/*.js",
   ],
+  prefix: "",
   theme: {
     extend: {
       backgroundImage: {
@@ -18,7 +20,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [nextui()],
-  darkMode: "class",
-};
+  plugins: [require("tailwindcss-animate"), nextui()],
+} satisfies Config;
+
 export default config;

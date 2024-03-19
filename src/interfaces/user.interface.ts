@@ -9,11 +9,11 @@ export interface IUser {
   estado: Estado;
 
   negocio?: INegocio;
-  dueneg?: IDuenoNegocio;
+  duenonegocio?: IDuenoNegocio;
   cliente?: ICliente;
 }
 
 export enum Estado {
-  Activo = "Activo",
-  Inactivo = "Inactivo",
+  Activo = "ACTIVO",
+  Inactivo = "INACTIVO",
 }
