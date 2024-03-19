@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import { hash } from "bcrypt";
 
-import { signToken } from "@/lib/utils/jwt";
+import { signToken } from "@/lib/jwt";
 import prisma from "@/lib/prisma";
 
 async function registerUser(req: NextRequest, res: NextResponse) {

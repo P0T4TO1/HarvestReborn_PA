@@ -1,6 +1,6 @@
 import { AddProduct } from "@/components";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/utils/authOptions";
+import { authOptions } from "@/lib/authOptions";
 import { redirect } from "next/navigation";
 
 const AddProductPage = async () => {

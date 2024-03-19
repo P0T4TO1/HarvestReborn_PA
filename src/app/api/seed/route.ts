@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { seedDatabase } from "@/lib/utils";
+import { seedDatabase } from "@/lib";
 import { NextRequest, NextResponse } from "next/server";
 
 type Data = {

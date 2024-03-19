@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { signToken } from "@/lib/utils/jwt";
+import { signToken } from "@/lib/jwt";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
