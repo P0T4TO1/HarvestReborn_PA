@@ -59,6 +59,7 @@ export const SidebarWrapper = () => {
                 icon={
                   <span className="material-symbols-outlined">storefront</span>
                 }
+                href="/admin/dashboard/negocios"
               />
               <SidebarItem
                 isActive={pathname === "/admin/dashboard/orders"}
@@ -68,11 +69,13 @@ export const SidebarWrapper = () => {
                     shopping_bag
                   </span>
                 }
+                href="/admin/dashboard/orders"
               />
               <SidebarItem
                 isActive={pathname === "/admin/dashboard/chats"}
                 title="Chats"
                 icon={<span className="material-symbols-outlined">forum</span>}
+                href="/admin/dashboard/chats"
               />
             </SidebarMenu>
 

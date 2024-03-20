@@ -16,6 +16,7 @@ import {
   Link,
 } from "@nextui-org/react";
 import { UiContext } from "@/context/ui";
+import { useRouter, usePathname } from "next/navigation";
 
 export const NavbarComponent = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -23,27 +24,40 @@ export const NavbarComponent = () => {
   const { user } = useContext(AuthContext);
   const { toggleSideMenu, isMenuOpen } = useContext(UiContext);
 
+  const pathname = usePathname();
+
   return (
     <>
-      <Navbar onMenuOpenChange={setMobileMenuOpen} className="bg-green-800 z-[40]">
+      <Navbar
+        onMenuOpenChange={setMobileMenuOpen}
+        className="bg-green-800 z-[40]"
+      >
         {user?.id_rol === 1 ? (
           <NavbarContent>
-            <button onClick={toggleSideMenu} className="md:hidden">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-6 h-6 text-white"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-                />
-              </svg>
-            </button>
+            {pathname === "/admin/dashboard" ? (
+              <button onClick={toggleSideMenu} className="md:hidden">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-6 h-6 text-white"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                  />
+                </svg>
+              </button>
+            ) : (
+              <NavbarMenuToggle
+                aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+                className="sm:hidden"
+              />
+            )}
+
             <NavbarBrand>
               <Image
                 src="/images/logo.png"

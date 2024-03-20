@@ -1,5 +1,13 @@
 import { z } from "zod";
 
+const MAX_FILE_SIZE = 50000000;
+const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];
+
 export const adminAddProductValidation = z.object({
   nombre_producto: z
     .string({ required_error: "El nombre del producto es obligatorio" })
@@ -10,22 +18,17 @@ export const adminAddProductValidation = z.object({
       message: "El nombre del producto debe tener menos de 100 caracteres",
     }),
   imagen_producto: z
-    .string({ required_error: "La imagen del producto es obligatoria" })
-    .min(3, {
-      message: "La imagen del producto debe tener mínimo 3 caracteres",
+    .any({ required_error: "La imagen del producto es obligatoria" })
+    .refine((files) => files?.length >= 1, {
+      message: "La imagen del producto es obligatoria",
     })
-    .max(100, {
-      message: "La imagen del producto debe tener menos de 100 caracteres",
+    .refine((files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type), {
+      message: "Solo archivos .jpg, .jpeg, .png and .webp son aceptados.",
+    })
+    .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, {
+      message: `El tamaño máximo es de 5MB.`,
     }),
-  descripcion: z
-    .string({ required_error: "La descripción del producto es obligatoria" })
-    .min(3, {
-      message: "La descripción del producto debe tener mínimo 3 caracteres",
-    })
-    .max(100, {
-      message: "La descripción del producto debe tener menos de 100 caracteres",
-    })
-    .optional(),
+  descripcion: z.string().optional(),
   enTemporada: z.boolean({
     required_error: "El campo en temporada es obligatorio",
   }),

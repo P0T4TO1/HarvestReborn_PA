@@ -3,9 +3,9 @@
 import { Button, Input } from "@nextui-org/react";
 import Link from "next/link";
 import React from "react";
-import { TableUsers, AddUser } from "@/components";
+import { TableNegocios } from "@/components";
 
-export const Accounts = () => {
+export const Negocios = () => {
   return (
     <div className="my-10 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
       <ul className="flex">
@@ -18,16 +18,15 @@ export const Accounts = () => {
         </li>
 
         <li className="flex gap-2">
-          <span className="material-symbols-outlined">group</span>
-          <span>Usuarios</span>
-          <span> / </span>{" "}
+          <span className="material-symbols-outlined">store</span>
+          <span>Negocios </span> <span> / </span>{" "}
         </li>
         <li className="flex gap-2">
           <span>Listado</span>
         </li>
       </ul>
 
-      <h3 className="text-xl font-semibold">Todos los usuarios</h3>
+      <h3 className="text-xl font-semibold">Todos los negocios</h3>
       <div className="flex justify-between flex-wrap gap-4 items-center">
         <div className="flex items-center gap-3 flex-wrap md:flex-nowrap">
           <Input
@@ -35,19 +34,13 @@ export const Accounts = () => {
               input: "w-full",
               mainWrapper: "w-full",
             }}
-            placeholder="Buscar usuarios"
+            placeholder="Buscar negocios"
           />
           <span className="material-symbols-outlined cursor-pointer">
             delete
           </span>
         </div>
         <div className="flex flex-row gap-3.5 flex-wrap">
-          {/*<AddUser />*/}
-          <Link href={"/admin/dashboard/users/add-user"}>
-            <Button color="primary" isIconOnly variant="faded">
-              <span className="material-symbols-outlined">person_add</span>
-            </Button>
-          </Link>
           <Button
             color="primary"
             startContent={
@@ -59,7 +52,7 @@ export const Accounts = () => {
         </div>
       </div>
       <div className="max-w-[95rem] mx-auto w-full">
-        <TableUsers />
+        <TableNegocios />
       </div>
     </div>
   );

@@ -71,7 +71,7 @@ export const DropdownComponent: FC = () => {
             ) : (
               <DropdownItem
                 key="dashboard"
-                href={"/dashboard"}
+                href={"/admin/dashboard"}
                 startContent={
                   <span className="material-symbols-outlined">dashboard</span>
                 }
