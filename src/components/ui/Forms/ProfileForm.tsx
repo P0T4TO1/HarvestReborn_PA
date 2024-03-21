@@ -5,10 +5,11 @@ import { profileSchema } from "@/validations/profile.validation";
 import { Estado, IUser } from "@/interfaces";
 import { AuthContext } from "@/context/auth";
 import { hrApi } from "@/api";
-import { NextResponse } from "next/server";
 import { CircularProgress, Select, SelectItem } from "@nextui-org/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Input } from "@nextui-org/input";
+import { AsideProfile, SUCCESS_TOAST } from "@/components";
+import { toast } from "sonner";
 
 type Errors = {
   email?: string;
@@ -88,7 +89,6 @@ export const ProfileForm: FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [errors, setErrors] = useState<Errors>(null);
   const [error, setError] = useState(false);
-  const [isMutation, setIsMutation] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
   const [fecNac, setFecNac] = useState<{
     day: string;
@@ -133,7 +133,6 @@ export const ProfileForm: FC = () => {
   }, [user?.id, profile]);
 
   const onUpdateProfile: SubmitHandler<IFormData> = async (data) => {
-    console.log(profile);
     try {
       data = {
         ...profile,
@@ -151,7 +150,6 @@ export const ProfileForm: FC = () => {
         ...profile.cliente,
         ...data.cliente,
       };
-      console.log("data", data);
       const validations = profileSchema.safeParse(data);
       if (!validations.success) {
         console.log("error", validations.error.issues);
@@ -171,12 +169,7 @@ export const ProfileForm: FC = () => {
         .put("/user/profile", { data })
         .then(() => {
           setIsEditing(false);
-          return NextResponse.json(
-            {
-              message: "El usuario se modifico correctamente",
-            },
-            { status: 200 }
-          );
+          toast("Perfil actualizado", SUCCESS_TOAST);
         })
         .catch((err) => {
           setErrors(err);
@@ -192,21 +185,8 @@ export const ProfileForm: FC = () => {
 
   return (
     <section className="bg-white w-full flex flex-col gap-5 px-3 md:px-16 lg:px-28 md:flex-row text-[#161931] min-h-screen">
-      <aside className="hidden py-4 md:w-1/3 lg:w-1/4 md:block">
-        <div className="flex flex-col gap-2 p-4 text-sm border-r border-indigo-100 top-12">
-          <h2 className="pl-3 mb-4 text-2xl font-semibold">Settings</h2>
-          <button className="flex items-center px-3 py-2.5 font-bold bg-white  text-indigo-900 border rounded-full">
-            Perfil público
-          </button>
-          <button className="flex items-center px-3 py-2.5 font-semibold  hover:text-indigo-900 hover:border hover:rounded-full">
-            Cuenta
-          </button>
-          <button className="flex items-center px-3 py-2.5 font-semibold hover:text-indigo-900 hover:border hover:rounded-full  ">
-            Notificaciones
-          </button>
-        </div>
-      </aside>
-      <main className="w-full min-h-screen py-1 md:w-2/3 lg:w-3/4">
+      <AsideProfile />
+      <div className="w-full min-h-screen py-1 md:w-2/3 lg:w-3/4">
         <div className="p-2 md:p-4">
           <div className="w-full pb-8 mt-8 sm:max-w-3xl sm:rounded-lg">
             <h2 className="text-2xl font-bold sm:text-xl">
@@ -250,17 +230,20 @@ export const ProfileForm: FC = () => {
                   onSubmit={handleSubmit(onUpdateProfile)}
                   className="items-center mt-8 sm:mt-14 text-[#202142]"
                 >
-                  <div className="mb-2 sm:mb-6">
-                    <Input
-                      isDisabled={!isEditing}
-                      type="email"
-                      label="Correo electrónico"
-                      className="w-full"
-                      defaultValue={profile?.email}
-                      disabled={!isEditing}
-                      {...register("email")}
-                    />
-                  </div>
+                  {/*<div className="mb-2 sm:mb-6">*/}
+                  {/*  <Input*/}
+                  {/*    isDisabled={!isEditing}*/}
+                  {/*    type="email"*/}
+                  {/*    label="Correo electrónico"*/}
+                  {/*    className="w-full"*/}
+                  {/*    defaultValue={profile?.email}*/}
+                  {/*    disabled={!isEditing}*/}
+                  {/*    {...register("email")}*/}
+                  {/*  />*/}
+                  {/*  {errors?.email && (*/}
+                  {/*    <p className="text-red-500 text-xs">{errors?.email}</p>*/}
+                  {/*  )}*/}
+                  {/*</div>*/}
 
                   {user?.id_rol === 2 && (
                     <>
@@ -275,6 +258,11 @@ export const ProfileForm: FC = () => {
                             {...register("dueneg.nombre_dueneg")}
                             aria-label={"Nombre del dueño"}
                           />
+                          {errors?.nombre_dueneg && (
+                            <p className="text-red-500 text-xs">
+                              {errors?.nombre_dueneg}
+                            </p>
+                          )}
                         </div>
 
                         <div className="w-full pt-4">
@@ -282,11 +270,18 @@ export const ProfileForm: FC = () => {
                             type="text"
                             className="w-full"
                             label="Apellidos"
-                            defaultValue={profile?.duenonegocio?.apellidos_dueneg}
+                            defaultValue={
+                              profile?.duenonegocio?.apellidos_dueneg
+                            }
                             isDisabled={!isEditing}
                             {...register("dueneg.apellidos_dueneg")}
                             aria-label={"Apellidos del dueño"}
                           />
+                          {errors?.apellidos_dueneg && (
+                            <p className="text-red-500 text-xs">
+                              {errors?.apellidos_dueneg}
+                            </p>
+                          )}
                         </div>
                         <div className="w-full">
                           <div className="relative">
@@ -313,6 +308,11 @@ export const ProfileForm: FC = () => {
                                 isDisabled={!isEditing}
                                 aria-label={"Día de nacimiento"}
                               />
+                              {errors?.dia_nacimiento_d && (
+                                <p className="text-red-500 text-xs">
+                                  {errors?.dia_nacimiento_d}
+                                </p>
+                              )}
                             </div>
                             <div className="relative">
                               <Select
@@ -333,6 +333,11 @@ export const ProfileForm: FC = () => {
                                   </SelectItem>
                                 ))}
                               </Select>
+                              {errors?.mes_nacimiento_d && (
+                                <p className="text-red-500 text-xs">
+                                  {errors?.mes_nacimiento_d}
+                                </p>
+                              )}
                             </div>
                             <div className="relative">
                               <Input
@@ -354,6 +359,11 @@ export const ProfileForm: FC = () => {
                                 isDisabled={!isEditing}
                                 aria-label={"Año de nacimiento"}
                               />
+                              {errors?.year_nacimiento_d && (
+                                <p className="text-red-500 text-xs">
+                                  {errors?.year_nacimiento_d}
+                                </p>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -371,13 +381,18 @@ export const ProfileForm: FC = () => {
                             {...register("dueneg.negocio.nombre_negocio")}
                             aria-label={"Nombre del negocio"}
                           />
+                          {errors?.nombre_negocio_d && (
+                            <p className="text-red-500 text-xs">
+                              {errors?.nombre_negocio_d}
+                            </p>
+                          )}
                         </div>
 
                         <div className="w-full">
                           <Input
                             type="text"
                             className="w-full"
-                            label="Teléfono del Negocio"
+                            label="Número de teléfono"
                             defaultValue={
                               profile?.duenonegocio?.negocio?.telefono_negocio
                             }
@@ -385,6 +400,11 @@ export const ProfileForm: FC = () => {
                             {...register("dueneg.negocio.telefono_negocio")}
                             aria-label={"Teléfono del negocio"}
                           />
+                          {errors?.telefono_negocio_d && (
+                            <p className="text-red-500 text-xs">
+                              {errors?.telefono_negocio_d}
+                            </p>
+                          )}
                         </div>
                       </div>
                       <div className="mb-2 sm:mb-6">
@@ -398,6 +418,11 @@ export const ProfileForm: FC = () => {
                           isDisabled
                           aria-label={"Dirección del negocio"}
                         />
+                        {errors?.direccion_negocio_d && (
+                          <p className="text-red-500 text-xs">
+                            {errors?.direccion_negocio_d}
+                          </p>
+                        )}
                       </div>
                       <div className="flex flex-col items-center w-full mb-2 space-x-0 space-y-2 sm:flex-row sm:space-x-4 sm:space-y-0 sm:mb-6">
                         <div>
@@ -413,6 +438,11 @@ export const ProfileForm: FC = () => {
                             isDisabled={!isEditing}
                             aria-label={"Calle y número"}
                           />
+                          {errors?.calle_d && (
+                            <p className="text-red-500 text-xs">
+                              {errors?.calle_d}
+                            </p>
+                          )}
                         </div>
                         <div className="mb-2 sm:mb-6">
                           <Input
@@ -427,6 +457,11 @@ export const ProfileForm: FC = () => {
                             isDisabled={!isEditing}
                             aria-label={"Colonia"}
                           />
+                          {errors?.colonia_d && (
+                            <p className="text-red-500 text-xs">
+                              {errors?.colonia_d}
+                            </p>
+                          )}
                         </div>
                         <div className="mb-2 sm:mb-6">
                           <Input
@@ -441,6 +476,11 @@ export const ProfileForm: FC = () => {
                             isDisabled={!isEditing}
                             aria-label={"Alcaldía"}
                           />
+                          {errors?.cp_d && (
+                            <p className="text-red-500 text-xs">
+                              {errors?.cp_d}
+                            </p>
+                          )}
                         </div>
                         <div className="mb-2 sm:mb-6">
                           <Input
@@ -455,6 +495,11 @@ export const ProfileForm: FC = () => {
                             isDisabled={!isEditing}
                             aria-label={"Código postal"}
                           />
+                          {errors?.cp_d && (
+                            <p className="text-red-500 text-xs">
+                              {errors?.cp_d}
+                            </p>
+                          )}
                         </div>
                       </div>
 
@@ -463,11 +508,18 @@ export const ProfileForm: FC = () => {
                           type="email"
                           className="w-full"
                           label="Email del Negocio"
-                          defaultValue={profile?.duenonegocio?.negocio?.email_negocio}
+                          defaultValue={
+                            profile?.duenonegocio?.negocio?.email_negocio
+                          }
                           isDisabled={!isEditing}
                           {...register("dueneg.negocio.email_negocio")}
                           aria-label={"Email del negocio"}
                         />
+                        {errors?.email_negocio && (
+                          <p className="text-red-500 text-xs">
+                            {errors?.email_negocio}
+                          </p>
+                        )}
                       </div>
                     </>
                   )}
@@ -476,29 +528,22 @@ export const ProfileForm: FC = () => {
                     <>
                       <div className="grid grid-cols-2 grid-flow-row gap-6 mt-6">
                         <div className="w-full">
-                          <label
-                            htmlFor="cluni"
-                            className="block mb-2 text-sm font-medium text-indigo-900"
-                          >
-                            Nombre(s)
-                          </label>
-                          <input
+                          <Input
                             type="text"
                             id="nombre"
-                            className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                            placeholder="Nombre(s)"
+                            className="w-full"
+                            label="Nombre(s)"
                             defaultValue={profile?.cliente?.nombre_cliente}
-                            disabled={!isEditing}
+                            isDisabled={!isEditing}
                             {...register("cliente.nombre_cliente")}
                           />
+                          {errors?.nombre_cliente && (
+                            <p className="text-red-500 text-xs">
+                              {errors?.nombre_cliente}
+                            </p>
+                          )}
                         </div>
                         <div className="w-full">
-                          <label
-                            htmlFor="apellidos"
-                            className="block mb-2 text-sm font-medium text-indigo-900"
-                          >
-                            Apellidos
-                          </label>
                           <Input
                             type="text"
                             id="apellidos"
@@ -508,14 +553,13 @@ export const ProfileForm: FC = () => {
                             isDisabled={!isEditing}
                             {...register("cliente.apellidos_cliente")}
                           />
+                          {errors?.apellidos_cliente && (
+                            <p className="text-red-500 text-xs">
+                              {errors?.apellidos_cliente}
+                            </p>
+                          )}
                         </div>
                         <div className="w-full">
-                          <label
-                            htmlFor="tel_c"
-                            className="block mb-2 text-sm font-medium text-indigo-900"
-                          >
-                            Número de Teléfono
-                          </label>
                           <Input
                             type="text"
                             id="tel_c"
@@ -525,6 +569,11 @@ export const ProfileForm: FC = () => {
                             isDisabled={!isEditing}
                             {...register("cliente.telefono_cliente")}
                           />
+                          {errors?.telefono_cliente && (
+                            <p className="text-red-500 text-xs">
+                              {errors?.telefono_cliente}
+                            </p>
+                          )}
                         </div>
                         <div>
                           <div className="relative">
@@ -554,6 +603,11 @@ export const ProfileForm: FC = () => {
                                 disabled={!isEditing}
                                 required={false}
                               />
+                              {errors?.dia_nacimiento_c && (
+                                <p className="text-red-500 text-xs">
+                                  {errors?.dia_nacimiento_c}
+                                </p>
+                              )}
                             </div>
                             <div className="relative">
                               <Select
@@ -575,6 +629,11 @@ export const ProfileForm: FC = () => {
                                   </SelectItem>
                                 ))}
                               </Select>
+                              {errors?.mes_nacimiento_c && (
+                                <p className="text-red-500 text-xs">
+                                  {errors?.mes_nacimiento_c}
+                                </p>
+                              )}
                             </div>
                             <div className="relative">
                               <Input
@@ -596,34 +655,32 @@ export const ProfileForm: FC = () => {
                                 required={false}
                                 disabled={!isEditing}
                               />
+                              {errors?.year_nacimiento_c && (
+                                <p className="text-red-500 text-xs">
+                                  {errors?.year_nacimiento_c}
+                                </p>
+                              )}
                             </div>
                           </div>
                         </div>
                       </div>
                       <div className="my-2 sm:my-6 w-full">
-                        <label
-                          htmlFor="nombre_negocio_c"
-                          className="block mb-2 text-sm font-medium text-indigo-900"
-                        >
-                          Nombre del Negocio(si aplica)
-                        </label>
                         <Input
                           type="text"
                           id="nombre_negocio_c"
                           className="w-full"
-                          label="Siglas de la Organización"
+                          label="Nombre del negocio"
                           defaultValue={profile?.cliente?.nombre_negocio}
                           isDisabled={!isEditing}
                           {...register("cliente.nombre_negocio")}
                         />
+                        {errors?.nombre_negocio_c && (
+                          <p className="text-red-500 text-xs">
+                            {errors?.nombre_negocio_c}
+                          </p>
+                        )}
                       </div>
                       <div className="my-2 sm:my-6 w-full">
-                        <label
-                          htmlFor="direction_c"
-                          className="block mb-2 text-sm font-medium text-indigo-900"
-                        >
-                          Dirección del Negocio(si aplica)
-                        </label>
                         <Input
                           type="text"
                           id="direction"
@@ -633,6 +690,11 @@ export const ProfileForm: FC = () => {
                           isDisabled
                           {...register("cliente.direccion_negocio")}
                         />
+                        {errors?.direccion_negocio_c && (
+                          <p className="text-red-500 text-xs">
+                            {errors?.direccion_negocio_c}
+                          </p>
+                        )}
                       </div>
                     </>
                   )}
@@ -650,7 +712,7 @@ export const ProfileForm: FC = () => {
             )}
           </div>
         </div>
-      </main>
+      </div>
     </section>
   );
 };

@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-async function searchUserByEmail(req: NextRequest, res: NextResponse) {
-  const { searchParams } = new URL(req.url);
-  const email = searchParams.get("email");
+async function searchUserByEmail(
+  request: Request,
+  { params }: { params: { email: string } },
+  req: NextRequest,
+  res: NextResponse
+) {
   try {
-    if (!email) {
+    if (!params.email) {
       return NextResponse.json(
         {
           error: "Internal Server Error",
@@ -17,7 +20,7 @@ async function searchUserByEmail(req: NextRequest, res: NextResponse) {
 
     const user = await prisma.m_user.findUnique({
       where: {
-        email: email,
+        email: params.email,
       },
     });
 

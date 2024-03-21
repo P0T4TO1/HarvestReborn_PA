@@ -325,7 +325,7 @@ model d_mensajes {
 //   direccion_negocio String?
 //
 //   id_user String
-//   user    m_user    @relation(fields: [id_user], references: [id], onDelete: Cascade)
+//   user    m_user    @relation(fields: [id_user], references: [id]]], onDelete: Cascade)
 //   orden   d_orden[]
 //
 //   @@index([id_user])
@@ -338,7 +338,7 @@ model d_mensajes {
 //   fecha_nacimiento DateTime
 //
 //   id_user String
-//   user    m_user @relation(fields: [id_user], references: [id])
+//   user    m_user @relation(fields: [id_user], references: [id]]])
 //
 //   negocio m_negocio?
 //
@@ -466,7 +466,7 @@ model d_mensajes {
 //   id_historial Int @id @default(autoincrement())
 //
 //   id_user String
-//   user    m_user @relation(fields: [id_user], references: [id])
+//   user    m_user @relation(fields: [id_user], references: [id]]])
 //
 //   orden d_orden[]
 //
@@ -483,7 +483,7 @@ model d_mensajes {
 //   estado_ticket  Estado   @default(ACTIVO)
 //
 //   id_user String
-//   user    m_user @relation(fields: [id_user], references: [id])
+//   user    m_user @relation(fields: [id_user], references: [id]]])
 //
 //   @@index([id_user])
 // }
@@ -511,7 +511,7 @@ model d_mensajes {
 //   id_participantes Int @id @default(autoincrement())
 //
 //   id_user String
-//   user    m_user @relation(fields: [id_user], references: [id])
+//   user    m_user @relation(fields: [id_user], references: [id]]])
 //
 //   id_chat Int
 //   chat    m_chat @relation(fields: [id_chat], references: [id_chat])
@@ -526,7 +526,7 @@ model d_mensajes {
 //   fecha_creacion DateTime
 //
 //   id_user_creator String
-//   user            m_user @relation(fields: [id_user_creator], references: [id])
+//   user            m_user @relation(fields: [id_user_creator], references: [id]]])
 //
 //   participantes d_participantes[]
 //   mensajes      d_mensajes[]
@@ -546,7 +546,7 @@ model d_mensajes {
 //   chat    m_chat @relation(fields: [id_chat], references: [id_chat])
 //
 //   id_user String
-//   user    m_user @relation(fields: [id_user], references: [id])
+//   user    m_user @relation(fields: [id_user], references: [id]]])
 //
 //   @@index([id_chat])
 //   @@index([id_user])

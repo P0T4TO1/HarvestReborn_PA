@@ -171,3 +171,14 @@ export const profileSchema = z.object({
       message: "El codigo postal debe tener menos de 100 caracteres",
     }),
 });
+
+export const accountSchema = z
+  .object({
+    oldPassword: z.string().optional(),
+    password: z.string().optional(),
+    confirmPassword: z.string().optional(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Las contraseñas no coinciden",
+    path: ["confirmPassword"],
+  });

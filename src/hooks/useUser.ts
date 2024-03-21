@@ -18,6 +18,11 @@ export const useProfile = async (id: string, config: SWRConfiguration = {}) => {
 };
 
 export const searchUserByEmail = async (email: string) => {
-  const res = await hrApi.get(`/user/search?email=${email}`);
+  const res = await hrApi.get(`/user/search/${email}`);
+  return res.data;
+};
+
+export const verifyOldPassword = async (id: string, password: string) => {
+  const res = await hrApi.post(`/user/search/password/${id}`, { password });
   return res.data;
 };

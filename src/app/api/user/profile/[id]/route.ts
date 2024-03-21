@@ -1,8 +1,6 @@
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-type Data = { message: string } | any;
-
 async function getProfile(
   request: Request,
   { params }: { params: { id: string } },
@@ -54,25 +52,7 @@ async function updateProfile(
   req: NextRequest,
   res: NextResponse
 ) {
-  // const body = await request.json();
-  // const {
-  //   email,
-  //   nombre_cliente,
-  //   apellidos_cliente,
-  //   telefono_cliente,
-  //   fecha_nacimiento_d,
-  //   nombre_negocio_c,
-  //   direccion_negocio_c,
-  //   nombre_dueneg,
-  //   apellidos_dueneg,
-  //   fecha_nacimiento_c,
-  //   nombre_negocio_d,
-  //   direccion_negocio_d,
-  //   telefono_negocio,
-  //   email_negocio,
-  // } = body;
   const {
-    email = "",
     nombre_cliente = "",
     apellidos_cliente = "",
     telefono_cliente = "",
@@ -87,7 +67,6 @@ async function updateProfile(
     telefono_negocio = "",
     email_negocio = "",
   } = (await new Response(request.body).json()) as {
-    email: string;
     nombre_cliente: string;
     apellidos_cliente: string;
     telefono_cliente: string;
@@ -116,7 +95,6 @@ async function updateProfile(
           id: params.id,
         },
         data: {
-          email,
           duenonegocio: {
             update: {
               where: {
@@ -131,6 +109,7 @@ async function updateProfile(
                     nombre_negocio: nombre_negocio_d,
                     telefono_negocio: telefono_negocio,
                     direccion_negocio: direccion_negocio_d,
+                    email_negocio: email_negocio || "",
                   },
                 },
               },
@@ -144,7 +123,6 @@ async function updateProfile(
           id: params.id,
         },
         data: {
-          email,
           cliente: {
             update: {
               where: {

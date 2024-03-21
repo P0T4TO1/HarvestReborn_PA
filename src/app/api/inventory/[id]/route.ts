@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 
-async function getInventoryById(
+async function getLotesFromInventory(
   request: Request,
   { params }: { params: { id: string } },
   req: NextRequest,
@@ -14,7 +14,7 @@ async function getInventoryById(
         { status: 400 }
       );
 
-    const products = await prisma.m_lote.findMany({
+    const lotes = await prisma.m_lote.findMany({
       where: {
         inventario: {
           id_inventario: parseInt(params.id, 10),
@@ -23,9 +23,10 @@ async function getInventoryById(
       include: {
         producto: true,
       },
+      distinct: ["id_producto"],
     });
 
-    return NextResponse.json(products, { status: 200 });
+    return NextResponse.json(lotes, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       { message: "Error al buscar el inventario" },
@@ -131,7 +132,7 @@ async function deleteProductFromInventory(
 }
 
 export {
-  getInventoryById as GET,
+  getLotesFromInventory as GET,
   addProductToInventory as POST,
   deleteProductFromInventory as DELETE,
 };

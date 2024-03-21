@@ -41,7 +41,7 @@ export const DropdownComponent: FC = () => {
             </DropdownItem>
             <DropdownItem
               key="settings"
-              href={`/user/profile?id=${user?.id}`}
+              href={`/user/profile/${user?.id}`}
               startContent={
                 <span className="material-symbols-outlined">settings</span>
               }
