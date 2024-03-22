@@ -174,9 +174,41 @@ export const profileSchema = z.object({
 
 export const accountSchema = z
   .object({
-    oldPassword: z.string().optional(),
-    password: z.string().optional(),
-    confirmPassword: z.string().optional(),
+    oldPassword: z
+      .string({
+        required_error:
+          "Si desea cambiar la contraseña este campo es obligatorio",
+      })
+      .min(3, {
+        message: "La contraseña actual debe tener minimo 3 caracteres",
+      })
+      .max(100, {
+        message: "La contraseña actual debe tener máximo 100 caracteres",
+      }),
+    password: z
+      .string({
+        required_error:
+          "Si desea cambiar la contraseña este campo es obligatorio",
+      })
+      .min(3, {
+        message: "La nueva contraseaña debe tener minimo 3 caracteres",
+      })
+      .max(100, {
+        message: "La nueva contraseña debe tener máximo 100 caracteres",
+      }),
+    confirmPassword: z
+      .string({
+        required_error:
+          "Si desea cambiar la contraseña este campo es obligatorio",
+      })
+      .min(3, {
+        message:
+          "La confirmación de la contraseña debe tener mínimo 3 caracteres",
+      })
+      .max(100, {
+        message:
+          "La confirmación de la contraseña debe tener menos de 100 caracteres",
+      }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Las contraseñas no coinciden",

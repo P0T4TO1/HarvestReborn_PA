@@ -79,7 +79,7 @@ export const AccountForm: FC = () => {
         user?.id as string,
         data.oldPassword
       );
-      if (passwordExists.message === "Contraseña incorrecta") {
+      if (passwordExists.message !== "Contraseña incorrecta") {
         setErrors({ oldPassword: "Contraseña incorrecta" });
         return null;
       }
@@ -154,6 +154,9 @@ export const AccountForm: FC = () => {
                       isDisabled={!isEditing}
                       {...register("email")}
                     />
+                    {errors?.email && (
+                      <span className="text-red-500">{errors?.email}</span>
+                    )}
                   </div>
                   <Button type="submit" color="success" variant="solid">
                     {loading ? (
