@@ -8,13 +8,20 @@ import { FaFacebook } from "react-icons/fa";
 
 import { AuthContext } from "@/context/auth";
 import { UserDataForm, ContactDataForm, PersonalDataForm } from "@/components";
+import { signIn } from "next-auth/react";
 
 export const RegisterForm: FC = () => {
   const { indexActive } = useContext(AuthContext);
 
   return (
     <section className="relative min-h-screen sm:flex flex-col items-center justify-center bg-transparent">
-      <div className={`flex justify-center z-10 shadow-xl ${indexActive === 1 ? "xl:w-[396px] sm:w-full md:w-[428px]" : "xl:w-2/6 sm:w-full md:w-[620px]"}`}>
+      <div
+        className={`flex justify-center z-10 shadow-xl ${
+          indexActive === 1
+            ? "xl:w-[396px] sm:w-full md:w-[428px]"
+            : "xl:w-2/6 sm:w-full md:w-[620px]"
+        }`}
+      >
         <div className="p-12 bg-white mx-auto rounded-3xl w-full">
           <div className="mb-7 text-center">
             <p className="text-gray-700 text-4xl">
@@ -57,7 +64,7 @@ export const RegisterForm: FC = () => {
             </div>
             <div className="flex justify-center gap-5 w-full ">
               <button
-                type="submit"
+                onClick={() => signIn("google")}
                 className="w-full flex items-center justify-center mb-6 md:mb-0 border border-gray-300 hover:border-gray-500 hover:text-yellow-700 text-sm text-gray-500 p-3  rounded-lg tracking-wide font-medium  cursor-pointer transition ease-in duration-500"
               >
                 <FcGoogle className="mr-2" />
@@ -65,7 +72,7 @@ export const RegisterForm: FC = () => {
               </button>
 
               <button
-                type="submit"
+                onClick={() => signIn("facebook")}
                 className="w-full flex items-center justify-center mb-6 md:mb-0 border border-gray-300 hover:border-gray-500 hover:text-blue-700 text-sm text-gray-500 p-3  rounded-lg tracking-wide font-medium  cursor-pointer transition ease-in duration-500 px-"
               >
                 <FaFacebook className="mr-2 text-blue-700" />

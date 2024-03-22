@@ -2,8 +2,12 @@ import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import * as crypto from "crypto";
 import { Resend } from "resend";
-import { ResetPasswordEmailTemplate } from "@/components";
+import { ResetPasswordEmailTemplate, ResetPassEmail } from "@/components";
+import sgMail from "@sendgrid/mail";
+import nodemailer from "nodemailer";
+import { render } from "@react-email/render";
 
+sgMail.setApiKey(process.env.SENDGRID_API_KEY || "");
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 async function resetPassword(req: NextRequest, res: NextResponse) {
@@ -38,18 +42,51 @@ async function resetPassword(req: NextRequest, res: NextResponse) {
     },
   });
 
-  const { data, error } = await resend.emails.send({
-    from: "Admin <admin@harvest-reborn-heroku-e3c30061952b.herokuapp.com>",
-    to: [email],
+  // Send email with reset password token with Resend
+  // const { data, error } = await resend.emails.send({
+  //   from: "Admin <onboarding@resend.dev>",
+  //   to: [email],
+  //   subject: "Restablecer tu contraseña",
+  //   text: " ",
+  //   react: ResetPasswordEmailTemplate({
+  //     email,
+  //     resetPasswordToken,
+  //   }),
+  // });
+  //
+  // if (error) {
+  //   console.log(error)
+  //   return NextResponse.json(
+  //     {
+  //       message: "Error al enviar el correo",
+  //     },
+  //     { status: 500 }
+  //   );
+  // }
+
+  let link = "";
+  if (process.env.NODE_ENV === "development") {
+    link = `http://localhost:3000/auth/reset-password?token=${resetPasswordToken}`;
+  } else {
+    link = `https://harvestreborn.vercel.app/auth/reset-password?token=${resetPasswordToken}`;
+  }
+
+  const emailHtml = render(
+    ResetPassEmail({ resetPasswordToken: link, email }) as React.ReactElement
+  );
+
+  // Send email with reset password token with SendGrid
+  const msg = {
+    from: "Admin No reply<harvestreborn@gmail.com>", // Use the email address or domain you verified above
+    to: email, // Change to your recipient
     subject: "Restablecer tu contraseña",
-    text: " ",
-    react: ResetPasswordEmailTemplate({
-      email,
-      resetPasswordToken,
-    }),
-  });
-  if (error) {
-    console.log(error)
+    html: emailHtml,
+  };
+
+  try {
+    await sgMail.send(msg);
+  } catch (error) {
+    console.error(error);
     return NextResponse.json(
       {
         message: "Error al enviar el correo",
@@ -57,10 +94,9 @@ async function resetPassword(req: NextRequest, res: NextResponse) {
       { status: 500 }
     );
   }
-
+  
   return NextResponse.json(
     {
-      data,
       message: "Correo enviado",
     },
     { status: 200 }
