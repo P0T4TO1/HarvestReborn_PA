@@ -16,9 +16,9 @@ async function createProduct(req: NextRequest, res: NextResponse) {
     enTemporada: boolean;
     categoria: Category;
   };
-
+  
   try {
-    if (!nombre_producto || !file || !enTemporada || !categoria) {
+    if (!nombre_producto || !file || !categoria) {
       return NextResponse.json(
         { message: "Faltan datos del producto" },
         { status: 400 }

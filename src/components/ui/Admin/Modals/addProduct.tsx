@@ -18,7 +18,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { adminAddProductValidation } from "@/validations/admin.validation";
 import { hrApi } from "@/api";
 import { toast } from "sonner";
-import { SUCCESS_TOAST } from "@/components";
+import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
 
 type Errors = {
   nombre_producto?: string;
@@ -30,7 +30,7 @@ type Errors = {
 
 interface IFormData {
   nombre_producto: string;
-  imagen_producto: FileList;
+  imagen_producto: File;
   file: string;
   descripcion: string;
   enTemporada: boolean;
@@ -44,26 +44,35 @@ export const AddProd = () => {
 
   const [isSelected, setIsSelected] = useState(false);
   const [errors, setErrors] = useState<Errors>(null);
-  const [fileList, setFileList] = useState<FileList | null>(null);
-  const [file, setFile] = useState<File>();
+  const [file, setFile] = useState<File | undefined>();
 
-  const onChangeImage = (event: ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files ?? [];
-    if (!files.length) return;
-
-    const file = files[0];
-    const maxSizeInBytes = 2 * 1024 * 1024;
-    if (!file) return;
-
-    if (file.size > maxSizeInBytes) return toast(`Maximum Size Image 2MB`);
-    setFileList(files as FileList);
-    setFile(file);
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files?.[0]) return;
+    setFile(e.target.files?.[0]);
   };
 
   const onSubmit: SubmitHandler<IFormData> = async (data) => {
     try {
+      if (!file) {
+        setErrors({
+          ...errors,
+          imagen_producto: "La imagen del producto es obligatoria",
+        });
+        return;
+      }
+      const dataImage = new FormData();
+      dataImage.set("file", file);
+
+      await hrApi.post("/admin/upload", dataImage).then((res) => {
+        if (res.status === 200) {
+          console.log("File uploaded successfully");
+          data.imagen_producto = file;
+          data.file = res.data.secure_url;
+        }
+      });
+
       data.enTemporada = isSelected;
-      data.imagen_producto = fileList!;
+      console.log(data, "data");
       const validations = adminAddProductValidation.safeParse(data);
       if (!validations.success) {
         let newErrors: Errors = {};
@@ -74,8 +83,6 @@ export const AddProd = () => {
         console.log(errors);
         return;
       }
-      data.file = "/images/products/brocoli.png";
-      console.log(data);
 
       const res = await hrApi
         .post("/admin/product", data)
@@ -86,6 +93,7 @@ export const AddProd = () => {
           return true;
         })
         .catch((err) => {
+          toast("Hubo un error al agregar el producto", DANGER_TOAST);
           console.log(err);
           return null;
         });
@@ -135,8 +143,9 @@ export const AddProd = () => {
                       </label>
                       <input
                         type="file"
-                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-gray-100 text-black-100 disabled:text-gray-300 placeholder:text-black-200"
-                        onChange={onChangeImage}
+                        accept="image/png, image/jpg, image/jpeg, image/webp"
+                        className="bg-zinc-900 text-zinc-100 p-2 rounded block mb-2"
+                        onChange={handleFileChange}
                       />
                       {errors?.imagen_producto && (
                         <p className="text-red-500 dark:text-red-400 text-sm">
@@ -147,7 +156,7 @@ export const AddProd = () => {
                         className="mt-1 text-sm text-gray-500 dark:text-gray-300"
                         id="file_input_help"
                       >
-                        SVG, PNG, JPG.
+                        PNG, JPG.
                       </p>
                     </div>
                     <Input
@@ -161,7 +170,6 @@ export const AddProd = () => {
                       <Checkbox
                         isSelected={isSelected}
                         onValueChange={setIsSelected}
-                        isRequired
                       >
                         {isSelected ? "Si" : "No"}
                       </Checkbox>

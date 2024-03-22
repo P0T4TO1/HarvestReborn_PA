@@ -9,8 +9,18 @@ export const oAuthToDb = async (oAuthEmail: string, oAuthName: string) => {
   });
 
   if (user) {
-    return user;
+    await prisma.m_user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        email: oAuthEmail,
+      },
+    });
+    const { id, email, id_rol, estado } = user;
+    return { id, email, id_rol, estado };
   }
+
   const role =
     oAuthEmail === "jaretgarciagomez@gmail.com" ||
     oAuthEmail === "saulchanona@yahoo.com"
@@ -22,6 +32,7 @@ export const oAuthToDb = async (oAuthEmail: string, oAuthName: string) => {
   const hash = bcrypt.hashSync(password, salt) as string;
 
   const [nombre, apellidos]: string[] = oAuthName.split(" ");
+
   const newUser = await prisma.m_user.create({
     data: {
       email: oAuthEmail,
@@ -29,4 +40,7 @@ export const oAuthToDb = async (oAuthEmail: string, oAuthName: string) => {
       id_rol: role === 1 ? 1 : 3,
     },
   });
+
+  const { email, id_rol, id } = newUser;
+  return { id, email, nombre, apellidos, id_rol };
 };

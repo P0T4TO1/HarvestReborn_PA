@@ -38,7 +38,7 @@ export const SidebarWrapper = () => {
               isActive={pathname === "/admin/dashboard"}
               href="/admin/dashboard"
             />
-            <SidebarMenu title="Main Menu">
+            <SidebarMenu title="Menu Principal">
               <SidebarItem
                 isActive={pathname === "/admin/dashboard/users"}
                 title="Usuarios"
@@ -76,28 +76,6 @@ export const SidebarWrapper = () => {
                 title="Chats"
                 icon={<span className="material-symbols-outlined">forum</span>}
                 href="/admin/dashboard/chats"
-              />
-            </SidebarMenu>
-
-            <SidebarMenu title="General">
-              <SidebarItem
-                isActive={pathname === "/developers"}
-                title="Developers"
-                icon={<span className="material-symbols-outlined">code</span>}
-              />
-              <SidebarItem
-                isActive={pathname === "/view"}
-                title="View Test Data"
-                icon={
-                  <span className="material-symbols-outlined">overview</span>
-                }
-              />
-              <SidebarItem
-                isActive={pathname === "/settings"}
-                title="Settings"
-                icon={
-                  <span className="material-symbols-outlined">settings</span>
-                }
               />
             </SidebarMenu>
           </div>

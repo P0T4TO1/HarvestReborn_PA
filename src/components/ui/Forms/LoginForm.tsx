@@ -14,6 +14,7 @@ import { AuthContext } from "@/context/auth";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Input } from "@nextui-org/input";
 import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
+import Link from "next/link";
 
 type Errors = {
   user_email?: string;
@@ -155,9 +156,12 @@ export const LoginForm: FC = () => {
 
               <div className="flex items-center justify-between">
                 <div className="text-sm ml-auto">
-                  <a href="#" className="text-green-800 hover:text-green-600">
+                  <Link
+                    href={"/auth/reset-password"}
+                    className="text-green-800 hover:text-green-600"
+                  >
                     Olvidaste tu contraseña?
-                  </a>
+                  </Link>
                 </div>
               </div>
               <div>
@@ -172,13 +176,13 @@ export const LoginForm: FC = () => {
               <div className="flex items-center justify-center space-x-2 my-5">
                 <span className="h-px w-16 bg-gray-400"></span>
                 <span className="text-gray-700 font-normal text-sm text-center">
-                  Si eres un negocio puedes iniciar con las siguientes opciones
+                  O también puedes iniciar sesión con
                 </span>
                 <span className="h-px w-16 bg-gray-400"></span>
               </div>
               <div className="flex justify-center gap-5 w-full ">
                 <button
-                  type="button"
+                  onClick={() => signIn("google")}
                   className="w-full flex items-center justify-center mb-6 md:mb-0 border border-gray-300 hover:border-gray-500 hover:text-yellow-700 text-sm text-gray-500 p-3  rounded-lg tracking-wide font-medium  cursor-pointer transition ease-in duration-500"
                 >
                   <FcGoogle className="mr-2" />
@@ -186,7 +190,7 @@ export const LoginForm: FC = () => {
                 </button>
 
                 <button
-                  type="button"
+                  onClick={() => signIn("facebook")}
                   className="w-full flex items-center justify-center mb-6 md:mb-0 border border-gray-300 hover:border-gray-500 hover:text-blue-700 text-sm text-gray-500 p-3  rounded-lg tracking-wide font-medium  cursor-pointer transition ease-in duration-500 px-"
                 >
                   <FaFacebook className="mr-2 text-blue-700" />

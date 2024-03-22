@@ -4,17 +4,10 @@ import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import prisma from "@/lib/prisma";
 import { compare } from "bcrypt";
+import { oAuthToDb } from "@/lib";
 
 export const authOptions: NextAuthOptions = {
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
-    }),
-    FacebookProvider({
-      clientId: process.env.FACEBOOK_CLIENT_ID || "",
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET || "",
-    }),
     CredentialsProvider({
       credentials: {
         user_email: {
@@ -66,6 +59,14 @@ export const authOptions: NextAuthOptions = {
         return user;
       },
     }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+    }),
+    FacebookProvider({
+      clientId: process.env.FACEBOOK_CLIENT_ID || "",
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET || "",
+    }),
   ],
   callbacks: {
     async jwt({ token, user, account }) {
@@ -73,19 +74,23 @@ export const authOptions: NextAuthOptions = {
         token.accessToken = account.access_token;
         switch (account.type) {
           case "oauth":
-            token.user = await prisma.m_user.findUnique({
-              where: {
-                email: user?.email || "",
-              },
-            });
+            user = await oAuthToDb(user?.email || "", user?.name || "");
+            if (user) {
+              return {
+                ...token,
+                ...user,
+              };
+            }
+            break;
+          case "credentials":
+            if (user) {
+              return {
+                ...token,
+                ...user,
+              };
+            }
             break;
         }
-      }
-      if (user) {
-        return {
-          ...token,
-          ...user,
-        };
       }
       return token;
     },
@@ -94,26 +99,6 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-  // async jwt({ token, account, user }) {
-  //   if (account) {
-  //     token.accessToken = account.access_token;
-  //     switch (account.type) {
-  //       case "oauth":
-  //         token.user = await dbUsers.oAUthToDbUser(
-  //             user?.email || "",
-  //             user?.name || "",
-  //             user?.image || ""
-  //         );
-  //         break;
-  //     }
-  //   }
-  //   return token;
-  // },
-  // async session({ session, token, user }) {
-  //   session.accessToken = token.accessToken;
-  //   session.user = token.user as any;
-  //   return session;
-  // },
   session: {
     strategy: "jwt",
   },

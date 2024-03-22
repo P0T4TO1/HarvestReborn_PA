@@ -1,10 +1,15 @@
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/authOptions";
+import { redirect } from "next/navigation";
 import {
   DescriptionComponent,
   ServicesComponent,
   AboutUsComponent,
 } from "@/components";
 
-export default function Home() {
+const Home = async () => {
+  const session = await getServerSession(authOptions);
+  if (session) redirect("/home");
   return (
     <>
       <DescriptionComponent />
@@ -12,4 +17,6 @@ export default function Home() {
       <AboutUsComponent />
     </>
   );
-}
+};
+
+export default Home;

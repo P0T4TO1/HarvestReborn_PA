@@ -41,14 +41,14 @@ export const Negocios = () => {
           </span>
         </div>
         <div className="flex flex-row gap-3.5 flex-wrap">
-          <Button
-            color="primary"
-            startContent={
-              <span className="material-symbols-outlined">ios_share</span>
-            }
-          >
-            Export to CSV
-          </Button>
+          {/*<Button*/}
+          {/*  color="primary"*/}
+          {/*  startContent={*/}
+          {/*    <span className="material-symbols-outlined">ios_share</span>*/}
+          {/*  }*/}
+          {/*>*/}
+          {/*  Export to CSV*/}
+          {/*</Button>*/}
         </div>
       </div>
       <div className="max-w-[95rem] mx-auto w-full">

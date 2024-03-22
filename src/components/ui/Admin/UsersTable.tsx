@@ -3,7 +3,7 @@
 import { Button, Input } from "@nextui-org/react";
 import Link from "next/link";
 import React from "react";
-import { TableUsers, AddUser } from "@/components";
+import { TableUsers } from "@/components";
 
 export const Accounts = () => {
   return (
@@ -48,14 +48,14 @@ export const Accounts = () => {
               <span className="material-symbols-outlined">person_add</span>
             </Button>
           </Link>
-          <Button
-            color="primary"
-            startContent={
-              <span className="material-symbols-outlined">ios_share</span>
-            }
-          >
-            Export to CSV
-          </Button>
+          {/*<Button*/}
+          {/*  color="primary"*/}
+          {/*  startContent={*/}
+          {/*    <span className="material-symbols-outlined">ios_share</span>*/}
+          {/*  }*/}
+          {/*>*/}
+          {/*  Export to CSV*/}
+          {/*</Button>*/}
         </div>
       </div>
       <div className="max-w-[95rem] mx-auto w-full">

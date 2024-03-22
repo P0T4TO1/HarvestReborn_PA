@@ -20,6 +20,12 @@ model m_user {
   email    String @unique
   estado   Estado @default(ACTIVO)
 
+  emailVerified          Boolean @default(false)
+  emailVerificationToken String? @unique
+
+  resetPasswordToken   String?   @unique
+  resetPasswordExpires DateTime?
+
   id_rol Int
   rol    c_rol @relation(fields: [id_rol], references: [id_rol])
 
@@ -114,7 +120,7 @@ model m_lote {
   inventario    c_inventario @relation(fields: [id_inventario], references: [id_inventario])
 
   id_producto Int
-  producto    m_producto @relation(fields: [id_producto], references: [id_producto])
+  producto    m_producto @relation(fields: [id_producto], references: [id_producto], onDelete: Cascade)
 
   id_proveedor Int?
   proveedor    c_proveedor? @relation(fields: [id_proveedor], references: [id_proveedor])

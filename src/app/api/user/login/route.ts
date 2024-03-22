@@ -3,17 +3,6 @@ import { signToken } from "@/lib/jwt";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-type Data =
-  | { message: string }
-  | {
-      token: string;
-      user: {
-        email: string;
-        name: string;
-        role: string;
-      };
-    };
-
 async function loginUser(req: NextRequest, res: NextResponse) {
   const { email = "", password = "" } = await new Response(req.body).json();
 

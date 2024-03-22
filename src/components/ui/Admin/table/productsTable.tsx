@@ -10,10 +10,13 @@ import {
   TableHeader,
   TableRow,
   Tooltip,
+  Button,
 } from "@nextui-org/react";
 import React, { useEffect, useState } from "react";
 import { IProduct } from "@/interfaces";
 import { hrApi } from "@/api";
+import { toast } from "sonner";
+import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
 
 export const TableProducts = () => {
   const [loading, setLoading] = useState(true);
@@ -30,6 +33,31 @@ export const TableProducts = () => {
       setLoading(false);
     });
   }, []);
+
+  const handleDelete = async (id: number) => {
+    try {
+      const res = await hrApi
+        .delete("/admin/product", { data: { id } })
+        .then(() => {
+          toast("Producto eliminado con éxito", SUCCESS_TOAST);
+          window.location.reload();
+          return true;
+        })
+        .catch((err) => {
+          console.log(err);
+          toast("Hubo un error al eliminar el producto", DANGER_TOAST);
+          return null;
+        });
+      if (res) {
+        console.log("Producto eliminado");
+      } else {
+        console.log("Hubo un error data");
+      }
+    } catch (error) {
+      console.log(error);
+      console.log("Hubo un error");
+    }
+  };
 
   return (
     <div className=" w-full flex flex-col gap-4">
@@ -83,9 +111,15 @@ export const TableProducts = () => {
                       </span>
                     </Tooltip>
                     <Tooltip content="Eliminar">
-                      <span className="material-symbols-outlined  text-red-800 cursor-pointer">
-                        delete
-                      </span>
+                      <Button
+                        type="button"
+                        isIconOnly
+                        onPress={() => handleDelete(product.id_producto)}
+                      >
+                        <span className="material-symbols-outlined  text-red-800 cursor-pointer">
+                          delete
+                        </span>
+                      </Button>
                     </Tooltip>
                   </div>
                 </TableCell>

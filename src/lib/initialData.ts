@@ -16,7 +16,7 @@ export const initialData: seedData = {
   products: [
     {
       nombre_producto: "Jitomate",
-      imagen_producto: "/images/products/jitomate.png",
+      imagen_producto: "jitomate.png",
       descripcion: "Jitomate rojo",
       enTemporada: true,
       categoria: Category.VERDURA,
