@@ -40,7 +40,6 @@ export const AccountForm: FC = () => {
   const [errors, setErrors] = useState<Errors>(null);
 
   const onSubmitEmail = async (data: IFormData) => {
-    setLoading(true);
     try {
       const res = await hrApi
         .put(`/user/account/${user?.id}`, data)
@@ -59,7 +58,6 @@ export const AccountForm: FC = () => {
   };
 
   const onSubmit: SubmitHandler<IFormData> = async (data) => {
-    setLoading(true);
     try {
       const validations = accountSchema.safeParse(data);
       if (!validations.success) {
@@ -79,7 +77,7 @@ export const AccountForm: FC = () => {
         user?.id as string,
         data.oldPassword
       );
-      if (passwordExists.message !== "Contraseña incorrecta") {
+      if (passwordExists.message === "Contraseña incorrecta") {
         setErrors({ oldPassword: "Contraseña incorrecta" });
         return null;
       }
@@ -88,7 +86,6 @@ export const AccountForm: FC = () => {
         .put(`/user/account/${user?.id}`, data)
         .then(() => {
           toast("Perfil actualizado", SUCCESS_TOAST);
-          setLoading(false);
         })
         .catch((err) => {
           return null;
