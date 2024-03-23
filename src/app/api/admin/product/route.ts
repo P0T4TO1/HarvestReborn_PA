@@ -99,7 +99,7 @@ async function updateProduct(req: NextRequest, res: NextResponse) {
 }
 
 async function deleteProduct(req: NextRequest, res: NextResponse) {
-  const { id } = await new Response(req.body).json();
+  const { id } = (await new Response(req.body).json()) as { id: string };
 
   if (!id) {
     return NextResponse.json(
@@ -108,13 +108,21 @@ async function deleteProduct(req: NextRequest, res: NextResponse) {
     );
   }
 
-  const product = await prisma.m_producto.delete({
-    where: {
-      id_producto: parseInt(id, 10),
-    },
-  });
+  try {
+    const product = await prisma.m_producto.delete({
+      where: {
+        id_producto: parseInt(id, 10),
+      },
+    });
 
-  return NextResponse.json(product, { status: 200 });
+    return NextResponse.json(product, { status: 200 });
+  } catch (error) {
+    console.log(error, "error al eliminar el producto");
+    return NextResponse.json(
+      { message: "Error al eliminar el producto" },
+      { status: 500 }
+    );
+  }
 }
 
 export { createProduct as POST, updateProduct as PUT, deleteProduct as DELETE };

@@ -39,6 +39,7 @@ export const TableProducts = () => {
     hrApi.get("/inventory/products").then((res) => {
       if (res.status === 200) {
         setProducts(res.data);
+        console.log(products);
       } else {
         setError(true);
       }
@@ -65,7 +66,6 @@ export const TableProducts = () => {
         toast("Producto eliminado con éxito", SUCCESS_TOAST);
         setProducts(products.filter((product) => product.id_producto !== id));
         window.location.reload();
-        // router.refresh();
       } else {
         toast("Hubo un error al borrar el producto", DANGER_TOAST);
         console.log("Error al borrar producto", res.data);
