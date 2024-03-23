@@ -8,7 +8,8 @@ import { AuthContext } from "@/context/auth";
 import {
   DANGER_TOAST,
   EditLoteModal,
-  ProductInventoryCard, SUCCESS_TOAST,
+  ProductInventoryCard,
+  SUCCESS_TOAST,
 } from "@/components";
 import {
   Select,

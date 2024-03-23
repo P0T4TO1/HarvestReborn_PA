@@ -14,7 +14,7 @@ import {
   useDisclosure,
   Pagination,
 } from "@nextui-org/react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { IProduct } from "@/interfaces";
 import { hrApi } from "@/api";
 import { toast } from "sonner";
@@ -34,17 +34,6 @@ export const TableProducts = () => {
   const [error, setError] = useState(false);
   const [products, setProducts] = useState<IProduct[]>([]);
   const [product, setProduct] = useState<IProduct>();
-
-  const [page, setPage] = React.useState(1);
-  const rowsPerPage = 10;
-  const pages = Math.ceil(products.length / rowsPerPage);
-
-  const items = React.useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
-
-    return products.slice(start, end);
-  }, [page, products]);
 
   useEffect(() => {
     hrApi.get("/inventory/products").then((res) => {
@@ -71,23 +60,17 @@ export const TableProducts = () => {
   };
 
   const handleDelete = async (id: number) => {
-    try {
-      await hrApi.delete("/admin/product", { data: { id } }).then((res) => {
-        if (res.status === 200) {
-          toast("Producto eliminado con éxito", SUCCESS_TOAST);
-          setProducts(products.filter((product) => product.id_producto !== id));
-          window.location.reload();
-          router.refresh();
-          return true;
-        } else {
-          toast("Hubo un error al borrar el producto", DANGER_TOAST);
-          console.log("Error al borrar producto", res.data);
-        }
-      });
-    } catch (error) {
-      console.log(error);
-      console.log("Hubo un error");
-    }
+    await hrApi.delete("/admin/product", { data: { id } }).then((res) => {
+      if (res.status === 200) {
+        toast("Producto eliminado con éxito", SUCCESS_TOAST);
+        setProducts(products.filter((product) => product.id_producto !== id));
+        window.location.reload();
+        // router.refresh();
+      } else {
+        toast("Hubo un error al borrar el producto", DANGER_TOAST);
+        console.log("Error al borrar producto", res.data);
+      }
+    });
   };
 
   return (
@@ -106,19 +89,6 @@ export const TableProducts = () => {
           <Table
             aria-label="Tabla de usuario"
             selectionMode="multiple"
-            bottomContent={
-              <div className="flex w-full justify-center">
-                <Pagination
-                  isCompact
-                  showControls
-                  showShadow
-                  color="primary"
-                  page={page}
-                  total={pages}
-                  onChange={(page) => setPage(page)}
-                />
-              </div>
-            }
           >
             <TableHeader>
               <TableColumn allowsSorting>ID</TableColumn>
@@ -128,21 +98,25 @@ export const TableProducts = () => {
               <TableColumn allowsSorting>Categoria</TableColumn>
               <TableColumn>Acciones</TableColumn>
             </TableHeader>
-            <TableBody items={items}>
-              {(product) => (
-                <TableRow key={product.id_producto}>
-                  <TableCell className="py-4">{product.id_producto}</TableCell>
+            <TableBody>
+              {products.map((productMap) => (
+                <TableRow key={productMap.id_producto}>
                   <TableCell className="py-4">
-                    {product.nombre_producto}
+                    {productMap.id_producto}
                   </TableCell>
-                  <TableCell className="py-4">{product.descripcion}</TableCell>
+                  <TableCell className="py-4">
+                    {productMap.nombre_producto}
+                  </TableCell>
+                  <TableCell className="py-4">
+                    {productMap.descripcion}
+                  </TableCell>
                   <TableCell className="py-4">
                     <Chip
                       size="sm"
                       variant="flat"
-                      color={`${product.enTemporada ? "success" : "danger"}`}
+                      color={`${productMap.enTemporada ? "success" : "danger"}`}
                     >
-                      {product.enTemporada ? "Si" : "No"}
+                      {productMap.enTemporada ? "Si" : "No"}
                     </Chip>
                   </TableCell>
                   <TableCell className="py-4">
@@ -150,12 +124,12 @@ export const TableProducts = () => {
                       size="sm"
                       variant="flat"
                       color={`${
-                        product.categoria === "VERDURA"
+                        productMap.categoria === "VERDURA"
                           ? "primary"
                           : "secondary"
                       }`}
                     >
-                      {product.categoria}
+                      {productMap.categoria}
                     </Chip>
                   </TableCell>
                   <TableCell className="py-4">
@@ -166,7 +140,7 @@ export const TableProducts = () => {
                           variant="light"
                           isIconOnly
                           onPress={() => {
-                            getProduct(product.id_producto).then(() => {});
+                            getProduct(productMap.id_producto).then(() => {});
                             setLoadingModal(true);
                             onOpen();
                           }}
@@ -181,7 +155,7 @@ export const TableProducts = () => {
                           type="button"
                           variant="light"
                           isIconOnly
-                          onPress={() => handleDelete(product.id_producto)}
+                          onPress={() => handleDelete(productMap.id_producto)}
                         >
                           <span className="material-symbols-outlined  text-red-800 cursor-pointer">
                             delete
@@ -191,7 +165,7 @@ export const TableProducts = () => {
                     </div>
                   </TableCell>
                 </TableRow>
-              )}
+              ))}
             </TableBody>
           </Table>
         )}
