@@ -8,7 +8,7 @@ import { AuthContext } from "@/context/auth";
 import {
   DANGER_TOAST,
   EditLoteModal,
-  ProductInventoryCard,
+  ProductInventoryCard, SUCCESS_TOAST,
 } from "@/components";
 import {
   Select,
@@ -87,6 +87,7 @@ export const ProductsList = () => {
   const handleDelete = async (id: number) => {
     await hrApi.delete(`/inventory/${id}`).then((res) => {
       if (res.status === 200) {
+        toast("Producto eliminado con éxito", SUCCESS_TOAST);
         setLotes(lotes.filter((lote) => lote.id_producto !== id));
         window.location.reload();
       } else {
