@@ -29,13 +29,13 @@ export async function POST(request: NextRequest, response: NextResponse) {
     //   const filePath = `/tmp/${file.name}`
     
     // works in development
-    const filePath = path.join(
-      process.cwd(),
-      "public/images/products",
-      file.name
-    );
+    // const filePath = path.join(
+    //   process.cwd(),
+    //   "public/images/products",
+    //   file.name
+    // );
     // await writeFile(filePath, buffer);
-    console.log(`open ${filePath} to see the uploaded file`);
+    // console.log(`open ${filePath} to see the uploaded file`);
   
     // Upload to Cloudinary
     // const { secure_url } = await cloudinary.uploader.upload(filePath, {
