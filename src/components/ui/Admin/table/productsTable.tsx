@@ -24,6 +24,7 @@ import {
   SUCCESS_TOAST,
 } from "@/components";
 import { useRouter } from "next/navigation";
+import { useProducts } from "@/hooks";
 
 export const TableProducts = () => {
   const router = useRouter();
@@ -34,6 +35,10 @@ export const TableProducts = () => {
   const [error, setError] = useState(false);
   const [products, setProducts] = useState<IProduct[]>([]);
   const [product, setProduct] = useState<IProduct>();
+
+  // const { isLoading, products } = useProducts({
+  //   refreshInterval: 30 * 1000,
+  // });
 
   useEffect(() => {
     hrApi.get("/inventory/products").then((res) => {
@@ -86,10 +91,7 @@ export const TableProducts = () => {
         ) : error ? (
           <p>Hubo un error</p>
         ) : (
-          <Table
-            aria-label="Tabla de usuario"
-            selectionMode="multiple"
-          >
+          <Table aria-label="Tabla de usuario" selectionMode="multiple">
             <TableHeader>
               <TableColumn allowsSorting>ID</TableColumn>
               <TableColumn allowsSorting>Nombre</TableColumn>
