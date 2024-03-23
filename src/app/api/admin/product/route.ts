@@ -125,4 +125,10 @@ async function deleteProduct(req: NextRequest, res: NextResponse) {
   }
 }
 
+export async function GET(req: NextRequest, res: NextResponse) {
+  const products = await prisma.m_producto.findMany();
+
+  return NextResponse.json(products, { status: 200 });
+}
+
 export { createProduct as POST, updateProduct as PUT, deleteProduct as DELETE };

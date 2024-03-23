@@ -24,7 +24,6 @@ import {
   SUCCESS_TOAST,
 } from "@/components";
 import { useRouter } from "next/navigation";
-import { useProducts } from "@/hooks";
 
 export const TableProducts = () => {
   const router = useRouter();
@@ -36,12 +35,8 @@ export const TableProducts = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [product, setProduct] = useState<IProduct>();
 
-  // const { isLoading, products } = useProducts({
-  //   refreshInterval: 30 * 1000,
-  // });
-
   useEffect(() => {
-    hrApi.get("/inventory/products").then((res) => {
+    hrApi.get("/admin/product").then((res) => {
       if (res.status === 200) {
         setProducts(res.data);
         console.log(products);
