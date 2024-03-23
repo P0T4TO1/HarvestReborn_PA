@@ -45,7 +45,7 @@ export const TableProducts = () => {
       }
       setLoading(false);
     });
-  }, []);
+  }, [products]);
 
   const getProduct = async (id: number) => {
     setLoadingModal(true);
