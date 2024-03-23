@@ -45,6 +45,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
       invalidate: true,
       folder: "products",
     });
+    console.log(secure_url);
   
     // Delete the local file
     // const unlinkPromise = unlink(filePath);
@@ -55,7 +56,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
     // const localFilePublicPath = `/images/products/${file.name}`;
   
     return NextResponse.json(
-      { filePath, secure_url },
+      { fileUri, secure_url },
       { status: 200 }
     );
   } catch (err) {
