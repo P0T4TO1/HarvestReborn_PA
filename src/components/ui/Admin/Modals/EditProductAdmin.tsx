@@ -106,8 +106,8 @@ export const EditProductAdminModal = ({
       });
       if (res.status === 200) {
         toast("Producto editado correctamente", SUCCESS_TOAST);
-        window.location.reload();
         router.refresh();
+        window.location.reload();
         onClose();
       }
     } catch (error) {

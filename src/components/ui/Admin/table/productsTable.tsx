@@ -73,12 +73,15 @@ export const TableProducts = () => {
   const handleDelete = async (id: number) => {
     try {
       await hrApi.delete("/admin/product", { data: { id } }).then((res) => {
-        if (res.status !== 200) {
+        if (res.status === 200) {
           toast("Producto eliminado con éxito", SUCCESS_TOAST);
           setProducts(products.filter((product) => product.id_producto !== id));
           window.location.reload();
           router.refresh();
           return true;
+        } else {
+          toast("Hubo un error al borrar el producto", DANGER_TOAST);
+          console.log("Error al borrar producto", res.data);
         }
       });
     } catch (error) {
