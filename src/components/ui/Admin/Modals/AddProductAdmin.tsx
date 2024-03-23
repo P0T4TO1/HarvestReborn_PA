@@ -19,6 +19,8 @@ import { adminAddProductValidation } from "@/validations/admin.validation";
 import { hrApi } from "@/api";
 import { toast } from "sonner";
 import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
+import { useRouter } from "next/navigation";
+import { searchProductByName } from "@/hooks";
 
 type Errors = {
   nombre_producto?: string;
@@ -37,7 +39,8 @@ interface IFormData {
   categoria: string;
 }
 
-export const AddProd = () => {
+export const AddProductAdminModal = () => {
+  const router = useRouter();
   const methods = useForm<IFormData>();
   const { handleSubmit, register } = methods;
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
@@ -53,6 +56,23 @@ export const AddProd = () => {
 
   const onSubmit: SubmitHandler<IFormData> = async (data) => {
     try {
+      if (!data.nombre_producto) {
+        setErrors({
+          ...errors,
+          nombre_producto: "El nombre del producto es obligatorio",
+        });
+        return;
+      }
+
+      const productExists = await searchProductByName(data.nombre_producto);
+      if (productExists.message === "Este producto ya esta registrado") {
+        setErrors({
+          ...errors,
+          nombre_producto: "Este producto ya esta registrado",
+        });
+        return null;
+      }
+
       if (!file) {
         setErrors({
           ...errors,
@@ -68,11 +88,14 @@ export const AddProd = () => {
           console.log("File uploaded successfully");
           data.imagen_producto = file;
           data.file = res.data.secure_url;
+        } else {
+          console.log("Hubo un error al subir la imagen");
+          return null;
         }
       });
 
       data.enTemporada = isSelected;
-      console.log(data, "data");
+
       const validations = adminAddProductValidation.safeParse(data);
       if (!validations.success) {
         let newErrors: Errors = {};
@@ -90,6 +113,7 @@ export const AddProd = () => {
           toast("Producto agregado con éxito", SUCCESS_TOAST);
           onClose();
           window.location.reload();
+          router.refresh();
           return true;
         })
         .catch((err) => {

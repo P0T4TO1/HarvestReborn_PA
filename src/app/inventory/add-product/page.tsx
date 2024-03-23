@@ -1,4 +1,4 @@
-import { AddProduct } from "@/components";
+import { AddProductLote } from "@/components";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { redirect } from "next/navigation";
@@ -9,7 +9,7 @@ const AddProductPage = async () => {
 
   return (
     <section className="flex flex-col relative overflow-hidden min-h-screen">
-      <AddProduct />
+      <AddProductLote />
     </section>
   );
 };

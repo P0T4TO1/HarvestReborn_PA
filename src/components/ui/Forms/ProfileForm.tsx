@@ -152,7 +152,6 @@ export const ProfileForm: FC = () => {
       };
       const validations = profileSchema.safeParse(data);
       if (!validations.success) {
-        console.log("error", validations.error.issues);
         let newErrors: Errors = {};
 
         validations.error.issues.forEach((issue) => {

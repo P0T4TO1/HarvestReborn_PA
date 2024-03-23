@@ -16,7 +16,7 @@ async function createProduct(req: NextRequest, res: NextResponse) {
     enTemporada: boolean;
     categoria: Category;
   };
-  
+
   try {
     if (!nombre_producto || !file || !categoria) {
       return NextResponse.json(
@@ -24,6 +24,19 @@ async function createProduct(req: NextRequest, res: NextResponse) {
         { status: 400 }
       );
     }
+
+    // const productExists = await prisma.m_producto.findFirst({
+    //   where: {
+    //     nombre_producto,
+    //   },
+    // });
+    //
+    // if (productExists) {
+    //   return NextResponse.json(
+    //     { message: "Este producto ya esta registrado" },
+    //     { status: 401 }
+    //   );
+    // }
 
     const product = await prisma.m_producto.create({
       data: {
@@ -46,10 +59,23 @@ async function createProduct(req: NextRequest, res: NextResponse) {
 }
 
 async function updateProduct(req: NextRequest, res: NextResponse) {
-  const { id, name, amount, arriveDate, expiration, isSeasonal } =
-    await new Response(req.body).json();
+  const {
+    id = 0,
+    nombre_producto = "",
+    imagen_producto = "",
+    descripcion = "",
+    enTemporada = false,
+    categoria = "",
+  } = (await new Response(req.body).json()) as {
+    id: number;
+    nombre_producto: string;
+    imagen_producto: string;
+    descripcion: string;
+    enTemporada: boolean;
+    categoria: Category;
+  };
 
-  if (!id || !name || !amount || !arriveDate || !expiration || !isSeasonal) {
+  if (!nombre_producto || !imagen_producto || !categoria) {
     return NextResponse.json(
       { message: "Faltan datos del producto" },
       { status: 400 }
@@ -58,11 +84,14 @@ async function updateProduct(req: NextRequest, res: NextResponse) {
 
   const product = await prisma.m_producto.update({
     where: {
-      id_producto: parseInt(id, 10),
+      id_producto: id,
     },
     data: {
-      nombre_producto: name,
-      enTemporada: isSeasonal,
+      nombre_producto,
+      imagen_producto,
+      descripcion: descripcion || "",
+      enTemporada,
+      categoria: categoria.toUpperCase() as Category,
     },
   });
 

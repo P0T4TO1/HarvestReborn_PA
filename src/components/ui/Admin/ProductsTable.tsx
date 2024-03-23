@@ -1,9 +1,9 @@
 "use client";
 
-import { Button, Input } from "@nextui-org/react";
+import { Input } from "@nextui-org/react";
 import Link from "next/link";
 import React from "react";
-import { TableProducts, AddProd } from "@/components";
+import { TableProducts, AddProductAdminModal } from "@/components";
 
 export const Products = () => {
   return (
@@ -39,7 +39,7 @@ export const Products = () => {
           <span className="material-symbols-outlined cursor-pointer">delete</span>
         </div>
         <div className="flex flex-row gap-3.5 flex-wrap">
-          <AddProd />
+          <AddProductAdminModal />
           {/*<Button*/}
           {/*  color="primary"*/}
           {/*  startContent={*/}

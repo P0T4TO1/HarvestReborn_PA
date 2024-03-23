@@ -3,14 +3,14 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { IProduct } from "@/interfaces";
 import { hrApi } from "@/api";
-import { AddToInventory, ProductCard } from "@/components";
+import { AddLoteToInventory, ProductCard } from "@/components";
 import {
   Input,
   useDisclosure,
   CircularProgress,
 } from "@nextui-org/react";
 
-export const AddProduct = () => {
+export const AddProductLote = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -51,7 +51,7 @@ export const AddProduct = () => {
           Aquí puedes agregar productos a tu inventario
         </p>
 
-        <AddToInventory
+        <AddLoteToInventory
           id={productId}
           product={product}
           useDisclosure={{ isOpen, onClose }}

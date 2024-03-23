@@ -9,7 +9,6 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  useDisclosure,
 } from "@nextui-org/react";
 import { useState } from "react";
 import { hrApi } from "@/api";
@@ -17,6 +16,7 @@ import { toast } from "sonner";
 import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
 import { useForm } from "react-hook-form";
 import { ILote } from "@/interfaces";
+import { useRouter } from "next/navigation";
 
 type Errors = {
   cantidad_producto?: number;
@@ -44,6 +44,7 @@ export const EditLoteModal = ({
   useDisclosure: { isOpen, onClose },
   loading,
 }: Props) => {
+  const router = useRouter();
   const methods = useForm<IFormData>();
   const { handleSubmit, register } = methods;
   const [isEditing, setIsEditing] = useState(false);
@@ -55,7 +56,6 @@ export const EditLoteModal = ({
         ...lote,
         ...data,
       };
-      console.log(data);
       await hrApi
         .put(`/inventory/lote/${lote?.id_lote}`, {
           ...lote,
@@ -65,6 +65,7 @@ export const EditLoteModal = ({
           if (res.status === 200) {
             toast("Producto actualizado", SUCCESS_TOAST);
             window.location.reload();
+            router.refresh();
             onClose();
           } else {
             toast("Hubo un error al actualizar el producto", DANGER_TOAST);

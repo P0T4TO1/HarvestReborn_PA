@@ -42,7 +42,7 @@ interface Props {
   useDisclosure: { isOpen: boolean; onClose: () => void };
 }
 
-export const AddToInventory = ({
+export const AddLoteToInventory = ({
   id,
   product,
   useDisclosure: { isOpen, onClose },

@@ -128,7 +128,7 @@ export const LoginForm: FC = () => {
               <div className="relative">
                 <Input
                   placeholder="Contraseña"
-                  type="password"
+                  type={visible ? "text" : "password"}
                   id="password"
                   {...register("user_password")}
                   endContent={

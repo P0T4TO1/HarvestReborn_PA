@@ -26,7 +26,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
   
     // With the file data in the buffer, you can do whatever you want with it.
     // For this, we'll just write it to the filesystem in a new location
-    //   const filePath = `/tmp/${file.name}`
+    // const filePath = `/tmp/${file.name}`
     
     // works in development
     // const filePath = path.join(
