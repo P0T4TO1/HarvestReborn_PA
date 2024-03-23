@@ -20,6 +20,8 @@ model m_user {
   email    String @unique
   estado   Estado @default(ACTIVO)
 
+  changeData Boolean @default(false)
+
   emailVerified          Boolean @default(false)
   emailVerificationToken String? @unique
 

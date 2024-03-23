@@ -27,6 +27,10 @@ export const oAuthToDb = async (oAuthEmail: string, oAuthName: string) => {
       ? 1
       : 2 || 3;
 
+  let changeDataValue: boolean  =
+      oAuthEmail === "saulchanona@yahoo.com" ||
+      oAuthEmail === "jaretgarciagomez@gmail.com"
+
   const password = Math.random().toString(36).slice(-8);
   const salt = bcrypt.genSaltSync(10);
   const hash = bcrypt.hashSync(password, salt) as string;
@@ -37,6 +41,7 @@ export const oAuthToDb = async (oAuthEmail: string, oAuthName: string) => {
     data: {
       email: oAuthEmail,
       password: hash,
+      changeData: changeDataValue,
       id_rol: role === 1 ? 1 : 3,
     },
   });

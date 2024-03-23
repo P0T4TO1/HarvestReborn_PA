@@ -11,6 +11,8 @@ export interface IUser {
   negocio?: INegocio;
   duenonegocio?: IDuenoNegocio;
   cliente?: ICliente;
+
+  changeData: boolean;
 }
 
 export enum Estado {

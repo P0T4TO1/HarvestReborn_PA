@@ -75,27 +75,17 @@ export const authOptions: NextAuthOptions = {
         switch (account.type) {
           case "oauth":
             user = await oAuthToDb(user?.email || "", user?.name || "");
-            if (user) {
-              return {
-                ...token,
-                ...user,
-              };
-            }
+            token.user = user;
             break;
           case "credentials":
-            if (user) {
-              return {
-                ...token,
-                ...user,
-              };
-            }
+            token.user = user;
             break;
         }
       }
       return token;
     },
-    async session({ session, token, user }) {
-      session.user = token as any;
+    async session({ session, token }) {
+      session.user = token.user as any;
       return session;
     },
   },

@@ -4,7 +4,6 @@ import * as crypto from "crypto";
 import { Resend } from "resend";
 import { ResetPasswordEmailTemplate, ResetPassEmail } from "@/components";
 import sgMail from "@sendgrid/mail";
-import nodemailer from "nodemailer";
 import { render } from "@react-email/render";
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY || "");

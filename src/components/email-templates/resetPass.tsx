@@ -71,7 +71,7 @@ export const ResetPassEmail: React.FC<Readonly<EmailProps>> = ({
             src="https://res-console.cloudinary.com/dejx7jbmx/media_explorer_thumbnails/ff656be34bd3894077608ea4091d74f5/detailed"
             width="40"
             height="33"
-            alt="Dropbox"
+            alt="HR"
           />
           <Section>
             <Text style={text}>Hola {email},</Text>
