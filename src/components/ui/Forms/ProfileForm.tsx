@@ -116,6 +116,7 @@ export const ProfileForm: FC = () => {
     email: "",
     password: "",
     estado: Estado.Activo,
+    changeData: true,
   });
 
   useEffect(() => {
