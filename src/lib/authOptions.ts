@@ -33,6 +33,8 @@ export const authOptions: NextAuthOptions = {
           },
         });
         if (!user) return null;
+        const emailVerified = user.emailVerified;
+        if (!emailVerified) return null;
 
         const passwordCorrect = await compare(user_password, user.password);
         if (!passwordCorrect) return null;
