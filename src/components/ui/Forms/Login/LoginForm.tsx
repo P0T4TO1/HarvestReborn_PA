@@ -16,6 +16,7 @@ import { Input } from "@nextui-org/input";
 import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { isEmailVerified } from "@/hooks";
 
 interface IFormData {
   user_email: string;
@@ -49,12 +50,21 @@ export const LoginForm: FC = () => {
     try {
       const result = await loginUser(data.user_email, data.user_password);
 
+      const isEmailVerifiedRes = await isEmailVerified(data.user_email);
+
       if (!result) {
         setError("user_email", {
           message: "Correo o contraseña inválidos",
         });
         setError("user_password", {
           message: "Correo o contraseña inválidos",
+        });
+        return null;
+      }
+
+      if (isEmailVerifiedRes.message === "Este correo no ha sido verificado") {
+        setError("user_email", {
+          message: "Este correo no ha sido verificado",
         });
         return null;
       }
@@ -112,7 +122,9 @@ export const LoginForm: FC = () => {
                   {...register("user_email")}
                 />
                 {errors?.user_email && (
-                  <p className="text-red-500 text-xs">{errors?.user_email.message}</p>
+                  <p className="text-red-500 text-xs">
+                    {errors?.user_email.message}
+                  </p>
                 )}
               </div>
 
@@ -141,7 +153,9 @@ export const LoginForm: FC = () => {
                   }
                 />
                 {errors?.user_password && (
-                  <p className="text-red-700 text-xs">{errors?.user_password.message}</p>
+                  <p className="text-red-700 text-xs">
+                    {errors?.user_password.message}
+                  </p>
                 )}
               </div>
 
