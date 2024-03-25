@@ -7,7 +7,7 @@ export async function middleware(req: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET,
   });
   const url = req.nextUrl.clone();
-  console.log("Esta activo el middleware");
+  console.log("Esta activo el middleware", url.pathname, url.origin);
 
   if (url.pathname === "/auth/login" && session) {
     console.log("Esta activo el middleware login");
