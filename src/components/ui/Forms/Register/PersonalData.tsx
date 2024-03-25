@@ -7,16 +7,7 @@ import { toast } from "sonner";
 import { registerPersonalDataSchema } from "@/validations/auth.validation";
 import { Select, SelectItem } from "@nextui-org/react";
 import { Input } from "@nextui-org/input";
-
-type Errors = {
-  nombre?: string;
-  apellidos?: string;
-  fecha_nacimiento?: string;
-  dia_nacimiento?: string;
-  mes_nacimiento?: string;
-  year_nacimiento?: string;
-  tipo?: string;
-} | null;
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface IFormData {
   nombre: string;
@@ -43,38 +34,30 @@ const months = {
   "12": "Diciembre",
 };
 
-export const PersonalDataForm = () => {
-  const { setPersonalData, setIndexActive } = useContext(AuthContext);
-  const { register, handleSubmit } = useForm<IFormData>();
-  const [errors, setErrors] = useState<Errors>(null);
-  const [fecNac, setFecNac] = useState<{
-    day: string;
-    month: string;
-    year: string;
-  }>({
-    day: "",
-    month: "",
-    year: "",
+interface PersonalDataFormProps {
+  isOAuth?: boolean;
+}
+
+export const PersonalDataForm = ({ isOAuth }: PersonalDataFormProps) => {
+  const { setPersonalData, setIndexActive, user, personalData } =
+    useContext(AuthContext);
+
+  const { register, handleSubmit, formState, watch } = useForm<IFormData>({
+    resolver: zodResolver(registerPersonalDataSchema),
+    defaultValues: {
+      nombre: personalData.nombre ?? "",
+      apellidos: personalData.apellidos ?? "",
+      dia_nacimiento: "",
+      mes_nacimiento: "",
+      year_nacimiento: "",
+      fecha_nacimiento: "",
+      tipo: "",
+    },
   });
 
   const onSubmit: SubmitHandler<IFormData> = async (data) => {
+    data.fecha_nacimiento = `${data.year_nacimiento}-${data.mes_nacimiento}-${data.dia_nacimiento}`;
     try {
-      data.fecha_nacimiento = `${fecNac.year}-${fecNac.month}-${fecNac.day}`;
-      data.dia_nacimiento = fecNac.day;
-      data.mes_nacimiento = fecNac.month;
-      data.year_nacimiento = fecNac.year;
-      const validations = registerPersonalDataSchema.safeParse(data);
-      if (!validations.success) {
-        let newErrors: Errors = {};
-
-        validations.error.issues.forEach((issue) => {
-          newErrors = { ...newErrors, [issue.path[0]]: issue.message };
-        });
-        setErrors(newErrors);
-        return null;
-      } else {
-        setErrors(null);
-      }
       setPersonalData(data);
       setIndexActive(3);
     } catch (error) {
@@ -90,23 +73,29 @@ export const PersonalDataForm = () => {
             <Input
               type="text"
               id="nombre"
-              placeholder="Nombre(s)"
+              label="Nombre(s)"
+              isDisabled={user?.id_rol === 4}
+              defaultValue={personalData.nombre ?? ""}
               {...register("nombre")}
             />
-            {errors?.nombre && (
-              <p className="text-red-700 text-xs">{errors?.nombre}</p>
-            )}
+            <p className="text-red-700 text-xs">
+              {formState.errors.nombre?.message}
+            </p>
           </div>
 
           <div className="relative">
             <Input
               type="text"
               id="apellidos"
-              placeholder="Apellidos"
+              label="Apellidos"
+              isDisabled={user?.id_rol === 4}
+              defaultValue={personalData.apellidos ?? ""}
               {...register("apellidos")}
             />
-            {errors?.apellidos && (
-              <p className="text-red-700 text-xs">{errors?.apellidos}</p>
+            {formState.errors?.apellidos && (
+              <p className="text-red-700 text-xs">
+                {formState.errors.apellidos?.message}
+              </p>
             )}
           </div>
         </div>
@@ -123,13 +112,13 @@ export const PersonalDataForm = () => {
                 radius="sm"
                 id="dia_nacimiento"
                 type="text"
-                placeholder="Día"
-                onChange={(e) => {
-                  setFecNac({ ...fecNac, day: e.target.value });
-                }}
+                label="Día"
+                {...register("dia_nacimiento")}
               />
-              {errors?.dia_nacimiento && (
-                <p className="text-red-700 text-xs">{errors?.dia_nacimiento}</p>
+              {formState.errors?.dia_nacimiento && (
+                <p className="text-red-700 text-xs">
+                  {formState.errors.dia_nacimiento?.message}
+                </p>
               )}
             </div>
             <div className="relative">
@@ -137,10 +126,8 @@ export const PersonalDataForm = () => {
                 isRequired
                 radius="sm"
                 id="mes_nacimiento"
-                placeholder="Mes"
-                onChange={(e) => {
-                  setFecNac({ ...fecNac, month: e.target.value });
-                }}
+                label="Mes"
+                {...register("mes_nacimiento")}
               >
                 {Object.entries(months).map(([key, value]) => (
                   <SelectItem value={key} key={key}>
@@ -148,8 +135,10 @@ export const PersonalDataForm = () => {
                   </SelectItem>
                 ))}
               </Select>
-              {errors?.mes_nacimiento && (
-                <p className="text-red-700 text-xs">{errors?.mes_nacimiento}</p>
+              {formState.errors?.mes_nacimiento && (
+                <p className="text-red-700 text-xs">
+                  {formState.errors.mes_nacimiento?.message}
+                </p>
               )}
             </div>
             <div className="relative">
@@ -157,14 +146,12 @@ export const PersonalDataForm = () => {
                 radius="sm"
                 id="año_nacimiento"
                 type="text"
-                placeholder="Año"
-                onChange={(e) => {
-                  setFecNac({ ...fecNac, year: e.target.value });
-                }}
+                label="Año"
+                {...register("year_nacimiento")}
               />
-              {errors?.year_nacimiento && (
+              {formState.errors?.year_nacimiento && (
                 <p className="text-red-700 text-xs">
-                  {errors?.year_nacimiento}
+                  {formState.errors.year_nacimiento?.message}
                 </p>
               )}
             </div>
@@ -175,7 +162,7 @@ export const PersonalDataForm = () => {
           <Select
             isRequired
             radius="sm"
-            placeholder="Tipo de usuario"
+            label="Tipo de usuario"
             id="tipo"
             {...register("tipo")}
           >
@@ -186,8 +173,10 @@ export const PersonalDataForm = () => {
               Cliente
             </SelectItem>
           </Select>
-          {errors?.tipo && (
-            <p className="text-red-700 text-xs">{errors?.tipo}</p>
+          {formState.errors?.tipo && (
+            <p className="text-red-700 text-xs">
+              {formState.errors.tipo?.message}
+            </p>
           )}
         </div>
 
@@ -197,13 +186,15 @@ export const PersonalDataForm = () => {
         >
           Siguiente
         </button>
-        <button
-          type="button"
-          onClick={() => setIndexActive(1)}
-          className="w-full flex justify-center bg-gray-800 hover:bg-gray-700 text-gray-100 p-3  rounded-lg tracking-wide font-semibold  cursor-pointer transition ease-in duration-500"
-        >
-          Regresar
-        </button>
+        {!isOAuth && (
+          <button
+            type="button"
+            onClick={() => setIndexActive(1)}
+            className="w-full flex justify-center bg-gray-800 hover:bg-gray-700 text-gray-100 p-3  rounded-lg tracking-wide font-semibold  cursor-pointer transition ease-in duration-500"
+          >
+            Regresar
+          </button>
+        )}
       </form>
     </>
   );

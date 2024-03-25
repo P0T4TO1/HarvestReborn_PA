@@ -8,16 +8,8 @@ import { registerContactDataSchema } from "@/validations/auth.validation";
 import { useRouter } from "next/navigation";
 import { Input } from "@nextui-org/input";
 import axios from "axios";
-import { DANGER_TOAST, SUCCESS_TOAST } from "@/components/toast";
-
-type Errors = {
-  nombreNegocio?: string;
-  telefono?: string;
-  calle?: string;
-  colonia?: string;
-  alcaldia?: string;
-  cp?: string;
-} | null;
+import { DANGER_TOAST, SUCCESS_TOAST } from "@/components/ui/toast";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface IFormData {
   nombreNegocio: string;
@@ -53,15 +45,31 @@ export const ContactDataForm = () => {
     personalData,
     setIndexActive,
     registerContext,
+    logout,
   } = useContext(AuthContext);
-  const { register, handleSubmit } = useForm<IFormData>();
-  const [errors, setErrors] = useState<Errors>(null);
   const [postalCode, setPostalCode] = useState("");
   const [alcaldia, setAlcaldia] = useState("");
   const [colonia, setColonia] = useState("");
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+    setValue,
+  } = useForm<IFormData>({
+    resolver: zodResolver(registerContactDataSchema),
+    defaultValues: {
+      nombreNegocio: "",
+      telefono: "",
+      calle: "",
+      colonia: "",
+      alcaldia: "",
+      cp: "",
+    },
+  });
+
   const router = useRouter();
-  const navigateTo = (path: string) => router.push(path);
 
   useEffect(() => {
     if (postalCode.length === 5) {
@@ -72,9 +80,12 @@ export const ContactDataForm = () => {
               (item: IResponse) => item.d_codigo === postalCode
             )
           ) {
-            setErrors({ cp: " " });
+            setError("cp", { type: "manual", message: "" });
           } else {
-            setErrors({ cp: "Código postal no encontrado" });
+            setError("cp", {
+              type: "manual",
+              message: "Código postal no encontrado",
+            });
             return;
           }
           direction.data.map((item: IResponse) => {
@@ -83,7 +94,7 @@ export const ContactDataForm = () => {
             } else {
               const coloniaString = item.d_asenta;
               const municipioString = item.D_mnpio;
-              setErrors({ cp: " " });
+              setError("cp", { type: "manual", message: "" });
               setColonia(coloniaString);
               setAlcaldia(municipioString);
             }
@@ -93,49 +104,28 @@ export const ContactDataForm = () => {
         }
       });
     }
-  }, [postalCode]);
+  }, [postalCode, setError]);
 
   const onSubmit: SubmitHandler<IFormData> = async (data) => {
     try {
-      data.alcaldia = alcaldia;
-      data.colonia = colonia;
-      const validations = registerContactDataSchema.safeParse(data);
-      if (!validations.success) {
-        let newErrors: Errors = {};
-
-        validations.error.issues.forEach((issue) => {
-          newErrors = { ...newErrors, [issue.path[0]]: issue.message };
-        });
-        setErrors(newErrors);
-        return null;
-      } else {
-        setErrors(null);
-      }
-
       setContactData(data);
-
-      const res = await registerContext(
-        userData.email,
-        userData.password,
-        personalData.tipo,
-        personalData.nombre,
-        personalData.apellidos,
-        personalData.fecha_nacimiento,
-        data.nombreNegocio,
-        data.telefono,
-        data.calle,
-        data.colonia,
-        data.alcaldia,
-        data.cp
-      );
+      const res = await registerContext({
+        ...userData,
+        ...personalData,
+        ...data,
+      });
       if (res.hasError) {
-        toast(res.message);
+        toast(res.message, DANGER_TOAST);
         return;
       } else {
-        console.log("[REGISTER_BUSINESS]", res, "Registro exitoso");
         toast("¡Registro exitoso!", SUCCESS_TOAST);
-        navigateTo("/auth/login");
-        setIndexActive(1);
+        if (userData.isEmailVerified) {
+          logout();
+          setIndexActive(1);
+        } else {
+          router.push("/auth/email-verification");
+          setIndexActive(1);
+        }
       }
     } catch (error) {
       toast.error("Error al registrar usuario", DANGER_TOAST);
@@ -150,7 +140,7 @@ export const ContactDataForm = () => {
             <Input
               type="text"
               id="nombreNegocio"
-              placeholder={`${
+              label={`${
                 personalData.tipo === "negocio"
                   ? "Nombre del negocio"
                   : "Nombre del negocio(si aplica)"
@@ -158,7 +148,9 @@ export const ContactDataForm = () => {
               {...register("nombreNegocio")}
             />
             {errors?.nombreNegocio && (
-              <p className="text-red-700 text-xs">{errors?.nombreNegocio}</p>
+              <p className="text-red-700 text-xs">
+                {errors?.nombreNegocio.message}
+              </p>
             )}
           </div>
 
@@ -166,11 +158,11 @@ export const ContactDataForm = () => {
             <Input
               type="text"
               id="telefono"
-              placeholder="Número de teléfono"
+              label="Número de teléfono"
               {...register("telefono")}
             />
             {errors?.telefono && (
-              <p className="text-red-700 text-xs">{errors?.telefono}</p>
+              <p className="text-red-700 text-xs">{errors?.telefono.message}</p>
             )}
           </div>
         </div>
@@ -179,26 +171,28 @@ export const ContactDataForm = () => {
             <Input
               type="text"
               id="cp"
-              placeholder="Código postal"
+              label="Código postal"
               {...register("cp")}
               onChange={(e) => {
                 setPostalCode(e.target.value);
               }}
             />
-            {errors?.cp && <p className="text-red-700 text-xs">{errors?.cp}</p>}
+            {errors?.cp && (
+              <p className="text-red-700 text-xs">{errors?.cp.message}</p>
+            )}
           </div>
           <div className="relative">
             <Input
               type="text"
               id="colonia"
-              placeholder="Colonia"
+              label="Colonia"
               isDisabled
               defaultValue={colonia}
               value={colonia}
               {...register("colonia")}
             />
             {errors?.colonia && (
-              <p className="text-red-700 text-xs">{errors?.colonia}</p>
+              <p className="text-red-700 text-xs">{errors?.colonia.message}</p>
             )}
           </div>
         </div>
@@ -207,37 +201,43 @@ export const ContactDataForm = () => {
             <Input
               type="text"
               id="calle"
-              placeholder="Calle y número"
+              label="Calle y número"
               {...register("calle")}
             />
             {errors?.calle && (
-              <p className="text-red-700 text-xs">{errors?.calle}</p>
+              <p className="text-red-700 text-xs">{errors?.calle.message}</p>
             )}
           </div>
           <div className="relative">
             <Input
               type="text"
               id="alcaldia"
-              placeholder="Alcaldía"
+              label="Alcaldía"
               isDisabled
               defaultValue={alcaldia}
               value={alcaldia}
               {...register("alcaldia")}
             />
             {errors?.alcaldia && (
-              <p className="text-red-700 text-xs">{errors?.alcaldia}</p>
+              <p className="text-red-700 text-xs">{errors?.alcaldia.message}</p>
             )}
           </div>
         </div>
         <button
           type="submit"
+          onClick={() => {
+            setValue("colonia", colonia);
+            setValue("alcaldia", alcaldia);
+          }}
           className="w-full flex justify-center bg-green-800 hover:bg-green-700 text-gray-100 p-3  rounded-lg tracking-wide font-semibold  cursor-pointer transition ease-in duration-500"
         >
           Registrarse
         </button>
         <button
           type="button"
-          onClick={() => setIndexActive(2)}
+          onClick={() => {
+            setIndexActive(2);
+          }}
           className="w-full flex justify-center bg-gray-200 hover:bg-gray-300 text-gray-800 p-3  rounded-lg tracking-wide font-semibold  cursor-pointer transition ease-in duration-500"
         >
           Atrás

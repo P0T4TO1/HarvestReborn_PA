@@ -3,7 +3,7 @@
 import { FC, useContext } from "react";
 import { AuthContext } from "@/context/auth";
 import { useSession, signOut } from "next-auth/react";
-import { SUCCESS_TOAST, showToast } from "@/components/toast";
+import { SUCCESS_TOAST, showToast } from "@/components/ui/toast";
 
 import {
   Dropdown,
@@ -33,7 +33,7 @@ export const DropdownComponent: FC = () => {
             }}
           />
         </DropdownTrigger>
-        {session ? (
+        {session && user?.id_rol !== 4 ? (
           <DropdownMenu aria-label="Profile Actions" variant="flat">
             <DropdownItem key="profile" className="h-14 gap-2">
               <p className="font-semibold">Inicio sesión como:</p>

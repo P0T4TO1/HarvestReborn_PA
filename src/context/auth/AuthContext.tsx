@@ -9,24 +9,24 @@ interface ContextProps {
 
   loginUser: (email: string, password: string) => Promise<boolean>;
 
-  registerContext: (
-    email: string,
-    password: string,
-    tipo: string,
-    nombre: string,
-    apellidos: string,
-    fecha_nacimiento: string,
-    nombreNegocio: string,
-    telefono: string,
-    calle: string,
-    colonia: string,
-    alcaldia: string,
-    cp: string
-  ) => Promise<{ hasError: boolean; message?: string }>;
+  registerContext: (registerData: {
+    email: string;
+    password: string;
+    tipo: string;
+    nombre: string;
+    apellidos: string;
+    fecha_nacimiento: string;
+    nombreNegocio: string;
+    telefono: string;
+    calle: string;
+    colonia: string;
+    alcaldia: string;
+    cp: string;
+  }) => Promise<{ hasError: boolean; message?: string }>;
 
   logout: () => void;
 
-  userData: { email: string; password: string };
+  userData: { email: string; password: string, isEmailVerified: boolean};
   personalData: {
     nombre: string;
     apellidos: string;
@@ -42,7 +42,7 @@ interface ContextProps {
   };
   indexActive: number;
 
-  setUserData: (userData: { email: string; password: string }) => void;
+  setUserData: (userData: { email: string; password: string, isEmailVerified: boolean }) => void;
   setPersonalData: (data: {
     nombre: string;
     apellidos: string;

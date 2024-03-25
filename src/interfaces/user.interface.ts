@@ -5,14 +5,15 @@ export interface IUser {
   email: string;
   password: string;
   id_rol: number;
+  nombre?: string;
+  apellidos?: string;
+  oAuthId?: string;
 
   estado: Estado;
 
   negocio?: INegocio;
   duenonegocio?: IDuenoNegocio;
   cliente?: ICliente;
-
-  changeData: boolean;
 }
 
 export enum Estado {

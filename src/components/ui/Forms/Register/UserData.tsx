@@ -7,48 +7,43 @@ import { toast } from "sonner";
 import { registerUserDataSchema } from "@/validations/auth.validation";
 import { searchUserByEmail } from "@/hooks";
 import { Input } from "@nextui-org/input";
-
-type Errors = {
-  email?: string;
-  password?: string;
-  confirmPassword?: string;
-} | null;
+import { zodResolver } from "@hookform/resolvers/zod";
+import { DANGER_TOAST } from "@/components";
 
 interface IFormData {
   email: string;
   password: string;
   confirmPassword?: string;
+  isEmailVerified: boolean;
 }
 
 export const UserDataForm = () => {
-  const { setUserData, setIndexActive, indexActive } = useContext(AuthContext);
-  const { register, handleSubmit } = useForm<IFormData>();
-  const [errors, setErrors] = useState<Errors>(null);
+  const { setUserData, setIndexActive, indexActive, userData } =
+    useContext(AuthContext);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IFormData>({
+    resolver: zodResolver(registerUserDataSchema),
+    defaultValues: {
+      email: userData.email ?? "",
+      password: userData.password ?? "",
+      confirmPassword: userData ? userData.password : "",
+      isEmailVerified: userData ? userData.isEmailVerified : false,
+    },
+  });
   const [visible, setVisible] = useState<boolean>(false);
   const [visibleConfirm, setVisibleConfirm] = useState<boolean>(false);
 
   const onSubmit: SubmitHandler<IFormData> = async (data) => {
     try {
-      const validations = registerUserDataSchema.safeParse(data);
-      if (!validations.success) {
-        let newErrors: Errors = {};
-
-        validations.error.issues.forEach((issue) => {
-          newErrors = { ...newErrors, [issue.path[0]]: issue.message };
-        });
-        setErrors(newErrors);
-        return null;
-      } else {
-        setErrors(null);
-      }
-
       const res = await searchUserByEmail(data.email);
 
       if (res.message === "Este correo ya esta registrado") {
-        setErrors({ email: "El correo ya esta registrado" });
+        toast("Este correo ya esta registrado", DANGER_TOAST);
         return null;
       }
-
       setUserData(data);
       setIndexActive(2);
     } catch (error) {
@@ -64,11 +59,11 @@ export const UserDataForm = () => {
             <Input
               type="email"
               id="email"
-              placeholder="Correo electrónico"
+              label="Correo electrónico"
               {...register("email")}
             />
             {errors?.email && (
-              <p className="text-red-700 text-xs">{errors?.email}</p>
+              <p className="text-red-700 text-xs">{errors?.email.message}</p>
             )}
           </div>
 
@@ -76,7 +71,7 @@ export const UserDataForm = () => {
             <Input
               type={`${visible ? "text" : "password"}`}
               id="contraseña"
-              placeholder="Contraseña"
+              label="Contraseña"
               {...register("password")}
               endContent={
                 <button
@@ -98,14 +93,14 @@ export const UserDataForm = () => {
             />
 
             {errors?.password && (
-              <p className="text-red-700 text-xs">{errors?.password}</p>
+              <p className="text-red-700 text-xs">{errors?.password.message}</p>
             )}
           </div>
           <div className="relative">
             <Input
               type={`${visibleConfirm ? "text" : "password"}`}
               id="confirmar-contraseña"
-              placeholder="Confirmar contraseña"
+              label="Confirmar contraseña"
               {...register("confirmPassword")}
               endContent={
                 <button
@@ -126,7 +121,9 @@ export const UserDataForm = () => {
               }
             />
             {errors?.confirmPassword && (
-              <p className="text-red-700 text-xs">{errors?.confirmPassword}</p>
+              <p className="text-red-700 text-xs">
+                {errors?.confirmPassword.message}
+              </p>
             )}
           </div>
         </div>

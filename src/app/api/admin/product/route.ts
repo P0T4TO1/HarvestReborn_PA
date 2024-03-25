@@ -18,26 +18,6 @@ async function createProduct(req: NextRequest, res: NextResponse) {
   };
 
   try {
-    if (!nombre_producto || !file || !categoria) {
-      return NextResponse.json(
-        { message: "Faltan datos del producto" },
-        { status: 400 }
-      );
-    }
-
-    // const productExists = await prisma.m_producto.findFirst({
-    //   where: {
-    //     nombre_producto,
-    //   },
-    // });
-    //
-    // if (productExists) {
-    //   return NextResponse.json(
-    //     { message: "Este producto ya esta registrado" },
-    //     { status: 401 }
-    //   );
-    // }
-
     const product = await prisma.m_producto.create({
       data: {
         nombre_producto,
@@ -62,25 +42,18 @@ async function updateProduct(req: NextRequest, res: NextResponse) {
   const {
     id = 0,
     nombre_producto = "",
-    imagen_producto = "",
+    file = "",
     descripcion = "",
     enTemporada = false,
     categoria = "",
   } = (await new Response(req.body).json()) as {
     id: number;
     nombre_producto: string;
-    imagen_producto: string;
+    file: string;
     descripcion: string;
     enTemporada: boolean;
     categoria: Category;
   };
-
-  if (!nombre_producto || !imagen_producto || !categoria) {
-    return NextResponse.json(
-      { message: "Faltan datos del producto" },
-      { status: 400 }
-    );
-  }
 
   const product = await prisma.m_producto.update({
     where: {
@@ -88,7 +61,7 @@ async function updateProduct(req: NextRequest, res: NextResponse) {
     },
     data: {
       nombre_producto,
-      imagen_producto,
+      imagen_producto: file,
       descripcion: descripcion || "",
       enTemporada,
       categoria: categoria.toUpperCase() as Category,
@@ -124,6 +97,8 @@ async function deleteProduct(req: NextRequest, res: NextResponse) {
     );
   }
 }
+
+export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest, res: NextResponse) {
   const products = await prisma.m_producto.findMany();

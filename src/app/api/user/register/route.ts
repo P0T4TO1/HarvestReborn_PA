@@ -1,8 +1,29 @@
 import { NextResponse, NextRequest } from "next/server";
 import { hash } from "bcrypt";
+import crypto from "crypto";
+import sgMail from "@sendgrid/mail";
+import { render } from "@react-email/render";
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY || "");
 
 import { signToken } from "@/lib/jwt";
 import prisma from "@/lib/prisma";
+import { VerifyEmail } from "@/components";
+
+interface Data {
+  email: string;
+  password: string;
+  tipo: string;
+  nombre: string;
+  apellidos: string;
+  fecha_nacimiento: string;
+  nombreNegocio: string;
+  telefono: string;
+  calle: string;
+  colonia: string;
+  alcaldia: string;
+  cp: string;
+}
 
 async function registerUser(req: NextRequest, res: NextResponse) {
   const {
@@ -18,45 +39,19 @@ async function registerUser(req: NextRequest, res: NextResponse) {
     colonia = "",
     alcaldia = "",
     cp = "",
-  } = (await new Response(req.body).json()) as {
-    email: string;
-    password: string;
-    tipo: string;
-    nombre: string;
-    apellidos: string;
-    fecha_nacimiento: string;
-    nombreNegocio: string;
-    telefono: string;
-    calle: string;
-    colonia: string;
-    alcaldia: string;
-    cp: string;
-  };
-
+  } = (await new Response(req.body).json()) as Data;
   try {
-    const emailAlreadyExist = await prisma.m_user.findUnique({
-      where: {
-        email: email,
-      },
-    });
-
-    if (emailAlreadyExist) {
-      return NextResponse.json(
-        {
-          error: "Internal Server Error",
-          message: "Este correo ya esta registrado",
-        },
-        { status: 500 }
-      );
-    }
-
     const ceo: number = email === "jaretgarciagomez@gmail.com" ? 1 : 2 || 3;
 
+    const emailVerificationToken = crypto.randomBytes(32).toString("base64url");
+
     if (tipo === "cliente") {
-      const newUser = await prisma.m_user.create({
-        data: {
+      const newUser = await prisma.m_user.upsert({
+        where: { email },
+        create: {
           email,
           password: await hash(password, 10),
+          emailVerificationToken,
           id_rol: ceo === 1 ? 1 : 3,
           cliente: {
             create: {
@@ -70,7 +65,70 @@ async function registerUser(req: NextRequest, res: NextResponse) {
             },
           },
         },
+        update: {
+          email,
+          password: await hash(password, 10),
+          id_rol: ceo === 1 ? 1 : 3,
+          cliente: {
+            upsert: {
+              create: {
+                nombre_cliente: nombre,
+                apellidos_cliente: apellidos,
+                telefono_cliente: telefono,
+                fecha_nacimiento: new Date(fecha_nacimiento),
+                nombre_negocio: nombreNegocio || "",
+                direccion_negocio:
+                  calle.concat(", ", colonia, ", ", alcaldia, ", ", cp) || "",
+              },
+              update: {
+                nombre_cliente: nombre,
+                apellidos_cliente: apellidos,
+                telefono_cliente: telefono,
+                fecha_nacimiento: new Date(fecha_nacimiento),
+                nombre_negocio: nombreNegocio || "",
+                direccion_negocio:
+                  calle.concat(", ", colonia, ", ", alcaldia, ", ", cp) || "",
+              },
+            },
+          },
+        },
       });
+
+      if (!newUser.emailVerified) {
+        let link = "";
+        if (process.env.NODE_ENV === "development") {
+          link = `http://localhost:3000/auth/email-verification?token=${emailVerificationToken}`;
+        } else {
+          link = `https://harvest-reborn-pa.vercel.app/auth/email-verification?token=${emailVerificationToken}`;
+        }
+
+        const emailHtml = render(
+          VerifyEmail({
+            emailVerificationToken: link,
+            email,
+          }) as React.ReactElement
+        );
+
+        const msg = {
+          from: "Admin No reply<harvestreborn@gmail.com>", // Use the email address or domain you verified above
+          to: email, // Change to your recipient
+          subject: "Verifica tu correo electrónico",
+          html: emailHtml,
+        };
+
+        try {
+          await sgMail.send(msg);
+        } catch (error) {
+          console.error(error);
+          return NextResponse.json(
+            {
+              message: "Error al enviar el correo",
+            },
+            { status: 500 }
+          );
+        }
+      }
+
       const { id } = newUser;
 
       const token = signToken(id, email);
@@ -80,16 +138,19 @@ async function registerUser(req: NextRequest, res: NextResponse) {
           user: {
             email,
           },
+          message: "Usuario creado correctamente y correo enviado",
         },
         { status: 201 }
       );
     }
 
     if (tipo === "negocio") {
-      const newUser = await prisma.m_user.create({
-        data: {
+      const newUser = await prisma.m_user.upsert({
+        where: { email },
+        create: {
           email,
           password: await hash(password, 10),
+          emailVerificationToken,
           id_rol: ceo === 1 ? 1 : 2,
           duenonegocio: {
             create: {
@@ -110,7 +171,98 @@ async function registerUser(req: NextRequest, res: NextResponse) {
             },
           },
         },
+        update: {
+          email,
+          password: await hash(password, 10),
+          id_rol: ceo === 1 ? 1 : 2,
+          duenonegocio: {
+            upsert: {
+              create: {
+                nombre_dueneg: nombre,
+                apellidos_dueneg: apellidos,
+                fecha_nacimiento: new Date(fecha_nacimiento),
+                negocio: {
+                  create: {
+                    nombre_negocio: nombreNegocio,
+                    telefono_negocio: telefono,
+                    direccion_negocio:
+                      calle.concat(", ", colonia, ", ", alcaldia, ", ", cp) ||
+                      "",
+                    inventario: {
+                      create: {},
+                    },
+                  },
+                },
+              },
+              update: {
+                nombre_dueneg: nombre,
+                apellidos_dueneg: apellidos,
+                fecha_nacimiento: new Date(fecha_nacimiento),
+                negocio: {
+                  upsert: {
+                    create: {
+                      nombre_negocio: nombreNegocio,
+                      telefono_negocio: telefono,
+                      direccion_negocio:
+                        calle.concat(", ", colonia, ", ", alcaldia, ", ", cp) ||
+                        "",
+                      inventario: {
+                        create: {},
+                      },
+                    },
+                    update: {
+                      nombre_negocio: nombreNegocio,
+                      telefono_negocio: telefono,
+                      direccion_negocio:
+                        calle.concat(", ", colonia, ", ", alcaldia, ", ", cp) ||
+                        "",
+                      inventario: {
+                        create: {},
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       });
+
+      if (!newUser.emailVerified) {
+        let link = "";
+        if (process.env.NODE_ENV === "development") {
+          link = `http://localhost:3000/auth/email-verification?token=${emailVerificationToken}`;
+        } else {
+          link = `https://harvest-reborn-pa.vercel.app/auth/email-verification?token=${emailVerificationToken}`;
+        }
+
+        const emailHtml = render(
+          VerifyEmail({
+            emailVerificationToken: link,
+            email,
+          }) as React.ReactElement
+        );
+
+        const msg = {
+          from: "Admin No reply<harvestreborn@gmail.com>", // Use the email address or domain you verified above
+          to: email, // Change to your recipient
+          subject: "Verifica tu correo electrónico",
+          html: emailHtml,
+        };
+
+        try {
+          await sgMail.send(msg);
+        } catch (error) {
+          console.error(error);
+          return NextResponse.json(
+            {
+              message: "Error al enviar el correo",
+            },
+            { status: 500 }
+          );
+        }
+      }
+
       const { id } = newUser;
 
       const token = signToken(id, email);
@@ -120,11 +272,14 @@ async function registerUser(req: NextRequest, res: NextResponse) {
           user: {
             email,
           },
+          message: "Usuario creado correctamente y correo enviado",
         },
         { status: 201 }
       );
     }
   } catch (error) {
+    console.log(error);
+
     return NextResponse.json(
       {
         error: "Internal Server Error",

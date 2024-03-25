@@ -6,7 +6,6 @@ import { redirect } from "next/navigation";
 const Profile = async () => {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/");
-
   return (
     <>
       <ProfileForm />

@@ -25,7 +25,7 @@ type AuthActionType =
     }
   | {
       type: "[Auth] - SetUserData";
-      payload: { email: string; password: string };
+      payload: { email: string; password: string; isEmailVerified: boolean };
     }
   | { type: "[Auth] - SetIndexActive"; payload: number };
 

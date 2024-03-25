@@ -34,29 +34,27 @@ export const NavbarComponent = () => {
       >
         {user?.id_rol === 1 ? (
           <NavbarContent>
-            {pathname === "/admin/dashboard" ? (
-              <button onClick={toggleSideMenu} className="md:hidden">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6 text-white"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-                  />
-                </svg>
-              </button>
-            ) : (
-              <NavbarMenuToggle
-                aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-                className="sm:hidden"
-              />
-            )}
+            <button onClick={toggleSideMenu} className="md:hidden">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6 text-white"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                />
+              </svg>
+            </button>
+
+            <NavbarMenuToggle
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              className="sm:hidden"
+            />
 
             <NavbarBrand>
               <Image
@@ -85,22 +83,22 @@ export const NavbarComponent = () => {
         )}
 
         <NavbarContent className="hidden sm:flex gap-4" justify="center">
-          {session ? (
+          {session && user?.id_rol !== 4 ? (
             <>
               <NavbarItem>
-                <Link className="text-gray-300" href={"/home"}>
+                <Link className="text-gray-700" href={"/home"}>
                   Inicio
                 </Link>
               </NavbarItem>
               {user?.id_rol === 2 ? (
                 <>
                   <NavbarItem>
-                    <Link className="text-gray-300" href="/inventory">
+                    <Link className="text-gray-700" href={"/inventory"}>
                       Inventario
                     </Link>
                   </NavbarItem>
                   <NavbarItem>
-                    <Link className="text-gray-300" href={"/orders"}>
+                    <Link className="text-gray-700" href={"/orders"}>
                       Pedidos
                     </Link>
                   </NavbarItem>
@@ -108,12 +106,12 @@ export const NavbarComponent = () => {
               ) : user?.id_rol === 3 ? (
                 <>
                   <NavbarItem>
-                    <Link className="text-gray-300" href="/negocios">
-                      Negocios
+                    <Link className="text-gray-700" href={"/negocios"}>
+                      Recauderías
                     </Link>
                   </NavbarItem>
                   <NavbarItem>
-                    <Link className="text-gray-300" href={"/orders"}>
+                    <Link className="text-gray-700" href={"/orders"}>
                       Mis pedidos
                     </Link>
                   </NavbarItem>
@@ -121,12 +119,12 @@ export const NavbarComponent = () => {
               ) : (
                 <>
                   <NavbarItem>
-                    <Link className="text-gray-300" href={"/admin/dashboard"}>
+                    <Link className="text-gray-700" href={"/admin/dashboard"}>
                       Dashboard
                     </Link>
                   </NavbarItem>
                   <NavbarItem>
-                    <Link className="text-gray-300" href={"/admin/tickets"}>
+                    <Link className="text-gray-700" href={"/admin/tickets"}>
                       Tickets
                     </Link>
                   </NavbarItem>
@@ -136,18 +134,18 @@ export const NavbarComponent = () => {
           ) : (
             <>
               <NavbarItem>
-                <Link className="text-gray-300" href="/#">
+                <Link className="text-gray-700" href="/#">
                   Inicio
                 </Link>
               </NavbarItem>
               <NavbarItem>
-                <Link className="text-gray-300" href="/#servicios">
+                <Link className="text-gray-700" href="/#servicios">
                   Cómo funciona
                 </Link>
               </NavbarItem>
               <NavbarItem>
-                <Link className="text-gray-300" href="/#aboutUs">
-                  Acerca de nosotros
+                <Link className="text-gray-700" href={"/negocios"}>
+                  Recauderías
                 </Link>
               </NavbarItem>
             </>
@@ -170,12 +168,12 @@ export const NavbarComponent = () => {
               {user?.id_rol === 2 ? (
                 <>
                   <NavbarMenuItem>
-                    <Link className="text-gray-300" href="/inventory">
+                    <Link className="text-gray-700" href={"/inventory"}>
                       Inventario
                     </Link>
                   </NavbarMenuItem>
                   <NavbarMenuItem>
-                    <Link className="text-gray-300" href={"/orders"}>
+                    <Link className="text-gray-700" href={"/orders"}>
                       Pedidos
                     </Link>
                   </NavbarMenuItem>
@@ -183,12 +181,12 @@ export const NavbarComponent = () => {
               ) : user?.id_rol === 3 ? (
                 <>
                   <NavbarMenuItem>
-                    <Link className="text-gray-300" href="/negocios">
-                      Negocios
+                    <Link className="text-gray-700" href={"/negocios"}>
+                      Recauderías
                     </Link>
                   </NavbarMenuItem>
                   <NavbarMenuItem>
-                    <Link className="text-gray-300" href={"/orders"}>
+                    <Link className="text-gray-700" href={"/orders"}>
                       Mis pedidos
                     </Link>
                   </NavbarMenuItem>
@@ -196,12 +194,12 @@ export const NavbarComponent = () => {
               ) : (
                 <>
                   <NavbarMenuItem>
-                    <Link className="text-gray-300" href={"/admin/dashboard"}>
+                    <Link className="text-gray-700" href={"/admin/dashboard"}>
                       Dashboard
                     </Link>
                   </NavbarMenuItem>
                   <NavbarMenuItem>
-                    <Link className="text-gray-300" href={"/admin/tickets"}>
+                    <Link className="text-gray-700" href={"/admin/tickets"}>
                       Tickets
                     </Link>
                   </NavbarMenuItem>
@@ -226,8 +224,8 @@ export const NavbarComponent = () => {
                 </Link>
               </NavbarMenuItem>
               <NavbarMenuItem>
-                <Link color="foreground" href="/#aboutUs">
-                  Acerca de nosotros
+                <Link color="foreground" href={"/negocios"}>
+                  Recauderías
                 </Link>
               </NavbarMenuItem>
               <NavbarMenuItem>

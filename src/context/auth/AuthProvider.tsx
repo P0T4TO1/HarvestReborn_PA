@@ -15,7 +15,7 @@ import { hrApi } from "@/api";
 export interface AuthState {
   isLoggedIn: boolean;
   user?: IUser;
-  userData: { email: string; password: string };
+  userData: { email: string; password: string; isEmailVerified: boolean };
   personalData: {
     nombre: string;
     apellidos: string;
@@ -35,7 +35,7 @@ export interface AuthState {
 const AUTH_INITIAL_STATE: AuthState = {
   isLoggedIn: false,
   user: undefined,
-  userData: { email: "", password: "" },
+  userData: { email: "", password: "", isEmailVerified: false },
   personalData: {
     nombre: "",
     apellidos: "",
@@ -92,35 +92,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const registerContext = async (
-    email: string,
-    password: string,
-    tipo: string,
-    nombre: string,
-    apellidos: string,
-    fecha_nacimiento: string,
-    nombreNegocio: string,
-    telefono: string,
-    calle: string,
-    colonia: string,
-    alcaldia: string,
-    cp: string
-  ): Promise<{ hasError: boolean; message?: string }> => {
+  const registerContext = async (registerData: {
+    email: string;
+    password: string;
+    tipo: string;
+    nombre: string;
+    apellidos: string;
+    fecha_nacimiento: string;
+    nombreNegocio: string;
+    telefono: string;
+    calle: string;
+    colonia: string;
+    alcaldia: string;
+    cp: string;
+  }): Promise<{ hasError: boolean; message?: string }> => {
     try {
-      const { data } = await hrApi.post("/user/register", {
-        email,
-        password,
-        tipo,
-        nombre,
-        apellidos,
-        fecha_nacimiento,
-        nombreNegocio,
-        telefono,
-        calle,
-        colonia,
-        alcaldia,
-        cp,
-      });
+      const { data } = await hrApi.post("/user/register", registerData);
       const { token, user } = data;
       Cookies.set("token", token);
       dispatch({ type: "[Auth] - Login", payload: user });
@@ -142,24 +129,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = () => {
-    Cookies.remove("cart");
-    Cookies.remove("firstName");
-    Cookies.remove("lastName");
-    Cookies.remove("address");
-    Cookies.remove("address2");
-    Cookies.remove("zip");
-    Cookies.remove("city");
-    Cookies.remove("country");
-    Cookies.remove("phone");
-    Cookies.remove("email");
-    Cookies.remove("user");
+    Cookies.remove("token");
+    Cookies.remove("next-auth.session-token");
+    Cookies.remove("next-auth.csrf-token");
+    Cookies.remove("next-auth.callback-url");
 
-    signOut().then();
-    // router.reload();
-    // Cookies.remove('token');
+    signOut({ callbackUrl: "/auth/login", redirect: true }).then(() => {
+      dispatch({ type: "[Auth] - Logout" });
+    });
   };
 
-  const setUserData = (userData: { email: string; password: string }) => {
+  const setUserData = (userData: {
+    email: string;
+    password: string;
+    isEmailVerified: boolean;
+  }) => {
     dispatch({ type: "[Auth] - SetUserData", payload: userData });
   };
 
@@ -172,7 +156,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const setIndexActive = (index: number): void => {
-    dispatch({ type: '[Auth] - SetIndexActive', payload: index });
+    dispatch({ type: "[Auth] - SetIndexActive", payload: index });
   };
 
   return (
@@ -187,7 +171,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         userData: state.userData,
         personalData: state.personalData,
         contactData: state.contactData,
-        indexActive : state.indexActive,
+        indexActive: state.indexActive,
         setUserData,
         setPersonalData,
         setContactData,

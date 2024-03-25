@@ -39,14 +39,15 @@ export const authOptions: NextAuthOptions = {
         console.log("Inicio de sesión correcto", user);
 
         if (user.id_rol === 2) {
-          const negocio = await prisma.m_negocio.findFirst({
+          const duenonegocio = await prisma.d_duenonegocio.findFirst({
             where: {
-              dueneg: {
-                id_user: user.id,
-              },
+              id_user: user.id,
+            },
+            include: {
+              negocio: true,
             },
           });
-          return { ...user, negocio };
+          return { ...user, duenonegocio };
         } else if (user.id_rol === 3) {
           const cliente = await prisma.d_cliente.findFirst({
             where: {
@@ -55,7 +56,6 @@ export const authOptions: NextAuthOptions = {
           });
           return { ...user, cliente };
         }
-
         return user;
       },
     }),
@@ -69,13 +69,26 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, profile }) {
       if (account) {
         token.accessToken = account.access_token;
         switch (account.type) {
           case "oauth":
-            user = await oAuthToDb(user?.email || "", user?.name || "");
-            token.user = user;
+            if (account.provider === "google") {
+              user = await oAuthToDb(
+                user?.email || "",
+                user?.name || "",
+                account.providerAccountId || "",
+                // @ts-ignore
+                profile?.given_name || "",
+                // @ts-ignore
+                profile?.family_name || ""
+              );
+              token.user = user;
+            } else {
+              user = await oAuthToDb(user?.email || "", user?.name || "");
+              token.user = user;
+            }
             break;
           case "credentials":
             token.user = user;

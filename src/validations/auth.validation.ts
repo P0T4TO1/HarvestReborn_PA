@@ -149,15 +149,7 @@ export const registerPersonalDataSchema = z
   });
 
 export const registerContactDataSchema = z.object({
-  nombreNegocio: z
-    .string()
-    .min(3, {
-      message: "El nombre del negocio debe tener mínimo 3 caracteres",
-    })
-    .max(100, {
-      message: "El nombre del negocio debe tener menos de 100 caracteres",
-    })
-    .optional(),
+  nombreNegocio: z.string().optional(),
   telefono: z
     .string({ required_error: "El telefono es obligatorio" })
     .min(10, { message: "El telefono debe tener mínimo 10 caracteres" })

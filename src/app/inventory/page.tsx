@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { redirect } from "next/navigation";
-import { ProductsList } from "@/components/ui/Inventory/ProductsList";
+import { ProductsInventory } from "@/components";
 
 const InventoryPage = async () => {
   const session = await getServerSession(authOptions);
@@ -9,7 +9,7 @@ const InventoryPage = async () => {
   return (
     <>
       <section className="flex flex-col relative overflow-hidden min-h-screen">
-        <ProductsList />
+        <ProductsInventory />
       </section>
     </>
   );
