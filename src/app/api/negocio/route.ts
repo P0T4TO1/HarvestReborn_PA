@@ -1,6 +1,8 @@
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 async function getAllNegocios(req: NextRequest, res: NextResponse) {
   const negocios = await prisma.m_negocio.findMany({
     include: {
