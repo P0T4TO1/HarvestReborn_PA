@@ -7,6 +7,7 @@ export async function middleware(req: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET,
   });
   const url = req.nextUrl.clone();
+  console.log("Esta activo el middleware");
 
   if (url.pathname === "/auth/login" && session) {
     return NextResponse.redirect(new URL("/home", url.origin).href);
@@ -45,6 +46,7 @@ export async function middleware(req: NextRequest) {
 //   "/admin/dashboard/negocios",
 // ];
 
-// export const config = {
-//   matcher: ["/((?!api|_next|static|public|favicon.ico).*)"],
-// };
+export const config = {
+  matcher: ["/((?!api|_next|static|public|favicon.ico).*)"],
+  runtime: "edge",
+};
