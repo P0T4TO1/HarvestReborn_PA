@@ -11,8 +11,8 @@ interface RegisterPageProps {
 
 const Register = async ({ searchParams }: RegisterPageProps) => {
   const session = await getServerSession(authOptions);
-  if (!session) redirect("/auth/login");
   if (searchParams.oauth === "true") {
+    if (!session) redirect("/auth/login");
     const user = session?.user;
 
     return <RegisterForm user={user} />;
