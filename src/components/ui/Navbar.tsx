@@ -86,19 +86,19 @@ export const NavbarComponent = () => {
           {session && user?.id_rol !== 4 ? (
             <>
               <NavbarItem>
-                <Link className="text-gray-700" href={"/home"}>
+                <Link className="text-gray-300" href={"/home"}>
                   Inicio
                 </Link>
               </NavbarItem>
               {user?.id_rol === 2 ? (
                 <>
                   <NavbarItem>
-                    <Link className="text-gray-700" href={"/inventory"}>
+                    <Link className="text-gray-300" href={"/inventory"}>
                       Inventario
                     </Link>
                   </NavbarItem>
                   <NavbarItem>
-                    <Link className="text-gray-700" href={"/orders"}>
+                    <Link className="text-gray-300" href={"/orders"}>
                       Pedidos
                     </Link>
                   </NavbarItem>
@@ -106,12 +106,12 @@ export const NavbarComponent = () => {
               ) : user?.id_rol === 3 ? (
                 <>
                   <NavbarItem>
-                    <Link className="text-gray-700" href={"/negocios"}>
+                    <Link className="text-gray-300" href={"/negocios"}>
                       Recauderías
                     </Link>
                   </NavbarItem>
                   <NavbarItem>
-                    <Link className="text-gray-700" href={"/orders"}>
+                    <Link className="text-gray-300" href={"/orders"}>
                       Mis pedidos
                     </Link>
                   </NavbarItem>
@@ -119,12 +119,12 @@ export const NavbarComponent = () => {
               ) : (
                 <>
                   <NavbarItem>
-                    <Link className="text-gray-700" href={"/admin/dashboard"}>
+                    <Link className="text-gray-300" href={"/admin/dashboard"}>
                       Dashboard
                     </Link>
                   </NavbarItem>
                   <NavbarItem>
-                    <Link className="text-gray-700" href={"/admin/tickets"}>
+                    <Link className="text-gray-300" href={"/admin/tickets"}>
                       Tickets
                     </Link>
                   </NavbarItem>
@@ -134,17 +134,17 @@ export const NavbarComponent = () => {
           ) : (
             <>
               <NavbarItem>
-                <Link className="text-gray-700" href="/#">
+                <Link className="text-gray-300" href="/#">
                   Inicio
                 </Link>
               </NavbarItem>
               <NavbarItem>
-                <Link className="text-gray-700" href="/#servicios">
+                <Link className="text-gray-300" href="/#servicios">
                   Cómo funciona
                 </Link>
               </NavbarItem>
               <NavbarItem>
-                <Link className="text-gray-700" href={"/negocios"}>
+                <Link className="text-gray-300" href={"/negocios"}>
                   Recauderías
                 </Link>
               </NavbarItem>
@@ -168,12 +168,12 @@ export const NavbarComponent = () => {
               {user?.id_rol === 2 ? (
                 <>
                   <NavbarMenuItem>
-                    <Link className="text-gray-700" href={"/inventory"}>
+                    <Link className="text-gray-300" href={"/inventory"}>
                       Inventario
                     </Link>
                   </NavbarMenuItem>
                   <NavbarMenuItem>
-                    <Link className="text-gray-700" href={"/orders"}>
+                    <Link className="text-gray-300" href={"/orders"}>
                       Pedidos
                     </Link>
                   </NavbarMenuItem>
@@ -181,12 +181,12 @@ export const NavbarComponent = () => {
               ) : user?.id_rol === 3 ? (
                 <>
                   <NavbarMenuItem>
-                    <Link className="text-gray-700" href={"/negocios"}>
+                    <Link className="text-gray-300" href={"/negocios"}>
                       Recauderías
                     </Link>
                   </NavbarMenuItem>
                   <NavbarMenuItem>
-                    <Link className="text-gray-700" href={"/orders"}>
+                    <Link className="text-gray-300" href={"/orders"}>
                       Mis pedidos
                     </Link>
                   </NavbarMenuItem>
@@ -194,12 +194,12 @@ export const NavbarComponent = () => {
               ) : (
                 <>
                   <NavbarMenuItem>
-                    <Link className="text-gray-700" href={"/admin/dashboard"}>
+                    <Link className="text-gray-300" href={"/admin/dashboard"}>
                       Dashboard
                     </Link>
                   </NavbarMenuItem>
                   <NavbarMenuItem>
-                    <Link className="text-gray-700" href={"/admin/tickets"}>
+                    <Link className="text-gray-300" href={"/admin/tickets"}>
                       Tickets
                     </Link>
                   </NavbarMenuItem>
