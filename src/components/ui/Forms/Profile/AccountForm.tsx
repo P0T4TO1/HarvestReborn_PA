@@ -40,6 +40,20 @@ export const AccountForm: FC = () => {
   const [error, setError] = useState(false);
   const [errors, setErrors] = useState<Errors>(null);
 
+  useEffect(() => {
+    if (!user?.id) {
+      return;
+    }
+    hrApi.get(`/user/account/${user?.id}`).then((res) => {
+      if (res.status === 200) {
+        setAccount(res.data);
+      } else {
+        setError(true);
+      }
+      setLoading(false);
+    });
+  }, [user?.id]);
+
   const onSubmitEmail = async (data: IFormData) => {
     try {
       const res = await hrApi
@@ -98,20 +112,6 @@ export const AccountForm: FC = () => {
       console.error(error);
     }
   };
-
-  useEffect(() => {
-    if (!user?.id) {
-      return;
-    }
-    hrApi.get(`/user/account/${user?.id}`).then((res) => {
-      if (res.status === 200) {
-        setAccount(res.data);
-      } else {
-        setError(true);
-      }
-      setLoading(false);
-    });
-  }, [user?.id]);
 
   return (
     <section className="bg-white w-full flex flex-col gap-5 px-3 md:px-16 lg:px-28 md:flex-row text-[#161931] min-h-screen">

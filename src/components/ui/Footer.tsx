@@ -35,7 +35,7 @@ export const Footer = () => {
                 </NextLink>
                 <NextLink
                   target={"_blank"}
-                  href={"facebook.com"}
+                  href={"https://www.facebook.com"}
                   className="bg-white flex text-lightBlue-600 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
                   type="button"
                 >
@@ -43,7 +43,7 @@ export const Footer = () => {
                 </NextLink>
                 <NextLink
                   target={"_blank"}
-                  href={"twitter.com"}
+                  href={"https://www.twitter.com"}
                   className="flex bg-white text-lightBlue-600 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
                   type="button"
                 >
@@ -51,7 +51,7 @@ export const Footer = () => {
                 </NextLink>
                 <NextLink
                   target={"_blank"}
-                  href={"instagram.com"}
+                  href={"https://www.instagram.com"}
                   className="flex bg-white text-lightBlue-600 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
                   type="button"
                 >
@@ -108,7 +108,7 @@ export const Footer = () => {
                     <li>
                       <NextLink
                         className="font-semibold block pb-2 text-sm hover:text-gray-800"
-                        href={"terms-conditions"}
+                        href={"/terms-conditions"}
                       >
                         Términos y condiciones
                       </NextLink>
@@ -116,7 +116,7 @@ export const Footer = () => {
                     <li>
                       <NextLink
                         className="font-semibold block pb-2 text-sm hover:text-gray-800"
-                        href={"privacy-policy"}
+                        href={"/privacy-policy"}
                       >
                         Aviso de privacidad
                       </NextLink>

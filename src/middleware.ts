@@ -10,9 +10,11 @@ export async function middleware(req: NextRequest) {
   console.log("Esta activo el middleware");
 
   if (url.pathname === "/auth/login" && session) {
+    console.log("Esta activo el middleware login");
     return NextResponse.redirect(new URL("/home", url.origin).href);
   }
   if (url.pathname === "/auth/register" && session) {
+    console.log("Esta activo el middleware register");
     if (session.user.id_rol === 4)
       return NextResponse.rewrite(
         new URL("/auth/register?oauth=true&verify=false", url.origin).href
@@ -23,6 +25,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/auth/login", url.origin).href);
   }
   if (url.pathname === "/home" && session) {
+    console.log("Esta activo el middleware home");
     if (session.user.id_rol === 4) {
       return NextResponse.redirect(
         new URL("/auth/register?oauth=true", url.origin).href
@@ -48,5 +51,4 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: ["/((?!api|_next|static|public|favicon.ico).*)"],
-  runtime: "experimental-edge",
 };
