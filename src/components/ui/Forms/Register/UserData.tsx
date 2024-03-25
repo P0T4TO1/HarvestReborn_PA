@@ -24,6 +24,7 @@ export const UserDataForm = () => {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<IFormData>({
     resolver: zodResolver(registerUserDataSchema),
     defaultValues: {
@@ -41,6 +42,9 @@ export const UserDataForm = () => {
       const res = await searchUserByEmail(data.email);
 
       if (res.message === "Este correo ya esta registrado") {
+        setError("email", {
+          message: "Este correo ya esta registrado",
+        });
         toast("Este correo ya esta registrado", DANGER_TOAST);
         return null;
       }

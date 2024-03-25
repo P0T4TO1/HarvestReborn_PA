@@ -1,12 +1,17 @@
 import prisma from "@/lib/prisma";
 import React from "react";
 import { EmailVerificationForm, EmailVerified } from "@/components";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/authOptions";
+import { redirect } from "next/navigation";
 
 interface VerifyEmailPageProps {
   searchParams: { [key: string]: string | string[] | undefined };
 }
 
 const VerifyEmailPage = async ({ searchParams }: VerifyEmailPageProps) => {
+  const session = await getServerSession(authOptions);
+  if (session) redirect("/home");
   if (searchParams.token) {
     const user = await prisma.m_user.findUnique({
       where: {
