@@ -45,6 +45,6 @@ export async function middleware(req: NextRequest) {
 //   "/admin/dashboard/negocios",
 // ];
 
-export const config = {
-  matcher: ["/((?!api|_next|static|public|favicon.ico).*)"],
-};
+// export const config = {
+//   matcher: ["/((?!api|_next|static|public|favicon.ico).*)"],
+// };
