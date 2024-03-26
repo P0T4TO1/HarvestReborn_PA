@@ -4,7 +4,7 @@ import React, { useContext } from "react";
 import { Button, Link } from "@nextui-org/react";
 import { AuthContext } from "@/context/auth";
 
-export const HomeNegocio = async () => {
+export const HomeNegocio = () => {
   const { user } = useContext(AuthContext);
     console.log(user)
   return (
