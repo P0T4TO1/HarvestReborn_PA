@@ -1,7 +1,9 @@
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-async function getNegocioById(
+export const dynamic = "force-dynamic";
+
+async function getNegocioByIDAdmin(
   request: Request,
   { params }: { params: { id: string } },
   req: NextRequest,
@@ -15,9 +17,14 @@ async function getNegocioById(
 
   const negocio = await prisma.m_negocio.findFirst({
     where: {
-      id_negocio: parseInt(params.id.toString()),
+      id_negocio: parseInt(params.id, 10),
     },
     include: {
+      dueneg: {
+        include: {
+          user: true,
+        },
+      },
       inventario: {
         include: {
           lote: {
@@ -32,4 +39,4 @@ async function getNegocioById(
   return NextResponse.json(negocio, { status: 200 });
 }
 
-export { getNegocioById as GET };
+export { getNegocioByIDAdmin as GET };

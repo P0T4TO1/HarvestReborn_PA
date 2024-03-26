@@ -45,6 +45,7 @@ model m_user {
 enum Estado {
   ACTIVO
   INACTIVO
+  PENDIENTE
 }
 
 model c_rol {
@@ -85,11 +86,14 @@ model d_duenonegocio {
 }
 
 model m_negocio {
-  id_negocio        Int     @id @default(autoincrement())
-  nombre_negocio    String
-  direccion_negocio String
-  telefono_negocio  String
-  email_negocio     String?
+  id_negocio          Int      @id @default(autoincrement())
+  nombre_negocio      String
+  direccion_negocio   String
+  telefono_negocio    String
+  email_negocio       String?
+  images_negocio      String[] @default([])
+  descripcion_negocio String?
+  estado_negocio      Estado   @default(PENDIENTE)
 
   id_dueneg Int            @unique
   dueneg    d_duenonegocio @relation(fields: [id_dueneg], references: [id_dueneg])

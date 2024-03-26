@@ -11,7 +11,7 @@ import {
   Paper,
 } from "@mui/material";
 import { ILote } from "@/interfaces";
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import { Tooltip, useDisclosure } from "@nextui-org/react";
 import { hrApi } from "@/api";
 import { toast } from "sonner";
@@ -20,7 +20,6 @@ import { DANGER_TOAST, EditLoteModal, SUCCESS_TOAST, Row } from "@/components";
 interface ProductsCollapsibleTableProps {
   lotesById: ILote[];
   allLotes: ILote[];
-  children?: ReactNode;
 }
 
 export const ProductsCollapsibleTable = ({

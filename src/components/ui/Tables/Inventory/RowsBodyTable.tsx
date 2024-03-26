@@ -63,6 +63,7 @@ export const Row = ({ lote, allLotes, children }: RowProps) => {
               <Table size="small" aria-label="tableproducts">
                 <TableHead>
                   <TableRow>
+                    <TableCell>Número de lote</TableCell>
                     <TableCell>Fecha de entrada</TableCell>
                     <TableCell>Cantidad en kg</TableCell>
                     <TableCell align="right">
@@ -73,7 +74,7 @@ export const Row = ({ lote, allLotes, children }: RowProps) => {
                 </TableHead>
                 <TableBody>
                   {allLotes?.map(
-                    (loteMap) =>
+                    (loteMap, key) =>
                       loteMap?.id_producto === lote?.id_producto && (
                         <TableRow key={loteMap.id_lote}>
                           <TableCell component="th" scope="row">

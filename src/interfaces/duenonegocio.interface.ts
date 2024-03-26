@@ -1,4 +1,4 @@
-import { INegocio } from "@/interfaces";
+import {INegocio, IUser} from "@/interfaces";
 
 export interface IDuenoNegocio {
   id_dueneg?: number;
@@ -8,4 +8,5 @@ export interface IDuenoNegocio {
 
   id_user: string;
   negocio: INegocio;
+  user?: IUser;
 }

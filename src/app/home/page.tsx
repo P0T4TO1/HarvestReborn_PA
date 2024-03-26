@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { redirect } from "next/navigation";
+import { HomeCliente, HomeNegocio } from "@/components";
 
 const HomePage = async () => {
   const session = await getServerSession(authOptions);
@@ -9,7 +10,7 @@ const HomePage = async () => {
   if (!session) redirect("/auth/login");
   return (
     <div className="min-h-screen flex justify-center items-center">
-      <h1>Home page logged in</h1>
+      {session?.user.id_rol === 2 ? <HomeNegocio /> : <HomeCliente />}
     </div>
   );
 };

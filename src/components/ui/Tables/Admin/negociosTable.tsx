@@ -18,9 +18,10 @@ export const TableNegocios = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [negocios, setNegocios] = React.useState<INegocio[]>([]);
+  const [negocio, setNegocio] = useState<INegocio>();
 
   useEffect(() => {
-    hrApi.get("/negocio").then((res) => {
+    hrApi.get("/admin/users/negocios").then((res) => {
       if (res.status === 200) {
         setNegocios(res.data);
       } else {
@@ -29,6 +30,18 @@ export const TableNegocios = () => {
       setLoading(false);
     });
   }, []);
+
+  const getNegocio = async (id: number) => {
+    setLoading(true);
+    await hrApi.get(`/admin/users/negocios/${id}`).then((res) => {
+      if (res.status === 200) {
+        setNegocio(res.data);
+      } else {
+        setError(true);
+      }
+      setLoading(false);
+    });
+  };
 
   return (
     <div className=" w-full flex flex-col gap-4">

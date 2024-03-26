@@ -47,41 +47,42 @@ export const adminAddProductValidation = z.object({
 });
 
 export const adminEditProductValidation = z.object({
-    nombre_producto: z
-        .string({ required_error: "El nombre del producto es obligatorio" })
-        .min(3, {
-            message: "El nombre del producto debe tener mínimo 3 caracteres",
-        })
-        .max(100, {
-            message: "El nombre del producto debe tener menos de 100 caracteres",
-        }),
-    imagen_producto: z
-        .any()
-        .refine(
-            (file) => {
-                if (!file) return false;
-                if (file instanceof File) {
-                    if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) return false;
-                    if (file.size > MAX_FILE_SIZE) return false;
-                }
-                return true;
-            },
-            {
-                message: "La imagen del producto no es válida",
-            }
-        ).optional(),
-    descripcion: z.string().optional(),
-    enTemporada: z.boolean({
-        required_error: "El campo en temporada es obligatorio",
+  nombre_producto: z
+    .string({ required_error: "El nombre del producto es obligatorio" })
+    .min(3, {
+      message: "El nombre del producto debe tener mínimo 3 caracteres",
+    })
+    .max(100, {
+      message: "El nombre del producto debe tener menos de 100 caracteres",
     }),
-    categoria: z
-        .string({ required_error: "La categoría del producto es obligatoria" })
-        .min(3, {
-            message: "La categoría del producto debe tener mínimo 3 caracteres",
-        })
-        .max(100, {
-            message: "La categoría del producto debe tener menos de 100 caracteres",
-        }),
+  imagen_producto: z
+    .any()
+    .refine(
+      (file) => {
+        if (!file) return false;
+        if (file instanceof File) {
+          if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) return false;
+          if (file.size > MAX_FILE_SIZE) return false;
+        }
+        return true;
+      },
+      {
+        message: "La imagen del producto no es válida",
+      }
+    )
+    .optional(),
+  descripcion: z.string().optional(),
+  enTemporada: z.boolean({
+    required_error: "El campo en temporada es obligatorio",
+  }),
+  categoria: z
+    .string({ required_error: "La categoría del producto es obligatoria" })
+    .min(3, {
+      message: "La categoría del producto debe tener mínimo 3 caracteres",
+    })
+    .max(100, {
+      message: "La categoría del producto debe tener menos de 100 caracteres",
+    }),
 });
 
 export const adminAddUserValidation = z
@@ -267,3 +268,6 @@ export const adminAddUserValidation = z
     }
     return null;
   });
+export const adminEditNegocioValidation = z.object({
+    
+});

@@ -1,15 +1,22 @@
 "use client";
 
-import { ChangeEvent, useContext, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { AuthContext } from "@/context/auth";
-import { INegocio } from "@/interfaces";
+import { ChangeEvent, useEffect, useState } from "react";
+import { Estado, INegocio } from "@/interfaces";
 import { hrApi } from "@/api";
-import { Select, SelectItem } from "@nextui-org/react";
-import NextLink from "next/link";
+import {
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Link,
+  Select,
+  SelectItem,
+  CircularProgress,
+} from "@nextui-org/react";
 
 export const NegociosList = () => {
   const [negocios, setNegocios] = useState<INegocio[]>([]);
+  const [negocio, setNegocio] = useState<INegocio>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -29,6 +36,18 @@ export const NegociosList = () => {
         )
       );
 
+  const getNegocio = async (id: number | undefined) => {
+    setLoading(true);
+    await hrApi.get(`/negocio/${id}`).then((res) => {
+      if (res.status === 200) {
+        setNegocio(res.data);
+      } else {
+        console.log("Error al obtener negocio", res.data);
+      }
+      setLoading(false);
+    });
+  };
+
   useEffect(() => {
     hrApi.get("/negocio").then((res) => {
       if (res.status === 200) {
@@ -42,7 +61,7 @@ export const NegociosList = () => {
   }, []);
 
   return (
-    <div className="p-24">
+    <div className="pt-20 lg:px-48 md:px-20 sm:px-12">
       <h1 className="font-bebas-neue uppercase text-4xl font-black flex flex-col leading-none text-green-900">
         Negocios
         <span className="text-xl text-gray-900 font-semibold">
@@ -75,83 +94,93 @@ export const NegociosList = () => {
           </Select>
         </div>
       </div>
-
-      <div className="mt-12 grid grid-cols-2">
-        {loading ? (
-          <p>Cargando...</p>
-        ) : error ? (
-          <p>Hubo un error</p>
-        ) : (
-          results.map((negocio) => (
-            <div
-              className="max-w-2xl bg-emerald-600 shadow-lg rounded-lg mt-4 m-auto"
-              key={negocio.id_negocio}
-            >
-              <div className="px-6 py-5">
-                <div className="flex items-start">
-                  <span className="material-symbols-outlined fill-current flex-shrink-0 mr-5 mt-1.5 text-gray-300">
-                    storefront
-                  </span>
-
-                  <div className="flex-grow truncate">
-                    <div className="w-full sm:flex justify-between items-center mb-3">
-                      <h2 className="text-2xl leading-snug font-extrabold text-gray-50 truncate mb-1 sm:mb-0">
+      <div className="grid grid-cols-2 mt-10">
+        <div className="all-negocios-cards">
+          {loading ? (
+            <p>Cargando...</p>
+          ) : error ? (
+            <p>Error al cargar los negocios</p>
+          ) : (
+            results.map(
+              (negocio) =>
+                negocio.estado_negocio === Estado.Activo && (
+                  <Card
+                    key={negocio.id_negocio}
+                    className="mb-4"
+                    onClick={() => getNegocio(negocio.id_negocio)}
+                  >
+                    <CardHeader>
+                      <h2 className="text-2xl font-bold">
                         {negocio.nombre_negocio}
                       </h2>
+                    </CardHeader>
+                    <CardBody>
+                      <p>{negocio.descripcion_negocio}</p>
+                    </CardBody>
+                    <CardFooter>
+                      <Link href={`/negocios/${negocio.id_negocio}`}>
+                        Ver más
+                      </Link>
+                    </CardFooter>
+                  </Card>
+                )
+            )
+          )}
+        </div>
+        <div className="generalinfo-negocio">
+          {loading ? (
+            <CircularProgress size="lg" />
+          ) : error ? (
+            <p>Error al cargar los negocios</p>
+          ) : (
+            <Card>
+              {negocio ? (
+                <>
+                  <CardHeader>
+                    <h2 className="text-2xl font-bold">
+                      Información general de {negocio?.nombre_negocio}
+                    </h2>
+                  </CardHeader>
+                  <CardBody>
+                    <p>
+                      <span className="font-bold">Nombre:</span>{" "}
+                      {negocio?.nombre_negocio}
+                    </p>
+                    <p>
+                      <span className="font-bold">Descripción:</span>{" "}
+                      {negocio?.descripcion_negocio}
+                    </p>
+                    <p>
+                      <span className="font-bold">Dirección:</span>{" "}
+                      {negocio?.direccion_negocio}
+                    </p>
+                    <p>
+                      <span className="font-bold">Teléfono:</span>{" "}
+                      {negocio?.telefono_negocio}
+                    </p>
+                    <p>
+                      <span className="font-bold">Email:</span>{" "}
+                      {negocio?.email_negocio}
+                    </p>
 
-                      <div className="flex-shrink-0 flex items-center space-x-3 sm:ml-2">
-                        <button className="flex items-center text-left text-sm font-medium text-indigo-100 hover:text-white group focus:outline-none focus-visible:border-b focus-visible:border-indigo-100">
-                          <span className="material-symbols-outlined">
-                            favorite
-                          </span>
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="flex items-end justify-between whitespace-normal">
-                      <div className="max-w-md text-indigo-100">
-                        <p className="mb-2">
-                          <span className="font-semibold">Dirección:</span>{" "}
-                          {negocio.direccion_negocio}, Ciudad de México
-                        </p>
-                        <p className="mb-2">
-                          <span className="font-semibold">Teléfono:</span>{" "}
-                          {negocio.telefono_negocio}
-                        </p>
-                        {negocio.email_negocio && (
-                          <p className="mb-2">
-                            <span className="font-semibold">Correo:</span>{" "}
-                            {negocio.email_negocio}
-                          </p>
-                        )}
-                        <p className="mb-2">
-                          <span className="font-semibold">
-                            Productos disponibles:
-                          </span>{" "}
-                          {negocio.inventario?.lote?.map((lote) => (
-                            <span key={lote.id_lote}>
-                              {lote.producto?.nombre_producto}
-                              {", "}
-                            </span>
-                          ))}
-                        </p>
-                      </div>
-
-                      <NextLink
-                        className="flex-shrink-0 flex items-center justify-center text-indigo-600 w-10 h-10 rounded-full bg-gradient-to-b from-indigo-50 to-indigo-100 hover:from-white hover:to-indigo-50 focus:outline-none focus-visible:from-white focus-visible:to-white transition duration-150 ml-2"
-                        href={`/negocios/${negocio.nombre_negocio}?id=${negocio.id_negocio}`}
-                      >
-                        <span className="material-symbols-outlined">
-                          more_up
-                        </span>
-                      </NextLink>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))
-        )}
+                    <p>
+                      <span className="font-bold">Total de productos:</span>{" "}
+                      {negocio?.inventario?.lote?.length}
+                    </p>
+                  </CardBody>
+                </>
+              ) : (
+                <>
+                  <CardHeader>
+                    <h2 className="text-2xl font-bold">
+                      Seleccione un negocio para visualizar su información
+                    </h2>
+                  </CardHeader>
+                </>
+              )}
+            </Card>
+          )}
+        </div>
       </div>
     </div>
   );

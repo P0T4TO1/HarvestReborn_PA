@@ -68,7 +68,7 @@ export const NegocioInfo = () => {
   };
 
   return (
-    <div className="p-24">
+    <div className="pt-20 lg:px-48 md:px-20 sm:px-12">
       <h1 className="font-bebas-neue uppercase text-4xl font-black flex flex-col leading-none text-green-900">
         {negocio?.nombre_negocio}
         <span className="text-xl text-gray-900 font-semibold">

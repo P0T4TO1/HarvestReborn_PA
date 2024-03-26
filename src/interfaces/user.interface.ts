@@ -19,4 +19,5 @@ export interface IUser {
 export enum Estado {
   Activo = "ACTIVO",
   Inactivo = "INACTIVO",
+  Pendiente = "PENDIENTE",
 }
