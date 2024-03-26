@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import React from "react";
-import { TableNegocios } from "@/components";
+import { TableClientes } from "@/components";
 
-export const NegociosAdmin = () => {
+export const ClientesAdmin = () => {
   return (
     <div className="my-10 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
       <ul className="flex">
@@ -18,14 +18,14 @@ export const NegociosAdmin = () => {
 
         <li className="flex gap-2">
           <span className="material-symbols-outlined">store</span>
-          <span>Negocios </span> <span> / </span>{" "}
+          <span>Clientes </span> <span> / </span>{" "}
         </li>
         <li className="flex gap-2">
           <span>Listado</span>
         </li>
       </ul>
 
-      <h3 className="text-xl font-semibold">Todos los negocios</h3>
+      <h3 className="text-xl font-semibold">Todos los clientes</h3>
       <div className="flex justify-between flex-wrap gap-4 items-center">
         <div className="flex flex-row gap-3.5 flex-wrap">
           {/*<Button*/}
@@ -39,7 +39,7 @@ export const NegociosAdmin = () => {
         </div>
       </div>
       <div className="max-w-[95rem] mx-auto w-full">
-        <TableNegocios />
+        <TableClientes />
       </div>
     </div>
   );

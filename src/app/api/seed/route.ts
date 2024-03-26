@@ -2,10 +2,6 @@ import prisma from "@/lib/prisma";
 import { seedDatabase } from "@/lib";
 import { NextRequest, NextResponse } from "next/server";
 
-type Data = {
-  message: string;
-};
-
 async function initialData(req: NextRequest, res: NextResponse) {
   if (process.env.NODE_ENV === "production") {
     return NextResponse.json({ message: "Not allowed" }, { status: 405 });

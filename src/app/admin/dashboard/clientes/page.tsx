@@ -1,9 +1,9 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { redirect } from "next/navigation";
-import { SidebarWrapper, HomeDashboard } from "@/components";
+import { SidebarWrapper, ClientesAdmin } from "@/components";
 
-const AdminDashboardPage = async () => {
+const ClientesPage = async () => {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/");
   return (
@@ -11,11 +11,9 @@ const AdminDashboardPage = async () => {
       <div>
         <SidebarWrapper />
       </div>
-      <div className="my-10 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
-        <HomeDashboard />
-      </div>
+      <ClientesAdmin />
     </div>
   );
 };
 
-export default AdminDashboardPage;
+export default ClientesPage;

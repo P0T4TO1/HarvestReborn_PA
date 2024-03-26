@@ -24,6 +24,16 @@ async function searchIfEmailVerified(
       },
     });
 
+    if (user?.estado === "INACTIVO") {
+      return NextResponse.json(
+        {
+          error: "Internal Server Error",
+          message: "Este usuario se encuentra inactivo",
+        },
+        { status: 200 }
+      );
+    }
+
     if (!user?.emailVerified) {
       return NextResponse.json(
         {
@@ -33,6 +43,7 @@ async function searchIfEmailVerified(
         { status: 200 }
       );
     }
+
     return NextResponse.json(
       { user, message: "Correo verificado" },
       { status: 200 }

@@ -4,7 +4,7 @@ import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import prisma from "@/lib/prisma";
 import { compare } from "bcrypt";
-import { oAuthToDb } from "@/lib";
+import { oAuthToDb } from "@/actions";
 
 export const authOptions: NextAuthOptions = {
   providers: [

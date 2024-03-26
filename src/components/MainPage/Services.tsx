@@ -26,7 +26,7 @@ export const ServicesComponent: FC = () => {
               Intermediación entre Recauderías y Clientes
             </h6>
             <p className="mb-3 text-sm text-gray-900">
-              Facilitamos la conexión entre recauderías locales y clientes,
+              Facilitamos la conexión entre recauderías locales con clientes,
               restaurantes, fondas o comedores para asegurar que los alimentos
               excedentes lleguen a quienes más los necesitan.
             </p>

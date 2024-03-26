@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useReducer, useEffect, ReactNode } from "react";
-import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 
 import Cookies from "js-cookie";
@@ -61,21 +60,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       dispatch({ type: "[Auth] - Login", payload: data?.user as IUser });
     }
   }, [status, data]);
-
-  const checkToken = async () => {
-    if (!Cookies.get("token")) {
-      return;
-    }
-
-    try {
-      const { data } = await hrApi.get("/user/validate-token");
-      const { token, user } = data;
-      Cookies.set("token", token);
-      dispatch({ type: "[Auth] - Login", payload: user });
-    } catch (error) {
-      Cookies.remove("token");
-    }
-  };
 
   const loginUser = async (
     email: string,
@@ -164,7 +148,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       value={{
         ...state,
 
-        // Methods
         loginUser,
         registerContext,
         logout,

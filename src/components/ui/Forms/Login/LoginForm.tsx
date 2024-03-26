@@ -17,6 +17,7 @@ import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isEmailVerified } from "@/hooks";
+import { IUser } from "@/interfaces";
 
 interface IFormData {
   user_email: string;
@@ -26,9 +27,6 @@ interface IFormData {
 export const LoginForm: FC = () => {
   const router = useRouter();
   const { loginUser } = useContext(AuthContext);
-  const navigateTo = (url: string) => {
-    router.push(url);
-  };
 
   const {
     handleSubmit,
@@ -39,14 +37,10 @@ export const LoginForm: FC = () => {
     resolver: zodResolver(loginSchema),
   });
 
-  const [isMutation, setIsMutation] = useState<boolean>(false);
-
+  const [user, setUser] = useState<IUser | null>(null);
   const [visible, setVisible] = useState<boolean>(false);
 
   const clientAction: SubmitHandler<IFormData> = async (data) => {
-    if (isMutation) return null;
-    setIsMutation(true);
-
     try {
       const result = await loginUser(data.user_email, data.user_password);
 
@@ -67,6 +61,15 @@ export const LoginForm: FC = () => {
           message: "Este correo no ha sido verificado",
         });
         return null;
+      } else if (
+        isEmailVerifiedRes.message === "Este usuario se encuentra inactivo"
+      ) {
+        setError("user_email", {
+          message: "Este usuario se encuentra inactivo",
+        });
+        return null;
+      } else {
+        setUser(isEmailVerifiedRes.data.user);
       }
 
       const res: SignInResponse | undefined = await signIn("credentials", {
@@ -83,14 +86,13 @@ export const LoginForm: FC = () => {
         });
       }
       if (res && res.ok && res.status === 200) {
+        console.log("user", user);
         toast("¡Bienvenido!", SUCCESS_TOAST);
-        navigateTo("/home");
+        return;
       }
     } catch (e) {
       console.info("[ERROR_CLIENT_ACTION]", e);
       toast("¡Algo salio mal!", DANGER_TOAST);
-    } finally {
-      setIsMutation(false);
     }
   };
 
@@ -171,7 +173,6 @@ export const LoginForm: FC = () => {
               </div>
               <div>
                 <button
-                  disabled={isMutation}
                   type="submit"
                   className="w-full flex justify-center bg-green-800 hover:bg-green-700 text-gray-100 p-3  rounded-lg tracking-wide font-semibold  cursor-pointer transition ease-in duration-500"
                 >

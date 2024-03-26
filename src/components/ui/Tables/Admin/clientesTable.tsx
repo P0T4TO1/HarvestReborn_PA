@@ -11,18 +11,18 @@ import {
   Tooltip,
 } from "@nextui-org/react";
 import React, { useEffect, useState } from "react";
-import { INegocio } from "@/interfaces";
+import { ICliente } from "@/interfaces";
 import { hrApi } from "@/api";
 
-export const TableNegocios = () => {
+export const TableClientes = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [negocios, setNegocios] = React.useState<INegocio[]>([]);
+  const [clientes, setClientes] = React.useState<ICliente[]>([]);
 
   useEffect(() => {
-    hrApi.get("/negocio").then((res) => {
+    hrApi.get("/admin/users/clientes").then((res) => {
       if (res.status === 200) {
-        setNegocios(res.data);
+        setClientes(res.data);
       } else {
         setError(true);
       }
@@ -41,25 +41,24 @@ export const TableNegocios = () => {
           <TableHeader>
             <TableColumn allowsSorting>ID</TableColumn>
             <TableColumn allowsSorting>Nombre</TableColumn>
-            <TableColumn allowsSorting>Dirección</TableColumn>
+            <TableColumn allowsSorting>Apellidos</TableColumn>
             <TableColumn allowsSorting>Teléfono</TableColumn>
-            <TableColumn allowsSorting>Email</TableColumn>
-            <TableColumn allowsSorting>ID dueño</TableColumn>
+            {/*<TableColumn allowsSorting>Email</TableColumn>*/}
+            <TableColumn allowsSorting>ID del usuario</TableColumn>
             <TableColumn>Acciones</TableColumn>
           </TableHeader>
-          <TableBody items={negocios}>
-            {(negocio) => (
-              <TableRow key={negocio.id_negocio}>
-                <TableCell className="py-4">{negocio.id_negocio}</TableCell>
-                <TableCell className="py-4">{negocio.nombre_negocio}</TableCell>
+          <TableBody items={clientes}>
+            {(cliente) => (
+              <TableRow key={cliente.id_cliente}>
+                <TableCell className="py-4">{cliente.id_cliente}</TableCell>
+                <TableCell className="py-4">{cliente.nombre_cliente}</TableCell>
                 <TableCell className="py-4">
-                  {negocio.direccion_negocio}
+                  {cliente.apellidos_cliente}
                 </TableCell>
                 <TableCell className="py-4">
-                  {negocio.telefono_negocio}
+                  {cliente.telefono_cliente}
                 </TableCell>
-                <TableCell className="py-4">{negocio.email_negocio}</TableCell>
-                <TableCell className="py-4">{negocio.id_dueneg}</TableCell>
+                <TableCell className="py-4">{cliente.id_user}</TableCell>
                 <TableCell className="py-4">
                   <div className="flex items-center gap-4">
                     <Tooltip content="Editar">

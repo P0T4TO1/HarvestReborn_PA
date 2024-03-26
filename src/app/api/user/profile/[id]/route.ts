@@ -48,41 +48,55 @@ async function getProfile(
   return NextResponse.json({ ...profile }, { status: 200 });
 }
 
+interface ProfileData {
+  id_dueneg?: number;
+  id_cliente?: number;
+  dueneg?: {
+    nombre_dueneg: string;
+    apellidos_dueneg: string;
+    dia_nacimiento: string;
+    mes_nacimiento: string;
+    year_nacimiento: string;
+    fecha_nacimiento: string;
+    negocio: {
+      nombre_negocio: string;
+      direccion_negocio: string;
+      calle: string;
+      colonia: string;
+      alcaldia: string;
+      cp: string;
+      telefono_negocio: string;
+      email_negocio?: string;
+    };
+  };
+
+  cliente?: {
+    nombre_cliente: string;
+    apellidos_cliente: string;
+    telefono_cliente: string;
+    dia_nacimiento: string;
+    mes_nacimiento: string;
+    year_nacimiento: string;
+    fecha_nacimiento: string;
+    nombre_negocio?: string;
+    direccion_negocio?: string;
+    calle?: string;
+    colonia?: string;
+    alcaldia?: string;
+    cp?: string;
+  };
+  fecha_nacimiento_d: string;
+  fecha_nacimiento_c: string;
+}
+
 async function updateProfile(
   request: Request,
   { params }: { params: { id: string } },
   req: NextRequest,
   res: NextResponse
 ) {
-  const {
-    nombre_cliente = "",
-    apellidos_cliente = "",
-    telefono_cliente = "",
-    fecha_nacimiento_d = "",
-    nombre_negocio_c = "",
-    direccion_negocio_c = "",
-    nombre_dueneg = "",
-    apellidos_dueneg = "",
-    fecha_nacimiento_c = "",
-    nombre_negocio_d = "",
-    direccion_negocio_d = "",
-    telefono_negocio = "",
-    email_negocio = "",
-  } = (await new Response(request.body).json()) as {
-    nombre_cliente: string;
-    apellidos_cliente: string;
-    telefono_cliente: string;
-    fecha_nacimiento_d: string;
-    nombre_negocio_c: string;
-    direccion_negocio_c: string;
-    nombre_dueneg: string;
-    apellidos_dueneg: string;
-    fecha_nacimiento_c: string;
-    nombre_negocio_d: string;
-    direccion_negocio_d: string;
-    telefono_negocio: string;
-    email_negocio: string;
-  };
+  const data: ProfileData = await new Response(request.body).json();
+  console.log(data, params.id);
 
   if (!params.id)
     return NextResponse.json(
@@ -91,7 +105,7 @@ async function updateProfile(
     );
 
   try {
-    if (nombre_negocio_d && direccion_negocio_d && telefono_negocio) {
+    if (data.dueneg) {
       await prisma.m_user.update({
         where: {
           id: params.id,
@@ -100,18 +114,18 @@ async function updateProfile(
           duenonegocio: {
             update: {
               where: {
-                id_dueneg: parseInt(params.id),
+                id_dueneg: data.id_dueneg,
               },
               data: {
-                nombre_dueneg: nombre_dueneg,
-                apellidos_dueneg: apellidos_dueneg,
-                fecha_nacimiento: new Date(fecha_nacimiento_c),
+                nombre_dueneg: data.dueneg.nombre_dueneg,
+                apellidos_dueneg: data.dueneg.apellidos_dueneg,
+                fecha_nacimiento: new Date(data.fecha_nacimiento_d),
                 negocio: {
                   update: {
-                    nombre_negocio: nombre_negocio_d,
-                    telefono_negocio: telefono_negocio,
-                    direccion_negocio: direccion_negocio_d,
-                    email_negocio: email_negocio || "",
+                    nombre_negocio: data.dueneg.negocio.nombre_negocio,
+                    telefono_negocio: data.dueneg.negocio.telefono_negocio,
+                    direccion_negocio: data.dueneg.negocio.direccion_negocio,
+                    email_negocio: data.dueneg.negocio.email_negocio || "",
                   },
                 },
               },
@@ -119,7 +133,11 @@ async function updateProfile(
           },
         },
       });
-    } else if (nombre_negocio_c && direccion_negocio_c) {
+      return NextResponse.json(
+        { message: "Usuario dueño de negocio actualizado correctamente" },
+        { status: 200 }
+      );
+    } else if (data.cliente) {
       await prisma.m_user.update({
         where: {
           id: params.id,
@@ -128,20 +146,25 @@ async function updateProfile(
           cliente: {
             update: {
               where: {
-                id_cliente: parseInt(params.id),
+                id_cliente: data.id_cliente,
               },
               data: {
-                nombre_cliente: nombre_cliente,
-                apellidos_cliente: apellidos_cliente,
-                telefono_cliente: telefono_cliente,
-                fecha_nacimiento: new Date(fecha_nacimiento_d),
+                nombre_cliente: data.cliente.nombre_cliente,
+                apellidos_cliente: data.cliente.apellidos_cliente,
+                telefono_cliente: data.cliente.telefono_cliente,
+                fecha_nacimiento: new Date(data.fecha_nacimiento_c),
               },
             },
           },
         },
       });
+      return NextResponse.json(
+        { message: "Usuario cliente actualizado correctamente" },
+        { status: 200 }
+      );
     }
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       { message: "Error al actualizar usuario" },
       { status: 400 }

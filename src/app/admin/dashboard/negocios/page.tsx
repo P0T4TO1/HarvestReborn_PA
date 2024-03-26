@@ -3,7 +3,7 @@ import { authOptions } from "@/lib/authOptions";
 import { redirect } from "next/navigation";
 import { SidebarWrapper, NegociosAdmin } from "@/components";
 
-const ProductsPage = async () => {
+const NegociosPage = async () => {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/");
   return (
@@ -16,4 +16,4 @@ const ProductsPage = async () => {
   );
 };
 
-export default ProductsPage;
+export default NegociosPage;

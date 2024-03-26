@@ -62,6 +62,12 @@ export const SidebarWrapper = () => {
                 href="/admin/dashboard/negocios"
               />
               <SidebarItem
+                isActive={pathname === "/admin/dashboard/clientes"}
+                title="Clientes"
+                icon={<span className="material-symbols-outlined">hiking</span>}
+                href="/admin/dashboard/clientes"
+              />
+              <SidebarItem
                 isActive={pathname === "/admin/dashboard/orders"}
                 title="Ordenes"
                 icon={
