@@ -75,20 +75,22 @@ export const TableNegocios = () => {
                 </TableCell>
                 <TableCell className="py-4">{negocio.email_negocio}</TableCell>
                 <TableCell className="py-4">{negocio.id_dueneg}</TableCell>
-                <Chip
-                  size="sm"
-                  variant="flat"
-                  color={
-                    negocio.estado_negocio === "ACTIVO"
-                      ? "success"
-                      : negocio.estado_negocio === "INACTIVO"
-                      ? "danger"
-                      : "warning"
-                  }
-                >
-                  {negocio.estado_negocio.charAt(0) +
-                    negocio.estado_negocio.slice(1).toLowerCase()}
-                </Chip>
+                <TableCell>
+                  <Chip
+                    size="sm"
+                    variant="flat"
+                    color={
+                      negocio.estado_negocio === "ACTIVO"
+                        ? "success"
+                        : negocio.estado_negocio === "INACTIVO"
+                        ? "danger"
+                        : "warning"
+                    }
+                  >
+                    {negocio.estado_negocio.charAt(0) +
+                      negocio.estado_negocio.slice(1).toLowerCase()}
+                  </Chip>
+                </TableCell>
                 <TableCell className="py-4">
                   <div className="flex items-center gap-4">
                     <Tooltip content="Editar">
