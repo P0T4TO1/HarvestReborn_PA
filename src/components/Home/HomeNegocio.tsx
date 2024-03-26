@@ -13,7 +13,7 @@ export const HomeNegocio = () => {
           <Chip
             size="lg"
             variant="flat"
-            startContent={<span class="material-symbols-outlined">info</span>}
+            startContent={<span className="material-symbols-outlined">info</span>}
           >
             Su negocio esta siendo verificado, completa los datos de tu negocio
             para ser verificado más rápido.
