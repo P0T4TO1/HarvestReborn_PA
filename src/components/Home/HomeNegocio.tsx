@@ -17,7 +17,7 @@ export const HomeNegocio = () => {
             startContent={
               <span className="material-symbols-outlined">info</span>
             }
-            className="m-auto"
+            className="mx-auto"
           >
             Su negocio esta siendo verificado, completa los datos de tu negocio
             para ser verificado más rápido.
