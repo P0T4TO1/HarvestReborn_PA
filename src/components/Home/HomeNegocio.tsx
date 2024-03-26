@@ -8,7 +8,7 @@ export const HomeNegocio = () => {
   const { user } = useContext(AuthContext);
   return (
     <div className="pt-20 lg:px-48 md:px-20 sm:px-12">
-      {user?.duenonegocio?.negocio?.estado === "PENDIENTE" && (
+      {user?.duenonegocio?.negocio?.estado_negocio === "PENDIENTE" && (
         <>
           <Chip
             size="lg"
