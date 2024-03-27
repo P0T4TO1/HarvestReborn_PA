@@ -4,13 +4,9 @@ import { hash } from "bcrypt";
 
 async function getAllUsers(req: NextRequest, res: NextResponse) {
   const users = await prisma.m_user.findMany({
-    select: {
-      id: true,
-      email: true,
-      estado: true,
-      id_rol: true,
-      cliente: true,
+    include: {
       duenonegocio: true,
+      cliente: true,
     },
   });
 

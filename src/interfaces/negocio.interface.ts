@@ -1,4 +1,4 @@
-import {Estado, IDuenoNegocio, IInventario} from "@/interfaces";
+import { Estado, IDuenoNegocio, IInventario } from "@/interfaces";
 
 export interface INegocio {
   id_negocio?: number;
@@ -13,4 +13,8 @@ export interface INegocio {
   id_dueneg: number;
   dueneg: IDuenoNegocio;
   inventario?: IInventario;
+
+  created_at?: string;
+  updated_at?: string;
+  deleted_at?: string;
 }

@@ -110,7 +110,7 @@ async function registerUser(req: NextRequest, res: NextResponse) {
         );
 
         const msg = {
-          from: "Admin No reply<harvestreborn@gmail.com>", // Use the email address or domain you verified above
+          from: "Harvest Reborn<harvestreborn@gmail.com>", // Use the email address or domain you verified above
           to: email, // Change to your recipient
           subject: "Verifica tu correo electrónico",
           html: emailHtml,

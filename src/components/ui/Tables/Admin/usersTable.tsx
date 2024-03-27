@@ -35,7 +35,7 @@ export const TableUsers = () => {
   }, []);
 
   const [page, setPage] = React.useState(1);
-  const rowsPerPage = 4;
+  const rowsPerPage = 10;
 
   const pages = Math.ceil(users.length / rowsPerPage);
 
@@ -63,7 +63,7 @@ export const TableUsers = () => {
           <Input
             size="md"
             radius="lg"
-            placeholder="Buscar productos..."
+            placeholder="Buscar usuarios..."
             type="text"
             startContent={
               <span className="material-symbols-outlined">search</span>
@@ -102,6 +102,7 @@ export const TableUsers = () => {
               <TableColumn allowsSorting>Correo</TableColumn>
               <TableColumn allowsSorting>Rol</TableColumn>
               <TableColumn allowsSorting>Estado</TableColumn>
+              <TableColumn>Correo verificado</TableColumn>
               <TableColumn>Acciones</TableColumn>
             </TableHeader>
             <TableBody items={items}>
@@ -147,6 +148,15 @@ export const TableUsers = () => {
                     >
                       {user.estado.charAt(0) +
                         user.estado.slice(1).toLowerCase()}
+                    </Chip>
+                  </TableCell>
+                  <TableCell className="py-4">
+                    <Chip
+                      size="sm"
+                      variant="flat"
+                      color={user.emailVerified ? "success" : "danger"}
+                    >
+                      {user.emailVerified ? "Verificado" : "No verificado"}
                     </Chip>
                   </TableCell>
                   <TableCell className="py-4">

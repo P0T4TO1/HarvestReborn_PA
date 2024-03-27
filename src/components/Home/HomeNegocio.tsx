@@ -32,7 +32,7 @@ export const HomeNegocio = () => {
           </Link>
           <h1>
             Si ya lo configuraste puedes{" "}
-            <Link href="#inventory-howitworks">
+            <Link href={"#inventory-howitworks"}>
               que se puedes hacer en la aplicación
             </Link>
           </h1>

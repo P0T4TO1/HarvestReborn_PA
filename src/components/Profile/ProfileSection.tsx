@@ -58,7 +58,11 @@ export const ProfileSection = () => {
               type="button"
               color="success"
               className="mt-4"
+              size="md"
               onClick={() => setIsEditing(!isEditing)}
+              startContent={
+                <span className="material-symbols-outlined">edit_square</span>
+              }
             >
               {isEditing ? "Cancelar" : "Editar"}
             </Button>

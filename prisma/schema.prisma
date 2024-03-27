@@ -177,6 +177,10 @@ model m_prodcutoOrden {
   id_negocio Int
   negocio    m_negocio @relation(fields: [id_negocio], references: [id_negocio])
 
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
   @@index([id_orden])
   @@index([id_producto])
   @@index([id_negocio])

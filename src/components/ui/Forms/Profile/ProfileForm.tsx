@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import {
   clienteProfileSchema,
   duenegProfileSchema,
@@ -49,7 +49,7 @@ interface IFormData {
     calle?: string;
     colonia?: string;
     alcaldia?: string;
-    cp?: string;
+    cp: string;
   };
 }
 
@@ -99,7 +99,8 @@ export const ProfileForm = ({ profile, isEditing }: ProfileFormProps) => {
     handleSubmit,
     formState: { errors },
     setError,
-    watch,
+    getValues,
+    setValue,
   } = useForm<IFormData>({
     resolver:
       user?.id_rol === 2
@@ -165,41 +166,40 @@ export const ProfileForm = ({ profile, isEditing }: ProfileFormProps) => {
     },
   });
 
-  const [postalCode, setPostalCode] = useState("");
-  const [alcaldia, setAlcaldia] = useState(
-    profile?.duenonegocio?.negocio?.direccion_negocio?.split(",")[2] as string
-  );
-  const [colonia, setColonia] = useState(
-    profile?.duenonegocio?.negocio?.direccion_negocio?.split(",")[1] as string
-  );
-
   useEffect(() => {
-    if (postalCode.length === 5) {
+    if (
+      getValues("dueneg.negocio.cp").length === 5 ||
+      getValues("cliente.cp").length === 5
+    ) {
       axios.get("/CP_CDMX.json").then((direction) => {
         console.log(direction, "direction");
         if (direction) {
           if (
             direction.data.some(
-              (item: IResponse) => item.d_codigo === postalCode
+              (item: IResponse) =>
+                item.d_codigo === getValues("dueneg.negocio.cp") ||
+                item.d_codigo === getValues("cliente.cp")
             )
           ) {
-            setError("dueneg.negocio.cp", { type: "manual", message: "" });
+            setError("dueneg.negocio.cp", { message: "" });
           } else {
             setError("dueneg.negocio.cp", {
-              type: "manual",
               message: "Código postal no encontrado",
             });
             return;
           }
           direction.data.map((item: IResponse) => {
-            if (item.d_codigo !== postalCode) {
+            if (
+              item.d_codigo !== getValues("dueneg.negocio.cp") ||
+              item.d_codigo !== getValues("cliente.cp")
+            ) {
               return;
             } else {
-              const coloniaString = item.d_asenta;
-              const municipioString = item.D_mnpio;
-              setError("dueneg.negocio.cp", { type: "manual", message: "" });
-              setColonia(coloniaString);
-              setAlcaldia(municipioString);
+              setValue("dueneg.negocio.colonia", item.d_asenta);
+              setValue("dueneg.negocio.alcaldia", item.D_mnpio);
+              setValue("cliente.colonia", item.d_asenta);
+              setValue("cliente.alcaldia", item.D_mnpio);
+              setError("dueneg.negocio.cp", { message: "" });
             }
           });
         } else {
@@ -207,7 +207,7 @@ export const ProfileForm = ({ profile, isEditing }: ProfileFormProps) => {
         }
       });
     }
-  }, [postalCode, setError]);
+  }, [getValues, setError, setValue]);
 
   const onUpdateProfile: SubmitHandler<IFormData> = async (data) => {
     try {
@@ -442,7 +442,8 @@ export const ProfileForm = ({ profile, isEditing }: ProfileFormProps) => {
                     type="text"
                     className="w-full"
                     label="Colonia"
-                    defaultValue={colonia}
+                    defaultValue={getValues("dueneg.negocio.colonia")}
+                    value={getValues("dueneg.negocio.colonia")}
                     isDisabled
                     aria-label={"Colonia"}
                     {...register("dueneg.negocio.colonia")}
@@ -458,7 +459,8 @@ export const ProfileForm = ({ profile, isEditing }: ProfileFormProps) => {
                     type="text"
                     className="w-full"
                     label="Alcaldía"
-                    defaultValue={alcaldia}
+                    defaultValue={getValues("dueneg.negocio.alcaldia")}
+                    value={getValues("dueneg.negocio.alcaldia")}
                     isDisabled
                     aria-label={"Alcaldía"}
                     {...register("dueneg.negocio.alcaldia")}
@@ -482,9 +484,6 @@ export const ProfileForm = ({ profile, isEditing }: ProfileFormProps) => {
                     isDisabled={!isEditing}
                     aria-label={"Código postal"}
                     {...register("dueneg.negocio.cp")}
-                    onChange={(e) => {
-                      setPostalCode(e.target.value);
-                    }}
                   />
                   {errors?.dueneg?.negocio?.cp && (
                     <p className="text-red-500 text-xs">

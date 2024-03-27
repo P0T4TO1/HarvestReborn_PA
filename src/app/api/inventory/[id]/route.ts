@@ -1,6 +1,8 @@
 import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 async function getLotesFromInventory(
   request: Request,
   { params }: { params: { id: string } },

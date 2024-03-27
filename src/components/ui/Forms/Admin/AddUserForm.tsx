@@ -5,31 +5,13 @@ import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import axios from "axios";
 import { adminAddUserValidation } from "@/validations/admin.validation";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { hrApi } from "@/api";
 import { toast } from "sonner";
 import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { searchUserByEmail } from "@/hooks";
-
-type Errors = {
-  email?: string;
-  password?: string;
-  confirmPassword?: string;
-  nombre?: string;
-  apellidos?: string;
-  fecha_nacimiento?: string;
-  dia_nacimiento?: string;
-  mes_nacimiento?: string;
-  year_nacimiento?: string;
-  tipo?: string;
-  nombre_negocio?: string;
-  telefono?: string;
-  calle?: string;
-  colonia?: string;
-  alcaldia?: string;
-  cp?: string;
-} | null;
 
 interface IResponse {
   c_cve_ciudad: string;
@@ -84,51 +66,42 @@ const months = {
 };
 
 export const AddUserForm = () => {
-  const methods = useForm<IFormData>();
-  const { handleSubmit, register } = methods;
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    setError,
+    getValues,
+    setValue,
+  } = useForm<IFormData>({
+    resolver: zodResolver(adminAddUserValidation),
+  });
 
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<Errors>(null);
-  const [fecNac, setFecNac] = useState<{
-    day: string;
-    month: string;
-    year: string;
-  }>({
-    day: "",
-    month: "",
-    year: "",
-  });
-  const [postalCode, setPostalCode] = useState("");
-  const [alcaldia, setAlcaldia] = useState("");
-  const [colonia, setColonia] = useState("");
   const [visible, setVisible] = useState<boolean>(false);
   const [visibleConfirm, setVisibleConfirm] = useState<boolean>(false);
-  const [tipo, setTipo] = useState<string>("");
 
   useEffect(() => {
-    if (postalCode.length === 5) {
+    if (getValues("cp").length === 5) {
       axios.get("/CP_CDMX.json").then((direction) => {
         if (direction) {
           if (
             direction.data.some(
-              (item: IResponse) => item.d_codigo === postalCode
+              (item: IResponse) => item.d_codigo === getValues("cp")
             )
           ) {
-            setErrors({ cp: " " });
+            setError("cp", { message: "" });
           } else {
-            setErrors({ cp: "Código postal no encontrado" });
+            setError("cp", { message: "Código postal no encontrado" });
             return;
           }
           direction.data.map((item: IResponse) => {
-            if (item.d_codigo !== postalCode) {
+            if (item.d_codigo !== getValues("cp")) {
               return;
             } else {
-              const coloniaString = item.d_asenta;
-              const municipioString = item.D_mnpio;
-              setErrors({ cp: " " });
-              setColonia(coloniaString);
-              setAlcaldia(municipioString);
+              setValue("colonia", item.d_asenta);
+              setValue("alcaldia", item.D_mnpio);
+              setError("cp", { message: "" });
             }
           });
         } else {
@@ -136,32 +109,15 @@ export const AddUserForm = () => {
         }
       });
     }
-  }, [postalCode]);
+  }, [getValues, setError, setValue]);
 
   const onSubmit: SubmitHandler<IFormData> = async (data) => {
     try {
-      data.tipo = tipo;
-      data.fecha_nacimiento = `${fecNac.year}-${fecNac.month}-${fecNac.day}`;
-      data.dia_nacimiento = fecNac.day;
-      data.mes_nacimiento = fecNac.month;
-      data.year_nacimiento = fecNac.year;
-      data.alcaldia = alcaldia;
-      data.colonia = colonia;
-      const validations = adminAddUserValidation.safeParse(data);
-      if (!validations.success) {
-        let newErrors: Errors = {};
-        validations.error.errors.forEach((error) => {
-          newErrors = { ...newErrors, [error.path[0]]: error.message };
-        });
-        setErrors(newErrors);
-        console.log(errors);
-        return;
-      }
-
+      data.fecha_nacimiento = `${data.dia_nacimiento}-${data.mes_nacimiento}-${data.year_nacimiento}`;
       const userExists = await searchUserByEmail(data.email);
 
       if (userExists.message === "Este correo ya esta registrado") {
-        setErrors({ email: "El correo ya esta registrado" });
+        setError("email", { message: "Este correo ya esta registrado" });
         return null;
       }
 
@@ -223,7 +179,7 @@ export const AddUserForm = () => {
           <div>
             <Input label="Email" variant="bordered" {...register("email")} />
             {errors?.email && (
-              <p className="text-red-700 text-xs">{errors?.email}</p>
+              <p className="text-red-700 text-xs">{errors?.email.message}</p>
             )}
           </div>
           <div className="relative">
@@ -251,7 +207,7 @@ export const AddUserForm = () => {
               }
             />
             {errors?.password && (
-              <p className="text-red-700 text-xs">{errors?.password}</p>
+              <p className="text-red-700 text-xs">{errors?.password.message}</p>
             )}
           </div>
           <div className="relative">
@@ -279,7 +235,9 @@ export const AddUserForm = () => {
               }
             />
             {errors?.confirmPassword && (
-              <p className="text-red-700 text-xs">{errors?.confirmPassword}</p>
+              <p className="text-red-700 text-xs">
+                {errors?.confirmPassword.message}
+              </p>
             )}
           </div>
           <div>
@@ -289,7 +247,7 @@ export const AddUserForm = () => {
               {...register("nombre")}
             />
             {errors?.nombre && (
-              <p className="text-red-700 text-xs">{errors?.nombre}</p>
+              <p className="text-red-700 text-xs">{errors?.nombre.message}</p>
             )}
           </div>
           <div>
@@ -299,7 +257,9 @@ export const AddUserForm = () => {
               {...register("apellidos")}
             />
             {errors?.apellidos && (
-              <p className="text-red-700 text-xs">{errors?.apellidos}</p>
+              <p className="text-red-700 text-xs">
+                {errors?.apellidos.message}
+              </p>
             )}
           </div>
           <div>
@@ -309,12 +269,12 @@ export const AddUserForm = () => {
               variant="bordered"
               type="text"
               label="Día"
-              onChange={(e) => {
-                setFecNac({ ...fecNac, day: e.target.value });
-              }}
+              {...register("dia_nacimiento")}
             />
             {errors?.dia_nacimiento && (
-              <p className="text-red-700 text-xs">{errors?.dia_nacimiento}</p>
+              <p className="text-red-700 text-xs">
+                {errors?.dia_nacimiento.message}
+              </p>
             )}
           </div>
           <div>
@@ -324,9 +284,7 @@ export const AddUserForm = () => {
               id="mes_nacimiento"
               label="Mes"
               variant="bordered"
-              onChange={(e) => {
-                setFecNac({ ...fecNac, month: e.target.value });
-              }}
+              {...register("mes_nacimiento")}
             >
               {Object.entries(months).map(([key, value]) => (
                 <SelectItem value={key} key={key}>
@@ -335,7 +293,9 @@ export const AddUserForm = () => {
               ))}
             </Select>
             {errors?.mes_nacimiento && (
-              <p className="text-red-700 text-xs">{errors?.mes_nacimiento}</p>
+              <p className="text-red-700 text-xs">
+                {errors?.mes_nacimiento.message}
+              </p>
             )}
           </div>
           <div>
@@ -345,12 +305,12 @@ export const AddUserForm = () => {
               type="text"
               label="Año"
               variant="bordered"
-              onChange={(e) => {
-                setFecNac({ ...fecNac, year: e.target.value });
-              }}
+              {...register("year_nacimiento")}
             />
             {errors?.year_nacimiento && (
-              <p className="text-red-700 text-xs">{errors?.year_nacimiento}</p>
+              <p className="text-red-700 text-xs">
+                {errors?.year_nacimiento.message}
+              </p>
             )}
           </div>
           <div>
@@ -360,9 +320,7 @@ export const AddUserForm = () => {
               label="Tipo de usuario"
               id="tipo"
               variant="bordered"
-              onChange={(e) => {
-                setTipo(e.target.value);
-              }}
+              {...register("tipo")}
             >
               <SelectItem value="admin" key="admin">
                 Administrador
@@ -375,7 +333,7 @@ export const AddUserForm = () => {
               </SelectItem>
             </Select>
             {errors?.tipo && (
-              <p className="text-red-700 text-xs">{errors?.tipo}</p>
+              <p className="text-red-700 text-xs">{errors?.tipo.message}</p>
             )}
           </div>
           <div>
@@ -384,11 +342,13 @@ export const AddUserForm = () => {
               id="nombreNegocio"
               label="Nombre del negocio"
               variant="bordered"
-              isRequired={tipo === "negocio"}
+              isRequired={getValues("tipo") === "negocio"}
               {...register("nombre_negocio")}
             />
             {errors?.nombre_negocio && (
-              <p className="text-red-700 text-xs">{errors?.nombre_negocio}</p>
+              <p className="text-red-700 text-xs">
+                {errors?.nombre_negocio.message}
+              </p>
             )}
           </div>
           <div>
@@ -400,7 +360,7 @@ export const AddUserForm = () => {
               {...register("telefono")}
             />
             {errors?.telefono && (
-              <p className="text-red-700 text-xs">{errors?.telefono}</p>
+              <p className="text-red-700 text-xs">{errors?.telefono.message}</p>
             )}
           </div>
           <div>
@@ -410,11 +370,10 @@ export const AddUserForm = () => {
               label="Código postal"
               variant="bordered"
               {...register("cp")}
-              onChange={(e) => {
-                setPostalCode(e.target.value);
-              }}
             />
-            {errors?.cp && <p className="text-red-700 text-xs">{errors?.cp}</p>}
+            {errors?.cp && (
+              <p className="text-red-700 text-xs">{errors?.cp.message}</p>
+            )}
           </div>
           <div>
             <Input
@@ -423,12 +382,12 @@ export const AddUserForm = () => {
               label="Colonia"
               variant="bordered"
               isDisabled
-              defaultValue={colonia}
-              value={colonia}
+              defaultValue={getValues("colonia")}
+              value={getValues("colonia")}
               {...register("colonia")}
             />
             {errors?.colonia && (
-              <p className="text-red-700 text-xs">{errors?.colonia}</p>
+              <p className="text-red-700 text-xs">{errors?.colonia.message}</p>
             )}
           </div>
           <div>
@@ -440,7 +399,7 @@ export const AddUserForm = () => {
               {...register("calle")}
             />
             {errors?.calle && (
-              <p className="text-red-700 text-xs">{errors?.calle}</p>
+              <p className="text-red-700 text-xs">{errors?.calle.message}</p>
             )}
           </div>
           <div>
@@ -450,12 +409,12 @@ export const AddUserForm = () => {
               label="Alcaldía"
               variant="bordered"
               isDisabled
-              defaultValue={alcaldia}
-              value={alcaldia}
+              defaultValue={getValues("alcaldia")}
+              value={getValues("alcaldia")}
               {...register("alcaldia")}
             />
             {errors?.alcaldia && (
-              <p className="text-red-700 text-xs">{errors?.alcaldia}</p>
+              <p className="text-red-700 text-xs">{errors?.alcaldia.message}</p>
             )}
           </div>
           <div>

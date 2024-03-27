@@ -13,11 +13,13 @@ import {
   SelectItem,
   CircularProgress,
 } from "@nextui-org/react";
+import { Box, Grid } from "@mui/material";
 
 export const NegociosList = () => {
   const [negocios, setNegocios] = useState<INegocio[]>([]);
   const [negocio, setNegocio] = useState<INegocio>();
   const [loading, setLoading] = useState(true);
+  const [loadingNegocio, setLoadingNegocio] = useState(false);
   const [error, setError] = useState(false);
 
   const [search, setSearch] = useState("");
@@ -37,14 +39,14 @@ export const NegociosList = () => {
       );
 
   const getNegocio = async (id: number | undefined) => {
-    setLoading(true);
+    setLoadingNegocio(true);
     await hrApi.get(`/negocio/${id}`).then((res) => {
       if (res.status === 200) {
         setNegocio(res.data);
       } else {
         console.log("Error al obtener negocio", res.data);
       }
-      setLoading(false);
+      setLoadingNegocio(false);
     });
   };
 
@@ -94,10 +96,10 @@ export const NegociosList = () => {
           </Select>
         </div>
       </div>
-      <div className="grid grid-cols-2 mt-10">
-        <div className="all-negocios-cards">
+      <div className="grid grid-cols-3 mt-10 gap-8">
+        <div>
           {loading ? (
-            <p>Cargando...</p>
+            <CircularProgress size="lg" />
           ) : error ? (
             <p>Error al cargar los negocios</p>
           ) : (
@@ -105,9 +107,10 @@ export const NegociosList = () => {
               (negocio) =>
                 negocio.estado_negocio === Estado.Activo && (
                   <Card
+                    isPressable
                     key={negocio.id_negocio}
-                    className="mb-4"
-                    onClick={() => getNegocio(negocio.id_negocio)}
+                    className="mb-6 w-full"
+                    onPress={() => getNegocio(negocio.id_negocio)}
                   >
                     <CardHeader>
                       <h2 className="text-2xl font-bold">
@@ -127,8 +130,8 @@ export const NegociosList = () => {
             )
           )}
         </div>
-        <div className="generalinfo-negocio">
-          {loading ? (
+        <div className="col-span-2">
+          {loadingNegocio ? (
             <CircularProgress size="lg" />
           ) : error ? (
             <p>Error al cargar los negocios</p>
@@ -137,7 +140,7 @@ export const NegociosList = () => {
               {negocio ? (
                 <>
                   <CardHeader>
-                    <h2 className="text-2xl font-bold">
+                    <h2 className="text-xl font-bold">
                       Información general de {negocio?.nombre_negocio}
                     </h2>
                   </CardHeader>
@@ -172,7 +175,7 @@ export const NegociosList = () => {
               ) : (
                 <>
                   <CardHeader>
-                    <h2 className="text-2xl font-bold">
+                    <h2 className="text-xl font-bold">
                       Seleccione un negocio para visualizar su información
                     </h2>
                   </CardHeader>

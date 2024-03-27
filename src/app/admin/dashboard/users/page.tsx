@@ -5,7 +5,8 @@ import { SidebarWrapper, UsersAdmin } from "@/components";
 
 const UsersPage = async () => {
   const session = await getServerSession(authOptions);
-  if (!session) redirect("/");
+  if (!session) redirect("/auth/login");
+  if (session?.user.id_rol !== 1) redirect("/home");
   return (
     <div className="flex">
       <div>

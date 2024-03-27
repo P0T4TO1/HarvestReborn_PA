@@ -9,6 +9,7 @@ export interface IUser {
   apellidos?: string;
   oAuthId?: string;
 
+  emailVerified: boolean;
   estado: Estado;
 
   negocio?: INegocio;

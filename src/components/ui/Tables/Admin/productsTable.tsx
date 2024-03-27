@@ -24,7 +24,6 @@ import {
   EditProductAdminModal,
   SUCCESS_TOAST,
 } from "@/components";
-import { useRouter } from "next/navigation";
 
 export const TableProducts = () => {
   const { onOpen, onClose, isOpen } = useDisclosure();
@@ -48,7 +47,7 @@ export const TableProducts = () => {
   }, []);
 
   const [page, setPage] = useState(1);
-  const rowsPerPage = 10;
+  const rowsPerPage = 15;
 
   const pages = Math.ceil(products.length / rowsPerPage);
 
@@ -141,7 +140,7 @@ export const TableProducts = () => {
             }
           >
             <TableHeader>
-              <TableColumn allowsSorting>ID</TableColumn>
+              <TableColumn allowsSorting>No. de producto</TableColumn>
               <TableColumn allowsSorting>Nombre</TableColumn>
               <TableColumn allowsSorting>Descripcion</TableColumn>
               <TableColumn allowsSorting>En temporada</TableColumn>
@@ -149,10 +148,10 @@ export const TableProducts = () => {
               <TableColumn>Acciones</TableColumn>
             </TableHeader>
             <TableBody items={items}>
-              {results.map((productMap) => (
+              {results.map((productMap, key) => (
                 <TableRow key={productMap.id_producto}>
                   <TableCell className="py-4">
-                    {productMap.id_producto}
+                    {key + 1 + rowsPerPage * (page - 1)}
                   </TableCell>
                   <TableCell className="py-4">
                     {productMap.nombre_producto}

@@ -28,7 +28,7 @@ export const VerifyEmail = ({
     <Body style={main}>
       <Container style={container}>
         <Img
-          src="https://res-console.cloudinary.com/dejx7jbmx/media_explorer_thumbnails/ff656be34bd3894077608ea4091d74f5/detailed"
+          src="https://res.cloudinary.com/dejx7jbmx/image/upload/c_pad,b_auto:predominant,fl_preserve_transparency/v1711170409/logo_po1cqc.jpg?_s=public-apps"
           width={48}
           height={48}
           alt="HR"

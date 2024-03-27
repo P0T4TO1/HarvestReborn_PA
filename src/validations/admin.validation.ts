@@ -269,5 +269,50 @@ export const adminAddUserValidation = z
     return null;
   });
 export const adminEditNegocioValidation = z.object({
-    
+  nombre_negocio: z
+    .string({ required_error: "El nombre del negocio es obligatorio" })
+    .min(3, {
+      message: "El nombre del negocio debe tener mínimo 3 caracteres",
+    })
+    .max(100, {
+      message: "El nombre del negocio debe tener menos de 100 caracteres",
+    }),
+  direccion_negocio: z
+    .string({ required_error: "La dirección del negocio es obligatoria" })
+    .min(3, {
+      message: "La dirección del negocio debe tener mínimo 3 caracteres",
+    })
+    .max(100, {
+      message: "La dirección del negocio debe tener menos de 100 caracteres",
+    }),
+  calle: z
+    .string({ required_error: "La calle es obligatoria" })
+    .min(3, { message: "La calle debe tener mínimo 3 caracteres" })
+    .max(100, { message: "La calle debe tener menos de 100 caracteres" }),
+  colonia: z
+    .string({ required_error: "La colonia es obligatoria" })
+    .min(3, { message: "La colonia debe tener mínimo 3 caracteres" })
+    .max(100, { message: "La colonia debe tener menos de 100 caracteres" }),
+  alcaldia: z
+    .string({ required_error: "La alcaldia es obligatoria" })
+    .min(3, { message: "La alcaldia debe tener mínimo 3 caracteres" })
+    .max(100, { message: "La alcaldia debe tener menos de 100 caracteres" }),
+  cp: z
+    .string({ required_error: "El código postal es obligatorio" })
+    .min(5, { message: "El código postal debe tener mínimo 5 caracteres" })
+    .max(5, { message: "El código postal debe tener menos de 5 caracteres" }),
+  telefono_negocio: z
+    .string({ required_error: "El teléfono del negocio es obligatorio" })
+    .min(10, {
+      message: "El teléfono del negocio debe tener mínimo 10 caracteres",
+    })
+    .max(10, {
+      message: "El teléfono del negocio debe tener menos de 10 caracteres",
+    }),
+  email_negocio: z.string().optional(),
+  descripcion_negocio: z.string().optional(),
+  estado_negocio: z.enum(["ACTIVO", "INACTIVO", "PENDIENTE"], {
+    required_error: "El estado del negocio es obligatorio",
+  }),
+  images_negocio: z.array(z.string()).optional(),
 });

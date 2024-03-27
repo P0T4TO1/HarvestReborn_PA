@@ -48,7 +48,6 @@ export const ProductsInventory = () => {
       .then((res) => {
         if (res.status === 200) {
           setAllLotes(res.data);
-          console.log("Todos los lotes", res.data);
         } else {
           setError(true);
           console.log("Error al obtener productos", res.data);
@@ -60,7 +59,6 @@ export const ProductsInventory = () => {
       .then((res) => {
         if (res.status === 200) {
           setLotes(res.data);
-          console.log("Lotes separados por id", res.data);
         } else {
           setError(true);
           console.log("Error al obtener productos", res.data);
