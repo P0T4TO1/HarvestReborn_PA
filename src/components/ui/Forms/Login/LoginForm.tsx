@@ -82,7 +82,7 @@ export const LoginForm: FC = () => {
       }
       if (res && res.ok && res.status === 200) {
         toast("¡Bienvenido!", SUCCESS_TOAST);
-        window.location.reload();
+        router.push("/home");
         return;
       }
     } catch (e) {
