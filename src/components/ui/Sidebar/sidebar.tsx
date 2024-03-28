@@ -2,8 +2,7 @@
 
 import React, { useContext } from "react";
 import { Sidebar } from "./sidebar.styles";
-import { Avatar, Tooltip } from "@nextui-org/react";
-import { CollapseItems, SidebarMenu, SidebarItem } from "@/components";
+import { SidebarMenu, SidebarItem } from "@/components";
 import { usePathname } from "next/navigation";
 import { UiContext } from "@/context/ui";
 

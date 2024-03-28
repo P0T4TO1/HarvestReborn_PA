@@ -24,7 +24,13 @@ async function getNegocioById(
             include: {
               producto: true,
             },
+            distinct: ["id_producto"],
           },
+        },
+      },
+      dueneg: {
+        include: {
+          user: true,
         },
       },
     },

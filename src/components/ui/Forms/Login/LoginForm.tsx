@@ -37,7 +37,6 @@ export const LoginForm: FC = () => {
     resolver: zodResolver(loginSchema),
   });
 
-  const [user, setUser] = useState<IUser | null>(null);
   const [visible, setVisible] = useState<boolean>(false);
 
   const clientAction: SubmitHandler<IFormData> = async (data) => {
@@ -68,8 +67,6 @@ export const LoginForm: FC = () => {
           message: "Este usuario se encuentra inactivo",
         });
         return null;
-      } else {
-        setUser(isEmailVerifiedRes.data.user);
       }
 
       const res: SignInResponse | undefined = await signIn("credentials", {
@@ -86,7 +83,6 @@ export const LoginForm: FC = () => {
         });
       }
       if (res && res.ok && res.status === 200) {
-        console.log("user", user);
         toast("¡Bienvenido!", SUCCESS_TOAST);
         return;
       }

@@ -64,7 +64,6 @@ export const AddProductLote = () => {
             </h1>
             <div className="flex mt-2 w-2/5">
               <Input
-                isClearable
                 size="md"
                 radius="lg"
                 placeholder="Buscar productos..."

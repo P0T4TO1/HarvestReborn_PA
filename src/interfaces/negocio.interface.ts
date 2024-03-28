@@ -8,6 +8,7 @@ export interface INegocio {
   email_negocio?: string;
   images_negocio: string[];
   descripcion_negocio?: string;
+
   estado_negocio: Estado;
 
   id_dueneg: number;

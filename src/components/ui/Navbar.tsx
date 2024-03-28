@@ -16,15 +16,12 @@ import {
   Link,
 } from "@nextui-org/react";
 import { UiContext } from "@/context/ui";
-import { useRouter, usePathname } from "next/navigation";
 
 export const NavbarComponent = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { data: session } = useSession();
   const { user } = useContext(AuthContext);
   const { toggleSideMenu, isMenuOpen } = useContext(UiContext);
-
-  const pathname = usePathname();
 
   return (
     <>
@@ -152,6 +149,11 @@ export const NavbarComponent = () => {
           )}
         </NavbarContent>
         <NavbarContent justify="end">
+          {!session ? (
+            <NavbarItem className="flex items-center text-gray-300">
+              <span className="material-symbols-outlined">shopping_bag</span>
+            </NavbarItem>
+          ) : null}
           <NavbarItem>
             <DropdownComponent />
           </NavbarItem>
@@ -168,12 +170,12 @@ export const NavbarComponent = () => {
               {user?.id_rol === 2 ? (
                 <>
                   <NavbarMenuItem>
-                    <Link className="text-gray-300" href={"/inventory"}>
+                    <Link color="foreground" href={"/inventory"}>
                       Inventario
                     </Link>
                   </NavbarMenuItem>
                   <NavbarMenuItem>
-                    <Link className="text-gray-300" href={"/orders"}>
+                    <Link color="foreground" href={"/orders"}>
                       Pedidos
                     </Link>
                   </NavbarMenuItem>
@@ -181,12 +183,12 @@ export const NavbarComponent = () => {
               ) : user?.id_rol === 3 ? (
                 <>
                   <NavbarMenuItem>
-                    <Link className="text-gray-300" href={"/negocios"}>
+                    <Link color="foreground" href={"/negocios"}>
                       Recauderías
                     </Link>
                   </NavbarMenuItem>
                   <NavbarMenuItem>
-                    <Link className="text-gray-300" href={"/orders"}>
+                    <Link color="foreground" href={"/orders"}>
                       Mis pedidos
                     </Link>
                   </NavbarMenuItem>
@@ -194,12 +196,12 @@ export const NavbarComponent = () => {
               ) : (
                 <>
                   <NavbarMenuItem>
-                    <Link className="text-gray-300" href={"/admin/dashboard"}>
+                    <Link color="foreground" href={"/admin/dashboard"}>
                       Dashboard
                     </Link>
                   </NavbarMenuItem>
                   <NavbarMenuItem>
-                    <Link className="text-gray-300" href={"/admin/tickets"}>
+                    <Link color="foreground" href={"/admin/tickets"}>
                       Tickets
                     </Link>
                   </NavbarMenuItem>
