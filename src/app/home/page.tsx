@@ -7,6 +7,7 @@ const HomePage = async () => {
   const session = await getServerSession(authOptions);
   if (session?.user.id_rol === 4) redirect("/auth/register?oauth=true");
   if (session?.user.id_rol === 1) redirect("/admin/dashboard");
+  if (session?.user.id_rol === 3) redirect("/negocios");
   if (!session) redirect("/auth/login");
   return (
     <>
