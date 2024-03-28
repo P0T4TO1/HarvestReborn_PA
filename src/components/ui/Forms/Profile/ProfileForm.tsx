@@ -168,8 +168,8 @@ export const ProfileForm = ({ profile, isEditing }: ProfileFormProps) => {
 
   useEffect(() => {
     if (
-      getValues("dueneg.negocio.cp").length === 5 ||
-      getValues("cliente.cp").length === 5
+      getValues("dueneg.negocio.cp")?.length === 5 ||
+      getValues("cliente.cp")?.length === 5
     ) {
       axios.get("/CP_CDMX.json").then((direction) => {
         console.log(direction, "direction");
@@ -565,7 +565,7 @@ export const ProfileForm = ({ profile, isEditing }: ProfileFormProps) => {
                 </div>
                 <div>
                   <div className="relative">
-                    <p className="ml-2 mb-2 text-sm text-indigo-900 font-medium">
+                    <p className="ml-2 mb-2 text-sm text-gray-400 font-medium">
                       Fecha de nacimiento
                     </p>
                   </div>
@@ -664,7 +664,7 @@ export const ProfileForm = ({ profile, isEditing }: ProfileFormProps) => {
                   type="text"
                   id="direction"
                   className="w-full"
-                  label="Dirección del Negocio"
+                  label="Dirección"
                   defaultValue={profile?.cliente?.direccion_negocio}
                   isDisabled
                 />
