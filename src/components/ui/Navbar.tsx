@@ -149,7 +149,7 @@ export const NavbarComponent = () => {
           )}
         </NavbarContent>
         <NavbarContent justify="end">
-          {!session ? (
+          {!session || user?.id_rol === 3 ? (
             <NavbarItem className="flex items-center text-gray-300">
               <span className="material-symbols-outlined">shopping_bag</span>
             </NavbarItem>
