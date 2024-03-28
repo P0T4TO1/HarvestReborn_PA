@@ -36,7 +36,6 @@ export const LoginForm: FC = () => {
   } = useForm<IFormData>({
     resolver: zodResolver(loginSchema),
   });
-
   const [visible, setVisible] = useState<boolean>(false);
 
   const clientAction: SubmitHandler<IFormData> = async (data) => {
@@ -68,7 +67,6 @@ export const LoginForm: FC = () => {
         });
         return null;
       }
-
       const res: SignInResponse | undefined = await signIn("credentials", {
         ...data,
         redirect: false,
@@ -84,6 +82,7 @@ export const LoginForm: FC = () => {
       }
       if (res && res.ok && res.status === 200) {
         toast("¡Bienvenido!", SUCCESS_TOAST);
+        window.location.reload();
         return;
       }
     } catch (e) {
