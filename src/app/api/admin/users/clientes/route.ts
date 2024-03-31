@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic";
 
 async function getAllClientes(req: NextRequest, res: NextResponse) {
   const clientes = await prisma.d_cliente.findMany();

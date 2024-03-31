@@ -32,7 +32,7 @@ export const ProductsCollapsibleTable = ({
 
   const getLote = async (id: number) => {
     setLoading(true);
-    await hrApi.get(`/inventory/lote/${id}`).then((res) => {
+    await hrApi.get(`/negocio/inventory/lote/${id}`).then((res) => {
       if (res.status === 200) {
         setLote(res.data);
       } else {
@@ -42,7 +42,7 @@ export const ProductsCollapsibleTable = ({
     });
   };
   const handleDelete = async (id: number) => {
-    await hrApi.delete(`/inventory/${id}`).then((res) => {
+    await hrApi.delete(`/negocio/inventory/${id}`).then((res) => {
       if (res.status === 200) {
         toast("Producto eliminado con éxito", SUCCESS_TOAST);
         window.location.reload();

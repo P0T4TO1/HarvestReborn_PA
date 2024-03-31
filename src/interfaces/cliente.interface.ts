@@ -1,7 +1,7 @@
-import { IUser } from "@/interfaces";
+import { IHistorial, IOrden, IUser } from "@/interfaces";
 
 export interface ICliente {
-  id_cliente?: string;
+  id_cliente?: number;
   nombre_cliente: string;
   apellidos_cliente: string;
   telefono_cliente: string;
@@ -10,4 +10,7 @@ export interface ICliente {
   direccion_negocio?: string;
 
   id_user: string;
+  user: IUser;
+  historial: IHistorial;
+  ordenes: IOrden[];
 }

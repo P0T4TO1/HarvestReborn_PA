@@ -41,7 +41,10 @@ async function registerUser(req: NextRequest, res: NextResponse) {
     cp = "",
   } = (await new Response(req.body).json()) as Data;
   try {
-    const ceo: number = email === "jaretgarciagomez@gmail.com" ? 1 : 2 || 3;
+    const ceo: number =
+      email === "jaretgarciagomez@gmail.com" || "saulchanona@yahoo.com"
+        ? 1
+        : 2 || 3;
 
     const emailVerificationToken = crypto.randomBytes(32).toString("base64url");
 
@@ -62,6 +65,9 @@ async function registerUser(req: NextRequest, res: NextResponse) {
               nombre_negocio: nombreNegocio || "",
               direccion_negocio:
                 calle.concat(", ", colonia, ", ", alcaldia, ", ", cp) || "",
+              historial: {
+                create: {},
+              },
             },
           },
         },
@@ -79,6 +85,9 @@ async function registerUser(req: NextRequest, res: NextResponse) {
                 nombre_negocio: nombreNegocio || "",
                 direccion_negocio:
                   calle.concat(", ", colonia, ", ", alcaldia, ", ", cp) || "",
+                historial: {
+                  create: {},
+                },
               },
               update: {
                 nombre_cliente: nombre,
@@ -166,6 +175,9 @@ async function registerUser(req: NextRequest, res: NextResponse) {
                   inventario: {
                     create: {},
                   },
+                  historial: {
+                    create: {},
+                  },
                 },
               },
             },
@@ -191,6 +203,9 @@ async function registerUser(req: NextRequest, res: NextResponse) {
                     inventario: {
                       create: {},
                     },
+                    historial: {
+                      create: {},
+                    },
                   },
                 },
               },
@@ -209,6 +224,9 @@ async function registerUser(req: NextRequest, res: NextResponse) {
                       inventario: {
                         create: {},
                       },
+                      historial: {
+                        create: {},
+                      },
                     },
                     update: {
                       nombre_negocio: nombreNegocio,
@@ -216,9 +234,6 @@ async function registerUser(req: NextRequest, res: NextResponse) {
                       direccion_negocio:
                         calle.concat(", ", colonia, ", ", alcaldia, ", ", cp) ||
                         "",
-                      inventario: {
-                        create: {},
-                      },
                     },
                   },
                 },

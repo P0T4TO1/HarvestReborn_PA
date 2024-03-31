@@ -14,7 +14,7 @@ export const DescriptionComponent: FC = () => {
 
   return (
     <section
-      className="flex flex-col justify-center items-center overflow-hidden min-h-screen"
+      className="flex flex-col items-center overflow-hidden min-h-screen"
       id="inicio"
     >
       <div className="container mx-auto px-4 sm:px-8 md:px-16 lg:px-32 flex relative py-8 sm:py-16">

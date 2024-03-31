@@ -31,7 +31,7 @@ export const AddProductLote = () => {
       );
 
   useEffect(() => {
-    hrApi.get("/inventory/products").then((res) => {
+    hrApi.get("/negocio/inventory/products").then((res) => {
       if (res.status === 200) {
         setProducts(res.data);
       } else {

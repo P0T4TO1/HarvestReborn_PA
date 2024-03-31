@@ -44,7 +44,7 @@ export const ProductsInventory = () => {
       return;
     }
     hrApi
-      .get(`/inventory/lotes/${user?.duenonegocio?.negocio?.id_negocio}`)
+      .get(`/negocio/inventory/lotes/${user?.duenonegocio?.negocio?.id_negocio}`)
       .then((res) => {
         if (res.status === 200) {
           setAllLotes(res.data);
@@ -55,7 +55,7 @@ export const ProductsInventory = () => {
         setLoading(false);
       });
     hrApi
-      .get(`/inventory/${user?.duenonegocio?.negocio?.id_negocio}`)
+      .get(`/negocio/inventory/${user?.duenonegocio?.negocio?.id_negocio}`)
       .then((res) => {
         if (res.status === 200) {
           setLotes(res.data);

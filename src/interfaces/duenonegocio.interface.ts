@@ -7,6 +7,6 @@ export interface IDuenoNegocio {
   fecha_nacimiento: string;
 
   id_user: string;
-  negocio: INegocio;
   user?: IUser;
+  negocio: INegocio;
 }

@@ -1,4 +1,10 @@
-import { Estado, IDuenoNegocio, IInventario } from "@/interfaces";
+import {
+  Estado,
+  IDuenoNegocio,
+  IHistorial,
+  IInventario,
+  IProductoOrden,
+} from "@/interfaces";
 
 export interface INegocio {
   id_negocio?: number;
@@ -13,7 +19,9 @@ export interface INegocio {
 
   id_dueneg: number;
   dueneg: IDuenoNegocio;
+  historial?: IHistorial;
   inventario?: IInventario;
+  productosOrden?: IProductoOrden[];
 
   created_at?: string;
   updated_at?: string;

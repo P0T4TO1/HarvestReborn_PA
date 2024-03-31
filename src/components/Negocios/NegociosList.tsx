@@ -170,7 +170,7 @@ export const NegociosList = () => {
                 <p>Ve los productos que ofrece </p>
                 <Button color="success" size="md" className="mt-2">
                   <Link
-                    href={`/negocios/${negocio.nombre_negocio}?id=${negocio.id_negocio}`}
+                    href={`/negocios/${negocio.id_negocio}/${negocio.nombre_negocio}`}
                     className="text-gray-700"
                   >
                     Ver productos

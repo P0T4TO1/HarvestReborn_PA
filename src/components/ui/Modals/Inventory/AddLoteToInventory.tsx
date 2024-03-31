@@ -69,7 +69,7 @@ export const AddLoteToInventory = ({
       }
 
       const res = await hrApi
-        .post(`/inventory/${id}`, {
+        .post(`/negocio/inventory/${id}`, {
           id: id,
           cantidad_producto: data.cantidad_producto,
           fecha_entrada: data.fecha_entrada,

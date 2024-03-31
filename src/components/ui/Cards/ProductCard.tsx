@@ -64,10 +64,8 @@ export const ProductCard: FC<Props> = ({ lote, product, children, route }) => {
                 <p className="text-lg font-semibold text-green-800 mt-2">
                   ${lote?.precio_kg} el kg
                 </p>
-                <Button color="success" size="sm" className="mt-2">
-                  Agregar a la órden
-                </Button>
               </div>
+              <div className="flex h-full items-end mb-2">{children}</div>
             </div>
           </CardBody>
         </Card>

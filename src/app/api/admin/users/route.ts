@@ -2,6 +2,8 @@ import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { hash } from "bcrypt";
 
+export const dynamic = "force-dynamic";
+
 async function getAllUsers(req: NextRequest, res: NextResponse) {
   const users = await prisma.m_user.findMany({
     include: {

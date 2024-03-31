@@ -69,7 +69,7 @@ export const EditLoteModal = ({
 
   const onSubmit: SubmitHandler<IFormData> = async (data) => {
     try {
-      await hrApi.put(`/inventory/lote/${lote?.id_lote}`, data).then((res) => {
+      await hrApi.put(`/negocio/inventory/lote/${lote?.id_lote}`, data).then((res) => {
         if (res.status === 200) {
           toast("Producto actualizado", SUCCESS_TOAST);
           window.location.reload();

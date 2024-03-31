@@ -63,7 +63,6 @@ export const Row = ({ lote, allLotes, children }: RowProps) => {
               <Table size="small" aria-label="tableproducts">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Número de lote</TableCell>
                     <TableCell>Fecha de entrada</TableCell>
                     <TableCell>Cantidad en kg</TableCell>
                     <TableCell align="right">

@@ -34,7 +34,7 @@ export const NegocioInfoAdmin = ({ id_negocio }: NegocioInfoAdminProps) => {
       }
       setLoading(false);
     });
-    hrApi.get(`/inventory/${id_negocio}`).then((res) => {
+    hrApi.get(`/negocio/inventory/${id_negocio}`).then((res) => {
       if (res.status === 200) {
         setLotesSorted(res.data);
       } else {
@@ -42,7 +42,7 @@ export const NegocioInfoAdmin = ({ id_negocio }: NegocioInfoAdminProps) => {
         console.log("Error al obtener productos", res.data);
       }
     });
-    hrApi.get(`/inventory/lotes/${id_negocio}`).then((res) => {
+    hrApi.get(`/negocio/inventory/lotes/${id_negocio}`).then((res) => {
       if (res.status === 200) {
         setAllLotes(res.data);
       } else {
@@ -51,17 +51,6 @@ export const NegocioInfoAdmin = ({ id_negocio }: NegocioInfoAdminProps) => {
       }
     });
   }, [id_negocio]);
-
-  const editStatus = async (id: number) => {
-    await hrApi.put(`/admin/negocio/status/${id}`).then((res) => {
-      if (res.status === 200) {
-        toast("Estado cambiado con éxito", SUCCESS_TOAST);
-        window.location.reload();
-      } else {
-        console.log("Error al cambiar estado", res.data);
-      }
-    });
-  };
 
   return (
     <div className="my-10 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">

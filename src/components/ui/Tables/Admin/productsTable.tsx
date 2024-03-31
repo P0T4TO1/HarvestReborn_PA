@@ -70,7 +70,7 @@ export const TableProducts = () => {
 
   const getProduct = async (id: number) => {
     setLoadingModal(true);
-    await hrApi.get(`/inventory/products/${id}`).then((res) => {
+    await hrApi.get(`/negocio/inventory/products/${id}`).then((res) => {
       if (res.status === 200) {
         setProduct(res.data);
       } else {

@@ -4,6 +4,8 @@ import React, { useContext, useState } from "react";
 import { DropdownComponent } from "@/components";
 import { useSession } from "next-auth/react";
 import { AuthContext } from "@/context/auth";
+import { UiContext } from "@/context/ui";
+import { BagContext } from "@/context/order";
 import Image from "next/image";
 import {
   Navbar,
@@ -14,13 +16,14 @@ import {
   NavbarMenu,
   NavbarMenuItem,
   Link,
+  Badge,
 } from "@nextui-org/react";
-import { UiContext } from "@/context/ui";
 
 export const NavbarComponent = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { data: session } = useSession();
   const { user } = useContext(AuthContext);
+  const { numberOfProducts } = useContext(BagContext);
   const { toggleSideMenu, isMenuOpen } = useContext(UiContext);
 
   return (
@@ -150,8 +153,22 @@ export const NavbarComponent = () => {
         </NavbarContent>
         <NavbarContent justify="end">
           {!session || user?.id_rol === 3 ? (
-            <NavbarItem className="flex items-center text-gray-300">
-              <span className="material-symbols-outlined">shopping_bag</span>
+            <NavbarItem>
+              <Link
+                className="flex items-center text-gray-300"
+                href={"/bag"}
+              >
+                <Badge
+                  color="danger"
+                  content={numberOfProducts}
+                  isInvisible={!numberOfProducts}
+                  shape="circle"
+                >
+                  <span className="material-symbols-outlined">
+                    shopping_bag
+                  </span>
+                </Badge>
+              </Link>
             </NavbarItem>
           ) : null}
           <NavbarItem>

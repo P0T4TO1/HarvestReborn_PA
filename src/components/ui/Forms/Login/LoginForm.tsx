@@ -17,7 +17,6 @@ import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isEmailVerified } from "@/hooks";
-import { IUser } from "@/interfaces";
 
 interface IFormData {
   user_email: string;
@@ -83,7 +82,7 @@ export const LoginForm: FC = () => {
       if (res && res.ok && res.status === 200) {
         toast("¡Bienvenido!", SUCCESS_TOAST);
         router.push("/home");
-        window.location.reload();
+        router.refresh();
         return;
       }
     } catch (e) {

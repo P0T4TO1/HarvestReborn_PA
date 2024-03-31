@@ -1,3 +1,4 @@
+export * from "./Bag";
 export * from "./Dashboard";
 export * from "./email-templates";
 export * from "./Home";
