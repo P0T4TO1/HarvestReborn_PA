@@ -6,7 +6,6 @@ import { BagContext } from "./OrderContext";
 import { bagReducer } from "./orderReducer";
 
 import { IOrden, IProductoOrden } from "@/interfaces";
-import axios from "axios";
 import { hrApi } from "@/api";
 import { AuthContext } from "@/context/auth";
 
@@ -122,8 +121,10 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
       estado_orden: "Pendiente",
     };
 
+    const products = state.bag;
+
     try {
-      const { data } = await axios.post("/order", body);
+      const { data } = await hrApi.post("/order", { body, products });
       console.log(data);
       if (data.error) {
         return {
@@ -137,12 +138,7 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
         message: "Orden creada con éxito",
       };
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        return {
-          hasError: true,
-          message: error.response?.data.message,
-        };
-      }
+      console.log(error);
       return {
         hasError: true,
         message: "Error no controlado, hable con el administrador",

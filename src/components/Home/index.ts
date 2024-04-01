@@ -1,2 +1,2 @@
-export * from "./HomeNegocio";
+export * from "./Negocio";
 export * from "./HomeCliente";

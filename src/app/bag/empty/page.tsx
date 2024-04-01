@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { redirect } from "next/navigation";
 import React from "react";
+import { EmptyBag } from "@/components";
 
 const BagPage = async () => {
   const session = await getServerSession(authOptions);
@@ -9,10 +10,8 @@ const BagPage = async () => {
 
   return (
     <>
-      <section className="flex flex-col relative overflow-hidden min-h-screen">
-        <div className="flex items-center justify-center m-auto">
-          <p>No hay productos en la bolsa</p>
-        </div>
+      <section className="flex flex-col justify-center relative overflow-hidden min-h-screen">
+        <EmptyBag />
       </section>
     </>
   );

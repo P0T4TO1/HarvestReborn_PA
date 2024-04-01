@@ -44,7 +44,9 @@ export const ProductsInventory = () => {
       return;
     }
     hrApi
-      .get(`/negocio/inventory/lotes/${user?.duenonegocio?.negocio?.id_negocio}`)
+      .get(
+        `/negocio/inventory/lotes/${user?.duenonegocio?.negocio?.id_negocio}`
+      )
       .then((res) => {
         if (res.status === 200) {
           setAllLotes(res.data);
@@ -128,7 +130,10 @@ export const ProductsInventory = () => {
       </div>
 
       {loading ? (
-        <CircularProgress size="lg" aria-label="Loading..." />
+        <div className="flex flex-col justify-center items-center">
+          <h2 className="text-2xl font-semibold">Cargando...</h2>
+          <CircularProgress size="lg" aria-label="Loading..." />
+        </div>
       ) : error ? (
         <p>Hubo un error</p>
       ) : (

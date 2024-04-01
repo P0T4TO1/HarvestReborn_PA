@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { redirect } from "next/navigation";
 import { HomeCliente, HomeNegocio } from "@/components";
+import { CircularProgress } from "@nextui-org/react";
 
 const HomePage = async () => {
   const session = await getServerSession(authOptions);
@@ -10,9 +11,13 @@ const HomePage = async () => {
   if (!session) redirect("/auth/login");
   return (
     <>
-      <section className="flex flex-col relative overflow-hidden min-h-screen">
-        {session?.user.id_rol === 2 ? <HomeNegocio /> : <HomeCliente />}
-      </section>
+      {!session ? (
+        <CircularProgress size="lg" />
+      ) : (
+        <section className="flex flex-col relative overflow-hidden min-h-screen">
+          {session?.user.id_rol === 2 ? <HomeNegocio /> : <HomeCliente />}
+        </section>
+      )}
     </>
   );
 };

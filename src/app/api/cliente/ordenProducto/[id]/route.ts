@@ -8,7 +8,6 @@ async function deleteOrdenProducto(
   res: NextResponse
 ) {
   const { id } = params;
-  console.log("id", id);
 
   if (!id) {
     return NextResponse.json(

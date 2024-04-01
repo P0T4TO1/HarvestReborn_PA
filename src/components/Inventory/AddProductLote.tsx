@@ -1,14 +1,10 @@
 "use client";
 
-import { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { IProduct } from "@/interfaces";
 import { hrApi } from "@/api";
 import { AddLoteToInventory, ProductCard } from "@/components";
-import {
-  Input,
-  useDisclosure,
-  CircularProgress,
-} from "@nextui-org/react";
+import { Input, useDisclosure, CircularProgress } from "@nextui-org/react";
 
 export const AddProductLote = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
@@ -88,14 +84,17 @@ export const AddProductLote = () => {
           </div>
         </div>
 
-        <ul className="mt-8 grid grid-cols-4 gap-4">
+        <ul className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 xl:grid-cols-4">
           {loading ? (
-            <CircularProgress size="lg" aria-label="Loading..." />
+            <div className="flex flex-col">
+              <h2 className="text-2xl font-semibold">Cargando...</h2>
+              <CircularProgress size="lg" aria-label="Loading..." />
+            </div>
           ) : error ? (
             <p>Hubo un error</p>
           ) : (
             results.map((product) => (
-              <li key={product.id_producto} className={`p-4 flex`}>
+              <li key={product.id_producto} className="p-4 flex">
                 <ProductCard product={product} route={"add-product"}>
                   <button
                     onClick={() => {

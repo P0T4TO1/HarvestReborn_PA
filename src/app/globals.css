@@ -243,3 +243,7 @@ tr.example-element-row:not(.example-expanded-row):active {
 .example-element-description-attribution {
   opacity: 0.5;
 }
+
+.warning-home-negocio {
+  background-color: hsla(37 91% 55% / 0.2);
+}

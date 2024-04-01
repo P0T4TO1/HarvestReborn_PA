@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Estado, INegocio } from "@/interfaces";
 import { hrApi } from "@/api";
 import {
@@ -13,9 +13,7 @@ import {
   Button,
   Card,
   CardHeader,
-  CardFooter,
 } from "@nextui-org/react";
-import { FaStar } from "react-icons/fa";
 import { MdLabelImportantOutline } from "react-icons/md";
 
 export const NegociosList = () => {
@@ -240,7 +238,7 @@ export const NegociosList = () => {
                     loading="lazy"
                     allowFullScreen
                     referrerPolicy="no-referrer-when-downgrade"
-                    src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBTeBNwYaE9rbX3cxMGBK42uvhwSAhrsVY&q=${negocio?.direccion_negocio}`}
+                    src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyAIAxu9rSTpzfa_kkep1niIDxKvMtypqXM&q=${negocio?.direccion_negocio}`}
                   ></iframe>
                 </div>
               </CardBody>

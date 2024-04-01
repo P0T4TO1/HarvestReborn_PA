@@ -13,6 +13,10 @@ import {
   CardFooter,
   Input,
 } from "@nextui-org/react";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+import { toast } from "sonner";
+import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
 
 interface BagListProps {
   editable?: boolean;
@@ -26,15 +30,28 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
     removeBagProduct,
     updateBagQuantity,
     numberOfProducts,
+    createOrder,
     total,
   } = useContext(BagContext);
+  const { data: Session } = useSession();
 
   const onNewQuantity = (product: IProductoOrden, quantity: number) => {
     updateBagQuantity({ ...product, cantidad_orden: quantity });
   };
 
   const productsInBag = products ? products : bag;
-  console.log(productsInBag)
+
+  const onCreateOrder = () => {
+    if (!Session) {
+      return toast("Debes iniciar sesión para realizar un pedido");
+    }
+    createOrder().then((res) => {
+      if (res.hasError) {
+        toast(res.message, DANGER_TOAST);
+      }
+      toast(res.message, SUCCESS_TOAST);
+    });
+  };
 
   return (
     <>
@@ -139,7 +156,11 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
                 <p className="pb-4 pt-4">Total: ${total}</p>
               </CardBody>
               <CardFooter className="p-8 w-full">
-                <Button color="success" className="w-full">
+                <Button
+                  color="success"
+                  className="w-full"
+                  onClick={() => onCreateOrder()}
+                >
                   Realizar pedido
                 </Button>
               </CardFooter>

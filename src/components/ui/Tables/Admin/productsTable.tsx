@@ -14,6 +14,7 @@ import {
   useDisclosure,
   Pagination,
   Input,
+  Image,
 } from "@nextui-org/react";
 import React, { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { IProduct } from "@/interfaces";
@@ -141,6 +142,7 @@ export const TableProducts = () => {
           >
             <TableHeader>
               <TableColumn allowsSorting>No. de producto</TableColumn>
+              <TableColumn>Imagen</TableColumn>
               <TableColumn allowsSorting>Nombre</TableColumn>
               <TableColumn allowsSorting>Descripcion</TableColumn>
               <TableColumn allowsSorting>En temporada</TableColumn>
@@ -152,6 +154,13 @@ export const TableProducts = () => {
                 <TableRow key={productMap.id_producto}>
                   <TableCell className="py-4">
                     {key + 1 + rowsPerPage * (page - 1)}
+                  </TableCell>
+                  <TableCell className="py-4">
+                    <Image
+                      src={productMap.imagen_producto}
+                      alt={productMap.nombre_producto}
+                      className="w-12 h-12 rounded-full"
+                    />
                   </TableCell>
                   <TableCell className="py-4">
                     {productMap.nombre_producto}

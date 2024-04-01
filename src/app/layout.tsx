@@ -10,8 +10,8 @@ import { AuthProvider } from "@/context/auth";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Harvest Reborn - Inicio",
-  description: "Harvest Reborn - Inicio",
+  title: "Harvest Reborn",
+  description: "Harvest Reborn",
 };
 
 export default function RootLayout({

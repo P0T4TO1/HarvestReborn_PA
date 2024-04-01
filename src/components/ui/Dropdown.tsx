@@ -10,7 +10,7 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-  Avatar,
+  Button,
 } from "@nextui-org/react";
 
 export const DropdownComponent: FC = () => {
@@ -21,17 +21,9 @@ export const DropdownComponent: FC = () => {
     <>
       <Dropdown placement="bottom-end">
         <DropdownTrigger>
-          <Avatar
-            as="button"
-            icon={
-              <span className="material-symbols-outlined">account_circle</span>
-            }
-            className="transition-transform"
-            classNames={{
-              base: "bg-transparent",
-              icon: "text-gray-300",
-            }}
-          />
+          <Button variant="light" isIconOnly>
+            <span className="material-symbols-outlined text-gray-300">account_circle</span>
+          </Button>
         </DropdownTrigger>
         {session && user?.id_rol !== 4 ? (
           <DropdownMenu aria-label="Profile Actions" variant="flat">
