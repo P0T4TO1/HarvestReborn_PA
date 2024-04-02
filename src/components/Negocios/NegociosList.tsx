@@ -13,6 +13,7 @@ import {
   Button,
   Card,
   CardHeader,
+  Image,
 } from "@nextui-org/react";
 import { MdLabelImportantOutline } from "react-icons/md";
 
@@ -156,7 +157,7 @@ export const NegociosList = () => {
                 base: "border-2 border-gray-300",
               }}
             >
-              <img
+              <Image
                 src={negocio?.images_negocio[0] || "/images/no-image.jpg"}
                 alt={negocio?.nombre_negocio}
                 className="min-w-full h-40 object-cover rounded-t-lg"

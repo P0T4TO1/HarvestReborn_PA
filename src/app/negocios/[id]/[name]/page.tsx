@@ -1,4 +1,7 @@
 import { NegocioProducts } from "@/components";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/authOptions";
+import { redirect } from "next/navigation";
 
 interface NegocioInfoPageProps {
   params: {
@@ -7,6 +10,8 @@ interface NegocioInfoPageProps {
   };
 }
 const NegocioInfoPage = async ({ params }: NegocioInfoPageProps) => {
+  const session = await getServerSession(authOptions);
+  if (session?.user.id_rol === 4) redirect("/auth/register?oauth=true");
   const { id, name } = params;
   return (
     <>

@@ -7,10 +7,8 @@ import { hrApi } from "@/api";
 import { CircularProgress, Image, Button } from "@nextui-org/react";
 import {
   ProductsCollapsibleTable,
-  SUCCESS_TOAST,
   EditNegocioAdmin,
 } from "@/components";
-import { toast } from "sonner";
 
 interface NegocioInfoAdminProps {
   id_negocio: number;

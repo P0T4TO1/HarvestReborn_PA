@@ -2,20 +2,19 @@
 
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { TableNegocios } from "@/components";
-import { INegocio } from "@/interfaces";
+import { IPreguntasFaq } from "@/interfaces";
 import { hrApi } from "@/api";
 import { CircularProgress } from "@nextui-org/react";
 
-export const NegociosAdmin = () => {
+export const FaqsAdmin = () => {
+  const [preguntas, setPreguntas] = useState<IPreguntasFaq[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [negocios, setNegocios] = React.useState<INegocio[]>([]);
 
   useEffect(() => {
-    hrApi.get("/admin/users/negocios").then((res) => {
+    hrApi.get("/admin/faq").then((res) => {
       if (res.status === 200) {
-        setNegocios(res.data);
+        setPreguntas(res.data);
       } else {
         setError(true);
       }
@@ -35,15 +34,15 @@ export const NegociosAdmin = () => {
         </li>
 
         <li className="flex gap-2">
-          <span className="material-symbols-outlined">store</span>
-          <span>Negocios </span> <span> / </span>{" "}
+          <span className="material-symbols-outlined">quiz</span>
+          <span>Preguntas(Faq) </span> <span> / </span>{" "}
         </li>
         <li className="flex gap-2">
           <span>Listado</span>
         </li>
       </ul>
 
-      <h3 className="text-xl font-semibold">Todos los negocios</h3>
+      <h3 className="text-xl font-semibold">Preguntas frecuentes</h3>
       <div className="flex justify-between flex-wrap gap-4 items-center">
         <div className="flex flex-row gap-3.5 flex-wrap">
           {/*<Button*/}
@@ -56,17 +55,6 @@ export const NegociosAdmin = () => {
           {/*</Button>*/}
         </div>
       </div>
-      {loading ? (
-        <div className="flex flex-col items-center justify-center">
-          <CircularProgress size="lg" aria-label="Loading..." />
-        </div>
-      ) : error ? (
-        <p>Hubo un error</p>
-      ) : (
-        <div className="max-w-[95rem] mx-auto w-full">
-          <TableNegocios negocios={negocios} />
-        </div>
-      )}
     </div>
   );
 };

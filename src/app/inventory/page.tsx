@@ -5,6 +5,7 @@ import { ProductsInventory } from "@/components";
 
 const InventoryPage = async () => {
   const session = await getServerSession(authOptions);
+  if (session?.user.id_rol === 4) redirect("/auth/register?oauth=true");
   if (!session) redirect("/auth/login");
   return (
     <>

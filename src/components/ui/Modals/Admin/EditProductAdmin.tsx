@@ -25,7 +25,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 interface IFormData {
   nombre_producto: string;
-  imagen_producto: File | undefined;
+  imagen_producto: File | undefined | string;
   file: string;
   descripcion: string;
   enTemporada: boolean;
@@ -33,7 +33,7 @@ interface IFormData {
 }
 
 interface Props {
-  product: IProduct | undefined;
+  product: IProduct;
   useDisclosure: { isOpen: boolean; onClose: () => void };
   loading: boolean;
 }
@@ -43,6 +43,7 @@ export const EditProductAdminModal = ({
   useDisclosure: { isOpen, onClose },
   loading,
 }: Props) => {
+  console.log("Product", product)
   const {
     register,
     handleSubmit,
@@ -52,12 +53,12 @@ export const EditProductAdminModal = ({
   } = useForm<IFormData>({
     resolver: zodResolver(adminEditProductValidation),
     defaultValues: {
-      nombre_producto: product?.nombre_producto ?? "",
-      imagen_producto: undefined,
-      file: product?.imagen_producto ?? "",
-      descripcion: product?.descripcion ?? "",
-      enTemporada: product?.enTemporada ?? false,
-      categoria: product?.categoria ?? "",
+      nombre_producto: product.nombre_producto,
+      imagen_producto: product.imagen_producto ?? undefined,
+      file: product.imagen_producto,
+      descripcion: product.descripcion,
+      enTemporada: product.enTemporada,
+      categoria: product.categoria,
     },
   });
   const router = useRouter();
@@ -90,6 +91,7 @@ export const EditProductAdminModal = ({
           }
         });
       }
+      console.log("Data to send", data)
 
       const res = await hrApi.put(`/admin/product`, {
         id: product?.id_producto,
@@ -98,7 +100,7 @@ export const EditProductAdminModal = ({
       if (res.status === 200) {
         toast("Producto editado correctamente", SUCCESS_TOAST);
         router.refresh();
-        window.location.reload();
+
         onClose();
       }
     } catch (error) {
@@ -130,7 +132,7 @@ export const EditProductAdminModal = ({
                       </span>
                     }
                   >
-                    Editar
+                    {isEditing ? "Cancelar" : "Editar"}
                   </Button>
                 </ModalHeader>
                 <ModalBody>
@@ -187,14 +189,14 @@ export const EditProductAdminModal = ({
                     )}
                     <div className="flex flex-col gap-2">
                       <p className="text-default-500">
-                        En temporada {product?.enTemporada}
+                        En temporada
                       </p>
                       <Checkbox
-                        isSelected={isSelected}
+                        isSelected={product?.enTemporada || isSelected}
                         isDisabled={!isEditing}
                         onValueChange={setIsSelected}
                       >
-                        {isSelected ? "Si" : "No"}
+                        {product?.enTemporada || isSelected ? "Si" : "No"}
                       </Checkbox>
                       {errors?.enTemporada && (
                         <p className="text-red-500 dark:text-red-400 text-sm">
@@ -229,6 +231,7 @@ export const EditProductAdminModal = ({
                   <Button
                     color="primary"
                     type="submit"
+                    isDisabled={!isEditing}
                     onClick={() => {
                       setValue("imagen_producto", file as File);
                       setValue("enTemporada", isSelected);

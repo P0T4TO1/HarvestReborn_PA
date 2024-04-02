@@ -11,6 +11,7 @@ import {
   TableHead,
   TableBody,
 } from "@mui/material";
+import { Image } from "@nextui-org/react";
 
 interface RowProps {
   lote: ILote;
@@ -38,7 +39,7 @@ export const Row = ({ lote, allLotes, children }: RowProps) => {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          <img
+          <Image
             src={lote.producto?.imagen_producto}
             alt="imagenproduct"
             style={{ width: "100px", height: "100px" }}
@@ -73,7 +74,7 @@ export const Row = ({ lote, allLotes, children }: RowProps) => {
                 </TableHead>
                 <TableBody>
                   {allLotes?.map(
-                    (loteMap, key) =>
+                    (loteMap) =>
                       loteMap?.id_producto === lote?.id_producto && (
                         <TableRow key={loteMap.id_lote}>
                           <TableCell component="th" scope="row">

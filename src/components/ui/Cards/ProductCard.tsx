@@ -2,7 +2,7 @@
 
 import { FC, useState, ReactNode } from "react";
 import { ILote, IProduct } from "@/interfaces";
-import { Card, CardBody, Image, Button } from "@nextui-org/react";
+import { Card, CardBody, Image } from "@nextui-org/react";
 
 interface Props {
   children?: ReactNode;
@@ -20,7 +20,7 @@ export const ProductCard: FC<Props> = ({ lote, product, children, route }) => {
         <>
           <div className="product">
             <div className="left-side bg-[#87b663]">
-              <img src={product?.imagen_producto} alt="" className="image" />
+              <Image src={product?.imagen_producto} alt="" className="image" />
             </div>
             <div
               className={`setting-modal-container ${

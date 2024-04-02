@@ -1,10 +1,28 @@
 "use client";
 
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { TableClientes } from "@/components";
+import { ICliente } from "@/interfaces";
+import { hrApi } from "@/api";
+import { CircularProgress } from "@nextui-org/react";
 
 export const ClientesAdmin = () => {
+  const [clientes, setClientes] = useState<ICliente[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    hrApi.get("/admin/users/clientes").then((res) => {
+      if (res.status === 200) {
+        setClientes(res.data);
+      } else {
+        setError(true);
+      }
+      setLoading(false);
+    });
+  }, []);
+
   return (
     <div className="my-10 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
       <ul className="flex">
@@ -38,9 +56,21 @@ export const ClientesAdmin = () => {
           {/*</Button>*/}
         </div>
       </div>
-      <div className="max-w-[95rem] mx-auto w-full">
-        <TableClientes />
-      </div>
+      {loading ? (
+        <div className="flex flex-col items-center justify-center">
+          <h2 className="text-2xl font-semibold">Cargando...</h2>
+          <CircularProgress size="lg" aria-label="Loading..." />
+        </div>
+      ) : error ? (
+        <p>
+          Ha ocurrido un error al cargar los datos. Por favor, intenta de nuevo
+          más tarde.
+        </p>
+      ) : (
+        <div className="max-w-[95rem] mx-auto w-full">
+          <TableClientes clientes={clientes} />
+        </div>
+      )}
     </div>
   );
 };

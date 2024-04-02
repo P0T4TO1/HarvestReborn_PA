@@ -1,7 +1,6 @@
 "use client";
 
 import React, { ChangeEvent, useContext, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { hrApi } from "@/api";
 import { ILote } from "@/interfaces";
 import { AuthContext } from "@/context/auth";
@@ -11,14 +10,11 @@ import {
   Input,
   CircularProgress,
   Button,
+  Link,
 } from "@nextui-org/react";
 import { ProductsCollapsibleTable } from "@/components";
 
 export const ProductsInventory = () => {
-  const router = useRouter();
-  const navigateTo = (path: string) => {
-    router.push(path);
-  };
   const { user } = useContext(AuthContext);
 
   const [lotes, setLotes] = useState<ILote[]>([]);
@@ -78,14 +74,17 @@ export const ProductsInventory = () => {
         </span>
       </h1>
       <div className="my-4">
-        <Button
-          onClick={() => navigateTo("/inventory/add-product")}
-          startContent={
-            <span className="material-symbols-outlined">add_circle</span>
-          }
-        >
-          <span className="ml-2">Agregar productos</span>
-        </Button>
+        <Link href={"/inventory/add-product"}>
+          <Button
+            color="primary"
+            variant="faded"
+            startContent={
+              <span className="material-symbols-outlined">add_circle</span>
+            }
+          >
+            <span className="ml-2">Agregar productos</span>
+          </Button>
+        </Link>
       </div>
       <div className="flex">
         <div className="flex flex-1 justify-center sm:justify-start">

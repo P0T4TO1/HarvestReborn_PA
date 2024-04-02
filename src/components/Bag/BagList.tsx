@@ -16,7 +16,7 @@ import {
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { toast } from "sonner";
-import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
+import { DANGER_TOAST, SUCCESS_TOAST, WARNING_TOAST } from "@/components";
 
 interface BagListProps {
   editable?: boolean;
@@ -43,7 +43,10 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
 
   const onCreateOrder = () => {
     if (!Session) {
-      return toast("Debes iniciar sesión para realizar un pedido");
+      return toast(
+        "Debes iniciar sesión para realizar un pedido",
+        WARNING_TOAST
+      );
     }
     createOrder().then((res) => {
       if (res.hasError) {

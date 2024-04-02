@@ -78,7 +78,7 @@ model d_duenonegocio {
   fecha_nacimiento DateTime
 
   id_user String @unique
-  user    m_user @relation(fields: [id_user], references: [id])
+  user    m_user @relation(fields: [id_user], references: [id], onDelete: Cascade)
 
   negocio m_negocio?
 
@@ -96,7 +96,7 @@ model m_negocio {
   estado_negocio      Estado   @default(PENDIENTE)
 
   id_dueneg Int            @unique
-  dueneg    d_duenonegocio @relation(fields: [id_dueneg], references: [id_dueneg])
+  dueneg    d_duenonegocio @relation(fields: [id_dueneg], references: [id_dueneg], onDelete: Cascade)
 
   historial     c_historial?
   inventario    c_inventario?
@@ -109,7 +109,7 @@ model c_inventario {
   id_inventario Int @id @default(autoincrement())
 
   id_negocio Int       @unique
-  negocio    m_negocio @relation(fields: [id_negocio], references: [id_negocio])
+  negocio    m_negocio @relation(fields: [id_negocio], references: [id_negocio], onDelete: Cascade)
 
   lote m_lote[]
 }
@@ -123,7 +123,7 @@ model m_lote {
   monto_total       Float
 
   id_inventario Int
-  inventario    c_inventario @relation(fields: [id_inventario], references: [id_inventario])
+  inventario    c_inventario @relation(fields: [id_inventario], references: [id_inventario], onDelete: Cascade)
 
   id_producto Int
   producto    m_producto @relation(fields: [id_producto], references: [id_producto], onDelete: Cascade)
@@ -174,7 +174,7 @@ model m_prodcutoOrden {
   producto    m_producto @relation(fields: [id_producto], references: [id_producto], onDelete: Cascade)
 
   id_negocio Int
-  negocio    m_negocio @relation(fields: [id_negocio], references: [id_negocio])
+  negocio    m_negocio @relation(fields: [id_negocio], references: [id_negocio], onDelete: Cascade)
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -208,10 +208,10 @@ model c_historial {
   id_historial Int @id @default(autoincrement())
 
   id_cliente Int?       @unique
-  cliente    d_cliente? @relation(fields: [id_cliente], references: [id_cliente])
+  cliente    d_cliente? @relation(fields: [id_cliente], references: [id_cliente], onDelete: Cascade)
 
   id_negocio Int?       @unique
-  negocio    m_negocio? @relation(fields: [id_negocio], references: [id_negocio])
+  negocio    m_negocio? @relation(fields: [id_negocio], references: [id_negocio], onDelete: Cascade)
 
   orden d_orden[]
 }
@@ -226,7 +226,7 @@ model m_ticketSoporte {
   estado_ticket  Estado   @default(ACTIVO)
 
   id_user String
-  user    m_user @relation(fields: [id_user], references: [id])
+  user    m_user @relation(fields: [id_user], references: [id], onDelete: Cascade)
 
   @@index([id_user])
 }
@@ -248,13 +248,26 @@ model c_preguntasFrecuentes {
   pregunta String
 
   respuestas d_faqRespuestas[]
+  tipo       TipoPregunta      @default(GENERAL)
+}
+
+enum TipoPregunta {
+  GENERAL
+  CUENTA
+  NEGOCIO
+  CLIENTE
+  DUENONEGOCIO
+  ORDEN
+  PRODUCTOS
+  INVENTARIO
+  CHAT
 }
 
 model d_participantes {
   id_participantes Int @id @default(autoincrement())
 
   id_user String
-  user    m_user @relation(fields: [id_user], references: [id])
+  user    m_user @relation(fields: [id_user], references: [id], onDelete: Cascade)
 
   id_chat Int
   chat    m_chat @relation(fields: [id_chat], references: [id_chat])
@@ -269,7 +282,7 @@ model m_chat {
   fecha_creacion DateTime
 
   id_user_creator String
-  user            m_user @relation(fields: [id_user_creator], references: [id])
+  user            m_user @relation(fields: [id_user_creator], references: [id], onDelete: Cascade)
 
   participantes d_participantes[]
   mensajes      d_mensajes[]
@@ -289,7 +302,7 @@ model d_mensajes {
   chat    m_chat @relation(fields: [id_chat], references: [id_chat])
 
   id_user String
-  user    m_user @relation(fields: [id_user], references: [id])
+  user    m_user @relation(fields: [id_user], references: [id], onDelete: Cascade)
 
   @@index([id_chat])
   @@index([id_user])

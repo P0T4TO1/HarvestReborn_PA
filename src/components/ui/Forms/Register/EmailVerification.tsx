@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { Image } from "@nextui-org/react";
 
 export const EmailVerificationForm = () => {
   return (
@@ -8,8 +9,8 @@ export const EmailVerificationForm = () => {
       <div className="flex justify-center self-center z-10 shadow-xl">
         <div className="p-12 bg-white mx-auto rounded-3xl w-[386px]">
           <div className="mb-7">
-            <img
-              src="/images/buzon_email.png"
+            <Image
+              src={"/images/buzon_email.png"}
               alt="Email Verification"
               className="w-20 h-20 mx-auto"
             />

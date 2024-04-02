@@ -1,4 +1,7 @@
+"use client";
+
 import { FC } from "react";
+import { Image } from "@nextui-org/react";
 
 export const AboutUsComponent: FC = () => {
   return (
@@ -29,8 +32,8 @@ export const AboutUsComponent: FC = () => {
               </p>
             </div>
             <div className="mt-auto">
-              <img
-                src="/images/cards/harvest.jpg"
+              <Image
+                src={"/images/cards/harvest.jpg"}
                 alt=""
                 className="w-full h-36 sm:h-48 object-cover"
               />
@@ -51,8 +54,8 @@ export const AboutUsComponent: FC = () => {
               </p>
             </div>
             <div className="mt-auto">
-              <img
-                src="/images/cards/recauderia_card.jpg"
+              <Image
+                src={"/images/cards/recauderia_card.jpg"}
                 alt=""
                 className="w-full h-36 sm:h-48 object-cover"
               />
@@ -74,8 +77,8 @@ export const AboutUsComponent: FC = () => {
               </p>
             </div>
             <div className="mt-auto">
-              <img
-                src="/images/cards/desperdicio.jpg"
+              <Image
+                src={"/images/cards/desperdicio.jpg"}
                 alt=""
                 className="w-full h-36 sm:h-48 object-cover"
               />

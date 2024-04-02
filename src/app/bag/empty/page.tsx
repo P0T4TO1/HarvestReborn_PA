@@ -6,6 +6,7 @@ import { EmptyBag } from "@/components";
 
 const BagPage = async () => {
   const session = await getServerSession(authOptions);
+  if (session?.user.id_rol === 4) redirect("/auth/register?oauth=true");
   if (session?.user.id_rol === 2) redirect("/inventory");
 
   return (

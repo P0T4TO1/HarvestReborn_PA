@@ -3,6 +3,7 @@
 import { FC } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { Image } from "@nextui-org/react";
 
 export const DescriptionComponent: FC = () => {
   const { data: session } = useSession();
@@ -26,8 +27,8 @@ export const DescriptionComponent: FC = () => {
             </span>
           </h1>
           <p className="text-sm sm:text-base lg:text-lg font-semibold text-gray-700 mt-4 sm:mt-6">
-            El lugar donde tú y tu negocio ayuda a reducir el desperdicio de frutas y
-            verduras en la Ciudad de México
+            El lugar donde tú y tu negocio ayuda a reducir el desperdicio de
+            frutas y verduras en la Ciudad de México
           </p>
           <div className="flex mt-6 sm:mt-8">
             {session ? (
@@ -58,8 +59,9 @@ export const DescriptionComponent: FC = () => {
           </div>
         </div>
         <div className="hidden sm:block w-1/2 relative">
-          <img
-            src="/images/Apilados.png"
+          <Image
+            src={"/images/Apilados.png"}
+            alt="Apilados"
             className="max-w-xs sm:max-w-sm lg:max-w-md m-auto"
           />
         </div>

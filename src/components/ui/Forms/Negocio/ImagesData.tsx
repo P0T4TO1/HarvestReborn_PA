@@ -14,6 +14,7 @@ import {
   CardBody,
   CardHeader,
   CardFooter,
+  Image,
 } from "@nextui-org/react";
 
 interface ImagesDataProps {
@@ -23,12 +24,7 @@ interface ImagesDataProps {
 export const ImagesForm = ({ negocio }: ImagesDataProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const {
-    handleSubmit,
-    formState: { errors },
-    setValue,
-    getValues,
-  } = useForm({
+  const { handleSubmit, setValue, getValues } = useForm({
     resolver: zodResolver(negocioImagesSchema),
     defaultValues: {
       images_negocio: negocio.images_negocio,
@@ -74,7 +70,7 @@ export const ImagesForm = ({ negocio }: ImagesDataProps) => {
           ...negocio,
           images_negocio: data.images_negocio,
         })
-        .then((res) => {
+        .then(() => {
           toast("Datos actualizados con éxito", SUCCESS_TOAST);
           window.location.reload();
           return;
@@ -123,7 +119,7 @@ export const ImagesForm = ({ negocio }: ImagesDataProps) => {
             <div className="grid grid-cols-2 gap-6 mt-6">
               {getValues("images_negocio")?.map((image, index) => (
                 <div key={index}>
-                  <img
+                  <Image
                     src={image}
                     alt={`Imagen ${index + 1}`}
                     className="w-full max-h-96 object-cover rounded-lg"
