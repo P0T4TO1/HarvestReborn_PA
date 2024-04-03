@@ -1,3 +1,5 @@
+"use client";
+
 import { Image, Link, Button } from "@nextui-org/react";
 
 export const EmptyBag = () => {
@@ -13,7 +15,9 @@ export const EmptyBag = () => {
         No hay productos en la bolsa
       </p>
       <Link href={"/negocios"} className="mt-4">
-        <Button variant="light" size="lg">Ir a comprar</Button>
+        <Button variant="ghost" size="lg" color="primary">
+          Ir a comprar
+        </Button>
       </Link>
     </div>
   );

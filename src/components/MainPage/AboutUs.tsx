@@ -34,8 +34,7 @@ export const AboutUsComponent: FC = () => {
             <div className="mt-auto">
               <Image
                 src={"/images/cards/harvest.jpg"}
-                alt=""
-                className="w-full h-36 sm:h-48 object-cover"
+                alt="harvestcard"
               />
             </div>
           </div>

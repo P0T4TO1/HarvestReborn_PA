@@ -19,20 +19,20 @@ interface IFormData {
   tipo: string;
 }
 
-const months = {
-  "01": "Enero",
-  "02": "Febrero",
-  "03": "Marzo",
-  "04": "Abril",
-  "05": "Mayo",
-  "06": "Junio",
-  "07": "Julio",
-  "08": "Agosto",
-  "09": "Septiembre",
-  "10": "Octubre",
-  "11": "Noviembre",
-  "12": "Diciembre",
-};
+const months = [
+  { key: "01", value: "Enero" },
+  { key: "02", value: "Febrero" },
+  { key: "03", value: "Marzo" },
+  { key: "04", value: "Abril" },
+  { key: "05", value: "Mayo" },
+  { key: "06", value: "Junio" },
+  { key: "07", value: "Julio" },
+  { key: "08", value: "Agosto" },
+  { key: "09", value: "Septiembre" },
+  { key: "10", value: "Octubre" },
+  { key: "11", value: "Noviembre" },
+  { key: "12", value: "Diciembre" },
+];
 
 interface PersonalDataFormProps {
   isOAuth?: boolean;
@@ -129,9 +129,9 @@ export const PersonalDataForm = ({ isOAuth }: PersonalDataFormProps) => {
                 label="Mes"
                 {...register("mes_nacimiento")}
               >
-                {Object.entries(months).map(([key, value]) => (
-                  <SelectItem value={key} key={key}>
-                    {value}
+                {months.map((month) => (
+                  <SelectItem value={month.key} key={month.key}>
+                    {month.value}
                   </SelectItem>
                 ))}
               </Select>

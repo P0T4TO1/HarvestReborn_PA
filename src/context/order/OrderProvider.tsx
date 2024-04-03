@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useReducer, ReactNode, useContext } from "react";
+import { useEffect, useReducer, ReactNode } from "react";
 import Cookie from "js-cookie";
 import { BagContext } from "./OrderContext";
 import { bagReducer } from "./orderReducer";
 
 import { IOrden, IProductoOrden } from "@/interfaces";
 import { hrApi } from "@/api";
-import { AuthContext } from "@/context/auth";
 
 export interface BagState {
   isLoaded: boolean;
@@ -24,7 +23,6 @@ const BAG_INITIAL_STATE: BagState = {
 };
 
 export const BagProvider = ({ children }: { children: ReactNode }) => {
-  const { user } = useContext(AuthContext);
   const [state, dispatch] = useReducer(bagReducer, BAG_INITIAL_STATE);
 
   useEffect(() => {
@@ -62,10 +60,9 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
   }, [state.bag]);
 
   const addProductToBag = async (product: IProductoOrden) => {
-    const productInBag = state.bag.find(
-      (item) => item.id_productoOrden === product.id_productoOrden
+    const productInBag = state.bag.some(
+      (item) => item.id_producto === product.id_producto
     );
-
     if (!productInBag) {
       return dispatch({
         type: "UPDATE_PRODUCTS_IN_BAG",
@@ -74,11 +71,13 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
     }
 
     const updatedBag = state.bag.map((item) => {
-      if (item.id_productoOrden !== product.id_productoOrden) return item;
+      if (item.id_producto !== product.id_producto) return item;
       item.cantidad_orden += product.cantidad_orden;
       return item;
     });
+    console.log(updatedBag, "-------updatedBag-------");
     dispatch({ type: "UPDATE_PRODUCTS_IN_BAG", payload: updatedBag });
+    console.log(state.bag, "-------bag-------");
   };
 
   const updateBagQuantity = (product: IProductoOrden) => {
@@ -86,45 +85,27 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const removeBagProduct = async (product: IProductoOrden) => {
-    const { id_productoOrden } = product;
-    try {
-      const { data } = await hrApi.delete(
-        `/cliente/ordenProducto/${id_productoOrden}`
-      );
-      console.log(data);
-      if (data.error) {
-        return {
-          hasError: true,
-          message: data.message,
-        };
-      }
-      dispatch({ type: "REMOVE_PRODUCT", payload: product });
-    } catch (error) {
-      console.log(error);
-      return {
-        hasError: true,
-        message: "Error al eliminar el producto de la bolsa",
-      };
-    }
+    dispatch({ type: "REMOVE_PRODUCT", payload: product });
   };
 
   const clearBag = () => {
     dispatch({ type: "CLEAR_BAG", payload: [] });
   };
 
-  const createOrder = async () => {
+  const createOrder = async (id_cliente: number) => {
     const body: IOrden = {
       fecha_orden: new Date().toISOString(),
       hora_orden: new Date().toISOString(),
-      monto_subtotal: state.total,
       monto_total: state.total,
-      estado_orden: "Pendiente",
+      estado_orden: "PENDIENTE",
+      productosOrden: state.bag,
+      id_cliente,
     };
 
     const products = state.bag;
 
     try {
-      const { data } = await hrApi.post("/order", { body, products });
+      const { data } = await hrApi.post("/cliente/order", { body, products });
       console.log(data);
       if (data.error) {
         return {

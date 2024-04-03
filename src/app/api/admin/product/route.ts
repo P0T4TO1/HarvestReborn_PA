@@ -1,23 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
+import { getSession } from "@/lib/authOptions";
 import prisma from "@/lib/prisma";
 import { Category } from "@/interfaces";
+import {
+  validateUpdateProduct,
+  validateCreateProduct,
+} from "@/validations/admin.validation";
 
 async function createProduct(req: NextRequest, res: NextResponse) {
-  const {
-    nombre_producto = "",
-    file = "",
-    descripcion = "",
-    enTemporada = false,
-    categoria = "",
-  } = (await new Response(req.body).json()) as {
-    nombre_producto: string;
-    file: string;
-    descripcion: string;
-    enTemporada: boolean;
-    categoria: Category;
-  };
-
   try {
+    const body = await req.json();
+
+    const {
+      categoria,
+      descripcion,
+      enTemporada,
+      file,
+      nombre_producto,
+    } = validateCreateProduct(body);
+
     const product = await prisma.m_producto.create({
       data: {
         nombre_producto,
@@ -38,37 +40,48 @@ async function createProduct(req: NextRequest, res: NextResponse) {
   }
 }
 
+interface Data {
+  id: number;
+  nombre_producto: string;
+  file: string;
+  descripcion: string;
+  enTemporada: boolean;
+  categoria: Category;
+  imagen_producto: string;
+}
+
 async function updateProduct(req: NextRequest, res: NextResponse) {
-  const {
-    id = 0,
-    nombre_producto = "",
-    file = "",
-    descripcion = "",
-    enTemporada = false,
-    categoria = "",
-  } = (await new Response(req.body).json()) as {
-    id: number;
-    nombre_producto: string;
-    file: string;
-    descripcion: string;
-    enTemporada: boolean;
-    categoria: Category;
-  };
+  try {
+    const session = await getSession();
+    // const body = await req.json();
+    const body = await new Response(req.body).json();
 
-  const product = await prisma.m_producto.update({
-    where: {
-      id_producto: id,
-    },
-    data: {
-      nombre_producto,
-      imagen_producto: file,
-      descripcion: descripcion || "",
-      enTemporada,
-      categoria: categoria.toUpperCase() as Category,
-    },
-  });
+    const { id, nombre_producto, file, descripcion, enTemporada, categoria } =
+      validateUpdateProduct(body);
 
-  return NextResponse.json(product, { status: 200 });
+    const product = await prisma.m_producto.update({
+      where: {
+        id_producto: id,
+      },
+      data: {
+        nombre_producto,
+        imagen_producto: file,
+        descripcion: descripcion || "",
+        enTemporada,
+        categoria: categoria?.toUpperCase() as Category,
+      },
+    });
+
+    revalidatePath(`/`);
+
+    return NextResponse.json(product, { status: 200 });
+  } catch (error) {
+    console.log(error, "error al validar los datos");
+    return NextResponse.json(
+      { message: "Error al validar los datos" },
+      { status: 500 }
+    );
+  }
 }
 
 async function deleteProduct(req: NextRequest, res: NextResponse) {
@@ -102,6 +115,8 @@ export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest, res: NextResponse) {
   const products = await prisma.m_producto.findMany();
+  // const session = await getSession();
+  // console.log(session, "session");
 
   return NextResponse.json(products, { status: 200 });
 }

@@ -65,7 +65,7 @@ export const NegociosList = () => {
   };
 
   return (
-    <div className="pt-20 lg:px-48 md:px-20 sm:px-12">
+    <div className="pt-20 container mx-auto">
       <h1 className="font-bebas-neue uppercase text-4xl font-black flex flex-col leading-none text-green-900">
         Negocios
         <span className="text-xl text-gray-900 font-semibold">
@@ -161,6 +161,9 @@ export const NegociosList = () => {
                 src={negocio?.images_negocio[0] || "/images/no-image.jpg"}
                 alt={negocio?.nombre_negocio}
                 className="min-w-full h-40 object-cover rounded-t-lg"
+                classNames={{
+                  wrapper: "min-w-full",
+                }}
               />
               <CardHeader className="px-4 flex flex-col items-start">
                 <h2 className="text-2xl font-bold mb-4">

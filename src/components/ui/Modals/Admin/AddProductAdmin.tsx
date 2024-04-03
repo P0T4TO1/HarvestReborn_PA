@@ -151,7 +151,7 @@ export const AddProductAdminModal = () => {
                       <input
                         type="file"
                         accept="image/png, image/jpg, image/jpeg, image/webp"
-                        className="bg-zinc-900 text-zinc-100 p-2 rounded block mb-2"
+                        className="bg-gray-200 text-gray-800 p-2 rounded-lg block mb-2 w-full"
                         onChange={handleFileChange}
                       />
                       {errors?.imagen_producto && (

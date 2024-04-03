@@ -119,14 +119,6 @@ export const RegisterForm = ({ user }: RegisterFormProps) => {
                       <FcGoogle className="mr-2" />
                       <span>Google</span>
                     </button>
-
-                    <button
-                      onClick={() => signIn("facebook")}
-                      className="w-full flex items-center justify-center mb-6 md:mb-0 border border-gray-300 hover:border-gray-500 hover:text-blue-700 text-sm text-gray-500 p-3  rounded-lg tracking-wide font-medium  cursor-pointer transition ease-in duration-500 px-"
-                    >
-                      <FaFacebook className="mr-2 text-blue-700" />
-                      <span>Facebook</span>
-                    </button>
                   </div>
                 </>
               )}

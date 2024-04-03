@@ -30,13 +30,13 @@ export const bagReducer = (state: BagState, action: BagAction): BagState => {
     case "UPDATE_PRODUCTS_IN_BAG":
       return {
         ...state,
-        bag: [...action.payload, ...state.bag],
+        bag: [...action.payload],
       };
     case "CHANGE_BAG_QUANTITY":
       return {
         ...state,
         bag: state.bag.map((product) => {
-          if (product.id_productoOrden !== action.payload.id_productoOrden)
+          if (product.id_producto !== action.payload.id_producto)
             return product;
           return action.payload;
         }),
@@ -46,7 +46,7 @@ export const bagReducer = (state: BagState, action: BagAction): BagState => {
         ...state,
         bag: state.bag.filter(
           (product) =>
-            !(product.id_productoOrden === action.payload.id_productoOrden)
+            !(product.id_producto === action.payload.id_producto)
         ),
       };
     case "UPDATE_ORDER_SUMMARY":

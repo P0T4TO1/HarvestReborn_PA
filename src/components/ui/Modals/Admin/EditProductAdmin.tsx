@@ -43,7 +43,6 @@ export const EditProductAdminModal = ({
   useDisclosure: { isOpen, onClose },
   loading,
 }: Props) => {
-  console.log("Product", product)
   const {
     register,
     handleSubmit,
@@ -63,7 +62,7 @@ export const EditProductAdminModal = ({
   });
   const router = useRouter();
 
-  const [isSelected, setIsSelected] = useState(false);
+  const [isSelected, setIsSelected] = useState(product.enTemporada);
   const [isEditing, setIsEditing] = useState(false);
   const [file, setFile] = useState<File | undefined>();
 
@@ -91,7 +90,6 @@ export const EditProductAdminModal = ({
           }
         });
       }
-      console.log("Data to send", data)
 
       const res = await hrApi.put(`/admin/product`, {
         id: product?.id_producto,
@@ -99,9 +97,8 @@ export const EditProductAdminModal = ({
       });
       if (res.status === 200) {
         toast("Producto editado correctamente", SUCCESS_TOAST);
-        router.refresh();
-
         onClose();
+        window.location.reload();
       }
     } catch (error) {
       console.log("Error al editar producto", error);
@@ -159,7 +156,7 @@ export const EditProductAdminModal = ({
                       <input
                         type="file"
                         accept="image/png, image/jpg, image/jpeg, image/webp"
-                        className="bg-zinc-900 text-zinc-100 p-2 rounded block mb-2"
+                        className="bg-gray-200 text-gray-800 p-2 rounded-lg block mb-2 w-full"
                         disabled={!isEditing}
                         onChange={handleFileChange}
                       />

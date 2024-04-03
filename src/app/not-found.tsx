@@ -3,43 +3,41 @@ import NextLink from "next/link";
 
 export default function Custom404() {
   return (
-    <div className="lg:px-24 lg:py-24 md:py-20 md:px-44 px-4 py-24 items-center flex justify-center flex-col-reverse lg:flex-row md:gap-28 gap-16 min-h-screen">
-      <div className="xl:pt-24 w-full xl:w-1/2 relative pb-12 lg:pb-0">
-        <div className="relative">
-          <div className="absolute">
-            <div className="">
-              <h1 className="my-2 text-gray-800 font-bold text-2xl">
-                Parece que has encontrado la puerta a la gran nada
-              </h1>
-              <p className="my-2 text-gray-800">
-                ¡Lo lamento! Visite nuestra página de inicio para llegar a donde
-                necesita ir.
-              </p>
-              <NextLink href="/">
-                <button className="sm:w-full lg:w-auto my-2 border rounded md py-4 px-8 text-center bg-green-600 text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-opacity-50">
-                  ¡Llévame allí!
-                </button>
-              </NextLink>
-            </div>
+    <>
+      <div className="flex items-center justify-center w-full min-h-screen bg-gray-100">
+        <div className="flex flex-col text-gray-700 lg:flex-row lg:space-x-16 lg:space-x-reverse">
+          <div className="order-1 max-w-md px-2 text-sm md:text-base lg:px-0">
+            <header className="mb-6">
+              <h2 className="text-4xl font-bold leading-none text-gray-400 select-none lg:text-6xl">
+                404.
+              </h2>
+              <h3 className="text-xl font-light leading-normal lg:text-3xl md:text-3xl">
+                Lo sentimos, no pudimos encontrar la página que buscas.
+              </h3>
+            </header>
+
+            <p className="max-w-sm mb-5 leading-5 md:leading-7">
+              Es posible que la página haya sido eliminada o que hayas ingresado
+              una URL incorrecta. Puedes volver a la página de inicio o
+              informarnos sobre el problema.
+            </p>
+            <NextLink href="/home">
+              <button className="inline px-4 py-2 text-sm font-medium leading-5 text-white uppercase transition-colors duration-150 bg-blue-600 border border-transparent rounded-lg shadow focus:outline-none focus:shadow-outline-blue active:bg-blue-600 hover:bg-blue-700">
+                Ir a la página de inicio
+              </button>
+            </NextLink>
           </div>
-          <div>
+
+          <div className="max-w-lg">
             <Image
-              src="https://i.ibb.co/G9DC8S0/404-2.png"
-              width={540}
-              height={540}
-              alt={"bg-404"}
+              src={"/images/404-error-cat.png"}
+              alt={"cat-404"}
+              width={500}
+              height={500}
             />
           </div>
         </div>
       </div>
-      <div>
-        <Image
-          src="/images/404Image.png"
-          alt={"404"}
-          width={540}
-          height={540}
-        />
-      </div>
-    </div>
+    </>
   );
 }

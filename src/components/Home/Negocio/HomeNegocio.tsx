@@ -19,7 +19,7 @@ export const HomeNegocio = () => {
           </div>
         </>
       )}
-      <div className="pt-10 lg:px-48 md:px-20 sm:px-12">
+      <div className="pt-10 container mx-auto">
         <div
           className="w-full sm:p-4 flex flex-col items-center justify-center"
           id="inventory-howitworks"

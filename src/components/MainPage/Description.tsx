@@ -58,9 +58,10 @@ export const DescriptionComponent: FC = () => {
             </button>
           </div>
         </div>
-        <div className="hidden sm:block w-1/2 relative">
+        <div className="hidden sm:flex w-1/2 justify-center">
           <Image
-            src={"/images/Apilados.png"}
+            // src={"/images/frutas-verduras.png"}
+            src={"/images/apilados.png"}
             alt="Apilados"
             className="max-w-xs sm:max-w-sm lg:max-w-md m-auto"
           />

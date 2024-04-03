@@ -5,6 +5,7 @@ export * from "./Home";
 export * from "./Inventory";
 export * from "./MainPage";
 export * from "./Negocios";
+export * from "./Orders";
 export * from "./Profile";
 export * from "./ui";
 export * from "./providers";

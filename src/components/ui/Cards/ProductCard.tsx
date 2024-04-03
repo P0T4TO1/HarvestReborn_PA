@@ -51,6 +51,9 @@ export const ProductCard: FC<Props> = ({ lote, product, children, route }) => {
                 alt={lote?.producto.nombre_producto}
                 className="w-full object-cover min-h-[140px]"
                 src={lote?.producto?.imagen_producto}
+                classNames={{
+                  img: "max-h-[152px]",
+                }}
               />
             </div>
             <div className="flex flex-col px-4 w-full">

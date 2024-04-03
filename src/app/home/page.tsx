@@ -12,7 +12,10 @@ const HomePage = async () => {
   return (
     <>
       {!session ? (
-        <CircularProgress size="lg" />
+        <div className="flex flex-col items-center justify-center">
+          <CircularProgress size="lg" />
+          <p>Cargando...</p>
+        </div>
       ) : (
         <section className="flex flex-col relative overflow-hidden min-h-screen">
           {session?.user.id_rol === 2 ? <HomeNegocio /> : <HomeCliente />}

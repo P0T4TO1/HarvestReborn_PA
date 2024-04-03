@@ -4,7 +4,6 @@ export interface IOrden {
   id_orden?: number;
   fecha_orden: string;
   hora_orden: string;
-  monto_subtotal: number;
   monto_total: number;
   estado_orden: string;
 

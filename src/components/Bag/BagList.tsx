@@ -2,6 +2,7 @@
 
 import React, { useContext } from "react";
 import { BagContext } from "@/context/order";
+import { AuthContext } from "@/context/auth";
 import { IProductoOrden } from "@/interfaces";
 import {
   Divider,
@@ -14,7 +15,6 @@ import {
   Input,
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
 import { toast } from "sonner";
 import { DANGER_TOAST, SUCCESS_TOAST, WARNING_TOAST } from "@/components";
 
@@ -34,6 +34,7 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
     total,
   } = useContext(BagContext);
   const { data: Session } = useSession();
+  const { user } = useContext(AuthContext);
 
   const onNewQuantity = (product: IProductoOrden, quantity: number) => {
     updateBagQuantity({ ...product, cantidad_orden: quantity });
@@ -48,7 +49,7 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
         WARNING_TOAST
       );
     }
-    createOrder().then((res) => {
+    createOrder(user?.cliente?.id_cliente!).then((res) => {
       if (res.hasError) {
         toast(res.message, DANGER_TOAST);
       }
@@ -58,7 +59,7 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
 
   return (
     <>
-      <div className="pt-20 lg:px-48 md:px-20 sm:px-12">
+      <div className="pt-20 container mx-auto">
         <div className="flex justify-between">
           <h1 className="font-bebas-neue uppercase text-4xl font-black flex flex-col leading-none text-green-900">
             Bolsa de compras
@@ -106,13 +107,7 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
                             add_circle
                           </span>
                         </Button>
-                        <Input
-                          className="w-12"
-                          type="number"
-                          size="sm"
-                          isDisabled
-                          defaultValue={product.cantidad_orden.toString()}
-                        />
+                        <span className="mx-4">{product.cantidad_orden.toString()} kg</span>
                         <Button
                           isIconOnly
                           onClick={() =>

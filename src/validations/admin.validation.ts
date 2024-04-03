@@ -18,7 +18,7 @@ export const adminAddProductValidation = z.object({
       message: "El nombre del producto debe tener menos de 100 caracteres",
     }),
   imagen_producto: z
-    .any({ required_error: "La imagen del producto es obligatoria" })
+    .unknown({ required_error: "La imagen del producto es obligatoria" })
     .refine(
       (file) => {
         if (!file) return false;
@@ -31,20 +31,22 @@ export const adminAddProductValidation = z.object({
       {
         message: "La imagen del producto no es válida",
       }
-    ),
+    )
+    .optional(),
+  file: z.string(),
   descripcion: z.string().optional(),
   enTemporada: z.boolean({
     required_error: "El campo en temporada es obligatorio",
   }),
-  categoria: z
-    .string({ required_error: "La categoría del producto es obligatoria" })
-    .min(3, {
-      message: "La categoría del producto debe tener mínimo 3 caracteres",
-    })
-    .max(100, {
-      message: "La categoría del producto debe tener menos de 100 caracteres",
-    }),
+  categoria: z.enum(["FRUTA", "VERDURA"]),
 });
+
+export const updateProductValidation = adminAddProductValidation
+  .partial()
+  .extend({
+    id: z.number(),
+    file: z.string().optional(),
+  });
 
 export const adminEditProductValidation = z.object({
   nombre_producto: z
@@ -379,3 +381,11 @@ export const adminEditUserValidation = z.object({
     .min(5, { message: "El código postal debe tener mínimo 5 caracteres" })
     .max(5, { message: "El código postal debe tener menos de 5 caracteres" }),
 });
+
+export const validateCreateProduct = (shape: unknown) =>
+  adminAddProductValidation.parse(shape);
+
+export const validateUpdateProduct = (shape: unknown) =>
+  updateProductValidation.parse(shape);
+
+export type TUpdateProduct = z.infer<typeof updateProductValidation>;

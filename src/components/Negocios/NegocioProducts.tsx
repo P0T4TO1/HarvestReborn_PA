@@ -1,9 +1,9 @@
 "use client";
 
-import { ChangeEvent, useContext, useEffect, useState } from "react";
+import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import { ILote, IProductoOrden } from "@/interfaces";
 import { hrApi } from "@/api";
-import { Input, Button } from "@nextui-org/react";
+import { Input, Button, CircularProgress } from "@nextui-org/react";
 import { ProductCard } from "@/components";
 import { BagContext } from "@/context/order";
 
@@ -34,7 +34,9 @@ export const NegocioProducts = ({
   const results = !search
     ? lotes
     : lotes.filter((lote) =>
-        lote.producto.nombre_producto.toLowerCase().includes(search.toLowerCase())
+        lote.producto.nombre_producto
+          .toLowerCase()
+          .includes(search.toLowerCase())
       );
 
   useEffect(() => {
@@ -50,9 +52,12 @@ export const NegocioProducts = ({
   }, [id_negocio]);
 
   return (
-    <div className="pt-20 lg:px-48 md:px-20 sm:px-12">
+    <div className="pt-20 container mx-auto">
       {loading ? (
-        <p>Cargando...</p>
+        <div className="flex flex-col">
+          <h2 className="text-2xl font-semibold">Cargando...</h2>
+          <CircularProgress size="lg" aria-label="Loading..." />
+        </div>
       ) : error ? (
         <p>Hubo un error</p>
       ) : (
@@ -82,7 +87,7 @@ export const NegocioProducts = ({
               <div>Filtros</div>
             </div>
             <div className="col-span-5">
-              <ul className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 grid-cols-1">
+              <ul className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 grid-cols-1 xl:grid-cols-4">
                 {results?.map((lote) => (
                   <li key={lote.id_producto} className="p-2 flex">
                     <ProductCard lote={lote} route={"negocio-prods-cliente"}>
