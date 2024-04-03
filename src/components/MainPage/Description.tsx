@@ -18,7 +18,7 @@ export const DescriptionComponent: FC = () => {
       className="flex flex-col items-center overflow-hidden min-h-screen"
       id="inicio"
     >
-      <div className="container mx-auto px-4 sm:px-8 md:px-16 lg:px-32 flex relative py-8 sm:py-16">
+      <div className="container m-auto px-4 sm:px-8 md:px-16 lg:px-32 flex relative">
         <div className="w-full sm:w-1/2 flex flex-col relative z-20 justify-center">
           <h1 className="font-bebas-neue uppercase text-4xl sm:text-5xl lg:text-6xl font-black flex flex-col leading-none text-green-900">
             Unidos
@@ -61,7 +61,7 @@ export const DescriptionComponent: FC = () => {
         <div className="hidden sm:flex w-1/2 justify-center">
           <Image
             // src={"/images/frutas-verduras.png"}
-            src={"/images/apilados.png"}
+            src={"/images/Apilados.png"}
             alt="Apilados"
             className="max-w-xs sm:max-w-sm lg:max-w-md m-auto"
           />
