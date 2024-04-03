@@ -104,10 +104,12 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
                           size="sm"
                         >
                           <span className="material-symbols-outlined">
-                            add_circle
+                            do_not_disturb_on
                           </span>
                         </Button>
-                        <span className="mx-4">{product.cantidad_orden.toString()} kg</span>
+                        <span className="mx-4">
+                          {product.cantidad_orden.toString()} kg
+                        </span>
                         <Button
                           isIconOnly
                           onClick={() =>
@@ -117,7 +119,7 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
                           size="sm"
                         >
                           <span className="material-symbols-outlined">
-                            do_not_disturb_on
+                            add_circle
                           </span>
                         </Button>
                       </>
