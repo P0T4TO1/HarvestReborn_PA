@@ -1,11 +1,19 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useTheme as useNextTheme } from "next-themes";
 import { Button } from "@nextui-org/react";
 
-export const DarkModeSwitch = () => {
+export const DarkModeSwitch = async () => {
   const { setTheme, resolvedTheme } = useNextTheme();
+  useEffect(() => {
+    if (resolvedTheme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [resolvedTheme]);
+
   return (
     <Button
       isIconOnly
