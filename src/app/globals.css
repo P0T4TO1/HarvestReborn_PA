@@ -31,7 +31,6 @@ body {
   display: flex;
   flex-direction: column;
   margin-bottom: 6rem;
-  border: 1px solid hsl(240, 11%, 91%);
   position: relative;
   transition: box-shadow 300ms;
 }

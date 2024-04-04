@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { redirect } from "next/navigation";
 import { HomeCliente, HomeNegocio } from "@/components";
-import { CircularProgress } from "@nextui-org/react";
+import { Spinner } from "@nextui-org/react";
 
 const HomePage = async () => {
   const session = await getServerSession(authOptions);
@@ -13,7 +13,7 @@ const HomePage = async () => {
     <>
       {!session ? (
         <div className="flex flex-col items-center justify-center">
-          <CircularProgress size="lg" />
+          <Spinner size="lg" />
           <p>Cargando...</p>
         </div>
       ) : (

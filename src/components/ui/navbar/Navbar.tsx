@@ -1,12 +1,11 @@
 "use client";
 
 import React, { useContext, useState } from "react";
-import { DropdownComponent } from "@/components";
+import { DropdownComponent, DarkModeSwitch } from "@/components";
 import { useSession } from "next-auth/react";
 import { AuthContext } from "@/context/auth";
 import { UiContext } from "@/context/ui";
 import { BagContext } from "@/context/order";
-import Image from "next/image";
 import {
   Navbar,
   NavbarBrand,
@@ -17,21 +16,21 @@ import {
   NavbarMenuItem,
   Link,
   Badge,
+  Image,
 } from "@nextui-org/react";
+import { useTheme as useNextTheme } from "next-themes";
 
 export const NavbarComponent = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { data: session } = useSession();
   const { user } = useContext(AuthContext);
   const { numberOfProducts } = useContext(BagContext);
-  const { toggleSideMenu, isMenuOpen } = useContext(UiContext);
+  const { toggleSideMenu } = useContext(UiContext);
+  const { resolvedTheme } = useNextTheme();
 
   return (
     <>
-      <Navbar
-        onMenuOpenChange={setMobileMenuOpen}
-        className="bg-green-800 z-[40]"
-      >
+      <Navbar onMenuOpenChange={setMobileMenuOpen} isBordered className="fixed">
         {user?.id_rol === 1 ? (
           <NavbarContent>
             <button onClick={toggleSideMenu} className="md:hidden">
@@ -41,7 +40,7 @@ export const NavbarComponent = () => {
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
-                className="w-6 h-6 text-white"
+                className="w-6 h-6"
               >
                 <path
                   strokeLinecap="round"
@@ -58,10 +57,14 @@ export const NavbarComponent = () => {
 
             <NavbarBrand>
               <Image
-                src="/images/logo.png"
+                src={
+                  resolvedTheme === "dark"
+                    ? "/images/logo-white.png"
+                    : "/images/logo.png"
+                }
                 alt="Harvest Reborn"
-                width={80}
-                height={80}
+                width={50}
+                height={50}
               />
             </NavbarBrand>
           </NavbarContent>
@@ -75,8 +78,8 @@ export const NavbarComponent = () => {
               <Image
                 src="/images/logo.png"
                 alt="Harvest Reborn"
-                width={80}
-                height={80}
+                width={50}
+                height={50}
               />
             </NavbarBrand>
           </NavbarContent>
@@ -86,65 +89,49 @@ export const NavbarComponent = () => {
           {session && user?.id_rol !== 4 ? (
             <>
               <NavbarItem>
-                <Link className="text-gray-300" href={"/home"}>
+                <Link color="foreground" href={"/home"}>
                   Inicio
                 </Link>
               </NavbarItem>
               {user?.id_rol === 2 ? (
                 <>
                   <NavbarItem>
-                    <Link className="text-gray-300" href={"/inventory"}>
+                    <Link color="foreground" href={"/inventory"}>
                       Inventario
                     </Link>
                   </NavbarItem>
                   <NavbarItem>
-                    <Link className="text-gray-300" href={"/orders"}>
+                    <Link color="foreground" href={"/orders"}>
                       Pedidos
                     </Link>
                   </NavbarItem>
                 </>
-              ) : user?.id_rol === 3 ? (
-                <>
-                  <NavbarItem>
-                    <Link className="text-gray-300" href={"/negocios"}>
-                      Recauderías
-                    </Link>
-                  </NavbarItem>
-                  <NavbarItem>
-                    <Link className="text-gray-300" href={"/orders"}>
-                      Mis pedidos
-                    </Link>
-                  </NavbarItem>
-                </>
               ) : (
-                <>
-                  <NavbarItem>
-                    <Link className="text-gray-300" href={"/admin/dashboard"}>
-                      Dashboard
-                    </Link>
-                  </NavbarItem>
-                  <NavbarItem>
-                    <Link className="text-gray-300" href={"/admin/tickets"}>
-                      Tickets
-                    </Link>
-                  </NavbarItem>
-                </>
+                user?.id_rol === 3 && (
+                  <>
+                    <NavbarItem>
+                      <Link color="foreground" href={"/negocios"}>
+                        Recauderías
+                      </Link>
+                    </NavbarItem>
+                  </>
+                )
               )}
             </>
           ) : (
             <>
               <NavbarItem>
-                <Link className="text-gray-300" href="/#">
+                <Link color="foreground" href="/public#">
                   Inicio
                 </Link>
               </NavbarItem>
               <NavbarItem>
-                <Link className="text-gray-300" href="/#servicios">
+                <Link color="foreground" href="/public#servicios">
                   Cómo funciona
                 </Link>
               </NavbarItem>
               <NavbarItem>
-                <Link className="text-gray-300" href={"/negocios"}>
+                <Link color="foreground" href={"/negocios"}>
                   Recauderías
                 </Link>
               </NavbarItem>
@@ -155,7 +142,8 @@ export const NavbarComponent = () => {
           {!session || user?.id_rol === 3 ? (
             <NavbarItem>
               <Link
-                className="flex items-center text-gray-300"
+                className="flex items-center"
+                color="foreground"
                 href={"/bag"}
               >
                 <Badge
@@ -171,6 +159,7 @@ export const NavbarComponent = () => {
               </Link>
             </NavbarItem>
           ) : null}
+          <DarkModeSwitch />
           <NavbarItem>
             <DropdownComponent />
           </NavbarItem>
@@ -204,11 +193,6 @@ export const NavbarComponent = () => {
                       Recauderías
                     </Link>
                   </NavbarMenuItem>
-                  <NavbarMenuItem>
-                    <Link color="foreground" href={"/orders"}>
-                      Mis pedidos
-                    </Link>
-                  </NavbarMenuItem>
                 </>
               ) : (
                 <>
@@ -238,7 +222,7 @@ export const NavbarComponent = () => {
                 </Link>
               </NavbarMenuItem>
               <NavbarMenuItem>
-                <Link color="foreground" href="/#servicios">
+                <Link color="foreground" href="/public#servicios">
                   Cómo funciona
                 </Link>
               </NavbarMenuItem>

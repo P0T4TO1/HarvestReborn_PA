@@ -2,19 +2,22 @@
 
 import { FC, useState, useContext } from "react";
 
-import NextLink from "next/link";
-
 import { FcGoogle } from "react-icons/fc";
-import { FaFacebook } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { loginSchema } from "@/validations/auth.validation";
 import { signIn, SignInResponse } from "next-auth/react";
 import { toast } from "sonner";
 import { AuthContext } from "@/context/auth";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Input } from "@nextui-org/input";
+import {
+  Input,
+  Link,
+  Card,
+  CardBody,
+  CardHeader,
+  CardFooter,
+} from "@nextui-org/react";
 import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
-import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isEmailVerified } from "@/hooks";
 
@@ -92,122 +95,121 @@ export const LoginForm: FC = () => {
   };
 
   return (
-    <section className="relative min-h-screen sm:flex sm:flex-row justify-center bg-transparent">
-      <div className="flex justify-center self-center z-10 shadow-xl">
-        <div className="p-12 bg-white mx-auto rounded-3xl w-96 ">
-          <div className="mb-7">
-            <h3 className="font-semibold text-2xl text-gray-800">
+    <section className="relative min-h-screen flex flex-row justify-center bg-transparent">
+      <div className="flex justify-center self-center z-10">
+        <Card className="p-6 w-96" shadow="lg">
+          <CardHeader className="flex flex-col items-start">
+            <h3 className="font-semibold text-2xl dark:text-gray-300 light:text-gray-300">
               Iniciar sesión{" "}
             </h3>
             <p className="text-gray-400">
               ¿No tienes una cuenta?{" "}
-              <NextLink
-                href="/auth/register"
+              <Link
+                href={"/auth/register"}
                 className="text-sm text-green-700 hover:text-green-800 hover:underline"
               >
                 Regístrate
-              </NextLink>
+              </Link>
             </p>
-          </div>
-          <form onSubmit={handleSubmit(clientAction)}>
-            <div className="space-y-6">
-              <div className="relative">
-                <Input
-                  type="email"
-                  id="email"
-                  placeholder="Email"
-                  {...register("user_email")}
-                />
-                {errors?.user_email && (
-                  <p className="text-red-500 text-xs">
-                    {errors?.user_email.message}
-                  </p>
-                )}
-              </div>
+          </CardHeader>
+          <CardBody>
+            <form onSubmit={handleSubmit(clientAction)}>
+              <div className="space-y-6">
+                <div className="relative">
+                  <Input
+                    type="email"
+                    id="email"
+                    label="Email"
+                    {...register("user_email")}
+                  />
+                  {errors?.user_email && (
+                    <p className="text-red-500 text-xs">
+                      {errors?.user_email.message}
+                    </p>
+                  )}
+                </div>
 
-              <div className="relative">
-                <Input
-                  placeholder="Contraseña"
-                  type={visible ? "text" : "password"}
-                  id="password"
-                  {...register("user_password")}
-                  endContent={
-                    <button
-                      type="button"
-                      onClick={() => setVisible(!visible)}
-                      className="flex items-center absolute inset-y-0 right-0 mr-3 cursor-pointer text-sm leading-5 text-green-700"
+                <div className="relative">
+                  <Input
+                    label="Contraseña"
+                    type={visible ? "text" : "password"}
+                    id="password"
+                    {...register("user_password")}
+                    endContent={
+                      <button
+                        type="button"
+                        onClick={() => setVisible(!visible)}
+                        className="flex items-center absolute inset-y-0 right-0 mr-3 cursor-pointer text-sm leading-5 text-green-700"
+                      >
+                        {visible ? (
+                          <span className="material-symbols-outlined">
+                            visibility_off
+                          </span>
+                        ) : (
+                          <span className="material-symbols-outlined">
+                            visibility
+                          </span>
+                        )}
+                      </button>
+                    }
+                  />
+                  {errors?.user_password && (
+                    <p className="text-red-700 text-xs">
+                      {errors?.user_password.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="text-sm ml-auto">
+                    <Link
+                      href={"/auth/reset-password"}
+                      color="success"
+                      className="text-sm"
                     >
-                      {visible ? (
-                        <span className="material-symbols-outlined">
-                          visibility_off
-                        </span>
-                      ) : (
-                        <span className="material-symbols-outlined">
-                          visibility
-                        </span>
-                      )}
-                    </button>
-                  }
-                />
-                {errors?.user_password && (
-                  <p className="text-red-700 text-xs">
-                    {errors?.user_password.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="text-sm ml-auto">
-                  <Link
-                    href={"/auth/reset-password"}
-                    className="text-green-800 hover:text-green-600"
+                      Olvidaste tu contraseña?
+                    </Link>
+                  </div>
+                </div>
+                <div>
+                  <button
+                    type="submit"
+                    className="w-full flex justify-center bg-green-800 hover:bg-green-700 text-gray-100 p-3  rounded-lg tracking-wide font-semibold  cursor-pointer transition ease-in duration-500"
                   >
-                    Olvidaste tu contraseña?
-                  </Link>
+                    Iniciar sesión
+                  </button>
+                </div>
+                <div className="flex items-center justify-center space-x-2 my-5">
+                  <span className="h-px w-16 bg-gray-400"></span>
+                  <span className="light:text-gray-700 dark:text-gray-300 font-normal text-sm text-center">
+                    O también puedes iniciar sesión con
+                  </span>
+                  <span className="h-px w-16 bg-gray-400"></span>
+                </div>
+                <div className="flex justify-center gap-5 w-full ">
+                  <button
+                    type="button"
+                    onClick={() => signIn("google")}
+                    className="w-full flex items-center justify-center mb-6 md:mb-0 border border-gray-300 hover:border-gray-500 hover:text-yellow-700 dark:text-gray-300 dark:hover:text-yellow-700 text-sm text-gray-500 p-3  rounded-lg tracking-wide font-medium  cursor-pointer transition ease-in duration-500"
+                  >
+                    <FcGoogle className="mr-2" />
+                    <span>Google</span>
+                  </button>
                 </div>
               </div>
-              <div>
-                <button
-                  type="submit"
-                  className="w-full flex justify-center bg-green-800 hover:bg-green-700 text-gray-100 p-3  rounded-lg tracking-wide font-semibold  cursor-pointer transition ease-in duration-500"
-                >
-                  Iniciar sesión
-                </button>
-              </div>
-              <div className="flex items-center justify-center space-x-2 my-5">
-                <span className="h-px w-16 bg-gray-400"></span>
-                <span className="text-gray-700 font-normal text-sm text-center">
-                  O también puedes iniciar sesión con
-                </span>
-                <span className="h-px w-16 bg-gray-400"></span>
-              </div>
-              <div className="flex justify-center gap-5 w-full ">
-                <button
-                  onClick={() => signIn("google")}
-                  className="w-full flex items-center justify-center mb-6 md:mb-0 border border-gray-300 hover:border-gray-500 hover:text-yellow-700 text-sm text-gray-500 p-3  rounded-lg tracking-wide font-medium  cursor-pointer transition ease-in duration-500"
-                >
-                  <FcGoogle className="mr-2" />
-                  <span>Google</span>
-                </button>
-              </div>
+            </form>
+          </CardBody>
+          <CardFooter className="flex items-center justify-center">
+            <div className="light:text-gray-500 dark:text-gray-400 text-xs">
+              <span>
+                Copyright © 2024
+                <Link href={"/"} rel="" className="text-green-500 text-sm">
+                  &nbsp; Harvest Reborn
+                </Link>
+              </span>
             </div>
-          </form>
-          <div className="mt-7 text-center text-gray-500 text-xs">
-            <span>
-              Copyright © 2024
-              <a
-                href="https://github.com/P0T4TO1"
-                rel=""
-                target="_blank"
-                title="Codepen aji"
-                className="text-green-500 hover:text-green-600"
-              >
-                {" "}
-                Harvest Reborn
-              </a>
-            </span>
-          </div>
-        </div>
+          </CardFooter>
+        </Card>
       </div>
     </section>
   );

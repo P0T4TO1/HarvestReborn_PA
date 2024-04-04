@@ -1,4 +1,4 @@
-import { LoginForm } from "@/components";
+import { Footer, LoginForm, NavbarComponent } from "@/components";
 import { authOptions } from "@/lib/authOptions";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";

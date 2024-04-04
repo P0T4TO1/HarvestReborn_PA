@@ -1,6 +1,13 @@
 "use client";
 
-import { Button, Input, Select, SelectItem } from "@nextui-org/react";
+import {
+  BreadcrumbItem,
+  Breadcrumbs,
+  Button,
+  Input,
+  Select,
+  SelectItem,
+} from "@nextui-org/react";
 import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import axios from "axios";
@@ -147,28 +154,24 @@ export const AddUserForm = () => {
 
   return (
     <div className="my-10 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
-      <ul className="flex">
-        <li className="flex gap-2">
-          <span className="material-symbols-outlined">home</span>
-          <Link href={"/admin/dashboard"}>
-            <span>Home</span>
-          </Link>
-          <span> / </span>{" "}
-        </li>
-
-        <li className="flex gap-2">
-          <span className="material-symbols-outlined">group</span>
-          <Link href={"/admin/dashboard/users"}>
-            <span>Usuarios</span>
-          </Link>
-          <span> / </span>{" "}
-        </li>
-        <li className="flex gap-2">
-          <span className="material-symbols-outlined">person_add</span>
-          <span>Agregar</span>
-          <span> / </span>{" "}
-        </li>
-      </ul>
+      <Breadcrumbs size="lg">
+        <BreadcrumbItem
+          href={"/admin/dashboard"}
+          startContent={<span className="material-symbols-outlined">home</span>}
+        >
+          Home
+        </BreadcrumbItem>
+        <BreadcrumbItem
+          href={"/admin/dashboard/users"}
+          startContent={
+            <span className="material-symbols-outlined">group</span>
+          }
+        >
+          Usuarios
+        </BreadcrumbItem>
+        <BreadcrumbItem href={"/admin/dashboard/users"}>Listado</BreadcrumbItem>
+        <BreadcrumbItem>Agregar</BreadcrumbItem>
+      </Breadcrumbs>
 
       <h3 className="text-xl font-semibold">Agregar usuario nuevo</h3>
       <div className="max-w-[95rem] mx-auto w-full">

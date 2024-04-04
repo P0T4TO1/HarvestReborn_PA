@@ -59,14 +59,18 @@ export const ProductsCollapsibleTable = ({
         useDisclosure={{ isOpen, onClose }}
         loading={loading}
       />
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} className="dark:bg-[#1D1C19]">
         <Table aria-label="collapsible table">
           <TableHead>
             <TableRow>
-              <TableCell align="left">Ver lotes</TableCell>
-              <TableCell>Imagen</TableCell>
-              <TableCell align="right">Nombre del producto</TableCell>
-              <TableCell align="right">
+              <TableCell align="left" className="dark:text-gray-300">
+                Ver lotes
+              </TableCell>
+              <TableCell className="dark:text-gray-300">Imagen</TableCell>
+              <TableCell align="right" className="dark:text-gray-300">
+                Nombre del producto
+              </TableCell>
+              <TableCell align="right" className="dark:text-gray-300">
                 No. de lotes
               </TableCell>
             </TableRow>

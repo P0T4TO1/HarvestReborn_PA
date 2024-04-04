@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useState, ReactNode } from "react";
+import { FC, ReactNode } from "react";
 import { ILote, IProduct } from "@/interfaces";
 import { Card, CardBody, Image } from "@nextui-org/react";
 
@@ -12,33 +12,23 @@ interface Props {
 }
 
 export const ProductCard: FC<Props> = ({ lote, product, children, route }) => {
-  const [openCards, setOpenCards] = useState<boolean>(false);
-
   return (
     <>
       {route === "add-product" ? (
         <>
-          <div className="product">
+          <Card className="product">
             <div className="left-side bg-[#87b663]">
               <Image src={product?.imagen_producto} alt="" className="image" />
             </div>
-            <div
-              className={`setting-modal-container ${
-                openCards ? "show-setting-modal" : ""
-              }`}
-            >
-              {children}
-            </div>
-
-            <div className="right-side flex flex-col">
-              <h2 className="name text-md font-semibold text-center text-gray-700">
+            <div className="right-side flex flex-col border-1 border-gray-300">
+              <h2 className="name text-md font-semibold text-center">
                 {product?.nombre_producto}
               </h2>
               {product && (
                 <div className="setting-icon-container">{children}</div>
               )}
             </div>
-          </div>
+          </Card>
         </>
       ) : route === "negocio-prods-cliente" ? (
         <Card>

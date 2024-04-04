@@ -9,7 +9,7 @@ const AddProductPage = async () => {
   if (!session) redirect("/auth/login");
 
   return (
-    <section className="flex flex-col relative overflow-hidden min-h-screen">
+    <section className="flex mt-16 flex-col relative overflow-hidden min-h-screen">
       <AddProductLote />
     </section>
   );

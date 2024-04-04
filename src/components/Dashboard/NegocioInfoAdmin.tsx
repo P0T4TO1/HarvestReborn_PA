@@ -4,11 +4,14 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { ILote, INegocio } from "@/interfaces";
 import { hrApi } from "@/api";
-import { CircularProgress, Image, Button } from "@nextui-org/react";
 import {
-  ProductsCollapsibleTable,
-  EditNegocioAdmin,
-} from "@/components";
+  CircularProgress,
+  Image,
+  Button,
+  BreadcrumbItem,
+  Breadcrumbs,
+} from "@nextui-org/react";
+import { ProductsCollapsibleTable, EditNegocioAdmin } from "@/components";
 
 interface NegocioInfoAdminProps {
   id_negocio: number;
@@ -52,23 +55,24 @@ export const NegocioInfoAdmin = ({ id_negocio }: NegocioInfoAdminProps) => {
 
   return (
     <div className="my-10 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
-      <ul className="flex">
-        <li className="flex gap-2">
-          <span className="material-symbols-outlined">home</span>
-          <Link href={"/admin/dashboard"}>
-            <span>Home</span>
-          </Link>
-          <span> / </span>{" "}
-        </li>
-
-        <li className="flex gap-2">
-          <span className="material-symbols-outlined">store</span>
-          <span>Negocios </span> <span> / </span>{" "}
-        </li>
-        <li className="flex gap-2">
-          <span>Info</span>
-        </li>
-      </ul>
+      <Breadcrumbs size="lg">
+        <BreadcrumbItem
+          href={"/admin/dashboard"}
+          startContent={<span className="material-symbols-outlined">home</span>}
+        >
+          Home
+        </BreadcrumbItem>
+        <BreadcrumbItem
+          href={"/admin/dashboard/negocios"}
+          startContent={
+            <span className="material-symbols-outlined">storefront</span>
+          }
+        >
+          Negocios
+        </BreadcrumbItem>
+        <BreadcrumbItem href={"/admin/dashboard/negocios"}>Listado</BreadcrumbItem>
+        <BreadcrumbItem>Info</BreadcrumbItem>
+      </Breadcrumbs>
 
       <h3 className="text-xl font-semibold">Información del negocio</h3>
 

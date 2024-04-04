@@ -49,7 +49,10 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
         WARNING_TOAST
       );
     }
-    createOrder(user?.cliente?.id_cliente!).then((res) => {
+    createOrder(
+      user?.cliente?.id_cliente!,
+      user?.cliente?.historial.id_historial!
+    ).then((res) => {
       if (res.hasError) {
         toast(res.message, DANGER_TOAST);
       }
@@ -59,10 +62,10 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
 
   return (
     <>
-      <div className="pt-20 container mx-auto">
+      <div className="pt-16 container mx-auto">
         <div className="flex justify-between">
-          <h1 className="font-bebas-neue uppercase text-4xl font-black flex flex-col leading-none text-green-900">
-            Bolsa de compras
+          <h1 className="font-bebas-neue uppercase text-4xl font-black flex flex-col leading-none dark:text-green-600 text-green-900">
+            Tu bolsa
           </h1>
           <Button
             onClick={clearBag}

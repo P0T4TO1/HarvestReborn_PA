@@ -8,7 +8,7 @@ import { HomeNegocioCard } from "@/components";
 export const HomeNegocio = () => {
   const { user } = useContext(AuthContext);
   return (
-    <>
+    <section className="pt-16">
       {user?.duenonegocio?.negocio?.estado_negocio === "PENDIENTE" && (
         <>
           <div className="warning-home-negocio w-full flex items-center h-8 justify-center text-[#f5a524]">
@@ -86,6 +86,6 @@ export const HomeNegocio = () => {
           </p>
         </HomeNegocioCard>
       </div>
-    </>
+    </section>
   );
 };

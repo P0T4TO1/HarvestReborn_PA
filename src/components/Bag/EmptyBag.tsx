@@ -11,7 +11,7 @@ export const EmptyBag = () => {
         height={200}
         alt="Empty bag"
       />
-      <p className="text-lg font-semibold text-gray-500 mt-4">
+      <p className="text-lg font-semibold text-gray-500 dark:text-gray-400 mt-4">
         No hay productos en la bolsa
       </p>
       <Link href={"/negocios"} className="mt-4">

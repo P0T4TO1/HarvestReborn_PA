@@ -165,7 +165,11 @@ async function getUser(
         id: params.id,
       },
       include: {
-        duenonegocio: true,
+        duenonegocio: {
+          include: {
+            negocio: true,
+          },
+        },
         cliente: true,
       },
     });

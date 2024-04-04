@@ -46,7 +46,11 @@ export const authOptions: NextAuthOptions = {
               id_user: user.id,
             },
             include: {
-              negocio: true,
+              negocio: {
+                include: {
+                  historial: true,
+                }
+              },
             },
           });
           return { ...user, duenonegocio };
@@ -54,6 +58,9 @@ export const authOptions: NextAuthOptions = {
           const cliente = await prisma.d_cliente.findFirst({
             where: {
               id_user: user.id,
+            },
+            include: {
+              historial: true,
             },
           });
           return { ...user, cliente };

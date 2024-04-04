@@ -39,11 +39,11 @@ export const AddProductLote = () => {
 
   return (
     <>
-      <div className="pt-20 container mx-auto">
-        <h1 className="font-bebas-neue uppercase text-4xl font-black flex flex-col leading-none text-green-900">
+      <div className="pt-16 container mx-auto">
+        <h1 className="font-bebas-neue uppercase text-4xl font-black flex flex-col leading-none dark:text-green-600 text-green-900">
           Agregar productos
         </h1>
-        <p className="text-xl text-gray-900 font-semibold">
+        <p className="text-xl dark:text-gray-300 text-gray-900 font-semibold">
           Aquí puedes agregar productos a tu inventario
         </p>
 
@@ -55,7 +55,7 @@ export const AddProductLote = () => {
 
         <div className="flex mt-12">
           <div className="flex flex-col flex-1 justify-center sm:justify-start">
-            <h1 className="font-bebas-neue uppercase text-xl font-black flex flex-col leading-none text-green-900">
+            <h1 className="font-bebas-neue uppercase text-xl font-black flex flex-col leading-none dark:text-green-600 text-green-900">
               Todos los productos registrados
             </h1>
             <div className="flex mt-2 w-2/5">
@@ -70,16 +70,6 @@ export const AddProductLote = () => {
                 defaultValue={search}
                 onChange={handleChange}
               />
-            </div>
-          </div>
-          <div className="absolute inset-y-0 right-0 flex items-end pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 flex-col">
-            <div className="mt-4 flex justify-center text-gray-900 p-3 text-xs tracking-wide font-semibold">
-              <h3 className="text-sm text-gray-900 font-normal">
-                Si no encuentras el producto que buscas, puedes agregarlo
-              </h3>
-              <button className="ml-4">
-                <span className="material-symbols-outlined">add_circle</span>
-              </button>
             </div>
           </div>
         </div>

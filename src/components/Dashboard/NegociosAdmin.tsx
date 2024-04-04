@@ -1,11 +1,14 @@
 "use client";
 
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { TableNegocios } from "@/components";
 import { INegocio } from "@/interfaces";
 import { hrApi } from "@/api";
-import { CircularProgress } from "@nextui-org/react";
+import {
+  CircularProgress,
+  BreadcrumbItem,
+  Breadcrumbs,
+} from "@nextui-org/react";
 
 export const NegociosAdmin = () => {
   const [loading, setLoading] = useState(true);
@@ -25,23 +28,23 @@ export const NegociosAdmin = () => {
 
   return (
     <div className="my-10 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
-      <ul className="flex">
-        <li className="flex gap-2">
-          <span className="material-symbols-outlined">home</span>
-          <Link href={"/admin/dashboard"}>
-            <span>Home</span>
-          </Link>
-          <span> / </span>{" "}
-        </li>
-
-        <li className="flex gap-2">
-          <span className="material-symbols-outlined">store</span>
-          <span>Negocios </span> <span> / </span>{" "}
-        </li>
-        <li className="flex gap-2">
-          <span>Listado</span>
-        </li>
-      </ul>
+      <Breadcrumbs size="lg">
+        <BreadcrumbItem
+          href={"/admin/dashboard"}
+          startContent={<span className="material-symbols-outlined">home</span>}
+        >
+          Home
+        </BreadcrumbItem>
+        <BreadcrumbItem
+          href={"/admin/dashboard/negocios"}
+          startContent={
+            <span className="material-symbols-outlined">storefront</span>
+          }
+        >
+          Negocios
+        </BreadcrumbItem>
+        <BreadcrumbItem>Listado</BreadcrumbItem>
+      </Breadcrumbs>
 
       <h3 className="text-xl font-semibold">Todos los negocios</h3>
       <div className="flex justify-between flex-wrap gap-4 items-center">

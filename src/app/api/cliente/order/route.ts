@@ -9,6 +9,7 @@ interface body {
   monto_total: number;
   estado_orden: string;
   id_cliente: number;
+  id_historial: number;
 }
 
 interface products {
@@ -23,15 +24,21 @@ async function createOrder(req: NextRequest, res: NextResponse) {
     body: body;
     products: products[];
   };
+  // make an id for the order
+  let now = new Date().toString();
+  now += now + Math.floor(Math.random() * 10)
+  const id_orden = now.replace(/[^0-9]/g, "").slice(0, 10).toString();
 
   try {
     const order = await prisma.d_orden.create({
       data: {
+        id_orden,
         fecha_orden: body.fecha_orden,
         hora_orden: body.hora_orden,
         monto_total: body.monto_total,
         estado_orden: Estado.Pendiente,
         id_cliente: body.id_cliente,
+        id_historial: body.id_historial,
         productoOrden: {
           createMany: {
             data: products.map((product) => ({

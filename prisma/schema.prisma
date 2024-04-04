@@ -167,7 +167,7 @@ model m_prodcutoOrden {
   cantidad_orden   Int
   monto            Float
 
-  id_orden Int?
+  id_orden String?
   orden    d_orden? @relation(fields: [id_orden], references: [id_orden])
 
   id_producto Int
@@ -186,7 +186,7 @@ model m_prodcutoOrden {
 }
 
 model d_orden {
-  id_orden     Int      @id @default(autoincrement())
+  id_orden     String   @id @default(uuid())
   fecha_orden  DateTime
   hora_orden   DateTime
   monto_total  Float

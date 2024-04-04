@@ -237,19 +237,19 @@ export const EditNegocioAdmin = ({ negocio, isEditing }: Props) => {
               <div className="grid grid-cols-1 gap-4">
                 <p className="text-lg font-semibold my-4">Dueño del negocio</p>
                 <div>
-                  <div className="relative text-gray-800 font-medium">
+                  <div className="relative font-medium">
                     <p className="ml-2 mb-2 text-sm">Nombre del dueño</p>
                     <span>{negocio.dueneg.nombre_dueneg}</span>
                   </div>
                 </div>
                 <div>
-                  <div className="relative text-gray-800 font-medium">
+                  <div className="relative font-medium">
                     <p className="ml-2 mb-2 text-sm">Apellidos del dueño</p>
                     <span>{negocio.dueneg.apellidos_dueneg}</span>
                   </div>
                 </div>
                 <div>
-                  <div className="relative text-gray-800 font-medium">
+                  <div className="relative font-medium">
                     <p className="ml-2 mb-2 text-sm">Correo del dueño</p>
                     <span>{negocio.dueneg.user?.email}</span>
                   </div>

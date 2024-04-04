@@ -1,9 +1,10 @@
+"use client";
+
 import React from "react";
 
 import { FaGithub, FaFacebook, FaInstagram } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-import Image from "next/image";
-import NextLink from "next/link";
+import { Image, Link } from "@nextui-org/react";
 
 export const Footer = () => {
   return (
@@ -13,50 +14,38 @@ export const Footer = () => {
         <div className="container mx-auto px-4 pt-8">
           <div className="flex flex-wrap text-left lg:text-left">
             <div className="w-full lg:w-6/12 px-4">
-              <div className="flex items-center -ml-6">
+              <div className="flex items-center">
                 <Image
                   src={"/images/logo.png"}
                   alt={"logoFooter"}
-                  width={100}
-                  height={100}
+                  width={50}
+                  height={50}
                 />
-                <h4 className="text-3xl font-bold text-green-900">
+                <h4 className="text-3xl font-bold text-green-900 ml-2 ">
                   Harvest Reborn
                 </h4>
               </div>
               <div className="mt-6 lg:mb-0 mb-6 flex">
-                <NextLink
+                <Link
                   target={"_blank"}
                   href="https://github.com/P0T4TO1"
-                  className="flex bg-white text-lightBlue-400 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
-                  type="button"
+                  color="foreground"
+                  className="text-xl"
                 >
                   <FaGithub />
-                </NextLink>
-                <NextLink
-                  target={"_blank"}
-                  href={"https://www.facebook.com"}
-                  className="bg-white flex text-lightBlue-600 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
-                  type="button"
-                >
-                  <FaFacebook />
-                </NextLink>
-                <NextLink
-                  target={"_blank"}
-                  href={"https://www.twitter.com"}
-                  className="flex bg-white text-lightBlue-600 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
-                  type="button"
-                >
-                  <FaXTwitter />
-                </NextLink>
-                <NextLink
-                  target={"_blank"}
-                  href={"https://www.instagram.com"}
-                  className="flex bg-white text-lightBlue-600 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
-                  type="button"
-                >
-                  <FaInstagram />
-                </NextLink>
+                </Link>
+              </div>
+              <div>
+                <p className="mt-6 text-sm text-blueGray-500">
+                  Built by{" "}
+                  <Link
+                    href={"https://github.com/P0T4TO1"}
+                    target="_blank"
+                    color="foreground"
+                  >
+                    Jaret García
+                  </Link>
+                </p>
               </div>
             </div>
             <div className="w-full lg:w-6/12 px-4">
@@ -67,36 +56,41 @@ export const Footer = () => {
                   </span>
                   <ul className="list-unstyled">
                     <li>
-                      <NextLink
-                        className="font-semibold block pb-2 text-sm hover:text-gray-800"
+                      <Link
+                        className="font-semibold mb-2 text-sm"
                         href={"/"}
+                        color="foreground"
                       >
                         Inicio
-                      </NextLink>
+                      </Link>
                     </li>
                     <li>
-                      <NextLink
-                        className="font-semibold block pb-2 text-sm hover:text-gray-800"
+                      <Link
+                        className="font-semibold mb-2 text-sm"
                         href={"/negocios"}
+                        color="foreground"
                       >
                         Recauderías
-                      </NextLink>
+                      </Link>
                     </li>
                     <li>
-                      <NextLink
-                        className="font-semibold block pb-2 text-sm hover:text-gray-800"
+                      <Link
+                        className="font-semibold mb-2 text-sm"
                         href="/#aboutUs"
+                        color="foreground"
+
                       >
                         Acerca de nosotros
-                      </NextLink>
+                      </Link>
                     </li>
                     <li>
-                      <NextLink
-                        className="font-semibold block pb-2 text-sm hover:text-gray-800"
+                      <Link
+                        className="font-semibold mb-2 text-sm"
                         href={"/contact"}
+                        color="foreground"
                       >
                         Contacto
-                      </NextLink>
+                      </Link>
                     </li>
                   </ul>
                 </div>
@@ -106,20 +100,22 @@ export const Footer = () => {
                   </span>
                   <ul className="list-unstyled">
                     <li>
-                      <NextLink
-                        className="font-semibold block pb-2 text-sm hover:text-gray-800"
+                      <Link
+                        className="font-semibold mb-2 text-sm"
                         href={"/terms-conditions"}
+                        color="foreground"
                       >
                         Términos y condiciones
-                      </NextLink>
+                      </Link>
                     </li>
                     <li>
-                      <NextLink
-                        className="font-semibold block pb-2 text-sm hover:text-gray-800"
+                      <Link
+                        className="font-semibold mb-2 text-sm"
                         href={"/privacy-policy"}
+                        color="foreground"
                       >
                         Aviso de privacidad
-                      </NextLink>
+                      </Link>
                     </li>
                   </ul>
                 </div>
@@ -132,14 +128,14 @@ export const Footer = () => {
           <div className="w-full md:w-4/12 px-4 mx-auto text-center">
             <div className="text-sm text-blueGray-500 font-semibold py-1">
               Copyright © <span id="get-current-year">2024</span>
-              <NextLink
+              <Link
                 href={"https://harvest-reborn-pa.vercel.app/"}
-                className="text-blueGray-500 hover:text-gray-800"
                 target="_blank"
+                color="foreground"
               >
-                {" "}
+                &nbsp;
                 Harvest Reborn.
-              </NextLink>
+              </Link>
             </div>
           </div>
         </div>

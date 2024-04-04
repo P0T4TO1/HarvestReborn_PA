@@ -8,12 +8,9 @@ const NegociosPage = async () => {
   if (!session) redirect("/auth/login");
   if (session?.user.id_rol !== 1) redirect("/home");
   return (
-    <div className="flex">
-      <div>
-        <SidebarWrapper />
-      </div>
+    <>
       <NegociosAdmin />
-    </div>
+    </>
   );
 };
 

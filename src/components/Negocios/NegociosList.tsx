@@ -14,6 +14,7 @@ import {
   Card,
   CardHeader,
   Image,
+  Input,
 } from "@nextui-org/react";
 import { MdLabelImportantOutline } from "react-icons/md";
 
@@ -65,23 +66,30 @@ export const NegociosList = () => {
   };
 
   return (
-    <div className="pt-20 container mx-auto">
-      <h1 className="font-bebas-neue uppercase text-4xl font-black flex flex-col leading-none text-green-900">
+    <div className="pt-16 container mx-auto">
+      <h1 className="font-bebas-neue uppercase text-4xl font-black flex flex-col leading-none dark:text-green-600 text-green-900">
         Negocios
-        <span className="text-xl text-gray-900 font-semibold">
+        <span className="text-xl dark:text-gray-300 text-gray-900 font-semibold">
           Aquí puedes ver los negocios donde puedes adquirir productos
         </span>
       </h1>
 
       <div className="flex">
         <div className="flex flex-1 justify-center sm:justify-start">
-          <input
-            type="text"
-            placeholder="Buscar productos"
-            className="mt-4 p-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-green-700"
-            // defaultValue={search}
-            // onChange={handleChange}
-          />
+          <div className="mt-4 p-2">
+            <Input
+              isClearable
+              size="md"
+              radius="lg"
+              placeholder="Buscar productos..."
+              type="text"
+              startContent={
+                <span className="material-symbols-outlined">search</span>
+              }
+              // defaultValue={search}
+              // onChange={handleChange}
+            />
+          </div>
         </div>
         <div className="absolute inset-y-0 right-0 flex items-end pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 flex-col">
           <Select

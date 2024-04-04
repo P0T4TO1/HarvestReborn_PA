@@ -5,13 +5,14 @@ import { Sidebar } from "./sidebar.styles";
 import { SidebarMenu, SidebarItem } from "@/components";
 import { usePathname } from "next/navigation";
 import { UiContext } from "@/context/ui";
+import { Image } from "@nextui-org/react";
 
 export const SidebarWrapper = () => {
   const pathname = usePathname();
   const { isMenuOpen, toggleSideMenu } = useContext(UiContext);
 
   return (
-    <aside className="h-screen z-[30] sticky top-0">
+    <aside className="h-screen z-[50] sticky top-0">
       {isMenuOpen ? (
         <div className={Sidebar.Overlay()} onClick={toggleSideMenu} />
       ) : null}
@@ -22,18 +23,19 @@ export const SidebarWrapper = () => {
       >
         <div className={Sidebar.Header()}>
           <div className="flex items-center gap-2">
-            <div className="flex flex-col gap-4">
-              <h3 className="text-xl font-medium m-0 text-default-900 -mb-4 whitespace-nowrap">
-                Dashboard
-              </h3>
-            </div>
+            <Image src="/images/logo.png" width={50} height={50} alt="Logo" />
+            <h3 className="text-xl font-medium m-0 text-default-900 -mb-4 whitespace-nowrap">
+              Dashboard
+            </h3>
           </div>
         </div>
         <div className="flex flex-col justify-between h-full">
           <div className={Sidebar.Body()}>
             <SidebarItem
               title="Home"
-              icon={<span className="material-symbols-outlined">home</span>}
+              icon={
+                <span className="material-symbols-outlined">dashboard</span>
+              }
               isActive={pathname === "/admin/dashboard"}
               href="/admin/dashboard"
             />

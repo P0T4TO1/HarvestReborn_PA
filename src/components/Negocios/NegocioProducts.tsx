@@ -52,7 +52,7 @@ export const NegocioProducts = ({
   }, [id_negocio]);
 
   return (
-    <div className="pt-20 container mx-auto">
+    <div className="pt-16 container mx-auto">
       {loading ? (
         <div className="flex flex-col">
           <h2 className="text-2xl font-semibold">Cargando...</h2>
@@ -62,9 +62,9 @@ export const NegocioProducts = ({
         <p>Hubo un error</p>
       ) : (
         <>
-          <h1 className="font-bebas-neue uppercase text-4xl font-black flex flex-col leading-none text-green-900">
+          <h1 className="font-bebas-neue uppercase text-4xl font-black flex flex-col leading-none dark:text-green-600 text-green-900">
             {nombre_negocio}
-            <span className="text-xl text-gray-900 font-semibold">
+            <span className="text-xl dark:text-gray-300 text-gray-900 font-semibold">
               Aquí puedes ver los productos disponibles en este negocio
             </span>
           </h1>

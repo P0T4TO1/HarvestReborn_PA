@@ -1,0 +1,41 @@
+"use client";
+
+import { Link } from "@nextui-org/react";
+import { useContext } from "react";
+import { AuthContext } from "@/context/auth";
+
+export const AsideAccount = () => {
+  const { user } = useContext(AuthContext);
+  return (
+    <aside className="hidden py-4 md:w-1/3 lg:w-1/4 md:block border-r-1">
+      <div className="flex flex-col gap-2 p-4 text-sm top-12">
+        <h2 className="mb-4 text-2xl font-semibold dark:text-gray-300">
+          Cuenta
+        </h2>
+        <div>
+          <Link href={`/user/profile/${user?.id}`}>
+            <button className="flex items-center text-gray-800 dark:text-gray-300 px-3 py-2.5 font-semibold hover:text-cyan-900 hover:border hover:rounded-full">
+              Perfil
+            </button>
+          </Link>
+        </div>
+        <div>
+          <Link href={`/user/profile/account/${user?.id}`}>
+            <button className="flex items-center text-gray-800 dark:text-gray-300 px-3 py-2.5 font-semibold hover:text-cyan-900 hover:border hover:rounded-full">
+              Cuenta
+            </button>
+          </Link>
+        </div>
+        {user?.id_rol === 3 && (
+          <div>
+            <Link href={`/orders`}>
+              <button className="flex items-center text-gray-800 dark:text-gray-300 px-3 py-2.5 font-semibold hover:text-cyan-900 hover:border hover:rounded-full">
+                Ordenes
+              </button>
+            </Link>
+          </div>
+        )}
+      </div>
+    </aside>
+  );
+};

@@ -21,8 +21,8 @@ export const DropdownComponent: FC = () => {
     <>
       <Dropdown placement="bottom-end">
         <DropdownTrigger>
-          <Button variant="light" isIconOnly>
-            <span className="material-symbols-outlined text-gray-300">account_circle</span>
+          <Button variant="light" isIconOnly color="default">
+            <span className="material-symbols-outlined">account_circle</span>
           </Button>
         </DropdownTrigger>
         {session && user?.id_rol !== 4 ? (

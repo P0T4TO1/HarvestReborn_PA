@@ -15,7 +15,7 @@ const NegocioInfoPage = async ({ params }: NegocioInfoPageProps) => {
   const { id, name } = params;
   return (
     <>
-      <section className="flex flex-col relative overflow-hidden min-h-screen">
+      <section className="flex mt-16 flex-col relative overflow-hidden min-h-screen">
         <NegocioProducts id_negocio={id} nombre_negocio={name} />
       </section>
     </>

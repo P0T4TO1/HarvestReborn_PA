@@ -95,34 +95,37 @@ export const EditUserForm = ({ user, isEditing }: Props) => {
       tipo:
         user.id_rol === 1 ? "admin" : user.id_rol === 2 ? "negocio" : "cliente",
       nombre_negocio:
-        user.duenonegocio?.negocio.nombre_negocio ||
+        user.duenonegocio?.negocio?.nombre_negocio ||
         user.cliente?.nombre_negocio ||
         "",
       telefono:
-        user.duenonegocio?.negocio.telefono_negocio ||
+        user.duenonegocio?.negocio?.telefono_negocio ||
         user.cliente?.telefono_cliente,
       calle:
-        user.duenonegocio?.negocio.direccion_negocio.split(", ")[0] ||
+        user.duenonegocio?.negocio?.direccion_negocio.split(", ")[0] ||
         user.cliente?.direccion_negocio?.split(", ")[0],
       colonia:
-        user.duenonegocio?.negocio.direccion_negocio.split(", ")[1] ||
+        user.duenonegocio?.negocio?.direccion_negocio.split(", ")[1] ||
         user.cliente?.direccion_negocio?.split(", ")[1],
       alcaldia:
-        user.duenonegocio?.negocio.direccion_negocio.split(", ")[2] ||
+        user.duenonegocio?.negocio?.direccion_negocio.split(", ")[2] ||
         user.cliente?.direccion_negocio?.split(", ")[2],
       cp:
-        user.duenonegocio?.negocio.direccion_negocio.split(", ")[3] ||
+        user.duenonegocio?.negocio?.direccion_negocio.split(", ")[3] ||
         user.cliente?.direccion_negocio?.split(", ")[3],
     },
   });
 
   useEffect(() => {
-    if (getValues("cp").length === 5) {
+    if (!getValues("cp")) {
+      return;
+    }
+    if (getValues("cp")?.length === 5) {
       axios.get("/CP_CDMX.json").then((direction) => {
         if (direction) {
           if (
             direction.data.some(
-              (item: IResponse) => item.d_codigo === getValues("cp")
+              (item: IResponse) => item.d_codigo === getValues("cp")!
             )
           ) {
             setError("cp", { message: "" });
@@ -131,7 +134,7 @@ export const EditUserForm = ({ user, isEditing }: Props) => {
             return;
           }
           direction.data.map((item: IResponse) => {
-            if (item.d_codigo !== getValues("cp")) {
+            if (item.d_codigo !== getValues("cp")!) {
               return;
             } else {
               setValue("colonia", item.d_asenta);
@@ -337,7 +340,7 @@ export const EditUserForm = ({ user, isEditing }: Props) => {
               isRequired={getValues("tipo") === "negocio"}
               {...register("nombre_negocio")}
               defaultValue={
-                user.duenonegocio?.negocio.nombre_negocio ||
+                user.duenonegocio?.negocio?.nombre_negocio ||
                 user.cliente?.nombre_negocio
               }
               isDisabled={!isEditing}
@@ -356,7 +359,7 @@ export const EditUserForm = ({ user, isEditing }: Props) => {
               variant="bordered"
               {...register("telefono")}
               defaultValue={
-                user.duenonegocio?.negocio.telefono_negocio ||
+                user.duenonegocio?.negocio?.telefono_negocio ||
                 user.cliente?.telefono_cliente
               }
               isDisabled={!isEditing}
@@ -373,7 +376,7 @@ export const EditUserForm = ({ user, isEditing }: Props) => {
               variant="bordered"
               {...register("cp")}
               defaultValue={
-                user.duenonegocio?.negocio.direccion_negocio.split(", ")[3] ||
+                user.duenonegocio?.negocio?.direccion_negocio.split(", ")[3] ||
                 user.cliente?.direccion_negocio?.split(", ")[3]
               }
               isDisabled={!isEditing}
@@ -405,7 +408,7 @@ export const EditUserForm = ({ user, isEditing }: Props) => {
               label="Calle y número"
               {...register("calle")}
               defaultValue={
-                user.duenonegocio?.negocio.direccion_negocio.split(", ")[0] ||
+                user.duenonegocio?.negocio?.direccion_negocio.split(", ")[0] ||
                 user.cliente?.direccion_negocio?.split(", ")[0]
               }
               isDisabled={!isEditing}

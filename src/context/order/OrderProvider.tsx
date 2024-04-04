@@ -92,14 +92,15 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
     dispatch({ type: "CLEAR_BAG", payload: [] });
   };
 
-  const createOrder = async (id_cliente: number) => {
+  const createOrder = async (id_cliente: number, id_historial: number) => {
     const body: IOrden = {
       fecha_orden: new Date().toISOString(),
       hora_orden: new Date().toISOString(),
       monto_total: state.total,
       estado_orden: "PENDIENTE",
-      productosOrden: state.bag,
+      productoOrden: state.bag,
       id_cliente,
+      id_historial,
     };
 
     const products = state.bag;

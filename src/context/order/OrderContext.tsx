@@ -14,7 +14,7 @@ interface BagContextProps {
   removeBagProduct: (product: IProductoOrden) => void;
   clearBag: () => void;
 
-  createOrder: (id_cliente: number) => Promise<{ hasError: boolean; message: string }>;
+  createOrder: (id_cliente: number, id_historial: number) => Promise<{ hasError: boolean; message: string }>;
 }
 
 export const BagContext = createContext<BagContextProps>({} as BagContextProps);

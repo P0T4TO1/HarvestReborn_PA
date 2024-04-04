@@ -1,6 +1,6 @@
 "use client";
 
-import { AsideProfile } from "@/components";
+import { AsideAccount } from "@/components";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/auth";
 import { IUser } from "@/interfaces";
@@ -30,56 +30,53 @@ export const ProfileSection = () => {
   }, [user?.id]);
 
   return (
-    <section className="bg-white w-full flex flex-col gap-5 px-3 md:px-16 lg:px-28 md:flex-row text-[#161931] min-h-screen">
-      <AsideProfile />
-      <div className="w-full min-h-screen py-1 md:w-2/3 lg:w-3/4">
-        <div className="p-2 md:p-4">
-          <div className="w-full pb-8 mt-8 sm:max-w-5xl sm:rounded-lg">
-            <h2 className="text-2xl font-bold sm:text-xl">
-              Perfil de Usuario
-              {user?.id_rol === 2 ? (
-                <span className="text-sm font-normal text-gray-500">
-                  {" "}
-                  (Negocio)
-                </span>
-              ) : user?.id_rol === 3 ? (
-                <span className="text-sm font-normal text-gray-500">
-                  {" "}
-                  (Cliente)
-                </span>
-              ) : (
-                <span className="text-sm font-normal text-gray-500">
-                  {" "}
-                  (Administrador)
-                </span>
-              )}
-            </h2>
-            <Button
-              type="button"
-              color="success"
-              className="mt-4"
-              size="md"
-              onClick={() => setIsEditing(!isEditing)}
-              startContent={
-                <span className="material-symbols-outlined">edit_square</span>
-              }
-            >
-              {isEditing ? "Cancelar" : "Editar"}
-            </Button>
-            {loading ? (
-              <CircularProgress
-                size="lg"
-                aria-label="Loading..."
-                className="mt-4"
-              />
-            ) : error ? (
-              <p>Hubo un error</p>
+    <div className="w-full min-h-screen py-1 md:w-2/3 lg:w-3/4">
+      <div className="p-2 md:p-4">
+        <div className="w-full pb-8 mt-8 sm:max-w-5xl sm:rounded-lg">
+          <h2 className="text-2xl font-bold sm:text-xl dark:text-gray-300">
+            Perfil de Usuario
+            {user?.id_rol === 2 ? (
+              <span className="text-sm font-normal text-gray-500">
+                {" "}
+                (Negocio)
+              </span>
+            ) : user?.id_rol === 3 ? (
+              <span className="text-sm font-normal text-gray-500">
+                {" "}
+                (Cliente)
+              </span>
             ) : (
-              <ProfileForm profile={profile as IUser} isEditing={isEditing} />
+              <span className="text-sm font-normal text-gray-500">
+                {" "}
+                (Administrador)
+              </span>
             )}
-          </div>
+          </h2>
+          <Button
+            type="button"
+            color="success"
+            className="mt-4"
+            size="md"
+            onClick={() => setIsEditing(!isEditing)}
+            startContent={
+              <span className="material-symbols-outlined">edit_square</span>
+            }
+          >
+            {isEditing ? "Cancelar" : "Editar"}
+          </Button>
+          {loading ? (
+            <CircularProgress
+              size="lg"
+              aria-label="Loading..."
+              className="mt-4"
+            />
+          ) : error ? (
+            <p>Hubo un error</p>
+          ) : (
+            <ProfileForm profile={profile as IUser} isEditing={isEditing} />
+          )}
         </div>
       </div>
-    </section>
+    </div>
   );
 };

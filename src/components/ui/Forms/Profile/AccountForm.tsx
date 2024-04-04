@@ -7,11 +7,10 @@ import { hrApi } from "@/api";
 import { CircularProgress } from "@nextui-org/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Input, Button } from "@nextui-org/react";
-import { AsideProfile, SUCCESS_TOAST } from "@/components";
+import { AsideAccount, SUCCESS_TOAST } from "@/components";
 import { accountSchema } from "@/validations/profile.validation";
 import { toast } from "sonner";
 import { verifyOldPassword } from "@/hooks";
-import { useSession } from "next-auth/react";
 
 type Errors = {
   email?: string;
@@ -114,13 +113,10 @@ export const AccountForm: FC = () => {
   };
 
   return (
-    <section className="bg-white w-full flex flex-col gap-5 px-3 md:px-16 lg:px-28 md:flex-row text-[#161931] min-h-screen">
-      <AsideProfile />
       <div className="w-full min-h-screen py-1 md:w-2/3 lg:w-3/4">
         <div className="p-2 md:p-4">
           <div className="w-full pb-8 mt-8 sm:max-w-3xl sm:rounded-lg">
-            <h2 className="text-2xl font-bold sm:text-xl">Cuenta</h2>
-
+            <h2 className="text-2xl font-bold sm:text-xl dark:text-gray-300">Cuenta</h2>
             {loading ? (
               <CircularProgress
                 size="lg"
@@ -248,6 +244,5 @@ export const AccountForm: FC = () => {
           </Button>
         </div>
       </div>
-    </section>
   );
 };
