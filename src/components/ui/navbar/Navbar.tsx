@@ -121,12 +121,12 @@ export const NavbarComponent = () => {
           ) : (
             <>
               <NavbarItem>
-                <Link color="foreground" href="/public#">
+                <Link color="foreground" href="/#">
                   Inicio
                 </Link>
               </NavbarItem>
               <NavbarItem>
-                <Link color="foreground" href="/public#servicios">
+                <Link color="foreground" href="/#servicios">
                   Cómo funciona
                 </Link>
               </NavbarItem>
@@ -222,7 +222,7 @@ export const NavbarComponent = () => {
                 </Link>
               </NavbarMenuItem>
               <NavbarMenuItem>
-                <Link color="foreground" href="/public#servicios">
+                <Link color="foreground" href="/#servicios">
                   Cómo funciona
                 </Link>
               </NavbarMenuItem>
