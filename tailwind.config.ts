@@ -20,14 +20,14 @@ const config = {
     nextui({
       themes: {
         light: {
-          layout: {}, // light theme layout tokens
-          colors: {}, // light theme colors
+          layout: {},
+          colors: {},
         },
         dark: {
-          layout: {}, // dark theme layout tokens
+          layout: {},
           colors: {
             background: "#1D1C19",
-          }, // dark theme colors
+          },
         },
       },
     }),
