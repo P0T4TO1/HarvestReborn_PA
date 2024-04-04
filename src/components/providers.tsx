@@ -12,7 +12,7 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <SessionProvider>
       <NextUIProvider>
-        <NextThemesProvider attribute="class" defaultTheme="dark">
+        <NextThemesProvider attribute="class">
           <AuthProvider>
             <BagProvider>
               <UiProvider>{children}</UiProvider>
