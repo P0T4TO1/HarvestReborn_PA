@@ -1,1 +1,2 @@
-export * from "./hero-highlight";
+export * from "./text-generate-effect";
+export * from "./lamp";

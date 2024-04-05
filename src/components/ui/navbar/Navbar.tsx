@@ -131,6 +131,11 @@ export const NavbarComponent = () => {
                 </Link>
               </NavbarItem>
               <NavbarItem>
+                <Link color="foreground" href="/#aboutUs">
+                  Nosotros
+                </Link>
+              </NavbarItem>
+              <NavbarItem>
                 <Link color="foreground" href={"/negocios"}>
                   Recauderías
                 </Link>
@@ -224,6 +229,11 @@ export const NavbarComponent = () => {
               <NavbarMenuItem>
                 <Link color="foreground" href="/#servicios">
                   Cómo funciona
+                </Link>
+              </NavbarMenuItem>
+              <NavbarMenuItem>
+                <Link color="foreground" href="/#aboutUs">
+                  Nosotros
                 </Link>
               </NavbarMenuItem>
               <NavbarMenuItem>

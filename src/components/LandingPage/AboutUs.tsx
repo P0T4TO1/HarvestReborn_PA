@@ -1,7 +1,8 @@
 "use client";
 
 import { FC } from "react";
-import { Image, Card, CardHeader, CardBody } from "@nextui-org/react";
+import { Image, Card } from "@nextui-org/react";
+import { motion } from "framer-motion";
 
 export const AboutUsComponent: FC = () => {
   return (
@@ -10,12 +11,59 @@ export const AboutUsComponent: FC = () => {
       id="aboutUs"
     >
       <div className="m-5 sm:m-10 flex flex-col items-center mx-auto max-w-screen-lg">
-        <div className="header flex w-full justify-center">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false }}
+          animate={{
+            opacity: 0,
+            y: -50,
+          }}
+          transition={{
+            duration: 0.8,
+            ease: "easeInOut",
+          }}
+          variants={{
+            hidden: {
+              opacity: 0,
+              y: -50,
+            },
+            visible: {
+              opacity: 1,
+              y: 0,
+            },
+          }}
+          className="header flex w-full justify-center"
+        >
           <h2 className="font-black pb-5 sm:pb-10 mb-10 sm:mb-20 text-2xl sm:text-4xl text-green-900 dark:text-green-500 before:block before:absolute before:bg-green-700  relative before:w-1/3 before:h-1 before:bottom-0 before:left-1/3">
             Acerca de nosotros
           </h2>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-10 w-full">
+        </motion.div>
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false }}
+          animate={{
+            opacity: 0,
+            y: 50,
+          }}
+          transition={{
+            duration: 0.8,
+            ease: "easeInOut",
+          }}
+          variants={{
+            hidden: {
+              opacity: 0,
+              y: 50,
+            },
+            visible: {
+              opacity: 1,
+              y: 0,
+              x: 0,
+            },
+          }}
+          className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-10 w-full"
+        >
           <Card isHoverable>
             <div className="p-4 sm:p-6">
               <h3 className="mb-2 sm:mb-4 font-semibold text-lg sm:text-2xl">
@@ -78,7 +126,7 @@ export const AboutUsComponent: FC = () => {
               />
             </div>
           </Card>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

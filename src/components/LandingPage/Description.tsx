@@ -65,7 +65,7 @@ export const DescriptionComponent: FC = () => {
         <div className="hidden sm:flex w-1/2 justify-center">
           <Image
             // src={"/images/frutas-verduras.png"}
-            src={"/images/Apilados.png"}
+            src={"/images/landing-page/Apilados.png"}
             alt="Apilados"
             className="max-w-xs sm:max-w-sm lg:max-w-md m-auto"
           />

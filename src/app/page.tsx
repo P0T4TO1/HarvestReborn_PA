@@ -2,11 +2,11 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { redirect } from "next/navigation";
 import {
-  DescriptionComponent,
   ServicesComponent,
   AboutUsComponent,
   NavbarComponent,
   Footer,
+  HeroSection,
 } from "@/components";
 
 const LandingPage = async () => {
@@ -15,7 +15,7 @@ const LandingPage = async () => {
   return (
     <>
       <NavbarComponent />
-      <DescriptionComponent />
+      <HeroSection />
       <ServicesComponent />
       <AboutUsComponent />
       <Footer />
