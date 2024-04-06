@@ -29,21 +29,6 @@ interface IFormData {
   estado_negocio: Estado;
 }
 
-const months = [
-  { key: "01", value: "Enero" },
-  { key: "02", value: "Febrero" },
-  { key: "03", value: "Marzo" },
-  { key: "04", value: "Abril" },
-  { key: "05", value: "Mayo" },
-  { key: "06", value: "Junio" },
-  { key: "07", value: "Julio" },
-  { key: "08", value: "Agosto" },
-  { key: "09", value: "Septiembre" },
-  { key: "10", value: "Octubre" },
-  { key: "11", value: "Noviembre" },
-  { key: "12", value: "Diciembre" },
-];
-
 interface Props {
   negocio: INegocio;
   isEditing: boolean;

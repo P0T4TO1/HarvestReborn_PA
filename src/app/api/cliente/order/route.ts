@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { Estado } from "@/interfaces";
+import sgMail from "@sendgrid/mail";
+// import { render } from "@react-email/render";
+// import { OrderNotificationEmail } from "@/components";
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY || "");
 
 interface body {
   fecha_orden: string;
@@ -26,8 +31,11 @@ async function createOrder(req: NextRequest, res: NextResponse) {
   };
   // make an id for the order
   let now = new Date().toString();
-  now += now + Math.floor(Math.random() * 10)
-  const id_orden = now.replace(/[^0-9]/g, "").slice(0, 10).toString();
+  now += now + Math.floor(Math.random() * 10);
+  const id_orden = now
+    .replace(/[^0-9]/g, "")
+    .slice(0, 10)
+    .toString();
 
   try {
     const order = await prisma.d_orden.create({
@@ -50,7 +58,65 @@ async function createOrder(req: NextRequest, res: NextResponse) {
           },
         },
       },
+      include: {
+        productoOrden: {
+          include: {
+            producto: true,
+            negocio: {
+              include: {
+                dueneg: {
+                  include: {
+                    user: {
+                      select: {
+                        email: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        cliente: {
+          include: {
+            user: {
+              select: {
+                email: true,
+              },
+            },
+          },
+        },
+      },
     });
+
+    // const emailHtml = render(
+    //   OrderNotificationEmail({
+    //     email_cliente: order.cliente?.user.email!,
+    //     email_negocio: order.productoOrden.map(
+    //       (product) => product.negocio.dueneg.user.email
+    //     ),
+    //     fecha_orden: order.fecha_orden.toISOString(),
+    //     hora_orden: order.hora_orden.toISOString(),
+    //     monto_total: order.monto_total,
+    //   }) as React.ReactElement
+    // );
+
+    // const msgs = order.productoOrden.map((product) => ({
+    //   from: "Harvest Reborn<harvestreborn@gmail.com>",
+    //   to: product.negocio.dueneg.user.email,
+    //   subject: "Nueva orden en Harvest Reborn",
+    //   html: emailHtml,
+    // }));
+
+    // try {
+    //   await sgMail.send(msgs);
+    // } catch (error) {
+    //   console.error(error);
+    //   return NextResponse.json(
+    //     { message: "Error al enviar correo" },
+    //     { status: 400 }
+    //   );
+    // }
 
     return NextResponse.json(
       {

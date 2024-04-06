@@ -12,6 +12,7 @@ import {
   TableBody,
 } from "@mui/material";
 import { Image } from "@nextui-org/react";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 interface RowProps {
   lote: ILote;
@@ -32,11 +33,7 @@ export const Row = ({ lote, allLotes, children }: RowProps) => {
             onClick={() => setOpen(!open)}
             className="dark:text-gray-300"
           >
-            {open ? (
-              <span className="material-symbols-outlined">expand_less</span>
-            ) : (
-              <span className="material-symbols-outlined">expand_more</span>
-            )}
+            {open ? <FaChevronUp /> : <FaChevronDown />}
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">

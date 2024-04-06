@@ -22,6 +22,7 @@ import { useForm } from "react-hook-form";
 import { IProduct } from "@/interfaces";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { FaEdit } from "react-icons/fa";
 
 interface IFormData {
   nombre_producto: string;
@@ -123,11 +124,7 @@ export const EditProductAdminModal = ({
                     type="button"
                     className="mt-2"
                     onClick={() => setIsEditing(!isEditing)}
-                    startContent={
-                      <span className="material-symbols-outlined">
-                        edit_square
-                      </span>
-                    }
+                    startContent={<FaEdit size={20} />}
                   >
                     {isEditing ? "Cancelar" : "Editar"}
                   </Button>
@@ -156,7 +153,7 @@ export const EditProductAdminModal = ({
                       <input
                         type="file"
                         accept="image/png, image/jpg, image/jpeg, image/webp"
-                        className="bg-gray-200 text-gray-800 p-2 rounded-lg block mb-2 w-full"
+                        className="bg-gray-200 dark:bg-[#202022] text-gray-800 p-2 rounded-lg block mb-2 w-full"
                         disabled={!isEditing}
                         onChange={handleFileChange}
                       />
@@ -185,9 +182,7 @@ export const EditProductAdminModal = ({
                       </p>
                     )}
                     <div className="flex flex-col gap-2">
-                      <p className="text-default-500">
-                        En temporada
-                      </p>
+                      <p className="text-default-500">En temporada</p>
                       <Checkbox
                         isSelected={product?.enTemporada || isSelected}
                         isDisabled={!isEditing}

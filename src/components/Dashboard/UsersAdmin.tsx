@@ -11,6 +11,9 @@ import React, { useEffect, useState } from "react";
 import { TableUsers } from "@/components";
 import { IUser } from "@/interfaces";
 import { hrApi } from "@/api";
+import { FaHome } from "react-icons/fa";
+import { FaPeopleGroup } from "react-icons/fa6";
+import { MdPersonAdd } from "react-icons/md";
 
 export const UsersAdmin = () => {
   const [loading, setLoading] = useState(true);
@@ -32,15 +35,13 @@ export const UsersAdmin = () => {
       <Breadcrumbs size="lg">
         <BreadcrumbItem
           href={"/admin/dashboard"}
-          startContent={<span className="material-symbols-outlined">home</span>}
+          startContent={<FaHome size={25} />}
         >
           Home
         </BreadcrumbItem>
         <BreadcrumbItem
           href={"/admin/dashboard/users"}
-          startContent={
-            <span className="material-symbols-outlined">group</span>
-          }
+          startContent={<FaPeopleGroup size={25} />}
         >
           Usuarios
         </BreadcrumbItem>
@@ -55,9 +56,7 @@ export const UsersAdmin = () => {
             <Button
               color="primary"
               variant="faded"
-              startContent={
-                <span className="material-symbols-outlined">person_add</span>
-              }
+              startContent={<MdPersonAdd size={25} />}
             >
               Agregar usuario
             </Button>

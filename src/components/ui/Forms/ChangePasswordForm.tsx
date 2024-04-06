@@ -6,6 +6,7 @@ import { Input, Button } from "@nextui-org/react";
 import { toast } from "sonner";
 import { SUCCESS_TOAST } from "@/components";
 import { useRouter } from "next/navigation";
+import { MdOutlineVisibility, MdOutlineVisibilityOff } from "react-icons/md";
 
 interface ChangePasswordFormProps {
   resetPasswordToken: string;
@@ -20,6 +21,8 @@ export const ChangePasswordForm = ({
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [message, setMessage] = useState<string>("");
+  const [visible, setVisible] = useState<boolean>(false);
+  const [visibleConfirm, setVisibleConfirm] = useState<boolean>(false);
 
   const handleSubmit = async () => {
     if (password !== confirmPassword) {
@@ -57,6 +60,19 @@ export const ChangePasswordForm = ({
                   label="Contraseña"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  endContent={
+                    <button
+                      onClick={() => setVisible(!visible)}
+                      type="button"
+                      className="flex items-center absolute inset-y-0 right-0 mr-3 cursor-pointer text-sm leading-5 text-green-700"
+                    >
+                      {visible ? (
+                        <MdOutlineVisibilityOff size={24} />
+                      ) : (
+                        <MdOutlineVisibility size={24} />
+                      )}
+                    </button>
+                  }
                 />
               </div>
               <div className="relative">
@@ -65,6 +81,19 @@ export const ChangePasswordForm = ({
                   label="Confirmar contraseña"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
+                  endContent={
+                    <button
+                      onClick={() => setVisibleConfirm(!visibleConfirm)}
+                      type="button"
+                      className="flex items-center absolute inset-y-0 right-0 mr-3 cursor-pointer text-sm leading-5 text-green-700"
+                    >
+                      {visibleConfirm ? (
+                        <MdOutlineVisibilityOff />
+                      ) : (
+                        <MdOutlineVisibility />
+                      )}
+                    </button>
+                  }
                 />
                 {error && <p className="text-red-500 text-sm">{error}</p>}
               </div>

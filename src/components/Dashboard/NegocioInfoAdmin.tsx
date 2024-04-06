@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { ILote, INegocio } from "@/interfaces";
 import { hrApi } from "@/api";
@@ -12,6 +11,8 @@ import {
   Breadcrumbs,
 } from "@nextui-org/react";
 import { ProductsCollapsibleTable, EditNegocioAdmin } from "@/components";
+import { FaHome, FaEdit } from "react-icons/fa";
+import { MdOutlineStorefront } from "react-icons/md";
 
 interface NegocioInfoAdminProps {
   id_negocio: number;
@@ -58,19 +59,19 @@ export const NegocioInfoAdmin = ({ id_negocio }: NegocioInfoAdminProps) => {
       <Breadcrumbs size="lg">
         <BreadcrumbItem
           href={"/admin/dashboard"}
-          startContent={<span className="material-symbols-outlined">home</span>}
+          startContent={<FaHome size={25} />}
         >
           Home
         </BreadcrumbItem>
         <BreadcrumbItem
           href={"/admin/dashboard/negocios"}
-          startContent={
-            <span className="material-symbols-outlined">storefront</span>
-          }
+          startContent={<MdOutlineStorefront size={25} />}
         >
           Negocios
         </BreadcrumbItem>
-        <BreadcrumbItem href={"/admin/dashboard/negocios"}>Listado</BreadcrumbItem>
+        <BreadcrumbItem href={"/admin/dashboard/negocios"}>
+          Listado
+        </BreadcrumbItem>
         <BreadcrumbItem>Info</BreadcrumbItem>
       </Breadcrumbs>
 
@@ -91,11 +92,7 @@ export const NegocioInfoAdmin = ({ id_negocio }: NegocioInfoAdminProps) => {
                   className="mt-4"
                   size="md"
                   onClick={() => setIsEditing(!isEditing)}
-                  startContent={
-                    <span className="material-symbols-outlined">
-                      edit_square
-                    </span>
-                  }
+                  startContent={<FaEdit size={20} />}
                 >
                   {isEditing ? "Cancelar" : "Editar"}
                 </Button>

@@ -112,18 +112,21 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
         return {
           hasError: true,
           message: data.message,
+          data: {} as IOrden,
         };
       }
       dispatch({ type: "ORDER_COMPLETED" });
       return {
         hasError: false,
         message: "Orden creada con éxito",
+        data: data as IOrden,
       };
     } catch (error) {
       console.log(error);
       return {
         hasError: true,
         message: "Error no controlado, hable con el administrador",
+        data: {} as IOrden,
       };
     }
   };

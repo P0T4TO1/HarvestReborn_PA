@@ -9,9 +9,9 @@ import {
   BreadcrumbItem,
   Breadcrumbs,
 } from "@nextui-org/react";
-import {
-  EditUserForm,
-} from "@/components";
+import { EditUserForm } from "@/components";
+import { FaEdit, FaHome } from "react-icons/fa";
+import { FaPeopleGroup } from "react-icons/fa6";
 
 interface UserInfoAdminProps {
   id_user: string;
@@ -40,15 +40,13 @@ export const UserInfoAdmin = ({ id_user }: UserInfoAdminProps) => {
       <Breadcrumbs size="lg">
         <BreadcrumbItem
           href={"/admin/dashboard"}
-          startContent={<span className="material-symbols-outlined">home</span>}
+          startContent={<FaHome size={25} />}
         >
           Home
         </BreadcrumbItem>
         <BreadcrumbItem
           href={"/admin/dashboard/users"}
-          startContent={
-            <span className="material-symbols-outlined">group</span>
-          }
+          startContent={<FaPeopleGroup size={25} />}
         >
           Usuarios
         </BreadcrumbItem>
@@ -73,11 +71,7 @@ export const UserInfoAdmin = ({ id_user }: UserInfoAdminProps) => {
                   className="mt-4"
                   size="md"
                   onClick={() => setIsEditing(!isEditing)}
-                  startContent={
-                    <span className="material-symbols-outlined">
-                      edit_square
-                    </span>
-                  }
+                  startContent={<FaEdit size={20} />}
                 >
                   {isEditing ? "Cancelar" : "Editar"}
                 </Button>

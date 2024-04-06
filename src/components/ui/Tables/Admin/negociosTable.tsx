@@ -13,6 +13,8 @@ import {
 } from "@nextui-org/react";
 import { INegocio } from "@/interfaces";
 import { useRouter } from "next/navigation";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { MdOutlineInfo } from "react-icons/md";
 
 interface Props {
   negocios: INegocio[];
@@ -53,8 +55,8 @@ export const TableNegocios = ({ negocios }: Props) => {
                     negocio.estado_negocio === "ACTIVO"
                       ? "success"
                       : negocio.estado_negocio === "INACTIVO"
-                      ? "danger"
-                      : "warning"
+                        ? "danger"
+                        : "warning"
                   }
                 >
                   {negocio.estado_negocio.charAt(0) +
@@ -74,14 +76,12 @@ export const TableNegocios = ({ negocios }: Props) => {
                         )
                       }
                     >
-                      <span className="material-symbols-outlined">info</span>
+                      <MdOutlineInfo className="text-blue-800 cursor-pointer" size={20} />
                     </Button>
                   </Tooltip>
                   <Tooltip content="Eliminar">
                     <Button type="button" variant="light" isIconOnly>
-                      <span className="material-symbols-outlined  text-red-800 cursor-pointer">
-                        delete
-                      </span>
+                      <FaRegTrashAlt className="text-red-800 cursor-pointer" size={20} />
                     </Button>
                   </Tooltip>
                 </div>

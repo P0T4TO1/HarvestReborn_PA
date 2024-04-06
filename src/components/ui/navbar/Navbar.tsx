@@ -19,6 +19,7 @@ import {
   Image,
 } from "@nextui-org/react";
 import { useTheme as useNextTheme } from "next-themes";
+import { FaShoppingBag } from "react-icons/fa";
 
 export const NavbarComponent = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -157,9 +158,7 @@ export const NavbarComponent = () => {
                   isInvisible={!numberOfProducts}
                   shape="circle"
                 >
-                  <span className="material-symbols-outlined">
-                    shopping_bag
-                  </span>
+                  <FaShoppingBag size={20} />
                 </Badge>
               </Link>
             </NavbarItem>

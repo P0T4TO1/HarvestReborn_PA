@@ -20,6 +20,7 @@ import {
 import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isEmailVerified } from "@/hooks";
+import { MdOutlineVisibility, MdOutlineVisibilityOff } from "react-icons/md";
 
 interface IFormData {
   user_email: string;
@@ -142,13 +143,9 @@ export const LoginForm: FC = () => {
                         className="flex items-center absolute inset-y-0 right-0 mr-3 cursor-pointer text-sm leading-5 text-green-700"
                       >
                         {visible ? (
-                          <span className="material-symbols-outlined">
-                            visibility_off
-                          </span>
+                          <MdOutlineVisibilityOff size={24} />
                         ) : (
-                          <span className="material-symbols-outlined">
-                            visibility
-                          </span>
+                          <MdOutlineVisibility size={24} />
                         )}
                       </button>
                     }

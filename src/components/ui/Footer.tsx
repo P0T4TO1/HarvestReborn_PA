@@ -2,8 +2,7 @@
 
 import React from "react";
 
-import { FaGithub, FaFacebook, FaInstagram } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
+import { FaGithub } from "react-icons/fa";
 import { Image, Link } from "@nextui-org/react";
 
 export const Footer = () => {
@@ -78,7 +77,6 @@ export const Footer = () => {
                         className="font-semibold mb-2 text-sm"
                         href="/#aboutUs"
                         color="foreground"
-
                       >
                         Acerca de nosotros
                       </Link>
@@ -133,8 +131,7 @@ export const Footer = () => {
                 target="_blank"
                 color="foreground"
               >
-                &nbsp;
-                Harvest Reborn.
+                &nbsp; Harvest Reborn.
               </Link>
             </div>
           </div>

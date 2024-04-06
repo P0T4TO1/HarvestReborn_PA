@@ -6,6 +6,7 @@ import { hrApi } from "@/api";
 import { Input, Button, CircularProgress } from "@nextui-org/react";
 import { ProductCard } from "@/components";
 import { BagContext } from "@/context/order";
+import { FaSearch } from "react-icons/fa";
 
 interface NegocioProductsProps {
   id_negocio: number;
@@ -75,7 +76,10 @@ export const NegocioProducts = ({
               placeholder="Buscar productos..."
               type="text"
               startContent={
-                <span className="material-symbols-outlined">search</span>
+                <FaSearch
+                  size={25}
+                  className="text-gray-500 dark:text-gray-300"
+                />
               }
               defaultValue={search}
               onChange={handleChange}

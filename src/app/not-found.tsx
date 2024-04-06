@@ -4,8 +4,8 @@ import NextLink from "next/link";
 export default function Custom404() {
   return (
     <>
-      <div className="flex items-center justify-center w-full min-h-screen bg-gray-100">
-        <div className="flex flex-col text-gray-700 lg:flex-row lg:space-x-16 lg:space-x-reverse">
+      <div className="flex items-center justify-center w-full min-h-screen">
+        <div className="flex flex-col lg:flex-row lg:space-x-16 lg:space-x-reverse">
           <div className="order-1 max-w-md px-2 text-sm md:text-base lg:px-0">
             <header className="mb-6">
               <h2 className="text-4xl font-bold leading-none text-gray-400 select-none lg:text-6xl">

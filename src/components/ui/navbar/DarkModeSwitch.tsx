@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { Button } from "@nextui-org/react";
+import { MdOutlineWbSunny, MdOutlineDarkMode } from "react-icons/md";
 
 export const DarkModeSwitch = () => {
   const [mounted, setMounted] = useState(false);
@@ -22,9 +23,9 @@ export const DarkModeSwitch = () => {
         onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
       >
         {theme === "dark" ? (
-          <span className="material-symbols-outlined">wb_sunny</span>
+          <MdOutlineWbSunny size={24} />
         ) : (
-          <span className="material-symbols-outlined">dark_mode</span>
+          <MdOutlineDarkMode size={24} />
         )}
       </Button>
     </div>

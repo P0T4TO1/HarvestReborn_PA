@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  CircularProgress,
   Chip,
   Table,
   TableBody,
@@ -16,7 +15,7 @@ import {
   Input,
   Image,
 } from "@nextui-org/react";
-import React, { ChangeEvent, useEffect, useMemo, useState } from "react";
+import React, { ChangeEvent, useMemo, useState } from "react";
 import { IProduct } from "@/interfaces";
 import { hrApi } from "@/api";
 import { toast } from "sonner";
@@ -25,6 +24,7 @@ import {
   EditProductAdminModal,
   SUCCESS_TOAST,
 } from "@/components";
+import { FaEdit, FaRegTrashAlt, FaSearch } from "react-icons/fa";
 
 interface Props {
   products: IProduct[];
@@ -93,9 +93,7 @@ export const TableProducts = ({ products }: Props) => {
             radius="lg"
             placeholder="Buscar productos..."
             type="text"
-            startContent={
-              <span className="material-symbols-outlined">search</span>
-            }
+            startContent={<FaSearch size={20} />}
             defaultValue={search}
             onChange={handleChange}
           />
@@ -188,9 +186,7 @@ export const TableProducts = ({ products }: Props) => {
                           onOpen();
                         }}
                       >
-                        <span className="material-symbols-outlined text-gray-600 cursor-pointer">
-                          edit
-                        </span>
+                        <FaEdit className="text-blue-800 cursor-pointer" size={20} />
                       </Button>
                     </Tooltip>
                     <Tooltip content="Eliminar">
@@ -200,9 +196,7 @@ export const TableProducts = ({ products }: Props) => {
                         isIconOnly
                         onPress={() => handleDelete(productMap.id_producto)}
                       >
-                        <span className="material-symbols-outlined  text-red-800 cursor-pointer">
-                          delete
-                        </span>
+                        <FaRegTrashAlt className="text-red-800 cursor-pointer" size={20} />
                       </Button>
                     </Tooltip>
                   </div>

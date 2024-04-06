@@ -10,6 +10,7 @@ import {
   Tooltip,
 } from "@nextui-org/react";
 import { IOrden } from "@/interfaces";
+import { MdOutlineVisibility } from "react-icons/md";
 
 type Props = {
   orders: IOrden[];
@@ -34,9 +35,7 @@ export const OrdersTable = ({ orders }: Props) => {
               <TableCell className="py-4">
                 <div className="flex items-center gap-4">
                   <Tooltip content="Ver detalles">
-                    <span className="material-symbols-outlined text-gray-600 cursor-pointer">
-                      visibility
-                    </span>
+                    <MdOutlineVisibility className="text-blue-800 cursor-pointer" />
                   </Tooltip>
                 </div>
               </TableCell>

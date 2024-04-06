@@ -10,6 +10,7 @@ import {
   Tooltip,
 } from "@nextui-org/react";
 import { ICliente } from "@/interfaces";
+import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
 
 interface Props {
   clientes: ICliente[];
@@ -41,14 +42,10 @@ export const TableClientes = ({ clientes }: Props) => {
               <TableCell className="py-4">
                 <div className="flex items-center gap-4">
                   <Tooltip content="Editar">
-                    <span className="material-symbols-outlined text-gray-600 cursor-pointer">
-                      edit
-                    </span>
+                    <FaEdit className="text-blue-800 cursor-pointer" size={20} />
                   </Tooltip>
                   <Tooltip content="Eliminar">
-                    <span className="material-symbols-outlined  text-red-800 cursor-pointer">
-                      delete
-                    </span>
+                    <FaRegTrashAlt className="text-red-800 cursor-pointer" size={20} />
                   </Tooltip>
                 </div>
               </TableCell>

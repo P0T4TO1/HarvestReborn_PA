@@ -1,14 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { IPreguntasFaq } from "@/interfaces";
 import { hrApi } from "@/api";
-import {
-  BreadcrumbItem,
-  Breadcrumbs,
-  CircularProgress,
-} from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/react";
+import { FaHome, FaQuestionCircle } from "react-icons/fa";
 
 export const FaqsAdmin = () => {
   const [preguntas, setPreguntas] = useState<IPreguntasFaq[]>([]);
@@ -31,15 +27,13 @@ export const FaqsAdmin = () => {
       <Breadcrumbs size="lg">
         <BreadcrumbItem
           href={"/admin/dashboard"}
-          startContent={<span className="material-symbols-outlined">home</span>}
+          startContent={<FaHome size={25} />}
         >
           Home
         </BreadcrumbItem>
         <BreadcrumbItem
           href={"/admin/dashboard/faqs"}
-          startContent={
-            <span className="material-symbols-outlined">quiz</span>
-          }
+          startContent={<FaQuestionCircle size={25} />}
         >
           Preguntas frecuentes
         </BreadcrumbItem>

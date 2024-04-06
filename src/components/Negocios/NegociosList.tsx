@@ -16,7 +16,14 @@ import {
   Image,
   Input,
 } from "@nextui-org/react";
-import { MdLabelImportantOutline } from "react-icons/md";
+import {
+  MdLabelImportantOutline,
+  MdOutlineInventory,
+  MdOutlinePermPhoneMsg,
+} from "react-icons/md";
+import { FaSearch, FaRegStar } from "react-icons/fa";
+import { MdOutlineStorefront, MdHelpOutline } from "react-icons/md";
+import { FaLocationDot } from "react-icons/fa6";
 
 export const NegociosList = () => {
   const [negocios, setNegocios] = useState<INegocio[]>([]);
@@ -84,7 +91,10 @@ export const NegociosList = () => {
               placeholder="Buscar productos..."
               type="text"
               startContent={
-                <span className="material-symbols-outlined">search</span>
+                <FaSearch
+                  size={25}
+                  className="text-gray-500 dark:text-gray-300"
+                />
               }
               // defaultValue={search}
               // onChange={handleChange}
@@ -129,18 +139,14 @@ export const NegociosList = () => {
                   >
                     <CardHeader className="flex justify-between flex-row items-center px-5 pt-4">
                       <div className="flex gap-2 justify-center items-center">
-                        <span className="material-symbols-outlined">
-                          storefront
-                        </span>
+                        <MdOutlineStorefront size={25} />
                         <h2 className="text-2xl font-bold">
                           {negocio.nombre_negocio}
                         </h2>
                       </div>
                       <div>
                         <Button color="success" variant="light" isIconOnly>
-                          <span className="material-symbols-outlined">
-                            star
-                          </span>
+                          <FaRegStar size={25} />
                         </Button>
                       </div>
                     </CardHeader>
@@ -191,7 +197,7 @@ export const NegociosList = () => {
               <CardBody className="px-4 pb-4 overflow-y-scroll">
                 <div className="flex flex-col mt-6">
                   <div className="flex gap-2 items-center">
-                    <span className="material-symbols-outlined">help</span>
+                    <MdHelpOutline size={25} />
                     <h3 className="text-xl font-semibold">Descripción</h3>
                   </div>
                   <p className="mb-2 mt-2">{negocio?.descripcion_negocio}</p>
@@ -199,7 +205,7 @@ export const NegociosList = () => {
                 <Divider />
                 <div className="flex flex-col mt-6">
                   <div className="flex gap-2 items-center mt-2">
-                    <span className="material-symbols-outlined">inventory</span>
+                    <MdOutlineInventory size={25} />
                     <h3 className="text-xl font-semibold">
                       Productos disponibles
                     </h3>
@@ -223,9 +229,7 @@ export const NegociosList = () => {
                 <Divider />
                 <div className="flex flex-col mt-6">
                   <div className="flex gap-2 items-center">
-                    <span className="material-symbols-outlined">
-                      perm_phone_msg
-                    </span>
+                    <MdOutlinePermPhoneMsg size={25} />
                     <h3 className="text-xl font-semibold mt-2">Contacto</h3>
                   </div>
                   <p className="mb-2 mt-2">{negocio?.dueneg?.nombre_dueneg}</p>
@@ -237,9 +241,7 @@ export const NegociosList = () => {
                 <Divider />
                 <div className="flex flex-col mt-6">
                   <div className="flex gap-2 items-center">
-                    <span className="material-symbols-outlined">
-                      location_on
-                    </span>
+                    <FaLocationDot size={25} />
                     <h3 className="text-xl font-semibold mt-2">Ubicación</h3>
                   </div>
                   <p className="mb-2 mt-2">{negocio?.direccion_negocio}</p>

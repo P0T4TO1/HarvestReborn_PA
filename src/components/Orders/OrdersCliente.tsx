@@ -26,7 +26,7 @@ export const OrdersCliente = () => {
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    hrApi.get(`/cliente/order/${user?.cliente?.id_cliente}`).then((res) => {
+    hrApi.get(`/cliente/orders/${user?.cliente?.id_cliente}`).then((res) => {
       if (res.status === 200) {
         setOrders(res.data);
       } else {
@@ -55,7 +55,7 @@ export const OrdersCliente = () => {
             ) : (
               <>
                 {orders.length === 0 ? (
-                  <Card>
+                  <Card className="mt-12">
                     <CardHeader>No tienes ordenes</CardHeader>
                     <CardBody>
                       <p>
@@ -70,9 +70,9 @@ export const OrdersCliente = () => {
                     </CardFooter>
                   </Card>
                 ) : (
-                  <div className="mt-12">
+                  <div className="mt-6">
                     {orders.map((order) => (
-                      <Card key={order.id_orden} className="p-4">
+                      <Card key={order.id_orden} className="p-4 mt-6">
                         <CardHeader className="flex justify-between">
                           <div className="flex items-center justify-center">
                             <Chip variant="flat" size="lg">

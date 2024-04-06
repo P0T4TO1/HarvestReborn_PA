@@ -96,7 +96,7 @@ export const HeroSection = () => {
               duration: 0.5,
               ease: [0.4, 0.0, 0.2, 1],
             }}>
-            <img
+            <Image
               className="w-full"
               src="/images/landing-page/hero-image.png"
               alt=""

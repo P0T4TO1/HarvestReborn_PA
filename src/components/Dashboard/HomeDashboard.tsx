@@ -11,6 +11,7 @@ import {
   CardClientesAdmin,
   CardProductsAdmin,
 } from "@/components";
+import { FaHome } from "react-icons/fa";
 
 export const HomeDashboard = () => {
   const [negocios, setNegocios] = useState<INegocio[]>([]);
@@ -33,7 +34,7 @@ export const HomeDashboard = () => {
     <div className="my-10 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
       <ul className="flex">
         <li className="flex gap-2">
-          <span className="material-symbols-outlined">home</span>
+          <FaHome size={25} />
           <span>Home</span>
         </li>
       </ul>

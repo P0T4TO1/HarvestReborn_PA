@@ -22,6 +22,7 @@ import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
 import { useRouter } from "next/navigation";
 import { searchProductByName } from "@/hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { FaPlus } from "react-icons/fa";
 
 interface IFormData {
   nombre_producto: string;
@@ -113,8 +114,12 @@ export const AddProductAdminModal = () => {
   return (
     <div>
       <>
-        <Button onPress={onOpen} color="primary" variant="faded">
-          <span className="material-symbols-outlined">add</span>
+        <Button
+          onPress={onOpen}
+          color="primary"
+          variant="faded"
+          startContent={<FaPlus size={20} />}
+        >
           Agregar producto
         </Button>
         <Modal
@@ -151,7 +156,7 @@ export const AddProductAdminModal = () => {
                       <input
                         type="file"
                         accept="image/png, image/jpg, image/jpeg, image/webp"
-                        className="bg-gray-200 text-gray-800 p-2 rounded-lg block mb-2 w-full"
+                        className="bg-gray-200 dark:bg-[#202022] text-gray-800 p-2 rounded-lg block mb-2 w-full"
                         onChange={handleFileChange}
                       />
                       {errors?.imagen_producto && (

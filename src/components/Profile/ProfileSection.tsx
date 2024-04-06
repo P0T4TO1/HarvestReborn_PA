@@ -7,6 +7,7 @@ import { IUser } from "@/interfaces";
 import { hrApi } from "@/api";
 import { ProfileForm } from "@/components";
 import { CircularProgress, Button } from "@nextui-org/react";
+import { FaEdit } from "react-icons/fa";
 
 export const ProfileSection = () => {
   const { user } = useContext(AuthContext);
@@ -58,9 +59,7 @@ export const ProfileSection = () => {
             className="mt-4"
             size="md"
             onClick={() => setIsEditing(!isEditing)}
-            startContent={
-              <span className="material-symbols-outlined">edit_square</span>
-            }
+            startContent={<FaEdit size={20} />}
           >
             {isEditing ? "Cancelar" : "Editar"}
           </Button>

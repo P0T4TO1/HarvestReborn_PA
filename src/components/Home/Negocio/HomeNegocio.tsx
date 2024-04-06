@@ -1,9 +1,16 @@
 "use client";
 
 import React, { useContext } from "react";
-import { Link, Card, CardBody, CardHeader } from "@nextui-org/react";
+import { Link } from "@nextui-org/react";
 import { AuthContext } from "@/context/auth";
 import { HomeNegocioCard } from "@/components";
+import {
+  MdInfoOutline,
+  MdOutlineForum,
+  MdOutlineInventory,
+  MdOutlineStorefront,
+} from "react-icons/md";
+import { FaBoxOpen } from "react-icons/fa";
 
 export const HomeNegocio = () => {
   const { user } = useContext(AuthContext);
@@ -12,7 +19,7 @@ export const HomeNegocio = () => {
       {user?.duenonegocio?.negocio?.estado_negocio === "PENDIENTE" && (
         <>
           <div className="warning-home-negocio w-full flex items-center h-8 justify-center text-[#f5a524]">
-            <span className="material-symbols-outlined">info</span>
+            <MdInfoOutline size={25} className="mr-2" />
             Su negocio esta siendo verificado,&nbsp;
             <Link href={"/mi-negocio"}>completa los datos de tu negocio</Link>
             &nbsp; para ser verificado más rápido.
@@ -40,7 +47,7 @@ export const HomeNegocio = () => {
           buttonText={"Ver inventario"}
           title={"Gestionar inventario"}
           buttonLink={"/inventory"}
-          icon={"inventory"}
+          icon={<MdOutlineInventory size={30} />}
         >
           <p>
             Administra tu inventario, agrega productos, edita precios y más.
@@ -53,7 +60,7 @@ export const HomeNegocio = () => {
           buttonText={"Ver pedidos"}
           title={"Gestionar pedidos"}
           buttonLink={"/orders"}
-          icon={"orders"}
+          icon={<FaBoxOpen size={30} />}
         >
           <p>
             Revisa los pedidos que han realizado tus clientes, aprueba o rechaza
@@ -65,7 +72,7 @@ export const HomeNegocio = () => {
           buttonText={"Mi negocio"}
           title={"Configurar negocio"}
           buttonLink={"/mi-negocio"}
-          icon={"storefront"}
+          icon={<MdOutlineStorefront size={30} />}
         >
           <p>
             Configura tu negocio, sube tu logo, cambia el nombre de tu negocio,
@@ -77,7 +84,7 @@ export const HomeNegocio = () => {
           buttonText={"Contacta a tus clientes"}
           title={"Chat con clientes"}
           buttonLink={"/chats"}
-          icon={"forum"}
+          icon={<MdOutlineForum size={30} />}
         >
           <p>
             Contacta a tus clientes, responde sus dudas, envía promociones y

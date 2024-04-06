@@ -6,6 +6,14 @@ import { SidebarMenu, SidebarItem } from "@/components";
 import { usePathname } from "next/navigation";
 import { UiContext } from "@/context/ui";
 import { Image } from "@nextui-org/react";
+import {
+  MdOutlineDashboard,
+  MdOutlineForum,
+  MdOutlineQuiz,
+  MdOutlineStorefront,
+} from "react-icons/md";
+import { FaPeopleGroup, FaTicket, FaUserGroup } from "react-icons/fa6";
+import { FaAppleAlt, FaShoppingBag } from "react-icons/fa";
 
 export const SidebarWrapper = () => {
   const pathname = usePathname();
@@ -33,9 +41,7 @@ export const SidebarWrapper = () => {
           <div className={Sidebar.Body()}>
             <SidebarItem
               title="Home"
-              icon={
-                <span className="material-symbols-outlined">dashboard</span>
-              }
+              icon={<MdOutlineDashboard size={24} />}
               isActive={pathname === "/admin/dashboard"}
               href="/admin/dashboard"
             />
@@ -43,61 +49,49 @@ export const SidebarWrapper = () => {
               <SidebarItem
                 isActive={pathname === "/admin/dashboard/users"}
                 title="Usuarios"
-                icon={<span className="material-symbols-outlined">group</span>}
+                icon={<FaPeopleGroup size={24} />}
                 href="/admin/dashboard/users"
               />
               <SidebarItem
                 isActive={pathname === "/admin/dashboard/products"}
                 title="Productos"
-                icon={
-                  <span className="material-symbols-outlined">nutrition</span>
-                }
+                icon={<FaAppleAlt size={24} />}
                 href="/admin/dashboard/products"
               />
               <SidebarItem
                 isActive={pathname === "/admin/dashboard/negocios"}
                 title="Negocios"
-                icon={
-                  <span className="material-symbols-outlined">storefront</span>
-                }
+                icon={<MdOutlineStorefront size={24} />}
                 href="/admin/dashboard/negocios"
               />
               <SidebarItem
                 isActive={pathname === "/admin/dashboard/clientes"}
                 title="Clientes"
-                icon={<span className="material-symbols-outlined">hiking</span>}
+                icon={<FaUserGroup size={24} />}
                 href="/admin/dashboard/clientes"
               />
               <SidebarItem
                 isActive={pathname === "/admin/dashboard/orders"}
                 title="Ordenes"
-                icon={
-                  <span className="material-symbols-outlined">
-                    shopping_bag
-                  </span>
-                }
+                icon={<FaShoppingBag size={24} />}
                 href="/admin/dashboard/orders"
               />
               <SidebarItem
                 isActive={pathname === "/admin/dashboard/chats"}
                 title="Chats"
-                icon={<span className="material-symbols-outlined">forum</span>}
+                icon={<MdOutlineForum size={24} />}
                 href="/admin/dashboard/chats"
               />
             </SidebarMenu>
             <SidebarMenu title={"Soporte"}>
               <SidebarItem
                 title="Tickets"
-                icon={
-                  <span className="material-symbols-outlined">
-                    confirmation_number
-                  </span>
-                }
+                icon={<FaTicket size={24} />}
                 href="/admin/dashboard/tickets"
               />
               <SidebarItem
                 title="Preguntas Frecuentes"
-                icon={<span className="material-symbols-outlined">quiz</span>}
+                icon={<MdOutlineQuiz size={24} />}
                 href="/admin/dashboard/faqs"
               />
             </SidebarMenu>

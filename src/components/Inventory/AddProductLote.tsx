@@ -5,6 +5,8 @@ import { IProduct } from "@/interfaces";
 import { hrApi } from "@/api";
 import { AddLoteToInventory, ProductCard } from "@/components";
 import { Input, useDisclosure, CircularProgress } from "@nextui-org/react";
+import { FaSearch } from "react-icons/fa";
+import { MdAddCircleOutline } from "react-icons/md";
 
 export const AddProductLote = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
@@ -64,9 +66,7 @@ export const AddProductLote = () => {
                 radius="lg"
                 placeholder="Buscar productos..."
                 type="text"
-                startContent={
-                  <span className="material-symbols-outlined">search</span>
-                }
+                startContent={<FaSearch size={20} />}
                 defaultValue={search}
                 onChange={handleChange}
               />
@@ -93,9 +93,7 @@ export const AddProductLote = () => {
                       onOpen();
                     }}
                   >
-                    <span className="material-symbols-outlined setting-icon">
-                      add_circle
-                    </span>
+                    <MdAddCircleOutline size={20} className="setting-icon" />
                   </button>
                 </ProductCard>
               </li>

@@ -9,6 +9,8 @@ import {
   BreadcrumbItem,
   Breadcrumbs,
 } from "@nextui-org/react";
+import { FaHome } from "react-icons/fa";
+import { MdOutlineStorefront } from "react-icons/md";
 
 export const NegociosAdmin = () => {
   const [loading, setLoading] = useState(true);
@@ -31,15 +33,13 @@ export const NegociosAdmin = () => {
       <Breadcrumbs size="lg">
         <BreadcrumbItem
           href={"/admin/dashboard"}
-          startContent={<span className="material-symbols-outlined">home</span>}
+          startContent={<FaHome size={25} />}
         >
           Home
         </BreadcrumbItem>
         <BreadcrumbItem
           href={"/admin/dashboard/negocios"}
-          startContent={
-            <span className="material-symbols-outlined">storefront</span>
-          }
+          startContent={<MdOutlineStorefront size={25} />}
         >
           Negocios
         </BreadcrumbItem>

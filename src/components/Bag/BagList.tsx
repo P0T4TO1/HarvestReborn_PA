@@ -12,11 +12,12 @@ import {
   CardBody,
   CardHeader,
   CardFooter,
-  Input,
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { DANGER_TOAST, SUCCESS_TOAST, WARNING_TOAST } from "@/components";
+import { redirect } from "next/navigation";
+import { MdDeleteSweep, MdOutlineDoNotDisturbOn, MdAddCircleOutline, MdOutlineClose } from "react-icons/md";
 
 interface BagListProps {
   editable?: boolean;
@@ -57,6 +58,7 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
         toast(res.message, DANGER_TOAST);
       }
       toast(res.message, SUCCESS_TOAST);
+      return redirect(`/orders/${res.data.id_orden}?new=true`);
     });
   };
 
@@ -71,7 +73,7 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
             onClick={clearBag}
             color="danger"
             startContent={
-              <span className="material-symbols-outlined">delete_sweep</span>
+              <MdDeleteSweep size={25} />
             }
           >
             Limpiar bolsa
@@ -106,9 +108,7 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
                           variant="light"
                           size="sm"
                         >
-                          <span className="material-symbols-outlined">
-                            do_not_disturb_on
-                          </span>
+                          <MdOutlineDoNotDisturbOn size={25} />
                         </Button>
                         <span className="mx-4">
                           {product.cantidad_orden.toString()} kg
@@ -121,9 +121,7 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
                           variant="light"
                           size="sm"
                         >
-                          <span className="material-symbols-outlined">
-                            add_circle
-                          </span>
+                          <MdAddCircleOutline size={25} />
                         </Button>
                       </>
                     )}
@@ -136,7 +134,7 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
                       variant="light"
                       size="sm"
                     >
-                      <span className="material-symbols-outlined">close</span>
+                      <MdOutlineClose size={25} />
                     </Button>
                   </div>
                 </div>

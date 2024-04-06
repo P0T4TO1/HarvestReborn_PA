@@ -16,6 +16,7 @@ import { Tooltip, useDisclosure } from "@nextui-org/react";
 import { hrApi } from "@/api";
 import { toast } from "sonner";
 import { DANGER_TOAST, EditLoteModal, SUCCESS_TOAST, Row } from "@/components";
+import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
 
 interface ProductsCollapsibleTableProps {
   lotesById: ILote[];
@@ -86,9 +87,7 @@ export const ProductsCollapsibleTable = ({
                         onOpen();
                       }}
                     >
-                      <span className="material-symbols-outlined text-blue-700">
-                        edit
-                      </span>
+                      <FaEdit className="text-blue-700" size={20} />
                     </button>
                   </Tooltip>
                   <Tooltip content="Eliminar">
@@ -97,9 +96,7 @@ export const ProductsCollapsibleTable = ({
                         handleDelete(loteMap.id_lote).then(() => {});
                       }}
                     >
-                      <span className="material-symbols-outlined text-red-700">
-                        delete
-                      </span>
+                      <FaRegTrashAlt className="text-red-700" size={20} />
                     </button>
                   </Tooltip>
                 </div>

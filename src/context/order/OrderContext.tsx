@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext } from "react";
-import { IProductoOrden } from "@/interfaces";
+import { IOrden, IProductoOrden } from "@/interfaces";
 
 interface BagContextProps {
   isLoaded: boolean;
@@ -14,7 +14,7 @@ interface BagContextProps {
   removeBagProduct: (product: IProductoOrden) => void;
   clearBag: () => void;
 
-  createOrder: (id_cliente: number, id_historial: number) => Promise<{ hasError: boolean; message: string }>;
+  createOrder: (id_cliente: number, id_historial: number) => Promise<{ hasError: boolean; message: string, data: IOrden }>;
 }
 
 export const BagContext = createContext<BagContextProps>({} as BagContextProps);

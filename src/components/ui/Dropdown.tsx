@@ -12,6 +12,15 @@ import {
   DropdownItem,
   Button,
 } from "@nextui-org/react";
+import { FaBoxOpen, FaRegUserCircle } from "react-icons/fa";
+import {
+  MdOutlineDashboard,
+  MdOutlineInventory2,
+  MdOutlineLogin,
+  MdOutlineLogout,
+  MdOutlinePersonAdd,
+  MdOutlineSettings,
+} from "react-icons/md";
 
 export const DropdownComponent: FC = () => {
   const { data: session } = useSession();
@@ -22,7 +31,7 @@ export const DropdownComponent: FC = () => {
       <Dropdown placement="bottom-end">
         <DropdownTrigger>
           <Button variant="light" isIconOnly color="default">
-            <span className="material-symbols-outlined">account_circle</span>
+            <FaRegUserCircle size={20} />
           </Button>
         </DropdownTrigger>
         {session && user?.id_rol !== 4 ? (
@@ -34,9 +43,7 @@ export const DropdownComponent: FC = () => {
             <DropdownItem
               key="settings"
               href={`/user/profile/${user?.id}`}
-              startContent={
-                <span className="material-symbols-outlined">settings</span>
-              }
+              startContent={<MdOutlineSettings size={20} />}
             >
               Cuenta
             </DropdownItem>
@@ -44,9 +51,7 @@ export const DropdownComponent: FC = () => {
               <DropdownItem
                 key="inventory"
                 href={"/inventory"}
-                startContent={
-                  <span className="material-symbols-outlined">inventory_2</span>
-                }
+                startContent={<MdOutlineInventory2 size={20} />}
               >
                 Mi inventario
               </DropdownItem>
@@ -54,9 +59,7 @@ export const DropdownComponent: FC = () => {
               <DropdownItem
                 key="orders"
                 href={"/orders"}
-                startContent={
-                  <span className="material-symbols-outlined">orders</span>
-                }
+                startContent={<FaBoxOpen size={20} />}
               >
                 Mis pedidos
               </DropdownItem>
@@ -64,9 +67,7 @@ export const DropdownComponent: FC = () => {
               <DropdownItem
                 key="dashboard"
                 href={"/admin/dashboard"}
-                startContent={
-                  <span className="material-symbols-outlined">dashboard</span>
-                }
+                startContent={<MdOutlineDashboard size={20} />}
               >
                 Dashboard
               </DropdownItem>
@@ -82,9 +83,7 @@ export const DropdownComponent: FC = () => {
                   showToast("Logout Successful", SUCCESS_TOAST);
                 });
               }}
-              startContent={
-                <span className="material-symbols-outlined">logout</span>
-              }
+              startContent={<MdOutlineLogout size={20} />}
             >
               Cerrar sesión
             </DropdownItem>
@@ -95,9 +94,7 @@ export const DropdownComponent: FC = () => {
               key="login"
               color="primary"
               href={"/auth/login"}
-              startContent={
-                <span className="material-symbols-outlined">login</span>
-              }
+              startContent={<MdOutlineLogin size={20} />}
             >
               Iniciar sesión
             </DropdownItem>
@@ -105,9 +102,7 @@ export const DropdownComponent: FC = () => {
               key="register"
               color="success"
               href={"/auth/register"}
-              startContent={
-                <span className="material-symbols-outlined">person_add</span>
-              }
+              startContent={<MdOutlinePersonAdd size={20} />}
             >
               Regístrate
             </DropdownItem>

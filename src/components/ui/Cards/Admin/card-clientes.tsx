@@ -1,5 +1,8 @@
+"use client";
+
 import { Card, CardBody } from "@nextui-org/react";
 import React from "react";
+import { FaPeopleGroup } from "react-icons/fa6";
 
 interface CardClientesAdminProps {
   clientes: number;
@@ -10,7 +13,7 @@ export const CardClientesAdmin = ({ clientes }: CardClientesAdminProps) => {
     <Card className="xl:max-w-sm bg-primary rounded-xl shadow-md px-3 w-full">
       <CardBody className="py-5">
         <div className="flex gap-2.5">
-          <span className="material-symbols-outlined">groups</span>
+          <FaPeopleGroup size={24} className="text-white" />
           <div className="flex flex-col">
             <span className="text-white">Clientes registrados</span>
           </div>

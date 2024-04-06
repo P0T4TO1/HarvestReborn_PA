@@ -8,7 +8,6 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  useDisclosure,
 } from "@nextui-org/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { productSchema } from "@/validations/products.validation";

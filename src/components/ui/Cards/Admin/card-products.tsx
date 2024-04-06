@@ -1,5 +1,8 @@
+"use client";
+
 import { Card, CardBody } from "@nextui-org/react";
 import React from "react";
+import { FaAppleAlt } from "react-icons/fa";
 
 interface CardProductsAdminProps {
   products: number;
@@ -10,7 +13,7 @@ export const CardProductsAdmin = ({ products }: CardProductsAdminProps) => {
     <Card className="xl:max-w-sm bg-primary rounded-xl shadow-md px-3 w-full">
       <CardBody className="py-5">
         <div className="flex gap-2.5">
-          <span className="material-symbols-outlined">nutrition</span>
+          <FaAppleAlt size={24} className="text-white" />
           <div className="flex flex-col">
             <span className="text-white">Productos registrados</span>
           </div>

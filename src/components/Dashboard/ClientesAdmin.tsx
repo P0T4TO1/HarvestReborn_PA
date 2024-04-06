@@ -10,6 +10,8 @@ import {
   Breadcrumbs,
   BreadcrumbItem,
 } from "@nextui-org/react";
+import { FaHome } from "react-icons/fa";
+import { FaUserGroup } from "react-icons/fa6";
 
 export const ClientesAdmin = () => {
   const [clientes, setClientes] = useState<ICliente[]>([]);
@@ -32,15 +34,13 @@ export const ClientesAdmin = () => {
       <Breadcrumbs size="lg">
         <BreadcrumbItem
           href={"/admin/dashboard"}
-          startContent={<span className="material-symbols-outlined">home</span>}
+          startContent={<FaHome size={25} />}
         >
           Home
         </BreadcrumbItem>
         <BreadcrumbItem
           href={"/admin/dashboard/clientes"}
-          startContent={
-            <span className="material-symbols-outlined">groups</span>
-          }
+          startContent={<FaUserGroup size={25} />}
         >
           Clientes
         </BreadcrumbItem>

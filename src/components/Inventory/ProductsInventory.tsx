@@ -13,6 +13,8 @@ import {
   Link,
 } from "@nextui-org/react";
 import { ProductsCollapsibleTable } from "@/components";
+import { MdAddCircleOutline } from "react-icons/md";
+import { FaSearch } from "react-icons/fa";
 
 export const ProductsInventory = () => {
   const { user } = useContext(AuthContext);
@@ -78,9 +80,7 @@ export const ProductsInventory = () => {
           <Button
             color="primary"
             variant="faded"
-            startContent={
-              <span className="material-symbols-outlined">add_circle</span>
-            }
+            startContent={<MdAddCircleOutline size={25} />}
           >
             <span className="ml-2">Agregar productos</span>
           </Button>
@@ -95,9 +95,7 @@ export const ProductsInventory = () => {
               radius="lg"
               placeholder="Buscar productos..."
               type="text"
-              startContent={
-                <span className="material-symbols-outlined">search</span>
-              }
+              startContent={<FaSearch size={25} />}
               defaultValue={search}
               onChange={handleChange}
             />

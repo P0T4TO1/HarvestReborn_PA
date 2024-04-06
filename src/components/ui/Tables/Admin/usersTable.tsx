@@ -19,6 +19,8 @@ import { IUser } from "@/interfaces";
 import { hrApi } from "@/api";
 import { toast } from "sonner";
 import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
+import { FaCheck, FaEdit, FaRegTrashAlt, FaSearch } from "react-icons/fa";
+import { MdOutlinePersonOff } from "react-icons/md";
 
 interface Props {
   users: IUser[];
@@ -84,9 +86,7 @@ export const TableUsers = ({ users }: Props) => {
             radius="lg"
             placeholder="Buscar usuarios..."
             type="text"
-            startContent={
-              <span className="material-symbols-outlined">search</span>
-            }
+            startContent={<FaSearch size={24} />}
             defaultValue={search}
             onChange={handleChange}
           />
@@ -151,8 +151,8 @@ export const TableUsers = ({ users }: Props) => {
                   {user.id_rol === 1
                     ? "Admin"
                     : user.id_rol === 2
-                    ? "Dueño de negocio"
-                    : "Cliente"}
+                      ? "Dueño de negocio"
+                      : "Cliente"}
                 </TableCell>
                 <TableCell className="py-4">
                   <Chip
@@ -178,9 +178,7 @@ export const TableUsers = ({ users }: Props) => {
                       <Tooltip content="Editar">
                         <Link href={`/admin/dashboard/users/${user.id}`}>
                           <Button isIconOnly variant="light">
-                            <span className="material-symbols-outlined">
-                              edit
-                            </span>
+                            <FaEdit size={20} />
                           </Button>
                         </Link>
                       </Tooltip>
@@ -200,13 +198,9 @@ export const TableUsers = ({ users }: Props) => {
                           }
                         >
                           {user.estado === "ACTIVO" ? (
-                            <span className="material-symbols-outlined">
-                              no_accounts
-                            </span>
+                            <MdOutlinePersonOff size={20} />
                           ) : (
-                            <span className="material-symbols-outlined">
-                              check
-                            </span>
+                            <FaCheck size={20} />
                           )}
                         </Button>
                       </Tooltip>
@@ -218,9 +212,7 @@ export const TableUsers = ({ users }: Props) => {
                           variant="light"
                           onPress={() => handleDelete(user.id)}
                         >
-                          <span className="material-symbols-outlined text-red-800">
-                            delete
-                          </span>
+                          <FaRegTrashAlt className="text-red-800 cursor-pointer" size={20} />
                         </Button>
                       </Tooltip>
                     </div>

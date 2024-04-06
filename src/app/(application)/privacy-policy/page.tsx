@@ -11,21 +11,21 @@ export default function PrivacyPolicyPage() {
               Harvest Reborn
             </p>
           </div>
-          <h3 className="mb-6 font-sans text-4xl font-bold leading-none tracking-tight text-gray-900 md:mx-auto">
+          <h3 className="mb-6 font-sans text-4xl font-bold leading-none tracking-tight md:mx-auto">
             Aviso de Privacidad
           </h3>
         </div>
 
         <div className=" mb-10 md:mx-auto md:mb-12">
-          <p className="text-base text-gray-900 md:mx-auto mb-3">
+          <p className="text-base md:mx-auto mb-3">
             Fecha de última actualización: 25 de marzo de 2024
           </p>
-          <p className="text-base text-gray-900 md:mx-auto mb-3">
+          <p className="text-base md:mx-auto mb-3">
             Harvest Reborn, con domicilio en Calle de la Palma 24, Colonia
             Centro, Ciudad de México, C.P. 06000, es responsable del tratamiento
             de sus datos personales.
           </p>
-          <p className="text-base text-gray-900 md:mx-auto mb-3">
+          <p className="text-base md:mx-auto mb-3">
             En Harvest Reborn, estamos comprometidos con la protección y
             privacidad de sus datos personales. Este Aviso de Privacidad
             describe cómo recopilamos, utilizamos y protegemos la información
@@ -34,15 +34,15 @@ export default function PrivacyPolicyPage() {
         </div>
 
         <div className="mb-10 md:mx-auto md:mb-12">
-          <h3 className="text-xl text-gray-900 md:mx-auto mb-3">
+          <h3 className="text-xl md:mx-auto mb-3">
             Información recopilada
           </h3>
-          <p className="text-base text-gray-900 md:mx-auto mb-3">
+          <p className="text-base md:mx-auto mb-3">
             Recopilamos la siguiente información personal cuando usted utiliza
             nuestra aplicación:
           </p>
 
-          <div className="text-base text-gray-900 md:mx-auto mb-3 flex flex-col">
+          <div className="text-base md:mx-auto mb-3 flex flex-col">
             <p>
               - Información de Registro: Cuando se crea una cuenta en nuestra
               aplicación, recopilamos su nombre, dirección de correo electrónico
@@ -70,14 +70,14 @@ export default function PrivacyPolicyPage() {
         </div>
 
         <div className="mb-10 md:mx-auto md:mb-12">
-          <h3 className="text-xl text-gray-900 md:mx-auto mb-3">
+          <h3 className="text-xl md:mx-auto mb-3">
             Uso de la información
           </h3>
-          <p className="text-base text-gray-900 md:mx-auto mb-3">
+          <p className="text-base  md:mx-auto mb-3">
             Utilizamos la información que recopilamos para los siguientes
             propósitos:
           </p>
-          <div className="text-base text-gray-900 md:mx-auto mb-3 flex flex-col">
+          <div className="text-base  md:mx-auto mb-3 flex flex-col">
             <p>
               - Provisión de Servicios: Utilizamos su información para
               proporcionar los servicios solicitados, incluyendo la creación y
@@ -104,10 +104,10 @@ export default function PrivacyPolicyPage() {
         </div>
 
         <div className=" mb-10 md:mx-auto md:mb-12">
-          <h3 className="text-xl text-gray-900 md:mx-auto mb-3">
+          <h3 className="text-xl  md:mx-auto mb-3">
             Seguridad de la Información
           </h3>
-          <p className="text-base text-gray-900 md:mx-auto mb-3">
+          <p className="text-base  md:mx-auto mb-3">
             Implementamos medidas de seguridad técnicas, administrativas y
             físicas para proteger su información personal contra el acceso no
             autorizado, el uso indebido, la divulgación, la alteración o la
@@ -116,10 +116,10 @@ export default function PrivacyPolicyPage() {
         </div>
 
         <div className="mb-10 md:mx-auto md:mb-12">
-          <h3 className="text-xl text-gray-900 md:mx-auto mb-3">
+          <h3 className="text-xl  md:mx-auto mb-3">
             Derechos del Usuario
           </h3>
-          <p className="text-base text-gray-900 md:mx-auto mb-3">
+          <p className="text-base  md:mx-auto mb-3">
             Usted tiene ciertos derechos en relación con su información
             personal, incluyendo el derecho a acceder, corregir, actualizar,
             eliminar o restringir el procesamiento de sus datos personales. Para
@@ -128,10 +128,10 @@ export default function PrivacyPolicyPage() {
           </p>
         </div>
         <div className="mb-10 md:mx-auto md:mb-12">
-          <h3 className="text-xl text-gray-900 md:mx-auto mb-3">
+          <h3 className="text-xl  md:mx-auto mb-3">
             Menores de Edad
           </h3>
-          <p className="text-base text-gray-900 md:mx-auto mb-3">
+          <p className="text-base  md:mx-auto mb-3">
             Nuestra aplicación no está dirigida a menores de 18 años y no
             recopilamos intencionalmente información personal de personas
             menores de esa edad. Si usted es un padre o tutor y cree que su hijo
@@ -141,10 +141,10 @@ export default function PrivacyPolicyPage() {
         </div>
 
         <div className="mb-10 md:mx-auto md:mb-12">
-          <h3 className="text-xl text-gray-900 md:mx-auto mb-3">
+          <h3 className="text-xl  md:mx-auto mb-3">
             Cambios en el Aviso de Privacidad
           </h3>
-          <p className="text-base text-gray-900 md:mx-auto mb-3">
+          <p className="text-base  md:mx-auto mb-3">
             Nos reservamos el derecho de actualizar o modificar este Aviso de
             Privacidad en cualquier momento y sin previo aviso. Le recomendamos
             que revise periódicamente este aviso para estar al tanto de
@@ -153,11 +153,11 @@ export default function PrivacyPolicyPage() {
         </div>
 
         <div className="mb-10 md:mx-auto md:mb-12">
-          <h3 className="text-xl text-gray-900 md:mx-auto mb-3">
+          <h3 className="text-xl  md:mx-auto mb-3">
             Contacto
           </h3>
-          <div className="text-base text-gray-900 md:mx-auto mb-3 flex flex-col">
-            <p className="text-base text-gray-900 mb-3">
+          <div className="text-base  md:mx-auto mb-3 flex flex-col">
+            <p className="text-base  mb-3">
               Si tiene alguna pregunta, inquietud o solicitud relacionada con
               este Aviso de Privacidad, por favor contáctenos a través de los
               siguientes medios:
@@ -167,7 +167,7 @@ export default function PrivacyPolicyPage() {
             <span>Correo electrónico: harvestreborn@gmail.com</span>
           </div>
         </div>
-        <p className="text-base text-gray-900 md:mx-auto mb-3">
+        <p className="text-base  md:mx-auto mb-3">
           Fecha de última actualización: 25 de marzo de 2024
         </p>
       </section>

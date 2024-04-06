@@ -17,8 +17,10 @@ import { hrApi } from "@/api";
 import { toast } from "sonner";
 import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { searchUserByEmail } from "@/hooks";
+import { FaHome } from "react-icons/fa";
+import { FaPeopleGroup } from "react-icons/fa6";
+import { MdOutlineVisibility, MdOutlineVisibilityOff } from "react-icons/md";
 
 interface IResponse {
   c_cve_ciudad: string;
@@ -157,15 +159,13 @@ export const AddUserForm = () => {
       <Breadcrumbs size="lg">
         <BreadcrumbItem
           href={"/admin/dashboard"}
-          startContent={<span className="material-symbols-outlined">home</span>}
+          startContent={<FaHome size={20} />}
         >
           Home
         </BreadcrumbItem>
         <BreadcrumbItem
           href={"/admin/dashboard/users"}
-          startContent={
-            <span className="material-symbols-outlined">group</span>
-          }
+          startContent={<FaPeopleGroup size={20} />}
         >
           Usuarios
         </BreadcrumbItem>
@@ -198,13 +198,9 @@ export const AddUserForm = () => {
                   className="flex items-center absolute inset-y-0 right-0 mr-3 cursor-pointer text-sm leading-5 text-green-700"
                 >
                   {visible ? (
-                    <span className="material-symbols-outlined">
-                      visibility_off
-                    </span>
+                    <MdOutlineVisibilityOff />
                   ) : (
-                    <span className="material-symbols-outlined">
-                      visibility
-                    </span>
+                    <MdOutlineVisibility />
                   )}
                 </button>
               }
@@ -226,13 +222,9 @@ export const AddUserForm = () => {
                   className="flex items-center absolute inset-y-0 right-0 mr-3 cursor-pointer text-sm leading-5 text-green-700"
                 >
                   {visibleConfirm ? (
-                    <span className="material-symbols-outlined">
-                      visibility_off
-                    </span>
+                    <MdOutlineVisibilityOff />
                   ) : (
-                    <span className="material-symbols-outlined">
-                      visibility
-                    </span>
+                    <MdOutlineVisibility />
                   )}
                 </button>
               }

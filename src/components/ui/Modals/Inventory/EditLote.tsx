@@ -19,13 +19,7 @@ import { ILote } from "@/interfaces";
 import { useRouter } from "next/navigation";
 import { productSchema } from "@/validations/products.validation";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-type Errors = {
-  cantidad_producto?: number;
-  fecha_entrada?: string;
-  fecha_vencimiento?: string;
-  precio_kg?: number;
-} | null;
+import { FaEdit } from "react-icons/fa";
 
 interface IFormData {
   cantidad_producto: number;
@@ -69,17 +63,19 @@ export const EditLoteModal = ({
 
   const onSubmit: SubmitHandler<IFormData> = async (data) => {
     try {
-      await hrApi.put(`/negocio/inventory/lote/${lote?.id_lote}`, data).then((res) => {
-        if (res.status === 200) {
-          toast("Producto actualizado", SUCCESS_TOAST);
-          window.location.reload();
-          router.refresh();
-          onClose();
-        } else {
-          toast("Hubo un error al actualizar el producto", DANGER_TOAST);
-          console.log("Error al actualizar producto", res.data);
-        }
-      });
+      await hrApi
+        .put(`/negocio/inventory/lote/${lote?.id_lote}`, data)
+        .then((res) => {
+          if (res.status === 200) {
+            toast("Producto actualizado", SUCCESS_TOAST);
+            window.location.reload();
+            router.refresh();
+            onClose();
+          } else {
+            toast("Hubo un error al actualizar el producto", DANGER_TOAST);
+            console.log("Error al actualizar producto", res.data);
+          }
+        });
     } catch (error) {
       console.log("Error al actualizar producto", error);
       toast("Hubo un error al actualizar el producto", DANGER_TOAST);
@@ -101,11 +97,7 @@ export const EditLoteModal = ({
                     type="button"
                     className="mt-2"
                     onClick={() => setIsEditing(!isEditing)}
-                    startContent={
-                      <span className="material-symbols-outlined">
-                        edit_square
-                      </span>
-                    }
+                    startContent={<FaEdit size={20} />}
                   >
                     Editar
                   </Button>

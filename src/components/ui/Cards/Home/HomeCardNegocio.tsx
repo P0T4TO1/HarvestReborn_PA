@@ -8,13 +8,14 @@ import {
   Divider,
 } from "@nextui-org/react";
 import React, { ReactNode } from "react";
+import { FaRegArrowAltCircleRight } from "react-icons/fa";
 
 interface Props {
   title: string;
   children?: ReactNode;
   buttonText: string;
   buttonLink: string;
-  icon: string;
+  icon: ReactNode;
 }
 
 export const HomeNegocioCard = ({
@@ -27,9 +28,7 @@ export const HomeNegocioCard = ({
   return (
     <>
       <Card className="p-6">
-        <CardHeader>
-          <span className="material-symbols-outlined text-4xl">{icon}</span>
-        </CardHeader>
+        <CardHeader>{icon}</CardHeader>
         <CardBody>
           <h1 className="text-2xl font-semibold">{title}</h1>
           {children}
@@ -39,9 +38,7 @@ export const HomeNegocioCard = ({
           <Link href={buttonLink}>
             <Button
               color="secondary"
-              endContent={
-                <span className="material-symbols-outlined">arrow_forward</span>
-              }
+              endContent={<FaRegArrowAltCircleRight size={20} />}
             >
               {buttonText}
             </Button>

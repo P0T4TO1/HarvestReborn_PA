@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import React, { useEffect } from "react";
 import { TableProducts, AddProductAdminModal } from "@/components";
 import { IProduct } from "@/interfaces";
@@ -10,6 +9,7 @@ import {
   BreadcrumbItem,
   Breadcrumbs,
 } from "@nextui-org/react";
+import { FaHome, FaAppleAlt } from "react-icons/fa";
 
 export const ProductsAdmin = () => {
   const [products, setProducts] = React.useState<IProduct[]>([]);
@@ -32,14 +32,14 @@ export const ProductsAdmin = () => {
       <Breadcrumbs size="lg">
         <BreadcrumbItem
           href={"/admin/dashboard"}
-          startContent={<span className="material-symbols-outlined">home</span>}
+          startContent={<FaHome size={25} />}
         >
           Home
         </BreadcrumbItem>
         <BreadcrumbItem
           href={"/admin/dashboard/products"}
           startContent={
-            <span className="material-symbols-outlined">grocery</span>
+            <FaAppleAlt size={25} />
           }
         >
           Productos
