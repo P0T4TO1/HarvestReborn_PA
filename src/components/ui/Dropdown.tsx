@@ -10,6 +10,7 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  DropdownSection,
   Button,
 } from "@nextui-org/react";
 import { FaBoxOpen, FaRegUserCircle } from "react-icons/fa";
@@ -36,57 +37,58 @@ export const DropdownComponent: FC = () => {
         </DropdownTrigger>
         {session && user?.id_rol !== 4 ? (
           <DropdownMenu aria-label="Profile Actions" variant="flat">
-            <DropdownItem key="profile" className="h-14 gap-2">
-              <p className="font-semibold">Inicio sesión como:</p>
-              <p className="font-semibold">{user?.email}</p>
-            </DropdownItem>
-            <DropdownItem
-              key="settings"
-              href={`/user/profile/${user?.id}`}
-              startContent={<MdOutlineSettings size={20} />}
-            >
-              Cuenta
-            </DropdownItem>
-            {user?.id_rol === 2 ? (
-              <DropdownItem
-                key="inventory"
-                href={"/inventory"}
-                startContent={<MdOutlineInventory2 size={20} />}
-              >
-                Mi inventario
+            <DropdownSection>
+              <DropdownItem key="profile" className="h-14 gap-2">
+                <p className="font-semibold">Inicio sesión como:</p>
+                <p className="font-semibold">{user?.email}</p>
               </DropdownItem>
-            ) : user?.id_rol === 3 ? (
               <DropdownItem
-                key="orders"
-                href={"/orders"}
-                startContent={<FaBoxOpen size={20} />}
+                key="settings"
+                href={`/user/profile/${user?.id}`}
+                startContent={<MdOutlineSettings size={20} />}
               >
-                Mis pedidos
+                Cuenta
               </DropdownItem>
-            ) : (
+              {user?.id_rol === 2 ? (
+                <DropdownItem
+                  key="inventory"
+                  href={"/inventory"}
+                  startContent={<MdOutlineInventory2 size={20} />}
+                >
+                  Mi inventario
+                </DropdownItem>
+              ) : user?.id_rol === 3 ? (
+                <DropdownItem
+                  key="orders"
+                  href={"/orders"}
+                  startContent={<FaBoxOpen size={20} />}
+                >
+                  Mis pedidos
+                </DropdownItem>
+              ) : (
+                <DropdownItem
+                  key="dashboard"
+                  href={"/admin/dashboard"}
+                  startContent={<MdOutlineDashboard size={20} />}
+                >
+                  Dashboard
+                </DropdownItem>
+              )}
+            </DropdownSection>
+            <DropdownSection>
               <DropdownItem
-                key="dashboard"
-                href={"/admin/dashboard"}
-                startContent={<MdOutlineDashboard size={20} />}
+                key="logout"
+                color="danger"
+                onClick={() => {
+                  signOut().then(async () => {
+                    showToast("Logout Successful", SUCCESS_TOAST);
+                  });
+                }}
+                startContent={<MdOutlineLogout size={20} />}
               >
-                Dashboard
+                Cerrar sesión
               </DropdownItem>
-            )}
-            <DropdownItem key="br" color="default">
-              <hr />
-            </DropdownItem>
-            <DropdownItem
-              key="logout"
-              color="danger"
-              onClick={() => {
-                signOut().then(async () => {
-                  showToast("Logout Successful", SUCCESS_TOAST);
-                });
-              }}
-              startContent={<MdOutlineLogout size={20} />}
-            >
-              Cerrar sesión
-            </DropdownItem>
+            </DropdownSection>
           </DropdownMenu>
         ) : (
           <DropdownMenu aria-label="Profile Actions" variant="flat">

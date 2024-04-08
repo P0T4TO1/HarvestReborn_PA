@@ -185,12 +185,19 @@ model m_prodcutoOrden {
   @@index([id_negocio])
 }
 
+enum EstadoOrden {
+  PENDIENTE
+  EN_PROCESO
+  FINALIZADO
+  CANCELADO
+}
+
 model d_orden {
   id_orden     String   @id @default(uuid())
   fecha_orden  DateTime
   hora_orden   DateTime
   monto_total  Float
-  estado_orden Estado   @default(ACTIVO)
+  estado_orden EstadoOrden   @default(PENDIENTE)
 
   id_cliente Int?
   cliente    d_cliente? @relation(fields: [id_cliente], references: [id_cliente])
@@ -216,6 +223,12 @@ model c_historial {
   orden d_orden[]
 }
 
+enum EstadoTicket {
+  PENDIENTE
+  ACTIVO
+  CERRADO
+}
+
 model m_ticketSoporte {
   id_ticket      Int      @id @default(autoincrement())
   nombre_usuario String
@@ -223,7 +236,7 @@ model m_ticketSoporte {
   images         String
   fecha_creacion DateTime
   fecha_cierre   DateTime
-  estado_ticket  Estado   @default(ACTIVO)
+  estado_ticket  EstadoTicket  @default(PENDIENTE)
 
   id_user String
   user    m_user @relation(fields: [id_user], references: [id], onDelete: Cascade)

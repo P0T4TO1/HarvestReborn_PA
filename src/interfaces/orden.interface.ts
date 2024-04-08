@@ -5,7 +5,7 @@ export interface IOrden {
   fecha_orden: string;
   hora_orden: string;
   monto_total: number;
-  estado_orden: string;
+  estado_orden: EstadoOrden;
 
   id_cliente?: number;
   id_historial?: number;
@@ -26,4 +26,17 @@ export interface IProductoOrden {
   producto?: IProduct;
   orden?: IOrden;
   negocio?: INegocio;
+}
+
+export enum EstadoOrden {
+  PENDIENTE = "PENDIENTE",
+  EN_PROCESO = "EN_PROCESO",
+  FINALIZADO = "FINALIZADO",
+  CANCELADO = "CANCELADO",
+}
+
+export interface IMergedOrder {
+  id_orden: number;
+  orden: IOrden;
+  productos: IProductoOrden[];
 }

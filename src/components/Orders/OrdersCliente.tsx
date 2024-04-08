@@ -62,6 +62,11 @@ export const OrdersCliente = () => {
                         Aún no has realizado ninguna orden, ¿qué esperas para
                         realizar una?
                       </p>
+                      <p className="mt-2">
+                        Si ya ha realizado una orden y no aparece aquí, por favor
+                        refresque la página. Estamos trabajando para solucionar
+                        este problema.
+                      </p>
                     </CardBody>
                     <CardFooter>
                       <Link href={"/negocios"}>

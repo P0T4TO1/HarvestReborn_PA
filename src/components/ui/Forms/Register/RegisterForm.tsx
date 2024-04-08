@@ -17,7 +17,6 @@ import {
   CardBody,
   CardHeader,
   CardFooter,
-  Divider,
 } from "@nextui-org/react";
 
 import { type Session } from "next-auth";
@@ -70,7 +69,7 @@ export const RegisterForm = ({ user }: RegisterFormProps) => {
             className={`p-6 ${
               indexActive === 1
                 ? "xl:w-[396px] sm:w-full md:w-[428px]"
-                : "xl:w-2/6 sm:w-full md:w-[620px]"
+                : "xl:w-[542px] sm:w-full md:w-[620px]"
             }`}
           >
             <CardHeader className="flex flex-col items-start">
@@ -137,13 +136,13 @@ export const RegisterForm = ({ user }: RegisterFormProps) => {
               <div className="text-center text-gray-500 text-xs">
                 <p className="text-xs">
                   Una vez registrado, aceptas nuestros{" "}
-                  <a href="#" className="underline">
+                  <Link href={"/terms-conditions"} className="underline">
                     Términos de uso
-                  </a>{" "}
+                  </Link>{" "}
                   y confirmas que leiste nuestro{" "}
-                  <a href="#" className="underline">
+                  <Link href={"/privacy-policy"} className="underline">
                     Aviso de Privacidad
-                  </a>
+                  </Link>
                   .
                 </p>
                 <span className="flex justify-center items-center mt-2">

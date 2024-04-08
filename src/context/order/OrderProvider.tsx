@@ -49,7 +49,7 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
       0
     );
     const total = state.bag.reduce(
-      (acc, product) => acc + product.monto * product.cantidad_orden,
+      (acc, product) => acc + product.monto,
       0
     );
     const orderSummary = {
@@ -73,11 +73,10 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
     const updatedBag = state.bag.map((item) => {
       if (item.id_producto !== product.id_producto) return item;
       item.cantidad_orden += product.cantidad_orden;
+      item.monto += product.monto;
       return item;
     });
-    console.log(updatedBag, "-------updatedBag-------");
     dispatch({ type: "UPDATE_PRODUCTS_IN_BAG", payload: updatedBag });
-    console.log(state.bag, "-------bag-------");
   };
 
   const updateBagQuantity = (product: IProductoOrden) => {

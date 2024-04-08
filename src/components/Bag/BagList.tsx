@@ -16,8 +16,13 @@ import {
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { DANGER_TOAST, SUCCESS_TOAST, WARNING_TOAST } from "@/components";
-import { redirect } from "next/navigation";
-import { MdDeleteSweep, MdOutlineDoNotDisturbOn, MdAddCircleOutline, MdOutlineClose } from "react-icons/md";
+import { useRouter } from "next/navigation";
+import {
+  MdDeleteSweep,
+  MdOutlineDoNotDisturbOn,
+  MdAddCircleOutline,
+  MdOutlineClose,
+} from "react-icons/md";
 
 interface BagListProps {
   editable?: boolean;
@@ -25,6 +30,7 @@ interface BagListProps {
 }
 
 export const BagList = ({ editable = false, products }: BagListProps) => {
+  const router = useRouter();
   const {
     bag,
     clearBag,
@@ -37,8 +43,12 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
   const { data: Session } = useSession();
   const { user } = useContext(AuthContext);
 
-  const onNewQuantity = (product: IProductoOrden, quantity: number) => {
-    updateBagQuantity({ ...product, cantidad_orden: quantity });
+  const onNewQuantity = (
+    product: IProductoOrden,
+    quantity: number,
+    monto: number
+  ) => {
+    updateBagQuantity({ ...product, cantidad_orden: quantity, monto: monto });
   };
 
   const productsInBag = products ? products : bag;
@@ -58,7 +68,7 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
         toast(res.message, DANGER_TOAST);
       }
       toast(res.message, SUCCESS_TOAST);
-      return redirect(`/orders/${res.data.id_orden}?new=true`);
+      router.push(`/orders/${res.data.id_orden}?new=true`);
     });
   };
 
@@ -72,9 +82,7 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
           <Button
             onClick={clearBag}
             color="danger"
-            startContent={
-              <MdDeleteSweep size={25} />
-            }
+            startContent={<MdDeleteSweep size={25} />}
           >
             Limpiar bolsa
           </Button>
@@ -103,7 +111,12 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
                         <Button
                           isIconOnly
                           onClick={() =>
-                            onNewQuantity(product, product.cantidad_orden - 1)
+                            onNewQuantity(
+                              product,
+                              product.cantidad_orden - 1,
+                              product.monto -
+                                product.monto / product.cantidad_orden
+                            )
                           }
                           variant="light"
                           size="sm"
@@ -116,7 +129,12 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
                         <Button
                           isIconOnly
                           onClick={() =>
-                            onNewQuantity(product, product.cantidad_orden + 1)
+                            onNewQuantity(
+                              product,
+                              product.cantidad_orden + 1,
+                              product.monto +
+                                product.monto / product.cantidad_orden
+                            )
                           }
                           variant="light"
                           size="sm"
@@ -152,7 +170,8 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
                 <h3 className="text-2xl font-semibold">Resumen de pedido</h3>
               </CardHeader>
               <CardBody className="pt-2 px-8 pb-2">
-                <p className="pb-4">Productos: {numberOfProducts}</p>
+                <p className="pb-4">Productos: {bag.length}</p>
+                <p className="pb-4">Cantidad: {numberOfProducts} kg</p>
                 <Divider />
                 <p className="pb-4 pt-4">Total: ${total}</p>
               </CardBody>
