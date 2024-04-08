@@ -14,3 +14,5 @@ const ChatPage = async ({ searchParams }: ChatPageProps) => {
   }
   return <div>Chat</div>;
 };
+
+export default ChatPage;

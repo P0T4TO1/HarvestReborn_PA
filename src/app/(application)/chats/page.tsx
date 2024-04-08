@@ -25,3 +25,5 @@ const ChatsPage = async () => {
     </>
   );
 };
+
+export default ChatsPage;
