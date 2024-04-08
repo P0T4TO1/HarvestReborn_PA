@@ -18,7 +18,9 @@ const OrderDetailsPage = async ({
 }: OrderDetailsPageProps) => {
   const session = await getServerSession(authOptions);
   if (session?.user.id_rol === 4) redirect("/auth/register?oauth=true");
+  if (!session) redirect("/auth/login");
   const { id } = params;
+  if (session?.user.id_rol === 1) redirect("/admin/dashboard");
   return (
     <>
       <section className="flex mt-16 flex-col relative overflow-hidden min-h-screen">

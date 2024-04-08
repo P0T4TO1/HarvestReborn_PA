@@ -1,22 +1,28 @@
-import React from "react";
+// Objetivo: Contiene las constantes que se utilizan en las tablas de datos
 
-const columns = [
-  { name: "ID", uid: "id", sortable: true },
-  { name: "NAME", uid: "name", sortable: true },
-  { name: "AGE", uid: "age", sortable: true },
-  { name: "ROLE", uid: "role", sortable: true },
-  { name: "TEAM", uid: "team" },
-  { name: "EMAIL", uid: "email" },
-  { name: "STATUS", uid: "status", sortable: true },
-  { name: "ACTIONS", uid: "actions" },
-];
-
-export const statusColorMap = {
+// Ordenes de negocio/ejemplo
+export const statusColorMapOrders = {
   PENDIENTE: "warning",
   EN_PROCESO: "primary",
   FINALIZADO: "success",
   CANCELADO: "error",
 };
+
+export const columnsOrders = [
+  { name: "ID", uid: "id_orden", sortable: true },
+  { name: "CLIENTE", uid: "cliente.nombre_cliente", sortable: true },
+  { name: "FECHA", uid: "fecha_orden", sortable: true },
+  { name: "TOTAL", uid: "monto_total", sortable: true },
+  { name: "ESTADO", uid: "estado_orden", sortable: true },
+  { name: "ACCIONES", uid: "acciones" },
+];
+
+export const statusOptionsOrders = [
+  { name: "PENDIENTE", uid: "PENDIENTE" },
+  { name: "EN PROCESO", uid: "EN_PROCESO" },
+  { name: "FINALIZADO", uid: "FINALIZADO" },
+  { name: "CANCELADO", uid: "CANCELADO" },
+];
 
 export const INITIAL_VISIBLE_COLUMNS = [
   "cliente.nombre_cliente",
@@ -26,229 +32,89 @@ export const INITIAL_VISIBLE_COLUMNS = [
   "acciones",
 ];
 
-const columnsOrders = [
-  { name: "ID", uid: "id_orden", sortable: true },
-  { name: "CLIENTE", uid: "cliente.nombre_cliente", sortable: true },
-  { name: "FECHA", uid: "fecha_orden", sortable: true },
-  { name: "TOTAL", uid: "monto_total", sortable: true },
-  { name: "ESTADO", uid: "estado_orden", sortable: true },
+// Clientes
+export const columnsClientes = [
+  { name: "ID", uid: "id_cliente", sortable: true },
+  { name: "NOMBRE", uid: "nombre_cliente", sortable: true },
+  { name: "APELLIDOS", uid: "apellidos_cliente", sortable: true },
+  { name: "TELÉFONO", uid: "telefono_cliente", sortable: true },
+  { name: "ID USUARIO", uid: "id_user", sortable: true },
   { name: "ACCIONES", uid: "acciones" },
 ];
 
-const statusOptionsOrders = [
+// Negocios
+export const statusColorMapNegocios = {
+  ACTIVO: "success",
+  INACTIVO: "error",
+  PENDIENTE: "warning",
+};
+
+export const statusOptionsNegocios = [
+  { name: "ACTIVO", uid: "ACTIVO" },
+  { name: "INACTIVO", uid: "INACTIVO" },
   { name: "PENDIENTE", uid: "PENDIENTE" },
-  { name: "EN PROCESO", uid: "EN_PROCESO" },
-  { name: "FINALIZADO", uid: "FINALIZADO" },
-  { name: "CANCELADO", uid: "CANCELADO" },
 ];
 
-const statusOptions = [
-  { name: "Active", uid: "active" },
-  { name: "Paused", uid: "paused" },
-  { name: "Vacation", uid: "vacation" },
+export const columnsNegocios = [
+  { name: "ID", uid: "id_negocio", sortable: true },
+  { name: "NOMBRE", uid: "nombre_negocio", sortable: true },
+  { name: "DIRECCIÓN", uid: "direccion_negocio", sortable: true },
+  { name: "FECHA DE CREACIÓN", uid: "created_at", sortable: true },
+  { name: "ID DUEÑO", uid: "id_dueneg", sortable: true },
+  { name: "ESTADO", uid: "estado_negocio", sortable: true },
+  { name: "ACCIONES", uid: "acciones" },
 ];
 
-const users = [
-  {
-    id: 1,
-    name: "Tony Reichert",
-    role: "CEO",
-    team: "Management",
-    status: "active",
-    age: "29",
-    avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
-    email: "tony.reichert@example.com",
-  },
-  {
-    id: 2,
-    name: "Zoey Lang",
-    role: "Tech Lead",
-    team: "Development",
-    status: "paused",
-    age: "25",
-    avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
-    email: "zoey.lang@example.com",
-  },
-  {
-    id: 3,
-    name: "Jane Fisher",
-    role: "Sr. Dev",
-    team: "Development",
-    status: "active",
-    age: "22",
-    avatar: "https://i.pravatar.cc/150?u=a04258114e29026702d",
-    email: "jane.fisher@example.com",
-  },
-  {
-    id: 4,
-    name: "William Howard",
-    role: "C.M.",
-    team: "Marketing",
-    status: "vacation",
-    age: "28",
-    avatar: "https://i.pravatar.cc/150?u=a048581f4e29026701d",
-    email: "william.howard@example.com",
-  },
-  {
-    id: 5,
-    name: "Kristen Copper",
-    role: "S. Manager",
-    team: "Sales",
-    status: "active",
-    age: "24",
-    avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
-    email: "kristen.cooper@example.com",
-  },
-  {
-    id: 6,
-    name: "Brian Kim",
-    role: "P. Manager",
-    team: "Management",
-    age: "29",
-    avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
-    email: "brian.kim@example.com",
-    status: "Active",
-  },
-  {
-    id: 7,
-    name: "Michael Hunt",
-    role: "Designer",
-    team: "Design",
-    status: "paused",
-    age: "27",
-    avatar: "https://i.pravatar.cc/150?u=a042581f4e29027007d",
-    email: "michael.hunt@example.com",
-  },
-  {
-    id: 8,
-    name: "Samantha Brooks",
-    role: "HR Manager",
-    team: "HR",
-    status: "active",
-    age: "31",
-    avatar: "https://i.pravatar.cc/150?u=a042581f4e27027008d",
-    email: "samantha.brooks@example.com",
-  },
-  {
-    id: 9,
-    name: "Frank Harrison",
-    role: "F. Manager",
-    team: "Finance",
-    status: "vacation",
-    age: "33",
-    avatar: "https://i.pravatar.cc/150?img=4",
-    email: "frank.harrison@example.com",
-  },
-  {
-    id: 10,
-    name: "Emma Adams",
-    role: "Ops Manager",
-    team: "Operations",
-    status: "active",
-    age: "35",
-    avatar: "https://i.pravatar.cc/150?img=5",
-    email: "emma.adams@example.com",
-  },
-  {
-    id: 11,
-    name: "Brandon Stevens",
-    role: "Jr. Dev",
-    team: "Development",
-    status: "active",
-    age: "22",
-    avatar: "https://i.pravatar.cc/150?img=8",
-    email: "brandon.stevens@example.com",
-  },
-  {
-    id: 12,
-    name: "Megan Richards",
-    role: "P. Manager",
-    team: "Product",
-    status: "paused",
-    age: "28",
-    avatar: "https://i.pravatar.cc/150?img=10",
-    email: "megan.richards@example.com",
-  },
-  {
-    id: 13,
-    name: "Oliver Scott",
-    role: "S. Manager",
-    team: "Security",
-    status: "active",
-    age: "37",
-    avatar: "https://i.pravatar.cc/150?img=12",
-    email: "oliver.scott@example.com",
-  },
-  {
-    id: 14,
-    name: "Grace Allen",
-    role: "M. Specialist",
-    team: "Marketing",
-    status: "active",
-    age: "30",
-    avatar: "https://i.pravatar.cc/150?img=16",
-    email: "grace.allen@example.com",
-  },
-  {
-    id: 15,
-    name: "Noah Carter",
-    role: "IT Specialist",
-    team: "I. Technology",
-    status: "paused",
-    age: "31",
-    avatar: "https://i.pravatar.cc/150?img=15",
-    email: "noah.carter@example.com",
-  },
-  {
-    id: 16,
-    name: "Ava Perez",
-    role: "Manager",
-    team: "Sales",
-    status: "active",
-    age: "29",
-    avatar: "https://i.pravatar.cc/150?img=20",
-    email: "ava.perez@example.com",
-  },
-  {
-    id: 17,
-    name: "Liam Johnson",
-    role: "Data Analyst",
-    team: "Analysis",
-    status: "active",
-    age: "28",
-    avatar: "https://i.pravatar.cc/150?img=33",
-    email: "liam.johnson@example.com",
-  },
-  {
-    id: 18,
-    name: "Sophia Taylor",
-    role: "QA Analyst",
-    team: "Testing",
-    status: "active",
-    age: "27",
-    avatar: "https://i.pravatar.cc/150?img=29",
-    email: "sophia.taylor@example.com",
-  },
-  {
-    id: 19,
-    name: "Lucas Harris",
-    role: "Administrator",
-    team: "Information Technology",
-    status: "paused",
-    age: "32",
-    avatar: "https://i.pravatar.cc/150?img=50",
-    email: "lucas.harris@example.com",
-  },
-  {
-    id: 20,
-    name: "Mia Robinson",
-    role: "Coordinator",
-    team: "Operations",
-    status: "active",
-    age: "26",
-    avatar: "https://i.pravatar.cc/150?img=45",
-    email: "mia.robinson@example.com",
-  },
+// Productos
+export const categoryColorMap = {
+  VERDURA: "primary",
+  FRUTA: "secondary",
+};
+
+export const columnsProductos = [
+  { name: "NO. PRODUCTO", uid: "no. de producto", sortable: true },
+  { name: "IMAGEN", uid: "imagen_producto" },
+  { name: "NOMBRE", uid: "nombre_producto", sortable: true },
+  { name: "DESCRIPCIÓN", uid: "descripcion", sortable: true },
+  { name: "EN TEMPORADA", uid: "enTemporada", sortable: true },
+  { name: "CATEGORÍA", uid: "categoria", sortable: true },
+  { name: "ACCIONES", uid: "acciones" },
 ];
 
-export { columns, users, statusOptions, columnsOrders, statusOptionsOrders };
+export const categoryOptionsProductos = [
+  { name: "VERDURA", uid: "VERDURA" },
+  { name: "FRUTA", uid: "FRUTA" },
+];
+
+// Usuarios
+export const columnsUsuarios = [
+  { name: "ID", uid: "id", sortable: true },
+  {
+    name: "NOMBRE",
+    uid: "nombre",
+    sortable: true,
+  },
+  { name: "APELLIDO", uid: "apellido", sortable: true },
+  { name: "CORREO", uid: "email", sortable: true },
+  { name: "ROL", uid: "rol", sortable: true },
+  { name: "ESTADO", uid: "estado", sortable: true },
+  { name: "CORREO VERIFICADO", uid: "correo_verificado" },
+  { name: "ACCIONES", uid: "acciones" },
+];
+
+export const statusColorMapUsuarios = {
+  ACTIVO: "success",
+  INACTIVO: "error",
+  PENDIENTE: "warning",
+};
+
+export const statusOptionsUsuarios = [
+  { name: "ACTIVO", uid: "ACTIVO" },
+  { name: "INACTIVO", uid: "INACTIVO" },
+];
+
+export const rolOptionsUsuarios = [
+  { name: "ADMIN", uid: "ADMIN" },
+  { name: "DUEÑO DE NEGOCIO", uid: "DUENEG" },
+  { name: "CLIENTE", uid: "CLIENTE" },
+];

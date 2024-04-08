@@ -88,7 +88,11 @@ export const EditLoteModal = ({
         {(onClose) => (
           <>
             {loading ? (
-              <CircularProgress size="lg" aria-label="Loading..." />
+              <ModalBody>
+                <div className="flex justify-center items-center">
+                  <CircularProgress />
+                </div>
+              </ModalBody>
             ) : (
               <form onSubmit={handleSubmit(onSubmit)}>
                 <ModalHeader className="flex flex-col">

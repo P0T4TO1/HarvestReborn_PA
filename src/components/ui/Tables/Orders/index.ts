@@ -1,2 +1,2 @@
 export * from "./OrdersNegocio";
-export * from "./UsersTableNegocio";
+export * from "./OrdersTableMUI";

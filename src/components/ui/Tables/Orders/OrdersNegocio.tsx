@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useCallback, ChangeEvent, Key } from "react";
+import React, { useState, useMemo, useCallback, ChangeEvent, Key, useEffect } from "react";
 import {
   Table,
   TableHeader,
@@ -20,17 +20,18 @@ import {
   ChipProps,
   SortDescriptor,
   Tooltip,
+  useDisclosure,
 } from "@nextui-org/react";
-import { IMergedOrder, IOrden } from "@/interfaces";
-import { IoMdMore } from "react-icons/io";
+import { IMergedOrder, IOrden, IProductoOrden } from "@/interfaces";
 import {
   columnsOrders,
   statusOptionsOrders,
-  statusColorMap,
+  statusColorMapOrders as statusColorMap,
   INITIAL_VISIBLE_COLUMNS,
 } from "@/utils/data-table";
+import { OrderModal } from "@/components";
 import { capitalize } from "@/utils/capitalize";
-import { FaChevronDown, FaPlus, FaSearch } from "react-icons/fa";
+import { FaChevronDown, FaSearch, FaEye } from "react-icons/fa";
 
 type Props = {
   orders: IMergedOrder[];
@@ -48,6 +49,10 @@ export const OrdersTable = ({ orders }: Props) => {
     column: "fecha_orden",
     direction: "ascending",
   });
+
+  const [orderModal, setOrderModal] = useState<IOrden | undefined>();
+  const [productsModal, setProductsModal] = useState<IProductoOrden[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const [page, setPage] = useState(1);
 
@@ -112,6 +117,12 @@ export const OrdersTable = ({ orders }: Props) => {
     });
   }, [sortDescriptor, items]);
 
+  const { onOpen, onClose, isOpen } = useDisclosure();
+
+  const setOrder = (order: IOrden) => {
+    console.log(order);
+  };
+
   const renderCell = useCallback((order: IMergedOrder, columnKey: Key) => {
     const cellValue = order[columnKey as keyof IMergedOrder];
 
@@ -155,8 +166,17 @@ export const OrdersTable = ({ orders }: Props) => {
         return (
           <div className="flex items-center gap-4">
             <Tooltip content="Ver detalles">
-              <Button isIconOnly variant="light">
-                <IoMdMore size={20} />
+              <Button
+                isIconOnly
+                variant="light"
+                onClick={() => {
+                  setLoading(true);
+                  setOrderModal(order.orden);
+                  setProductsModal(order.productos);
+                  onOpen();
+                }}
+              >
+                <FaEye size={20} />
               </Button>
             </Tooltip>
           </div>
@@ -314,18 +334,26 @@ export const OrdersTable = ({ orders }: Props) => {
     );
   }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
 
+  useEffect(() => {
+    if (orderModal) {
+      setLoading(false);
+    }
+  }, [orderModal]);
+
   return (
     <div className=" w-full flex flex-col gap-4 mt-6">
+      <OrderModal
+        loading={loading}
+        order={orderModal as IOrden}
+        products={productsModal}
+        useDisclosure={{ isOpen, onClose }}
+      />
       <Table
         aria-label="Example table with custom cells, pagination and sorting"
         isHeaderSticky
         bottomContent={bottomContent}
         bottomContentPlacement="outside"
-        classNames={{
-          wrapper: "max-h-[382px]",
-        }}
         selectedKeys={selectedKeys}
-        selectionMode="multiple"
         sortDescriptor={sortDescriptor}
         topContent={topContent}
         topContentPlacement="outside"
@@ -343,7 +371,10 @@ export const OrdersTable = ({ orders }: Props) => {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody emptyContent={"No hay pedidos encontrados"} items={sortedItems}>
+        <TableBody
+          emptyContent={"No hay pedidos encontrados"}
+          items={sortedItems}
+        >
           {(item) => (
             <TableRow key={item.id_orden}>
               {(columnKey) => (

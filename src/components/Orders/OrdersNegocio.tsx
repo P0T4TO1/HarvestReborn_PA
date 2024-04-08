@@ -4,7 +4,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { IOrden, IProductoOrden, IMergedOrder } from "@/interfaces";
 import { hrApi } from "@/api";
 import { AuthContext } from "@/context/auth";
-import { OrdersTable, TableSortExample } from "@/components";
+import { OrdersTable } from "@/components";
 import {
   CircularProgress,
   Card,
