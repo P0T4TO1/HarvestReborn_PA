@@ -7,6 +7,7 @@ import { bagReducer } from "./orderReducer";
 
 import { IOrden, IProductoOrden } from "@/interfaces";
 import { hrApi } from "@/api";
+import { EstadoOrden } from "@/interfaces";
 
 export interface BagState {
   isLoaded: boolean;
@@ -96,7 +97,7 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
       fecha_orden: new Date().toISOString(),
       hora_orden: new Date().toISOString(),
       monto_total: state.total,
-      estado_orden: "PENDIENTE",
+      estado_orden: EstadoOrden.PENDIENTE,
       productoOrden: state.bag,
       id_cliente,
       id_historial,

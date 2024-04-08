@@ -106,16 +106,16 @@ export const OrdersCliente = () => {
                             </Link>
                             <Button
                               color={
-                                order.estado_orden === "ENTREGADO"
+                                order.estado_orden === "FINALIZADO"
                                   ? "default"
                                   : "danger"
                               }
                               size="md"
-                              disabled={order.estado_orden === "ENTREGADO"}
+                              disabled={order.estado_orden === "FINALIZADO"}
                               className="ml-2 hidden md:block"
                             >
-                              {order.estado_orden === "ENTREGADO"
-                                ? "Entregado"
+                              {order.estado_orden === "FINALIZADO"
+                                ? "Finalizado"
                                 : "Cancelar orden"}
                             </Button>
                           </div>
@@ -166,7 +166,7 @@ export const OrdersCliente = () => {
                           <Chip
                             variant="flat"
                             color={
-                              order.estado_orden === "ENTREGADO"
+                              order.estado_orden === "FINALIZADO"
                                 ? "success"
                                 : "warning"
                             }
@@ -175,16 +175,16 @@ export const OrdersCliente = () => {
                           </Chip>
                           <Button
                             color={
-                              order.estado_orden === "ENTREGADO"
+                              order.estado_orden === "FINALIZADO"
                                 ? "default"
                                 : "danger"
                             }
                             size="md"
-                            disabled={order.estado_orden === "ENTREGADO"}
+                            disabled={order.estado_orden === "FINALIZADO"}
                             className="ml-2 md:hidden block"
                           >
-                            {order.estado_orden === "ENTREGADO"
-                              ? "Entregado"
+                            {order.estado_orden === "FINALIZADO"
+                              ? "Finalizado"
                               : "Cancelar orden"}
                           </Button>
                         </CardFooter>
