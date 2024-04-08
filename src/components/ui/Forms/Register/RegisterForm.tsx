@@ -136,11 +136,11 @@ export const RegisterForm = ({ user }: RegisterFormProps) => {
               <div className="text-center text-gray-500 text-xs">
                 <p className="text-xs">
                   Una vez registrado, aceptas nuestros{" "}
-                  <Link href={"/terms-conditions"} className="underline">
+                  <Link href={"/terms-conditions"} className="underline text-sm text-gray-600 dark:text-gray-400">
                     Términos de uso
                   </Link>{" "}
                   y confirmas que leiste nuestro{" "}
-                  <Link href={"/privacy-policy"} className="underline">
+                  <Link href={"/privacy-policy"} className="underline text-sm text-gray-600 dark:text-gray-400">
                     Aviso de Privacidad
                   </Link>
                   .

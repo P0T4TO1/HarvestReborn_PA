@@ -1,10 +1,9 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { redirect } from "next/navigation";
-import { HomeCliente, HomeNegocio } from "@/components";
 import { Spinner } from "@nextui-org/react";
 
-const HomePage = async () => {
+const ChatsPage = async () => {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/auth/login");
   if (session?.user.id_rol === 4) redirect("/auth/register?oauth=true");
@@ -19,11 +18,10 @@ const HomePage = async () => {
         </div>
       ) : (
         <section className="flex flex-col relative overflow-hidden min-h-screen">
-          {session?.user.id_rol === 2 ? <HomeNegocio /> : <HomeCliente />}
+          {/* <Chats /> */}
+          <h2>Chats</h2>
         </section>
       )}
     </>
   );
 };
-
-export default HomePage;

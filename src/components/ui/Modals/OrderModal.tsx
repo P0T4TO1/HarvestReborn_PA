@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useContext, useEffect } from "react";
+import React from "react";
 import { IOrden, IProductoOrden } from "@/interfaces";
 import {
   Modal,
@@ -88,9 +88,14 @@ export const OrderModal = ({
                   </div>
                 </ModalBody>
                 <ModalFooter>
-                  <Button variant="ghost" color="primary">
-                    Contactar al cliente
-                  </Button>
+                  <Link
+                    href={`/chats/chat/${order?.id_cliente}`}
+                    color="primary"
+                  >
+                    <Button variant="ghost" color="primary">
+                      Contactar al cliente
+                    </Button>
+                  </Link>
                   <Button
                     onClick={onClose}
                     disabled={loading}

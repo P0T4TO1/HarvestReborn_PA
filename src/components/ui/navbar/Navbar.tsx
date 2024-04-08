@@ -106,6 +106,11 @@ export const NavbarComponent = () => {
                       Pedidos
                     </Link>
                   </NavbarItem>
+                  <NavbarItem>
+                    <Link color="foreground" href={"/chats"}>
+                      Chats
+                    </Link>
+                  </NavbarItem>
                 </>
               ) : (
                 user?.id_rol === 3 && (
@@ -113,6 +118,11 @@ export const NavbarComponent = () => {
                     <NavbarItem>
                       <Link color="foreground" href={"/negocios"}>
                         Recauderías
+                      </Link>
+                    </NavbarItem>
+                    <NavbarItem>
+                      <Link color="foreground" href={"/chats"}>
+                        Chats
                       </Link>
                     </NavbarItem>
                   </>
