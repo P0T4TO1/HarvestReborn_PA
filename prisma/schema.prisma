@@ -87,12 +87,25 @@ model d_duenonegocio {
   @@index([id_user])
 }
 
+// // mysql
+// model Images {
+//   id      Int    @id @default(autoincrement())
+//   url     String
+//   altText String
+
+//   id_negocio Int
+//   negocio    m_negocio @relation(fields: [id_negocio], references: [id_negocio], onDelete: Cascade)
+
+//   @@index([id_negocio])
+// }
+
 model m_negocio {
   id_negocio          Int      @id @default(autoincrement())
   nombre_negocio      String
   direccion_negocio   String
   telefono_negocio    String
   email_negocio       String?
+  // images_negocio      Images[]
   images_negocio      String[] @default([])
   descripcion_negocio String?
   estado_negocio      Estado   @default(PENDIENTE)
