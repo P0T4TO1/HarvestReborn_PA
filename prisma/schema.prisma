@@ -9,6 +9,8 @@ generator client {
 }
 
 datasource db {
+  // provider = "mysql"
+  // url      = env("LOCAL_MYSQL_DATABASE")
   provider     = "postgresql"
   url          = env("AZURE_POSTGRES_URL")
   relationMode = "prisma"
