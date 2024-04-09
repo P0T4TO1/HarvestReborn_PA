@@ -91,7 +91,7 @@ export const TableNegocios = ({ negocios }: Props) => {
     }
 
     return filteredOrders;
-  }, [negocios, filterValue, statusFilter]);
+  }, [negocios, filterValue, statusFilter, hasSearchFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -185,7 +185,7 @@ export const TableNegocios = ({ negocios }: Props) => {
       default:
         return cellValue;
     }
-  }, []);
+  }, [router]);
 
   const onNextPage = useCallback(() => {
     if (page < pages) {
@@ -291,9 +291,8 @@ export const TableNegocios = ({ negocios }: Props) => {
     statusFilter,
     visibleColumns,
     onSearchChange,
-    onRowsPerPageChange,
     negocios.length,
-    hasSearchFilter,
+    onClear,
   ]);
 
   const bottomContent = useMemo(() => {
@@ -333,7 +332,7 @@ export const TableNegocios = ({ negocios }: Props) => {
         </div>
       </div>
     );
-  }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
+  }, [selectedKeys, page, pages, filteredItems.length, , onNextPage, onPreviousPage]);
 
   return (
     <div className=" w-full flex flex-col gap-4">

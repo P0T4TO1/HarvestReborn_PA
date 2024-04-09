@@ -5,8 +5,6 @@ import { hrApi } from "@/api";
 import { ILote } from "@/interfaces";
 import { AuthContext } from "@/context/auth";
 import {
-  Select,
-  SelectItem,
   Input,
   CircularProgress,
   Button,
@@ -100,29 +98,6 @@ export const ProductsInventory = () => {
               onChange={handleChange}
             />
           </div>
-        </div>
-        <div className="absolute inset-y-0 right-0 flex items-end pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 flex-col">
-          <Select
-            placeholder="Filtrar por"
-            className="w-60"
-            onChange={(e) => console.log(e)}
-          >
-            <SelectItem value="0" key="0">
-              -- --
-            </SelectItem>
-            <SelectItem value="1" key="1">
-              Nombre
-            </SelectItem>
-            <SelectItem value="2" key="2">
-              Fecha de entrada
-            </SelectItem>
-            <SelectItem value="3" key="3">
-              Fecha de vencimiento
-            </SelectItem>
-            <SelectItem value="4" key="4">
-              Cantidad
-            </SelectItem>
-          </Select>
         </div>
       </div>
 

@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import {
   Table,
   TableBody,
@@ -11,12 +10,7 @@ import {
   Paper,
 } from "@mui/material";
 import { ILote } from "@/interfaces";
-import { useState } from "react";
-import { Tooltip, useDisclosure } from "@nextui-org/react";
-import { hrApi } from "@/api";
-import { toast } from "sonner";
-import { DANGER_TOAST, EditLoteModal, SUCCESS_TOAST, Row } from "@/components";
-import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
+import { Row } from "@/components";
 
 interface ProductsCollapsibleTableProps {
   lotesById: ILote[];
@@ -27,39 +21,8 @@ export const ProductsCollapsibleTable = ({
   lotesById,
   allLotes,
 }: ProductsCollapsibleTableProps) => {
-  const [loading, setLoading] = useState(true);
-  const { onOpen, onClose, isOpen } = useDisclosure();
-  const [lote, setLote] = useState<ILote>();
-
-  const getLote = async (id: number) => {
-    setLoading(true);
-    await hrApi.get(`/negocio/inventory/lote/${id}`).then((res) => {
-      if (res.status === 200) {
-        setLote(res.data);
-      } else {
-        console.log("Error al obtener producto", res.data);
-      }
-      setLoading(false);
-    });
-  };
-  const handleDelete = async (id: number) => {
-    await hrApi.delete(`/negocio/inventory/${id}`).then((res) => {
-      if (res.status === 200) {
-        toast("Producto eliminado con éxito", SUCCESS_TOAST);
-        window.location.reload();
-      } else {
-        toast("Hubo un error al borrar el producto", DANGER_TOAST);
-        console.log("Error al borrar producto", res.data);
-      }
-    });
-  };
   return (
     <>
-      <EditLoteModal
-        lote={lote}
-        useDisclosure={{ isOpen, onClose }}
-        loading={loading}
-      />
       <TableContainer component={Paper} className="dark:bg-[#1D1C19]">
         <Table aria-label="collapsible table">
           <TableHead>
@@ -78,29 +41,7 @@ export const ProductsCollapsibleTable = ({
           </TableHead>
           <TableBody>
             {lotesById?.map((loteMap) => (
-              <Row lote={loteMap} allLotes={allLotes} key={loteMap.id_lote}>
-                <div>
-                  <Tooltip content="Editar">
-                    <button
-                      onClick={() => {
-                        getLote(loteMap.id_lote).then(() => {});
-                        onOpen();
-                      }}
-                    >
-                      <FaEdit className="text-blue-700" size={20} />
-                    </button>
-                  </Tooltip>
-                  <Tooltip content="Eliminar">
-                    <button
-                      onClick={() => {
-                        handleDelete(loteMap.id_lote).then(() => {});
-                      }}
-                    >
-                      <FaRegTrashAlt className="text-red-700" size={20} />
-                    </button>
-                  </Tooltip>
-                </div>
-              </Row>
+              <Row lote={loteMap} allLotes={allLotes} key={loteMap.id_lote} />
             ))}
           </TableBody>
         </Table>

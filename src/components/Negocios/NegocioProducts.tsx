@@ -86,12 +86,12 @@ export const NegocioProducts = ({
             />
           </div>
 
-          <div className="grid grid-cols-6 mt-12">
-            <div className="col-span-1">
+          <div className="grid lg:grid-cols-6 mt-12 grid-cols-1">
+            <div className="lg:col-span-1 flex justify-center lg:block">
               <div>Filtros</div>
             </div>
-            <div className="col-span-5">
-              <ul className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 grid-cols-1 xl:grid-cols-4">
+            <div className="lg:col-span-5 flex justify-center lg:block">
+              <ul className="grid lg:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 grid-cols-1 xl:grid-cols-4">
                 {results?.map((lote) => (
                   <li key={lote.id_producto} className="p-2 flex">
                     <ProductCard lote={lote} route={"negocio-prods-cliente"}>

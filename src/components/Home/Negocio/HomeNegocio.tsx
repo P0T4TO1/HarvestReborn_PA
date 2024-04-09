@@ -42,7 +42,7 @@ export const HomeNegocio = () => {
           ¿Qué quieres hacer hoy?
         </h2>
       </div>
-      <div className="container grid grid-cols-4 gap-6 mt-8 mx-auto">
+      <div className="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8 mx-auto">
         <HomeNegocioCard
           buttonText={"Ver inventario"}
           title={"Gestionar inventario"}

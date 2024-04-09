@@ -10,9 +10,17 @@ const ChatPage = async ({ searchParams }: ChatPageProps) => {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/login");
   if (searchParams.user) {
-    return <div>Chat {searchParams.user}</div>;
+    return (
+      <section className="flex mt-16 flex-col relative overflow-hidden min-h-screen">
+        <div>Chat {searchParams.user}</div>
+      </section>
+    );
   }
-  return <div>Chat</div>;
+  return (
+    <section className="flex mt-16 flex-col relative overflow-hidden min-h-screen">
+      <div>Chat</div>
+    </section>
+  );
 };
 
 export default ChatPage;

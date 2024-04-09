@@ -29,7 +29,7 @@ export const OrderModal = ({
   loading,
 }: Props) => {
   return (
-    <Modal backdrop="blur" isOpen={isOpen} onClose={onClose}>
+    <Modal backdrop="blur" isOpen={isOpen} onClose={onClose} size="lg">
       <ModalContent>
         {(onClose) => (
           <>
@@ -46,7 +46,7 @@ export const OrderModal = ({
                     Orden: #{order?.id_orden}
                   </h2>
                 </ModalHeader>
-                <ModalBody>
+                <ModalBody className="max-h-[460px] overflow-y-scroll">
                   <div className="flex flex-col">
                     <h3 className="text-lg font-semibold">Productos</h3>
                     <div className="flex flex-col">
@@ -89,7 +89,7 @@ export const OrderModal = ({
                 </ModalBody>
                 <ModalFooter>
                   <Link
-                    href={`/chats/chat/${order?.id_cliente}`}
+                    href={`/chats/chat?user=${order?.cliente?.id_user}`}
                     color="primary"
                   >
                     <Button variant="ghost" color="primary">

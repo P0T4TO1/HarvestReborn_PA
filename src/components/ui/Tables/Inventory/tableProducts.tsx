@@ -1,69 +1,55 @@
 "use client";
 
-import { useState, useMemo, useCallback, Key, ChangeEvent } from "react";
+import React, { useState, useMemo, useCallback, ChangeEvent, Key } from "react";
 import {
-  Chip,
   Table,
-  TableBody,
-  TableCell,
-  TableColumn,
   TableHeader,
+  TableColumn,
+  TableBody,
   TableRow,
-  Tooltip,
-  Pagination,
-  Input,
+  TableCell,
   Button,
-  Link,
-  Dropdown,
   DropdownTrigger,
+  Dropdown,
   DropdownMenu,
   DropdownItem,
+  Pagination,
   Selection,
   SortDescriptor,
-  ChipProps,
+  Tooltip,
+  useDisclosure,
 } from "@nextui-org/react";
-import { IUser } from "@/interfaces";
-import { hrApi } from "@/api";
-import {
-  columnsUsuarios as columns,
-  rolOptionsUsuarios,
-  statusColorMapUsuarios as statusColorMap,
-  statusOptionsUsuarios as statusOptions,
-} from "@/utils/data-table";
-import { toast } from "sonner";
-import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
-import {
-  FaCheck,
-  FaChevronDown,
-  FaEdit,
-  FaRegTrashAlt,
-  FaSearch,
-} from "react-icons/fa";
-import { MdOutlinePersonOff } from "react-icons/md";
+import { ILote } from "@/interfaces";
+import { columnsLotes as columns } from "@/utils/data-table";
+import { FaChevronDown, FaRegTrashAlt, FaEdit } from "react-icons/fa";
 import { capitalize } from "@/utils/capitalize";
+import { hrApi } from "@/api";
+import { toast } from "sonner";
+import { DANGER_TOAST, EditLoteModal, SUCCESS_TOAST } from "@/components";
 
 interface Props {
-  users: IUser[];
+  lotes: ILote[];
 }
 
 const INITIAL_VISIBLE_COLUMNS = [
-  "nombre",
-  "apellido",
-  "email",
-  "rol",
-  "estado",
-  "correo_verificado",
+  "fecha_entrada",
+  "cantidad_producto",
+  "fecha_vencimiento",
   "acciones",
 ];
 
-export const TableUsers = ({ users }: Props) => {
+export const TableProductsInventory = ({ lotes }: Props) => {
+  const [lote, setLote] = useState<ILote>();
+  const [loading, setLoading] = useState(false);
+  const { onOpen, onClose, isOpen } = useDisclosure();
+
   const [filterValue, setFilterValue] = useState("");
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
   const [visibleColumns, setVisibleColumns] = useState<Selection>(
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
   const [statusFilter, setStatusFilter] = useState<Selection>("all");
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: "fecha_orden",
     direction: "ascending",
@@ -82,30 +68,18 @@ export const TableUsers = ({ users }: Props) => {
   }, [visibleColumns]);
 
   const filteredItems = useMemo(() => {
-    let filteredOrders = [...users];
+    let filteredOrders = [...lotes];
 
     if (hasSearchFilter) {
-      filteredOrders = filteredOrders.filter(
-        (user) =>
-          user.duenonegocio?.nombre_dueneg
-            .toLowerCase()
-            .includes(filterValue.toLowerCase()) ||
-          user.cliente?.nombre_cliente
-            .toLowerCase()
-            .includes(filterValue.toLowerCase())
-      );
-    }
-    if (
-      statusFilter !== "all" &&
-      Array.from(statusFilter).length !== statusOptions.length
-    ) {
-      filteredOrders = filteredOrders.filter((user) =>
-        Array.from(statusFilter).includes(user.estado)
+      filteredOrders = filteredOrders.filter((lote) =>
+        lote.producto.nombre_producto
+          .toLowerCase()
+          .includes(filterValue.toLowerCase())
       );
     }
 
     return filteredOrders;
-  }, [users, filterValue, statusFilter, hasSearchFilter]);
+  }, [lotes, filterValue, hasSearchFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -120,108 +94,99 @@ export const TableUsers = ({ users }: Props) => {
     const { column, direction } = sortDescriptor;
 
     return items.sort((a, b) => {
-      if ((a[column as keyof IUser] ?? "") < (b[column as keyof IUser] ?? "")) {
+      if ((a[column as keyof ILote] ?? "") < (b[column as keyof ILote] ?? "")) {
         return direction === "ascending" ? -1 : 1;
       }
-      if ((a[column as keyof IUser] ?? "") > (b[column as keyof IUser] ?? "")) {
+      if ((a[column as keyof ILote] ?? "") > (b[column as keyof ILote] ?? "")) {
         return direction === "ascending" ? 1 : -1;
       }
       return 0;
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = useCallback((user: IUser, columnKey: Key) => {
-    const cellValue = user[columnKey as keyof IUser];
+  const getLote = async (id: number) => {
+    setLoading(true);
+    await hrApi.get(`/negocio/inventory/lote/${id}`).then((res) => {
+      if (res.status === 200) {
+        setLote(res.data);
+      } else {
+        console.log("Error al obtener producto", res.data);
+      }
+      setLoading(false);
+    });
+  };
+
+  const handleDelete = async (id: number) => {
+    await hrApi.delete(`/negocio/inventory/${id}`).then((res) => {
+      if (res.status === 200) {
+        toast("Producto eliminado con éxito", SUCCESS_TOAST);
+        window.location.reload();
+      } else {
+        toast("Hubo un error al borrar el producto", DANGER_TOAST);
+        console.log("Error al borrar producto", res.data);
+      }
+    });
+  };
+
+  const renderCell = useCallback((lote: ILote, columnKey: Key) => {
+    const cellValue = lote[columnKey as keyof ILote];
 
     switch (columnKey) {
-      case "id":
-        return <>{user.id}</>;
-      case "nombre":
+      case "id_lote":
+        return <div className="dark:text-gray-300">{lote.id_lote}</div>;
+      case "fecha_entrada":
         return (
-          <>
-            {user.duenonegocio?.nombre_dueneg || user.cliente?.nombre_cliente}
-          </>
+          <div className="dark:text-gray-300">
+            {new Date(lote.fecha_entrada).toLocaleDateString("es-ES", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </div>
         );
-      case "apellido":
+      case "cantidad_producto":
         return (
-          <>
-            {user.duenonegocio?.apellidos_dueneg ||
-              user.cliente?.apellidos_cliente}
-          </>
+          <div className="dark:text-gray-300">{lote.cantidad_producto} kg</div>
         );
-      case "correo":
-        return <>{user.email}</>;
-      case "rol":
+      case "fecha_vencimiento":
         return (
-          <>
-            {user.id_rol === 1
-              ? "Admin"
-              : user.id_rol === 2
-                ? "Dueño de negocio"
-                : "Cliente"}
-          </>
-        );
-      case "estado":
-        return (
-          <Chip
-            size="sm"
-            variant="flat"
-            color={statusColorMap[user.estado] as ChipProps["color"]}
-          >
-            {user.estado.charAt(0) + user.estado.slice(1).toLowerCase()}
-          </Chip>
-        );
-      case "correo_verificado":
-        return (
-          <Chip
-            size="sm"
-            variant="flat"
-            color={user.emailVerified ? "success" : "danger"}
-          >
-            {user.emailVerified ? "Verificado" : "No verificado"}
-          </Chip>
+          <div className="dark:text-gray-300">
+            {new Date(lote.fecha_vencimiento).toLocaleDateString("es-ES", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </div>
         );
       case "acciones":
         return (
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             <div>
               <Tooltip content="Editar">
-                <Link href={`/admin/dashboard/users/${user.id}`}>
-                  <Button isIconOnly variant="light">
-                    <FaEdit size={20} />
-                  </Button>
-                </Link>
-              </Tooltip>
-            </div>
-            <div>
-              <Tooltip
-                content={user.estado === "ACTIVO" ? "Desactivar" : "Activar"}
-                color="warning"
-              >
                 <Button
                   isIconOnly
+                  size="sm"
                   variant="light"
-                  onPress={() => handleChangeStatus(user.id, user.estado)}
+                  onClick={() => {
+                    getLote(lote.id_lote).then(() => {});
+                    onOpen();
+                  }}
                 >
-                  {user.estado === "ACTIVO" ? (
-                    <MdOutlinePersonOff size={20} />
-                  ) : (
-                    <FaCheck size={20} />
-                  )}
+                  <FaEdit className="text-blue-700" size={20} />
                 </Button>
               </Tooltip>
             </div>
             <div>
-              <Tooltip content="Eliminar" color="danger">
+              <Tooltip content="Eliminar">
                 <Button
                   isIconOnly
+                  size="sm"
                   variant="light"
-                  onPress={() => handleDelete(user.id)}
+                  onClick={() => {
+                    handleDelete(lote.id_lote).then(() => {});
+                  }}
                 >
-                  <FaRegTrashAlt
-                    className="text-red-800 cursor-pointer"
-                    size={20}
-                  />
+                  <FaRegTrashAlt className="text-red-700" size={20} />
                 </Button>
               </Tooltip>
             </div>
@@ -230,7 +195,7 @@ export const TableUsers = ({ users }: Props) => {
       default:
         return cellValue;
     }
-  }, []);
+  }, [onOpen]);
 
   const onNextPage = useCallback(() => {
     if (page < pages) {
@@ -270,37 +235,7 @@ export const TableUsers = ({ users }: Props) => {
     return (
       <div className="flex flex-col gap-4">
         <div className="flex justify-between gap-3 items-end">
-          <Input
-            isClearable
-            className="w-full sm:max-w-[44%]"
-            placeholder="Buscar por nombre..."
-            startContent={<FaSearch size={20} />}
-            value={filterValue}
-            onClear={() => onClear()}
-            onValueChange={onSearchChange}
-          />
           <div className="flex gap-3">
-            <Dropdown>
-              <DropdownTrigger className="hidden sm:flex">
-                <Button endContent={<FaChevronDown size={20} />} variant="flat">
-                  Estado
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                disallowEmptySelection
-                aria-label="Table Columns"
-                closeOnSelect={false}
-                selectedKeys={statusFilter}
-                selectionMode="multiple"
-                onSelectionChange={setStatusFilter}
-              >
-                {statusOptions.map((status) => (
-                  <DropdownItem key={status.uid} className="capitalize">
-                    {capitalize(status.name)}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button endContent={<FaChevronDown size={20} />} variant="flat">
@@ -326,18 +261,14 @@ export const TableUsers = ({ users }: Props) => {
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            Total de clientes: {users.length}
+            Total de lotes: {lotes.length}
           </span>
         </div>
       </div>
     );
   }, [
-    filterValue,
-    statusFilter,
     visibleColumns,
-    onSearchChange,
-    users.length,
-    onClear,
+    lotes.length,
   ]);
 
   const bottomContent = useMemo(() => {
@@ -345,8 +276,8 @@ export const TableUsers = ({ users }: Props) => {
       <div className="py-2 px-2 flex justify-between items-center">
         <span className="w-[30%] text-small text-default-400">
           {selectedKeys === "all"
-            ? "Todos los clientes seleccionados"
-            : `${selectedKeys.size} de ${filteredItems.length} clientes seleccionados`}
+            ? "Todos los lotes seleccionados"
+            : `${selectedKeys.size} de ${filteredItems.length} lotes seleccionados`}
         </span>
         <Pagination
           isCompact
@@ -379,35 +310,15 @@ export const TableUsers = ({ users }: Props) => {
     );
   }, [selectedKeys, page, pages, filteredItems.length, onNextPage, onPreviousPage]);
 
-  const handleDelete = async (id: string) => {
-    try {
-      await hrApi.delete(`/admin/users/${id}`).then(() => {
-        toast("Usuario eliminado correctamente", SUCCESS_TOAST);
-        window.location.reload();
-      });
-    } catch (error) {
-      console.log(error);
-      toast("Error al eliminar el usuario", DANGER_TOAST);
-    }
-  };
-
-  const handleChangeStatus = async (id: string, status: string) => {
-    try {
-      await hrApi.patch(`/admin/users/status/${id}`, { status }).then(() => {
-        toast(
-          "Se ha cambiado el estado del usuario exitosamente",
-          SUCCESS_TOAST
-        );
-        window.location.reload();
-      });
-    } catch (error) {
-      console.log(error);
-      toast("Error al desactivar el usuario", DANGER_TOAST);
-    }
-  };
-
   return (
     <>
+      {lote && (
+        <EditLoteModal
+          lote={lote}
+          useDisclosure={{ isOpen, onClose }}
+          loading={loading}
+        />
+      )}
       <div className=" w-full flex flex-col gap-4">
         <Table
           aria-label="Example table with custom cells, pagination and sorting"
@@ -433,12 +344,9 @@ export const TableUsers = ({ users }: Props) => {
               </TableColumn>
             )}
           </TableHeader>
-          <TableBody
-            emptyContent={"No hay usuarios 😭"}
-            items={sortedItems}
-          >
+          <TableBody emptyContent={"No hay lotes 😭"} items={sortedItems}>
             {(item) => (
-              <TableRow key={item.id}>
+              <TableRow key={item.id_lote}>
                 {(columnKey) => (
                   <TableCell>{renderCell(item, columnKey) as any}</TableCell>
                 )}

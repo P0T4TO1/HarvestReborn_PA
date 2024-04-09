@@ -42,6 +42,16 @@ export const Footer = tv({
   base: "flex items-center justify-center gap-6 pt-16 pb-8 px-8 md:pt-10 md:pb-0",
 });
 
+export const SidebarWrapperChats = tv({
+  base: "bg-background transition-transform h-full fixed -translate-x-full w-96 shrink-0 z-[202] overflow-y-auto border-r border-divider flex-col py-6 px-3 md:ml-0 md:flex md:static md:h-screen md:translate-x-0 ",
+
+  variants: {
+    collapsed: {
+      true: "translate-x-0 ml-0 [display:inherit]",
+    },
+  },
+});
+
 export const Sidebar = Object.assign(SidebarWrapper, {
   Header,
   Body,

@@ -118,3 +118,12 @@ export const rolOptionsUsuarios = [
   { name: "DUEÑO DE NEGOCIO", uid: "DUENEG" },
   { name: "CLIENTE", uid: "CLIENTE" },
 ];
+
+// Lotes
+export const columnsLotes = [
+  { name: "ID", uid: "id_lote", sortable: true },
+  { name: "FECHA DE ENTRADA", uid: "fecha_entrada", sortable: true },
+  { name: "CANTIDAD EN KG", uid: "cantidad_producto", sortable: true },
+  { name: "FECHA DE VENCIMIENTO", uid: "fecha_vencimiento", sortable: true },
+  { name: "ACCIONES", uid: "acciones" },
+];

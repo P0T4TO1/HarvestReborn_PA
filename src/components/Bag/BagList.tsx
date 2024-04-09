@@ -87,8 +87,8 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
             Limpiar bolsa
           </Button>
         </div>
-        <div className="mt-6 grid grid-cols-3">
-          <div className="col-span-2 pr-6">
+        <div className="mt-6 grid lg:grid-cols-3 grid-cols-1">
+          <div className="lg:col-span-2 pr-6">
             {productsInBag.map((product) => (
               <div key={product.id_productoOrden} className="w-full">
                 <Divider />
@@ -160,7 +160,7 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
               </div>
             ))}
           </div>
-          <div className="col-span-1">
+          <div className="lg:col-span-1">
             <Card
               classNames={{
                 base: "border-1 border-gray-300",
