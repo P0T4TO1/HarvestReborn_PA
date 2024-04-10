@@ -19,7 +19,7 @@ export const getChatsByUserId = async (userId: string) => {
             select: {
               email: true,
               duenonegocio: {
-                include: {
+                select: {
                   negocio: {
                     select: {
                       nombre_negocio: true,
