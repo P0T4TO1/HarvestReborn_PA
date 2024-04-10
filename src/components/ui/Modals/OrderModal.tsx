@@ -34,6 +34,7 @@ export const OrderModal = ({
 }: Props) => {
   const { user } = useContext(AuthContext);
   const router = useRouter();
+
   const onContact = (
     id_user: string,
     id_cliente: string,
@@ -47,12 +48,12 @@ export const OrderModal = ({
         chatId: chatHrefConstructor(id_user, id_cliente),
       })
       .then((res) => {
-        if (res.status === 201) {
+        if (res.status === 200 && res.data.message === "El chat ya existe" ){
           router.push(
             `/chats/chat/${chatHrefConstructor(id_user, id_cliente)}`
           );
-        } else if (res.status === 400) {
-          console.error("El chat ya existe");
+        }
+        if (res.status === 201) {
           router.push(
             `/chats/chat/${chatHrefConstructor(id_user, id_cliente)}`
           );
@@ -131,7 +132,7 @@ export const OrderModal = ({
                       )
                     }
                   >
-                    Contactar al cliente
+                    Contactar al cliente por chat
                   </Button>
                   <Button
                     onClick={onClose}

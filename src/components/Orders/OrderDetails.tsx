@@ -57,26 +57,23 @@ export const OrderDetails = ({
 
   const onContact = (
     id_user: string,
-    id_dueneg?: string,
-    id_cliente?: string,
-    nombre_dueneg?: string,
-    nombre_cliente?: string,
+    id_dueneg: string,
+    nombre_dueneg: string
   ) => {
     hrApi
       .post(`/chat`, {
         userId: id_user,
-        userId2: id_dueneg ?? id_cliente,
-        chatName: `Chat con negocio ${nombre_dueneg ?? nombre_cliente}`,
+        userId2: id_dueneg,
+        chatName: `Chat con negocio ${nombre_dueneg}`,
       })
       .then((res) => {
-        if (res.status === 201) {
-          router.push(`/chats/chat/${chatHrefConstructor(id_user, id_dueneg! ?? id_cliente!)}`);
+        if (res.status === 200 && res.data.message === "El chat ya existe" ){
+          router.push(
+            `/chats/chat/${chatHrefConstructor(id_user, id_dueneg)}`
+          );
         }
-      }).catch((err) => {
-        console.log(err);
-        if(err.response.status === 400) {
-          console.log(err, err.response.data.message);
-          router.push(`/chats/chat/${chatHrefConstructor(id_user, id_dueneg! ?? id_cliente!)}`);
+        if (res.status === 201) {
+          router.push(`/chats/chat/${chatHrefConstructor(id_user, id_dueneg)}`);
         }
       });
   };

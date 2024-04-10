@@ -18,8 +18,11 @@ async function createChat(req: NextRequest, res: NextResponse) {
 
     if (chatExists) {
       return NextResponse.json(
-        { message: "El chat ya existe" },
-        { status: 400 }
+        {
+          error: "Internal Server Error",
+          message: "El chat ya existe",
+        },
+        { status: 200 }
       );
     }
 
