@@ -37,29 +37,11 @@ export const NavbarWrapperChats = ({ partnerName }: Props) => {
           </svg>
         </button>
       </NavbarContent>
-      <NavbarContent className="w-full max-md:hidden">
-        <NavbarItem>
-          <Link href={"/admin/dashboard"} color="foreground">
-            Inicio {partnerName}
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link href={"/admin/dashboard/users"} color="foreground">
-            Usuarios
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link href={"/admin/dashboard/products"} color="foreground">
-            Productos
-          </Link>
-        </NavbarItem>
-      </NavbarContent>
       <NavbarContent
         justify="end"
         className="w-fit data-[justify=end]:flex-grow-0"
       >
-        <DarkModeSwitch />
-        <DropdownComponent />
+        {partnerName}
       </NavbarContent>
     </Navbar>
   );
