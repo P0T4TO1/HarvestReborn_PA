@@ -36,7 +36,7 @@ export default async function ChatsLayout({
         text: lastMessage.cuerpo_mensaje,
         senderId: lastMessage.id_user,
         senderName:
-          lastMessage.user?.duenonegocio?.nombre_dueneg ??
+          lastMessage.user?.negocio?.nombre_negocio ??
           lastMessage.user?.cliente?.nombre_cliente ??
           lastMessage.user?.email,
       },

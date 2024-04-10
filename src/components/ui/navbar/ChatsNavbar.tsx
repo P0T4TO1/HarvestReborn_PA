@@ -1,9 +1,8 @@
 "use client";
 
-import { Link, Navbar, NavbarContent, NavbarItem } from "@nextui-org/react";
+import { Navbar, NavbarContent, NavbarItem } from "@nextui-org/react";
 import React, { useContext } from "react";
 import { UiContext } from "@/context/ui";
-import { DropdownComponent, DarkModeSwitch } from "@/components";
 
 type Props = {
   partnerName?: string;
