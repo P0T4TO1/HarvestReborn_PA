@@ -23,7 +23,7 @@ export interface IParticipantes {
   user?: IUser;
 
   id_chat: string;
-  chat: IChat;
+  chat?: IChat;
 }
 
 export interface IChat {
