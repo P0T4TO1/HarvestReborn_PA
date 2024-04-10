@@ -73,6 +73,7 @@ export const OrderDetails = ({
           router.push(`/chats/chat/${chatHrefConstructor(id_user, id_dueneg! ?? id_cliente!)}`);
         }
       }).catch((err) => {
+        console.log(err);
         if(err.response.status === 400) {
           console.log(err, err.response.data.message);
           router.push(`/chats/chat/${chatHrefConstructor(id_user, id_dueneg! ?? id_cliente!)}`);
