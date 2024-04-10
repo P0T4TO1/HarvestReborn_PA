@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { select } from "@nextui-org/react";
 
 export const getChatsByUserId = async (userId: string) => {
   console.log("userId", userId);
@@ -18,9 +19,13 @@ export const getChatsByUserId = async (userId: string) => {
             select: {
               email: true,
               duenonegocio: {
-                select: {
-                  nombre_dueneg: true,
-                },
+                include: {
+                  negocio: {
+                    select: {
+                      nombre_negocio: true,
+                    }
+                  }
+                }
               },
               cliente: {
                 select: {
