@@ -267,12 +267,19 @@ export const OrderDetails = ({
                           <p className="text-sm font-semibold text-end">
                             ${product.monto} MXN
                           </p>
-                          <Link
-                            href={`/chats/${product.id_negocio}`}
-                            className="text-sm text-end"
+                          <Button
+                            color="primary"
+                            variant="light"
+                            onClick={() =>
+                              onContact(
+                                user?.id!,
+                                product.negocio?.dueneg.id_user!,
+                                product.negocio?.dueneg.nombre_dueneg!
+                              )
+                            }
                           >
-                            Contactar negocio
-                          </Link>
+                            Contactar negocio por chat
+                          </Button>
                         </div>
                       </div>
                       <Divider />
