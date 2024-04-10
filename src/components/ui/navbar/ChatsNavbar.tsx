@@ -5,7 +5,11 @@ import React, { useContext } from "react";
 import { UiContext } from "@/context/ui";
 import { DropdownComponent, DarkModeSwitch } from "@/components";
 
-export const NavbarWrapperChats = () => {
+type Props = {
+  partnerName?: string;
+}
+
+export const NavbarWrapperChats = ({ partnerName }: Props) => {
   const { toggleSideMenu } = useContext(UiContext);
   return (
     <Navbar
@@ -36,7 +40,7 @@ export const NavbarWrapperChats = () => {
       <NavbarContent className="w-full max-md:hidden">
         <NavbarItem>
           <Link href={"/admin/dashboard"} color="foreground">
-            Inicio
+            Inicio {partnerName}
           </Link>
         </NavbarItem>
         <NavbarItem>

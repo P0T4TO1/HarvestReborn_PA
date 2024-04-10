@@ -6,6 +6,7 @@ import { messageArrayValidator } from "@/validations/chat.validation";
 import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
 import { IUser } from "@/interfaces";
+import { NavbarWrapperChats } from "@/components";
 
 // The following generateMetadata functiion was written after the video and is purely optional
 export async function generateMetadata({
@@ -117,6 +118,13 @@ const page = async ({ params }: PageProps) => {
         <ChatInput chatId={chatId} chatPartner={chatPartner} />
       </div> */}
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+        <NavbarWrapperChats
+          partnerName={
+            chatPartner.duenonegocio?.nombre_dueneg ??
+            chatPartner.cliente?.nombre_cliente ??
+            chatPartner.email
+          }
+        />
         <Messages
           chatId={chatId}
           chatPartner={chatPartner}
