@@ -23,9 +23,9 @@ export const getChatsByUserId = async (userId: string) => {
                   negocio: {
                     select: {
                       nombre_negocio: true,
-                    }
-                  }
-                }
+                    },
+                  },
+                },
               },
               cliente: {
                 select: {
@@ -43,7 +43,11 @@ export const getChatsByUserId = async (userId: string) => {
               email: true,
               duenonegocio: {
                 select: {
-                  nombre_dueneg: true,
+                  negocio: {
+                    select: {
+                      nombre_negocio: true,
+                    },
+                  },
                 },
               },
               cliente: {
