@@ -94,7 +94,7 @@ export const SidebarWrapperChats = ({ chats }: Props) => {
       chatPartner
         ?.map((partnerChat) => {
           return (
-            partnerChat.user?.negocio?.nombre_negocio ??
+            partnerChat.user?.duenonegocio?.negocio?.nombre_negocio ??
             partnerChat.user?.cliente?.nombre_cliente ??
             partnerChat.user?.email
           );

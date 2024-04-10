@@ -120,7 +120,7 @@ const page = async ({ params }: PageProps) => {
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
         <NavbarWrapperChats
           partnerName={
-            chatPartner.negocio?.nombre_negocio ??
+            chatPartner.duenonegocio?.negocio?.nombre_negocio ??
             chatPartner.cliente?.nombre_cliente ??
             chatPartner.email
           }
