@@ -46,7 +46,7 @@ async function sendMessage(req: NextRequest, res: NextResponse) {
     const isFriend = friendList.find((p) => p.id_user === friendId);
     if (!isFriend) {
       console.log("Unauthorized friend");
-      return new Response("Unauthorized", { status: 401 });
+      return NextResponse.json("Unauthorized", { status: 401 });
     }
 
     // const rawSender = (await fetchRedis(
