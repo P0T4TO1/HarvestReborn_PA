@@ -27,64 +27,64 @@ export const SidebarWrapperChats = ({ chats }: Props) => {
   const { data: session } = useSession();
   const pathname = usePathname();
   const { isMenuOpen, toggleSideMenu } = useContext(UiContext);
-  const [unseenMessages, setUnseenMessages] = useState<IMensaje[]>([]);
-  const [activeChats, setActiveChats] = useState<IChatWithLastMessage[]>(chats);
+  // const [unseenMessages, setUnseenMessages] = useState<IMensaje[]>([]);
+  // const [activeChats, setActiveChats] = useState<IChatWithLastMessage[]>(chats);
 
-  useEffect(() => {
-    pusherClient.subscribe(toPusherKey(`user:${session?.user.id}:chats`));
-    pusherClient.subscribe(toPusherKey(`user:${session?.user.id}:friends`));
+  // useEffect(() => {
+  //   pusherClient.subscribe(toPusherKey(`user:${session?.user.id}:chats`));
+  //   pusherClient.subscribe(toPusherKey(`user:${session?.user.id}:friends`));
 
-    const newFriendHandler = (newFriend: IChatWithLastMessage) => {
-      console.log("received new user", newFriend);
-      setActiveChats((prev) => [...prev, newFriend]);
-    };
+  //   const newFriendHandler = (newFriend: IChatWithLastMessage) => {
+  //     console.log("received new user", newFriend);
+  //     setActiveChats((prev) => [...prev, newFriend]);
+  //   };
 
-    const chatHandler = (message: IMensaje) => {
-      const shouldNotify =
-        pathname !==
-        `/chats/chat/${chatHrefConstructor(session?.user.id!, message.id_user)}`;
+  //   const chatHandler = (message: IMensaje) => {
+  //     const shouldNotify =
+  //       pathname !==
+  //       `/chats/chat/${chatHrefConstructor(session?.user.id!, message.id_user)}`;
 
-      if (!shouldNotify) return;
+  //     if (!shouldNotify) return;
 
-      // should be notified
-      toast.custom((t) => (
-        <UnseenChatToast
-          t={t}
-          sessionId={session?.user.id!}
-          senderId={message.id_user}
-          senderMessage={message.cuerpo_mensaje}
-          senderName={
-            message.user?.duenonegocio?.nombre_dueneg ??
-            message.user?.cliente?.nombre_cliente ??
-            message.user?.email!
-          }
-        />
-      ));
+  //     // should be notified
+  //     toast.custom((t) => (
+  //       <UnseenChatToast
+  //         t={t}
+  //         sessionId={session?.user.id!}
+  //         senderId={message.id_user}
+  //         senderMessage={message.cuerpo_mensaje}
+  //         senderName={
+  //           message.user?.duenonegocio?.nombre_dueneg ??
+  //           message.user?.cliente?.nombre_cliente ??
+  //           message.user?.email!
+  //         }
+  //       />
+  //     ));
 
-      setUnseenMessages((prev) => [...prev, message]);
-    };
+  //     setUnseenMessages((prev) => [...prev, message]);
+  //   };
 
-    pusherClient.bind("new_message", chatHandler);
-    pusherClient.bind("new_friend", newFriendHandler);
+  //   pusherClient.bind("new_message", chatHandler);
+  //   pusherClient.bind("new_friend", newFriendHandler);
 
-    return () => {
-      pusherClient.unsubscribe(toPusherKey(`user:${session?.user.id!}:chats`));
-      pusherClient.unsubscribe(
-        toPusherKey(`user:${session?.user.id!}:friends`)
-      );
+  //   return () => {
+  //     pusherClient.unsubscribe(toPusherKey(`user:${session?.user.id!}:chats`));
+  //     pusherClient.unsubscribe(
+  //       toPusherKey(`user:${session?.user.id!}:friends`)
+  //     );
 
-      pusherClient.unbind("new_message", chatHandler);
-      pusherClient.unbind("new_friend", newFriendHandler);
-    };
-  }, [pathname, session?.user.id!]);
+  //     pusherClient.unbind("new_message", chatHandler);
+  //     pusherClient.unbind("new_friend", newFriendHandler);
+  //   };
+  // }, [pathname, session?.user.id!]);
 
-  useEffect(() => {
-    if (pathname?.includes("chat")) {
-      setUnseenMessages((prev) => {
-        return prev.filter((msg) => !pathname.includes(msg.id_user));
-      });
-    }
-  }, [pathname]);
+  // useEffect(() => {
+  //   if (pathname?.includes("chat")) {
+  //     setUnseenMessages((prev) => {
+  //       return prev.filter((msg) => !pathname.includes(msg.id_user));
+  //     });
+  //   }
+  // }, [pathname]);
 
   const getChatPartnerName = (chat: IChatWithLastMessage) => {
     const chatPartner = chat.participants?.filter(
@@ -134,7 +134,7 @@ export const SidebarWrapperChats = ({ chats }: Props) => {
         </div>
         <div className="flex flex-col justify-between h-full">
           <div className={Sidebar.Body()}>
-            {/* {chats.length === 0 ? (
+            {chats.length === 0 ? (
               <p className="text-sm text-zinc-500">
                 No tienes chats aún, comienza uno!
               </p>
@@ -157,8 +157,8 @@ export const SidebarWrapperChats = ({ chats }: Props) => {
                   </SidebarItem>
                 </SidebarMenu>
               ))
-            )} */}
-            {activeChats.length === 0 ? (
+            )}
+            {/* {activeChats.length === 0 ? (
               <p className="text-sm text-zinc-500">
                 No tienes chats aún, comienza uno!
               </p>
@@ -197,7 +197,7 @@ export const SidebarWrapperChats = ({ chats }: Props) => {
                   </SidebarMenu>
                 );
               })
-            )}
+            )} */}
           </div>
         </div>
       </div>
