@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { IOrden } from "@/interfaces";
+import React, { useState, useEffect, useContext } from "react";
+import { IDuenoNegocio, IOrden } from "@/interfaces";
+import { chatHrefConstructor } from "@/utils/cn";
 import { hrApi } from "@/api";
 import { FaCheckCircle } from "react-icons/fa";
 import {
@@ -14,6 +15,8 @@ import {
   Link,
   Button,
 } from "@nextui-org/react";
+import { AuthContext } from "@/context/auth";
+import { useRouter } from "next/navigation";
 
 type OrdersClienteProps = {
   id_orden: string;
@@ -27,6 +30,8 @@ export const OrderDetails = ({
   detailsNegocio,
 }: OrdersClienteProps) => {
   const [order, setOrder] = useState<IOrden>();
+  const { user } = useContext(AuthContext);
+  const router = useRouter();
   useEffect(() => {
     hrApi.get(`/cliente/order/${id_orden}`).then((res) => {
       if (res.status === 200) {
@@ -49,6 +54,24 @@ export const OrderDetails = ({
       </div>
     );
   }
+
+  const onContact = (
+    id_user: string,
+    id_dueneg: string,
+    nombre_dueneg: string
+  ) => {
+    hrApi
+      .post(`/chat`, {
+        userId: id_user,
+        userId2: id_dueneg,
+        chatName: `Chat con negocio ${nombre_dueneg}`,
+      })
+      .then((res) => {
+        if (res.status === 201) {
+          router.push(`/chats/chat/${chatHrefConstructor(id_user, id_dueneg)}`);
+        }
+      });
+  };
 
   return (
     <div className="pt-16 container mx-auto">
@@ -134,12 +157,19 @@ export const OrderDetails = ({
                           <p className="text-sm font-semibold text-end">
                             ${product.monto} MXN
                           </p>
-                          <Link
-                            href={`/chats/${product.id_negocio}`}
-                            className="text-sm text-end"
+                          <Button
+                            color="primary"
+                            variant="light"
+                            onClick={() =>
+                              onContact(
+                                user?.id!,
+                                product.negocio?.dueneg.id_user!,
+                                product.negocio?.dueneg.nombre_dueneg!
+                              )
+                            }
                           >
-                            Contactar negocio
-                          </Link>
+                            Contactar negocio por chat
+                          </Button>
                         </div>
                       </div>
                       <Divider />

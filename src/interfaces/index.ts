@@ -1,3 +1,4 @@
+export * from "./chat.interface";
 export * from "./cliente.interface";
 export * from "./duenonegocio.interface";
 export * from "./historial.interface";

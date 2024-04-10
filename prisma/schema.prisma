@@ -295,9 +295,9 @@ model d_participantes {
   id_participantes Int @id @default(autoincrement())
 
   id_user String
-  user    m_user @relation(fields: [id_user], references: [id], onDelete: Cascade)
+  user    m_user? @relation(fields: [id_user], references: [id], onDelete: Cascade)
 
-  id_chat Int
+  id_chat String
   chat    m_chat @relation(fields: [id_chat], references: [id_chat])
 
   @@index([id_user])
@@ -305,12 +305,12 @@ model d_participantes {
 }
 
 model m_chat {
-  id_chat        Int      @id @default(autoincrement())
-  nombre_chat    String
+  id_chat        String      @id @default(uuid())
+  nombre_chat    String 
   fecha_creacion DateTime
 
   id_user_creator String
-  user            m_user @relation(fields: [id_user_creator], references: [id], onDelete: Cascade)
+  user            m_user? @relation(fields: [id_user_creator], references: [id], onDelete: Cascade)
 
   participantes d_participantes[]
   mensajes      d_mensajes[]
@@ -319,18 +319,18 @@ model m_chat {
 }
 
 model d_mensajes {
-  id_mensajes    Int          @id @default(autoincrement())
+  id_mensajes    String          @id @default(uuid())
   cuerpo_mensaje String       @db.VarChar(400)
   tipo_mensaje   tipo_mensaje @default(TEXTO)
   leido          Boolean      @default(false)
   createdAt      DateTime     @default(now())
   deletedAt      DateTime?
 
-  id_chat Int
-  chat    m_chat @relation(fields: [id_chat], references: [id_chat])
+  id_chat String
+  chat    m_chat? @relation(fields: [id_chat], references: [id_chat])
 
   id_user String
-  user    m_user @relation(fields: [id_user], references: [id], onDelete: Cascade)
+  user    m_user? @relation(fields: [id_user], references: [id], onDelete: Cascade)
 
   @@index([id_chat])
   @@index([id_user])

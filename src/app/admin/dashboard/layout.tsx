@@ -1,4 +1,4 @@
-import { Footer, SidebarWrapper, NavbarWrapper } from "@/components";
+import { SidebarWrapper, NavbarWrapper } from "@/components";
 import { ReactNode } from "react";
 import { Inter } from "next/font/google";
 

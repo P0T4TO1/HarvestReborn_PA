@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useContext } from "react";
+import { useRouter } from "next/navigation";
 import { IOrden, IProductoOrden } from "@/interfaces";
 import {
   Modal,
@@ -14,6 +15,9 @@ import {
   Link,
   Divider,
 } from "@nextui-org/react";
+import { AuthContext } from "@/context/auth";
+import { hrApi } from "@/api";
+import { chatHrefConstructor } from "@/utils/cn";
 
 interface Props {
   useDisclosure: { isOpen: boolean; onClose: () => void };
@@ -28,6 +32,29 @@ export const OrderModal = ({
   products,
   loading,
 }: Props) => {
+  const { user } = useContext(AuthContext);
+  const router = useRouter();
+  const onContact = (
+    id_user: string,
+    id_cliente: string,
+    nombre_cliente: string
+  ) => {
+    hrApi
+      .post(`/chat`, {
+        userId: id_user,
+        userId2: id_cliente,
+        chatName: `Chat con negocio ${nombre_cliente}`,
+        chatId: chatHrefConstructor(id_user, id_cliente),
+      })
+      .then((res) => {
+        if (res.status === 201) {
+          router.push(
+            `/chats/chat/${chatHrefConstructor(id_user, id_cliente)}`
+          );
+        }
+      });
+  };
+
   return (
     <Modal backdrop="blur" isOpen={isOpen} onClose={onClose} size="lg">
       <ModalContent>
@@ -88,14 +115,19 @@ export const OrderModal = ({
                   </div>
                 </ModalBody>
                 <ModalFooter>
-                  <Link
-                    href={`/chats/chat?user=${order?.cliente?.id_user}`}
+                  <Button
+                    variant="ghost"
                     color="primary"
+                    onClick={() =>
+                      onContact(
+                        user?.id!,
+                        order?.cliente?.id_user!,
+                        order?.cliente?.nombre_cliente!
+                      )
+                    }
                   >
-                    <Button variant="ghost" color="primary">
-                      Contactar al cliente
-                    </Button>
-                  </Link>
+                    Contactar al cliente
+                  </Button>
                   <Button
                     onClick={onClose}
                     disabled={loading}
