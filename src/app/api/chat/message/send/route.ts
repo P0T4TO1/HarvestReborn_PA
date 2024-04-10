@@ -8,7 +8,7 @@ import { nanoid } from "nanoid";
 import { getServerSession } from "next-auth";
 import { IMensaje, tipo_mensaje } from "@/interfaces";
 
-export async function POST(req: NextRequest, res: NextResponse) {
+async function sendMessage(req: NextRequest, res: NextResponse) {
   try {
     const { text, chatId }: { text: string; chatId: string } = await req.json();
     const session = await getServerSession(authOptions);
@@ -111,3 +111,5 @@ export async function POST(req: NextRequest, res: NextResponse) {
     return NextResponse.json("Internal Server Error", { status: 500 });
   }
 }
+
+export { sendMessage as POST };
