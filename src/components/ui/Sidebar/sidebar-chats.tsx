@@ -52,6 +52,7 @@ export const SidebarWrapperChats = ({ chats }: Props) => {
     return (
       chatPartner
         ?.map((partnerChat) => {
+          console.log(partnerChat);
           return (
             partnerChat.user?.duenonegocio?.negocio?.nombre_negocio ??
             partnerChat.user?.cliente?.nombre_cliente ??
@@ -109,9 +110,10 @@ export const SidebarWrapperChats = ({ chats }: Props) => {
                 No tienes chats aún, comienza uno!
               </p>
             ) : (
-              results.map((chat) => (
-                <SidebarMenu key={chat.id} title="Todos los chats">
+              <SidebarMenu title="Todos los chats">
+                {results.map((chat) => (
                   <SidebarItem
+                    key={chat.id}
                     href={`/chats/chat/${chat.id}`}
                     isActive={pathname === `/chats/chat/${chat.id}`}
                     title={getChatPartnerName(chat)}
@@ -125,8 +127,8 @@ export const SidebarWrapperChats = ({ chats }: Props) => {
                       {chat.lastMessage.text}
                     </p>
                   </SidebarItem>
-                </SidebarMenu>
-              ))
+                ))}
+              </SidebarMenu>
             )}
           </div>
         </div>
