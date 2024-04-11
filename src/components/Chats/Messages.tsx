@@ -102,7 +102,7 @@ const Messages: FC<MessagesProps> = ({
                 <p className="text-xs text-gray-400">
                   {isCurrentUser
                     ? "Tú"
-                    : chatPartner.duenonegocio?.nombre_dueneg ??
+                    : chatPartner.duenonegocio?.negocio?.nombre_negocio ??
                       chatPartner.cliente?.nombre_cliente}
                 </p>
               </div>

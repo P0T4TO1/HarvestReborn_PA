@@ -85,6 +85,23 @@ const page = async ({ params }: PageProps) => {
 
   const chatPartnerRaw = (await prisma.m_user.findUnique({
     where: { id: chatPartnerId },
+    select: {
+      email: true,
+      duenonegocio: {
+        select: {
+          negocio: {
+            select: {
+              nombre_negocio: true,
+            },
+          },
+        },
+      },
+      cliente: {
+        select: {
+          nombre_cliente: true,
+        },
+      },
+    },
   })) as IUser;
   const chatPartner = JSON.parse(JSON.stringify(chatPartnerRaw)) as IUser;
   const initialMessages = await getChatMessages(chatId);
