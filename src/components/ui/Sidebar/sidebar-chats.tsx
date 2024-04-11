@@ -14,8 +14,8 @@ import {
 } from "@/components";
 import { usePathname } from "next/navigation";
 import { UiContext } from "@/context/ui";
-import { FaSearch } from "react-icons/fa";
-import { Input } from "@nextui-org/react";
+import { FaSearch, FaChevronLeft } from "react-icons/fa";
+import { Input, Link, Button } from "@nextui-org/react";
 import { IChatWithLastMessage, IMensaje } from "@/interfaces";
 import { useSession } from "next-auth/react";
 
@@ -115,6 +115,13 @@ export const SidebarWrapperChats = ({ chats }: Props) => {
       >
         <div className={"flex gap-4 items-center px-6 flex-col"}>
           <div className="flex items-center justify-between gap-2 w-full">
+            <div>
+              <Link href={"/home"}>
+                <Button isIconOnly variant="light">
+                  <FaChevronLeft size={24} />
+                </Button>
+              </Link>
+            </div>
             <h3 className="text-xl font-medium m-0 text-default-900 whitespace-nowrap">
               Chats
             </h3>
