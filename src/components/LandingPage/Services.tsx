@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { FaHandshake, FaShoppingBag } from "react-icons/fa";
 import { BsBox2Heart } from "react-icons/bs";
 import { MdOutlineInventory } from "react-icons/md";
-import { FaH } from "react-icons/fa6";
 
 export const ServicesComponent = () => {
   return (
@@ -17,10 +16,10 @@ export const ServicesComponent = () => {
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false }}
+          viewport={{ once: true }}
           animate={{
             opacity: 0,
-            x: -50,
+            y: -50,
           }}
           transition={{
             duration: 0.8,
@@ -29,11 +28,11 @@ export const ServicesComponent = () => {
           variants={{
             hidden: {
               opacity: 0,
-              x: -50,
+              y: -50,
             },
             visible: {
               opacity: 1,
-              x: 0,
+              y: 0,
             },
           }}
           className="max-w-xl mb-10 md:mx-auto sm:text-center lg:max-w-2xl md:mb-12"
@@ -50,10 +49,10 @@ export const ServicesComponent = () => {
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false }}
+          viewport={{ once: true }}
           animate={{
             opacity: 0,
-            x: 50,
+            y: 50,
           }}
           transition={{
             duration: 0.8,
@@ -62,10 +61,11 @@ export const ServicesComponent = () => {
           variants={{
             hidden: {
               opacity: 0,
-              x: 50,
+              y: 50,
             },
             visible: {
               opacity: 1,
+              y: 0,
               x: 0,
             },
           }}
