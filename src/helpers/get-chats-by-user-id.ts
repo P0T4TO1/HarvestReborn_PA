@@ -2,7 +2,6 @@ import prisma from "@/lib/prisma";
 import { select } from "@nextui-org/react";
 
 export const getChatsByUserId = async (userId: string) => {
-  console.log("userId", userId);
   const chats = await prisma.m_chat.findMany({
     where: {
       participantes: {

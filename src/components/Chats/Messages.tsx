@@ -74,7 +74,7 @@ const Messages: FC<MessagesProps> = ({
               >
                 <span
                   className={cn("px-4 py-2 rounded-lg inline-block", {
-                    "bg-indigo-600 text-white": isCurrentUser,
+                    "dark:bg-green-700 bg-green-600 text-white": isCurrentUser,
                     "bg-gray-200 text-gray-900": !isCurrentUser,
                     "rounded-br-none":
                       !hasNextMessageFromSameUser && isCurrentUser,
@@ -83,7 +83,7 @@ const Messages: FC<MessagesProps> = ({
                   })}
                 >
                   {message.cuerpo_mensaje}{" "}
-                  <span className="ml-2 text-xs text-gray-400">
+                  <span className={`ml-2 text-xs text-gray-400 ${isCurrentUser && "text-gray-300"}`}>
                     {new Date(message.createdAt).toLocaleTimeString("es-MX", {
                       hour: "2-digit",
                       minute: "2-digit",

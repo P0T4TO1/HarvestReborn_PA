@@ -1,10 +1,6 @@
 "use client";
 
-import React, { useContext, useEffect, useState } from "react";
-import { pusherClient } from "@/lib/pusher";
-import { chatHrefConstructor, toPusherKey } from "@/utils/cn";
-import { toast } from "react-hot-toast";
-import UnseenChatToast from "@/components/Chats/UnseenChatToast";
+import React, { ChangeEvent, useContext, useState } from "react";
 import { Sidebar } from "./sidebar.styles";
 import {
   SidebarMenu,
@@ -15,7 +11,7 @@ import {
 import { usePathname } from "next/navigation";
 import { UiContext } from "@/context/ui";
 import { FaSearch, FaChevronLeft } from "react-icons/fa";
-import { Input, Link, Button } from "@nextui-org/react";
+import { Input, Link, Button, Tooltip } from "@nextui-org/react";
 import { IChatWithLastMessage, IMensaje } from "@/interfaces";
 import { useSession } from "next-auth/react";
 
@@ -27,64 +23,27 @@ export const SidebarWrapperChats = ({ chats }: Props) => {
   const { data: session } = useSession();
   const pathname = usePathname();
   const { isMenuOpen, toggleSideMenu } = useContext(UiContext);
-  // const [unseenMessages, setUnseenMessages] = useState<IMensaje[]>([]);
-  // const [activeChats, setActiveChats] = useState<IChatWithLastMessage[]>(chats);
 
-  // useEffect(() => {
-  //   pusherClient.subscribe(toPusherKey(`user:${session?.user.id}:chats`));
-  //   pusherClient.subscribe(toPusherKey(`user:${session?.user.id}:friends`));
+  const [search, setSearch] = useState("");
 
-  //   const newFriendHandler = (newFriend: IChatWithLastMessage) => {
-  //     console.log("received new user", newFriend);
-  //     setActiveChats((prev) => [...prev, newFriend]);
-  //   };
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearch(event.target.value);
+  };
 
-  //   const chatHandler = (message: IMensaje) => {
-  //     const shouldNotify =
-  //       pathname !==
-  //       `/chats/chat/${chatHrefConstructor(session?.user.id!, message.id_user)}`;
-
-  //     if (!shouldNotify) return;
-
-  //     // should be notified
-  //     toast.custom((t) => (
-  //       <UnseenChatToast
-  //         t={t}
-  //         sessionId={session?.user.id!}
-  //         senderId={message.id_user}
-  //         senderMessage={message.cuerpo_mensaje}
-  //         senderName={
-  //           message.user?.duenonegocio?.nombre_dueneg ??
-  //           message.user?.cliente?.nombre_cliente ??
-  //           message.user?.email!
-  //         }
-  //       />
-  //     ));
-
-  //     setUnseenMessages((prev) => [...prev, message]);
-  //   };
-
-  //   pusherClient.bind("new_message", chatHandler);
-  //   pusherClient.bind("new_friend", newFriendHandler);
-
-  //   return () => {
-  //     pusherClient.unsubscribe(toPusherKey(`user:${session?.user.id!}:chats`));
-  //     pusherClient.unsubscribe(
-  //       toPusherKey(`user:${session?.user.id!}:friends`)
-  //     );
-
-  //     pusherClient.unbind("new_message", chatHandler);
-  //     pusherClient.unbind("new_friend", newFriendHandler);
-  //   };
-  // }, [pathname, session?.user.id!]);
-
-  // useEffect(() => {
-  //   if (pathname?.includes("chat")) {
-  //     setUnseenMessages((prev) => {
-  //       return prev.filter((msg) => !pathname.includes(msg.id_user));
-  //     });
-  //   }
-  // }, [pathname]);
+  const results = !search
+    ? chats
+    : chats.filter((dato) =>
+        dato.participants?.some(
+          (p) =>
+            p.user?.duenonegocio?.negocio?.nombre_negocio
+              ?.toLowerCase()
+              .includes(search.toLocaleLowerCase()) ||
+            p.user?.cliente?.nombre_cliente
+              ?.toLowerCase()
+              .includes(search.toLocaleLowerCase()) ||
+            p.user?.email.toLowerCase().includes(search.toLocaleLowerCase())
+        )
+      );
 
   const getChatPartnerName = (chat: IChatWithLastMessage) => {
     const chatPartner = chat.participants?.filter(
@@ -115,16 +74,18 @@ export const SidebarWrapperChats = ({ chats }: Props) => {
       >
         <div className={"flex gap-4 items-center px-6 flex-col"}>
           <div className="flex items-center justify-between gap-2 w-full">
-            <div>
-              <Link href={"/home"}>
-                <Button isIconOnly variant="light">
-                  <FaChevronLeft size={24} />
-                </Button>
-              </Link>
+            <div className="flex items-center">
+              <Tooltip content="Volver al inicio" placement="bottom">
+                <Link href={"/home"}>
+                  <Button isIconOnly variant="light">
+                    <FaChevronLeft size={20} />
+                  </Button>
+                </Link>
+              </Tooltip>
+              <h3 className="text-xl font-medium m-0 text-default-900 whitespace-nowrap">
+                Chats
+              </h3>
             </div>
-            <h3 className="text-xl font-medium m-0 text-default-900 whitespace-nowrap">
-              Chats
-            </h3>
             <div className="flex items-center justify-center">
               <DarkModeSwitch />
               <DropdownComponent />
@@ -133,9 +94,11 @@ export const SidebarWrapperChats = ({ chats }: Props) => {
           <div className="w-full">
             <Input
               startContent={<FaSearch size={20} />}
-              placeholder="Buscar chat"
+              placeholder="Buscar chat..."
               size="md"
               width="100%"
+              defaultValue={search}
+              onChange={handleChange}
             />
           </div>
         </div>
@@ -146,7 +109,7 @@ export const SidebarWrapperChats = ({ chats }: Props) => {
                 No tienes chats aún, comienza uno!
               </p>
             ) : (
-              chats.map((chat) => (
+              results.map((chat) => (
                 <SidebarMenu key={chat.id} title="Todos los chats">
                   <SidebarItem
                     href={`/chats/chat/${chat.id}`}
@@ -165,46 +128,6 @@ export const SidebarWrapperChats = ({ chats }: Props) => {
                 </SidebarMenu>
               ))
             )}
-            {/* {activeChats.length === 0 ? (
-              <p className="text-sm text-zinc-500">
-                No tienes chats aún, comienza uno!
-              </p>
-            ) : (
-              activeChats.sort().map((friend) => {
-                const unseenMessagesCount = unseenMessages.filter(
-                  (unseenMsg) => {
-                    return unseenMsg.id_user === friend.id;
-                  }
-                ).length;
-                return (
-                  <SidebarMenu key={friend.id} title="Todos los chats">
-                    <SidebarItem
-                      href={`/chats/chat/${friend.id}`}
-                      isActive={
-                        pathname ===
-                        `/chats/chat/${friend.id}`
-                      }
-                      title={getChatPartnerName(friend)}
-                    >
-                      <p className="mt-1 max-w-md">
-                        <span className="text-zinc-400">
-                          {friend.lastMessage.senderId === session?.user.id
-                            ? "Tú: "
-                            : `${friend.lastMessage.senderName}: `}
-                        </span>
-                        {friend.lastMessage.text}
-                        {unseenMessagesCount > 0 && (
-                          <span className="text-xs text-zinc-400">
-                            {unseenMessagesCount} mensajes nuevos
-                            {unseenMessages[0].cuerpo_mensaje}
-                          </span>
-                        )}
-                      </p>
-                    </SidebarItem>
-                  </SidebarMenu>
-                );
-              })
-            )} */}
           </div>
         </div>
       </div>

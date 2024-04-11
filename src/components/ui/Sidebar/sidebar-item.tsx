@@ -31,8 +31,8 @@ export const SidebarItem = ({ icon, title, isActive, href = "", children }: Prop
           isActive
             ? "bg-primary-100 text-primary-500"
             : "hover:bg-default-100",
-          "flex gap-2 w-full min-h-[44px] h-full items-center px-3.5 rounded-xl cursor-pointer transition-all duration-150 active:scale-[0.98]",
-          children && "flex-col !items-start"
+          "flex gap-2 w-full min-h-[44px] px-3.5 h-full items-center rounded-xl cursor-pointer transition-all duration-150 active:scale-[0.98]",
+          children && "flex-col !items-start py-3.5"
         )}
         onClick={handleClick}
       >

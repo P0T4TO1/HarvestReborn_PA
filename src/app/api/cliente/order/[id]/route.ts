@@ -21,7 +21,16 @@ async function getOrderById(
         productoOrden: {
           include: {
             producto: true,
-            negocio: true,
+            negocio: {
+              select: {
+                nombre_negocio: true,
+                dueneg: {
+                  select: {
+                    id_user: true,
+                  },
+                },
+              },
+            },
           },
         },
       },

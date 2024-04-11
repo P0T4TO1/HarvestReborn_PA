@@ -1,12 +1,13 @@
 "use client";
 
-import { Navbar, NavbarContent, NavbarItem } from "@nextui-org/react";
+import { Navbar, NavbarContent, NavbarItem, Tooltip } from "@nextui-org/react";
 import React, { useContext } from "react";
 import { UiContext } from "@/context/ui";
+import { DropdownChat } from "../Dropdown";
 
 type Props = {
   partnerName?: string;
-}
+};
 
 export const NavbarWrapperChats = ({ partnerName }: Props) => {
   const { toggleSideMenu } = useContext(UiContext);
@@ -36,11 +37,16 @@ export const NavbarWrapperChats = ({ partnerName }: Props) => {
           </svg>
         </button>
       </NavbarContent>
+      <NavbarContent className="w-full max-md:hidden">
+        {partnerName}
+      </NavbarContent>
       <NavbarContent
         justify="end"
         className="w-fit data-[justify=end]:flex-grow-0"
       >
-        {partnerName}
+        <NavbarItem>
+          <DropdownChat />
+        </NavbarItem>
       </NavbarContent>
     </Navbar>
   );

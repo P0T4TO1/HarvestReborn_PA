@@ -48,13 +48,13 @@ export const OrdersCliente = () => {
             {loading ? (
               <div className="flex flex-col items-center justify-center">
                 <CircularProgress size="lg" />
-                <p>Cargando ordenes...</p>
+                <p className="dark:text-gray-300 text-gray-800">Cargando ordenes...</p>
               </div>
             ) : error ? (
               <p>Hubo un error al cargar las ordenes</p>
             ) : (
               <>
-                {orders.length === 0 ? (
+                {!orders ? (
                   <Card className="mt-12">
                     <CardHeader>No tienes ordenes</CardHeader>
                     <CardBody>

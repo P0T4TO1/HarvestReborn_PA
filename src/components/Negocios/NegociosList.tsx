@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { Estado, INegocio } from "@/interfaces";
 import { hrApi } from "@/api";
 import {
@@ -32,21 +32,17 @@ export const NegociosList = () => {
   const [loadingNegocio, setLoadingNegocio] = useState(false);
   const [error, setError] = useState(false);
 
-  // const [search, setSearch] = useState("");
-  //
-  // const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-  //   setSearch(event.target.value);
-  // };
-  //
-  // const results = !search
-  //   ? negocios
-  //   : negocios.filter((dato) =>
-  //       dato.inventario?.lote?.filter((lote) =>
-  //         lote.producto?.nombre_producto
-  //           .toLowerCase()
-  //           .includes(search.toLocaleLowerCase())
-  //       )
-  //     );
+  const [search, setSearch] = useState("");
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearch(event.target.value);
+  };
+
+  const results = !search
+    ? negocios
+    : negocios.filter((dato) =>
+        dato.nombre_negocio.toLowerCase().includes(search.toLowerCase())
+      );
 
   useEffect(() => {
     hrApi.get("/negocio").then((res) => {
@@ -88,7 +84,7 @@ export const NegociosList = () => {
               isClearable
               size="md"
               radius="lg"
-              placeholder="Buscar productos..."
+              placeholder="Buscar negocio por nombre..."
               type="text"
               startContent={
                 <FaSearch
@@ -96,12 +92,12 @@ export const NegociosList = () => {
                   className="text-gray-500 dark:text-gray-300"
                 />
               }
-              // defaultValue={search}
-              // onChange={handleChange}
+              defaultValue={search}
+              onChange={handleChange}
             />
           </div>
         </div>
-        <div className="absolute inset-y-0 right-0 flex items-end pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 flex-col">
+        {/* <div className="absolute inset-y-0 right-0 flex items-end pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 flex-col">
           <Select
             placeholder="Filtrar por"
             className="w-60"
@@ -114,7 +110,7 @@ export const NegociosList = () => {
               Nombre
             </SelectItem>
           </Select>
-        </div>
+        </div> */}
       </div>
       <div className="grid grid-cols-5 mt-10 gap-8">
         <div className="col-span-2">
@@ -123,7 +119,7 @@ export const NegociosList = () => {
           ) : error ? (
             <p>Error al cargar los negocios</p>
           ) : (
-            negocios.map(
+            results.map(
               (negocio) =>
                 negocio.estado_negocio === Estado.Activo && (
                   <Card

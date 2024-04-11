@@ -65,12 +65,11 @@ export const OrderDetails = ({
         userId: id_user,
         userId2: id_dueneg,
         chatName: `Chat con negocio ${nombre_dueneg}`,
+        chatId: chatHrefConstructor(id_user, id_dueneg),
       })
       .then((res) => {
-        if (res.status === 200 && res.data.message === "El chat ya existe" ){
-          router.push(
-            `/chats/chat/${chatHrefConstructor(id_user, id_dueneg)}`
-          );
+        if (res.status === 200 && res.data.message === "El chat ya existe") {
+          router.push(`/chats/chat/${chatHrefConstructor(id_user, id_dueneg)}`);
         }
         if (res.status === 201) {
           router.push(`/chats/chat/${chatHrefConstructor(id_user, id_dueneg)}`);
@@ -270,13 +269,14 @@ export const OrderDetails = ({
                           <Button
                             color="primary"
                             variant="light"
-                            onClick={() =>
-                              onContact(
-                                user?.id!,
-                                product.negocio?.dueneg.id_user!,
-                                product.negocio?.dueneg.nombre_dueneg!
-                              )
-                            }
+                            onClick={() => {
+                              console.log(product),
+                                onContact(
+                                  user?.id!,
+                                  product.negocio?.dueneg.id_user!,
+                                  product.negocio?.dueneg.nombre_dueneg!
+                                );
+                            }}
                           >
                             Contactar negocio por chat
                           </Button>

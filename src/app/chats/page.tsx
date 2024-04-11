@@ -1,11 +1,11 @@
 import { authOptions } from "@/lib/authOptions";
 import { getServerSession } from "next-auth";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { NavbarWrapperChats } from "@/components";
 
 const page = async ({}) => {
   const session = await getServerSession(authOptions);
-  if (!session) notFound();
+  if (!session) return redirect("/auth/login");
 
   return (
     <>

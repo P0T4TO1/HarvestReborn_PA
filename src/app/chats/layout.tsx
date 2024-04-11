@@ -26,6 +26,7 @@ export default async function ChatsLayout({
         lastMessage: {
           text: "No hay mensajes aún",
           senderId: "",
+          senderName: "",
         },
       } as IChatWithLastMessage;
     }

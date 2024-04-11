@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 import { authOptions } from "@/lib/authOptions";
 import { messageArrayValidator } from "@/validations/chat.validation";
 import { getServerSession } from "next-auth";
-import { notFound } from "next/navigation";
+import { redirect, notFound } from "next/navigation";
 import { IUser } from "@/interfaces";
 import { NavbarWrapperChats } from "@/components";
 
@@ -15,7 +15,7 @@ export async function generateMetadata({
   params: { chatId: string };
 }) {
   const session = await getServerSession(authOptions);
-  if (!session) notFound();
+  if (!session) return redirect("/auth/login");
   const [userId1, userId2] = params.chatId.split("--");
   const { user } = session;
 

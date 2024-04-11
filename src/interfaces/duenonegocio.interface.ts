@@ -1,4 +1,4 @@
-import {INegocio, IUser} from "@/interfaces";
+import { INegocio, IUser } from "@/interfaces";
 
 export interface IDuenoNegocio {
   id_dueneg?: number;
