@@ -32,7 +32,12 @@ export const NavbarComponent = () => {
 
   return (
     <>
-      <Navbar onMenuOpenChange={setMobileMenuOpen} isBordered className="fixed" maxWidth="xl">
+      <Navbar
+        onMenuOpenChange={setMobileMenuOpen}
+        isBordered
+        className="fixed"
+        maxWidth="xl"
+      >
         {user?.id_rol === 1 ? (
           <NavbarContent>
             <button onClick={toggleSideMenu} className="md:hidden">
@@ -202,12 +207,22 @@ export const NavbarComponent = () => {
                       Pedidos
                     </Link>
                   </NavbarMenuItem>
+                  <NavbarMenuItem>
+                    <Link color="foreground" href={"/chats"}>
+                      Chats
+                    </Link>
+                  </NavbarMenuItem>
                 </>
               ) : user?.id_rol === 3 ? (
                 <>
                   <NavbarMenuItem>
                     <Link color="foreground" href={"/negocios"}>
                       Recauderías
+                    </Link>
+                  </NavbarMenuItem>
+                  <NavbarMenuItem>
+                    <Link color="foreground" href={"/chats"}>
+                      Chats
                     </Link>
                   </NavbarMenuItem>
                 </>
