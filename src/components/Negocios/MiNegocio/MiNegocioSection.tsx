@@ -35,7 +35,9 @@ export const MiNegocioSection = () => {
       ) : (
         <div className="container m-auto mt-12 h-full">
           <div>
-            <h1 className="text-2xl font-semibold py-4">Tu negocio</h1>
+            <h1 className="font-bebas-neue uppercase text-2xl font-black flex flex-col leading-none dark:text-green-600 text-green-900 mb-4">
+              Tu negocio
+            </h1>
           </div>
           <div className="flex flex-col gap-4">
             <Tabs variant="underlined" aria-label="Tabs variants">

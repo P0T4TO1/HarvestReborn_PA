@@ -16,7 +16,7 @@ export const HomeNegocio = () => {
   const { user } = useContext(AuthContext);
   return (
     <section className="pt-16">
-      {user?.duenonegocio?.negocio?.estado_negocio === "PENDIENTE" && (
+      {user?.duenonegocio?.negocio?.estado_negocio === "PENDIENTE" ? (
         <>
           <div className="warning-home-negocio w-full flex items-center h-8 justify-center text-[#f5a524]">
             <MdInfoOutline size={25} className="mr-2" />
@@ -25,7 +25,17 @@ export const HomeNegocio = () => {
             &nbsp; para ser verificado más rápido.
           </div>
         </>
-      )}
+      ) : user?.duenonegocio?.negocio?.estado_negocio === "INACTIVO" ? (
+        <>
+          <div className="danger-home-negocio w-full flex items-center h-8 justify-center text-[#F872A1]">
+            <MdInfoOutline size={25} className="mr-2" />
+            Su negocio esta inactivo, por no cumplir con los requisitos,&nbsp;
+            <Link href={"/mi-negocio"}>completa los datos de tu negocio</Link>
+            &nbsp; para ser verificado más rápido.&nbsp;
+            Si cree que es un error, contacte a soporte.
+          </div>
+        </>
+      ) : null}
       <div className="pt-10 container mx-auto">
         <div
           className="w-full sm:p-4 flex flex-col items-center justify-center"

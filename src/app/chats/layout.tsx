@@ -1,7 +1,7 @@
 import { SidebarWrapperChats } from "@/components";
 import { ReactNode } from "react";
 import { Inter } from "next/font/google";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { getChatsByUserId } from "@/helpers/get-chats-by-user-id";
@@ -13,7 +13,8 @@ export default async function ChatsLayout({
   children,
 }: Readonly<{ children: ReactNode }>) {
   const session = await getServerSession(authOptions);
-  if (!session) notFound();
+  if (session?.user.id_rol === 4) redirect("/auth/register?oauth=true");
+  if (!session) redirect("/auth/login");
 
   const chats = await getChatsByUserId(session.user.id);
 

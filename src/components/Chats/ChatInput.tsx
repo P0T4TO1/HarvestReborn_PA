@@ -3,8 +3,7 @@
 import { hrApi } from "@/api";
 import { FC, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
-import TextareaAutosize from "react-textarea-autosize";
-import { Button } from "@nextui-org/react";
+import { Button, Textarea } from "@nextui-org/react";
 import { IUser } from "@/interfaces";
 import { IoMdSend } from "react-icons/io";
 
@@ -38,8 +37,8 @@ const ChatInput: FC<ChatInputProps> = ({ chatPartner, chatId }) => {
 
   return (
     <div className="border-t border-gray-200 px-4 pt-4 mb-2 sm:mb-0">
-      <div className="relative flex-1 overflow-hidden rounded-lg shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-green-600">
-        <TextareaAutosize
+      <div className="relative flex-1 overflow-hidden rounded-lg">
+        <Textarea
           ref={textareaRef}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {

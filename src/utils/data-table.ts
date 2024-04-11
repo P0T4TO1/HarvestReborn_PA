@@ -91,14 +91,14 @@ export const columnsUsuarios = [
   { name: "ID", uid: "id", sortable: true },
   {
     name: "NOMBRE",
-    uid: "nombre",
+    uid: "duenonegocio?.nombre_dueneg ?? cliente?.nombre_cliente",
     sortable: true,
   },
-  { name: "APELLIDO", uid: "apellido", sortable: true },
+  { name: "APELLIDO", uid: "duenonegocio?.apellidos_dueneg ?? cliente?.apellidos_cliente", sortable: true },
   { name: "CORREO", uid: "email", sortable: true },
-  { name: "ROL", uid: "rol", sortable: true },
+  { name: "ROL", uid: "id_rol", sortable: true },
   { name: "ESTADO", uid: "estado", sortable: true },
-  { name: "CORREO VERIFICADO", uid: "correo_verificado" },
+  { name: "CORREO VERIFICADO", uid: "emailVerified" },
   { name: "ACCIONES", uid: "acciones" },
 ];
 
@@ -114,9 +114,9 @@ export const statusOptionsUsuarios = [
 ];
 
 export const rolOptionsUsuarios = [
-  { name: "ADMIN", uid: "ADMIN" },
-  { name: "DUEÑO DE NEGOCIO", uid: "DUENEG" },
-  { name: "CLIENTE", uid: "CLIENTE" },
+  { name: "ADMIN", uid: 1 },
+  { name: "DUEÑO DE NEGOCIO", uid: 2 },
+  { name: "CLIENTE", uid: 3 },
 ];
 
 // Lotes
