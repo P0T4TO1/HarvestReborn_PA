@@ -34,7 +34,7 @@ export const OrdersCliente = () => {
       }
       setLoading(false);
     });
-  }, [user?.cliente?.id_cliente]);
+  }, [user?.cliente?.id_cliente, setOrders]);
 
   return (
     <section className="w-full flex flex-col gap-5 container pt-16 md:flex-row text-[#161931] min-h-screen">

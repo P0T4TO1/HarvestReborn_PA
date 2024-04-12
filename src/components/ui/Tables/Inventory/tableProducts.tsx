@@ -18,10 +18,22 @@ import {
   SortDescriptor,
   Tooltip,
   useDisclosure,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  ModalContent,
 } from "@nextui-org/react";
 import { ILote } from "@/interfaces";
 import { columnsLotes as columns } from "@/utils/data-table";
-import { FaChevronDown, FaRegTrashAlt, FaEdit } from "react-icons/fa";
+import {
+  FaChevronDown,
+  FaRegTrashAlt,
+  FaEdit,
+  FaQuestion,
+  FaCircle,
+} from "react-icons/fa";
+import { IoMdClose } from "react-icons/io";
 import { capitalize } from "@/utils/capitalize";
 import { hrApi } from "@/api";
 import { toast } from "sonner";
@@ -41,7 +53,8 @@ const INITIAL_VISIBLE_COLUMNS = [
 export const TableProductsInventory = ({ lotes }: Props) => {
   const [lote, setLote] = useState<ILote>();
   const [loading, setLoading] = useState(false);
-  const { onOpen, onClose, isOpen } = useDisclosure();
+  const { onOpen, onClose, isOpen, onOpenChange } = useDisclosure();
+  const [openInfoModal, setOpenInfoModal] = useState(false);
 
   const [filterValue, setFilterValue] = useState("");
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
@@ -128,74 +141,104 @@ export const TableProductsInventory = ({ lotes }: Props) => {
     });
   };
 
-  const renderCell = useCallback((lote: ILote, columnKey: Key) => {
-    const cellValue = lote[columnKey as keyof ILote];
+  const renderCell = useCallback(
+    (lote: ILote, columnKey: Key) => {
+      const cellValue = lote[columnKey as keyof ILote];
 
-    switch (columnKey) {
-      case "id_lote":
-        return <div className="dark:text-gray-300">{lote.id_lote}</div>;
-      case "fecha_entrada":
-        return (
-          <div className="dark:text-gray-300">
-            {new Date(lote.fecha_entrada).toLocaleDateString("es-ES", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
-          </div>
-        );
-      case "cantidad_producto":
-        return (
-          <div className="dark:text-gray-300">{lote.cantidad_producto} kg</div>
-        );
-      case "fecha_vencimiento":
-        return (
-          <div className="dark:text-gray-300">
-            {new Date(lote.fecha_vencimiento).toLocaleDateString("es-ES", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
-          </div>
-        );
-      case "acciones":
-        return (
-          <div className="flex items-center gap-2">
-            <div>
-              <Tooltip content="Editar">
-                <Button
-                  isIconOnly
-                  size="sm"
-                  variant="light"
-                  onClick={() => {
-                    getLote(lote.id_lote).then(() => {});
-                    onOpen();
-                  }}
-                >
-                  <FaEdit className="text-blue-700" size={20} />
-                </Button>
-              </Tooltip>
+      switch (columnKey) {
+        case "id_lote":
+          return <div className="dark:text-gray-300">{lote.id_lote}</div>;
+        case "fecha_entrada":
+          return (
+            <div className="dark:text-gray-300">
+              {new Date(
+                lote.fecha_entrada.replace(/-/g, "/").replace(/T.+/, "")
+              ).toLocaleDateString("es-MX", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
             </div>
-            <div>
-              <Tooltip content="Eliminar">
-                <Button
-                  isIconOnly
-                  size="sm"
-                  variant="light"
-                  onClick={() => {
-                    handleDelete(lote.id_lote).then(() => {});
-                  }}
-                >
-                  <FaRegTrashAlt className="text-red-700" size={20} />
-                </Button>
-              </Tooltip>
+          );
+        case "cantidad_producto":
+          return (
+            <div className="dark:text-gray-300">
+              {lote.cantidad_producto} kg
             </div>
-          </div>
-        );
-      default:
-        return cellValue;
-    }
-  }, [onOpen]);
+          );
+        case "fecha_vencimiento":
+          return (
+            <div className="dark:text-gray-300 flex items-center">
+              <p>
+                {new Date(
+                  lote.fecha_vencimiento.replace(/-/g, "/").replace(/T.+/, "")
+                )
+                  .toLocaleDateString("es-MX", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })
+                  .toString()}
+              </p>
+              <span className="flex items-center gap-2 ml-2">
+                {new Date(
+                  lote.fecha_vencimiento.replace(/-/g, "/").replace(/T.+/, "")
+                ) < new Date() ? (
+                  <FaCircle className="text-red-500" size={20} />
+                ) : new Date(
+                    lote.fecha_vencimiento.replace(/-/g, "/").replace(/T.+/, "")
+                  ) < new Date(new Date().setDate(new Date().getDate() + 3)) ? (
+                  <FaCircle className="text-[#CC4E00]" size={20} />
+                ) : new Date(
+                    lote.fecha_vencimiento.replace(/-/g, "/").replace(/T.+/, "")
+                  ) < new Date(new Date().setDate(new Date().getDate() + 7)) ? (
+                  <FaCircle className="text-yellow-500" size={20} />
+                ) : (
+                  <FaCircle className="text-green-500" size={20} />
+                )}
+              </span>
+            </div>
+          );
+        case "acciones":
+          return (
+            <div className="flex items-center gap-2">
+              <div>
+                <Tooltip content="Editar">
+                  <Button
+                    isIconOnly
+                    size="sm"
+                    variant="light"
+                    onClick={() => {
+                      getLote(lote.id_lote).then(() => {});
+                      onOpen();
+                    }}
+                  >
+                    <FaEdit className="text-blue-700" size={20} />
+                  </Button>
+                </Tooltip>
+              </div>
+              <div>
+                <Tooltip content="Eliminar">
+                  <Button
+                    isIconOnly
+                    size="sm"
+                    variant="light"
+                    onClick={() => {
+                      handleDelete(lote.id_lote).then(() => {});
+                    }}
+                  >
+                    <FaRegTrashAlt className="text-red-700" size={20} />
+                  </Button>
+                </Tooltip>
+              </div>
+            </div>
+          );
+        default:
+          return cellValue;
+      }
+    },
+    [onOpen]
+  );
 
   const onNextPage = useCallback(() => {
     if (page < pages) {
@@ -209,27 +252,27 @@ export const TableProductsInventory = ({ lotes }: Props) => {
     }
   }, [page]);
 
-  const onRowsPerPageChange = useCallback(
-    (e: ChangeEvent<HTMLSelectElement>) => {
-      setRowsPerPage(Number(e.target.value));
-      setPage(1);
-    },
-    []
-  );
+  // const onRowsPerPageChange = useCallback(
+  //   (e: ChangeEvent<HTMLSelectElement>) => {
+  //     setRowsPerPage(Number(e.target.value));
+  //     setPage(1);
+  //   },
+  //   []
+  // );
 
-  const onSearchChange = useCallback((value?: string) => {
-    if (value) {
-      setFilterValue(value);
-      setPage(1);
-    } else {
-      setFilterValue("");
-    }
-  }, []);
+  // const onSearchChange = useCallback((value?: string) => {
+  //   if (value) {
+  //     setFilterValue(value);
+  //     setPage(1);
+  //   } else {
+  //     setFilterValue("");
+  //   }
+  // }, []);
 
-  const onClear = useCallback(() => {
-    setFilterValue("");
-    setPage(1);
-  }, []);
+  // const onClear = useCallback(() => {
+  //   setFilterValue("");
+  //   setPage(1);
+  // }, []);
 
   const topContent = useMemo(() => {
     return (
@@ -258,6 +301,41 @@ export const TableProductsInventory = ({ lotes }: Props) => {
               </DropdownMenu>
             </Dropdown>
           </div>
+          <div className="flex flex-col gap-3 items-center justify-center">
+            <div>
+              <p className="text-default-600 text-small">
+                Fechas de vencimiento
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <div className="flex gap-3">
+                <FaCircle className="text-green-500" size={20} />
+                <span className="text-default-400 text-small">Lejano</span>
+              </div>
+              <div className="flex gap-3">
+                <FaCircle className="text-yellow-500" size={20} />
+                <span className="text-default-400 text-small">Próximo</span>
+              </div>
+              <div className="flex gap-3">
+                <FaCircle className="text-[#CC4E00]" size={20} />
+                <span className="text-default-400 text-small">Cercano</span>
+              </div>
+              <div className="flex gap-3">
+                <FaCircle className="text-red-500" size={20} />
+                <span className="text-default-400 text-small">Vencido</span>
+              </div>
+            </div>
+          </div>
+          <div className="flex gap-3">
+            <Button
+              size="sm"
+              variant="light"
+              isIconOnly
+              onPress={() => setOpenInfoModal(!openInfoModal)}
+            >
+              <FaQuestion className="text-blue-700" size={20} />
+            </Button>
+          </div>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
@@ -266,10 +344,7 @@ export const TableProductsInventory = ({ lotes }: Props) => {
         </div>
       </div>
     );
-  }, [
-    visibleColumns,
-    lotes.length,
-  ]);
+  }, [visibleColumns, lotes.length]);
 
   const bottomContent = useMemo(() => {
     return (
@@ -308,7 +383,14 @@ export const TableProductsInventory = ({ lotes }: Props) => {
         </div>
       </div>
     );
-  }, [selectedKeys, page, pages, filteredItems.length, onNextPage, onPreviousPage]);
+  }, [
+    selectedKeys,
+    page,
+    pages,
+    filteredItems.length,
+    onNextPage,
+    onPreviousPage,
+  ]);
 
   return (
     <>
@@ -319,6 +401,78 @@ export const TableProductsInventory = ({ lotes }: Props) => {
           loading={loading}
         />
       )}
+
+      <Modal
+        isOpen={openInfoModal}
+        onOpenChange={onOpenChange}
+        closeButton={
+          <Button
+            isIconOnly
+            variant="light"
+            onPress={() => setOpenInfoModal(!openInfoModal)}
+          >
+            <IoMdClose size={20} />
+          </Button>
+        }
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Fechas de vencimiento
+              </ModalHeader>
+              <ModalBody>
+                <div>
+                  <div className="flex gap-3">
+                    <FaCircle className="text-green-500" size={20} />
+                    <span className="text-default-700 text-small">Lejano</span>
+                  </div>
+                  <p className="text-default-600 text-small">
+                    Fecha de vencimiento entre 1 a 2 semanas
+                  </p>
+                </div>
+                <div>
+                  <div className="flex gap-3">
+                    <FaCircle className="text-yellow-500" size={20} />
+                    <span className="text-default-700 text-small">Próximo</span>
+                  </div>
+                  <p className="text-default-600 text-small">
+                    Fecha de vencimiento entre 4 a 7 días
+                  </p>
+                </div>
+                <div>
+                  <div className="flex gap-3">
+                    <FaCircle className="text-[#CC4E00]" size={20} />
+                    <span className="text-default-700 text-small">Cercano</span>
+                  </div>
+                  <p className="text-default-600 text-small">
+                    Fecha de vencimiento entre 1 a 3 días
+                  </p>
+                </div>
+                <div>
+                  <div className="flex gap-3">
+                    <FaCircle className="text-red-500" size={20} />
+                    <span className="text-default-700 text-small">Vencido</span>
+                  </div>
+                  <p className="text-default-600 text-small">
+                    El producto ya venció o no está en su mejor estado
+                  </p>
+                </div>
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  color="danger"
+                  variant="light"
+                  onPress={() => setOpenInfoModal(!openInfoModal)}
+                >
+                  Cerrar
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+
       <div className=" w-full flex flex-col gap-4">
         <Table
           aria-label="Example table with custom cells, pagination and sorting"
