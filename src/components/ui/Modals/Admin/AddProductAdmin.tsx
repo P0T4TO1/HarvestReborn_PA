@@ -196,10 +196,10 @@ export const AddProductAdminModal = () => {
                       )}
                     </div>
                     <Select {...register("categoria")} label="Categoria">
-                      <SelectItem key="verdura" value="VERDURA">
+                      <SelectItem key="VERDURA" value="VERDURA">
                         Verdura
                       </SelectItem>
-                      <SelectItem key="fruta" value="FRUTA">
+                      <SelectItem key="VERDURA" value="FRUTA">
                         Fruta
                       </SelectItem>
                     </Select>
