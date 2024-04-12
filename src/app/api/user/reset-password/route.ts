@@ -43,7 +43,7 @@ async function resetPassword(req: NextRequest, res: NextResponse) {
   if (process.env.NODE_ENV === "development") {
     link = `http://localhost:3000/auth/reset-password?token=${resetPasswordToken}`;
   } else {
-    link = `https://harvest-reborn-pa.vercel.app/auth/reset-password?token=${resetPasswordToken}`;
+    link = `https://www.harvest-reborn.me/auth/reset-password?token=${resetPasswordToken}`;
   }
 
   const emailHtml = render(
