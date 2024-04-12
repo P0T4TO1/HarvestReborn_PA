@@ -18,7 +18,7 @@ export const adminAddProductValidation = z.object({
       message: "El nombre del producto debe tener menos de 100 caracteres",
     }),
   imagen_producto: z
-    .unknown({ required_error: "La imagen del producto es obligatoria" })
+    .unknown()
     .refine(
       (file) => {
         if (!file) return false;

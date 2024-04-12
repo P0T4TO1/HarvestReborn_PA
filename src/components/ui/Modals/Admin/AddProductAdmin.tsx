@@ -199,7 +199,7 @@ export const AddProductAdminModal = () => {
                       <SelectItem key="VERDURA" value="VERDURA">
                         Verdura
                       </SelectItem>
-                      <SelectItem key="VERDURA" value="FRUTA">
+                      <SelectItem key="FRUTA" value="FRUTA">
                         Fruta
                       </SelectItem>
                     </Select>
