@@ -8,10 +8,15 @@ export interface IOrden {
   estado_orden: EstadoOrden;
 
   id_cliente?: number;
+  cliente?: ICliente;
+
   id_historial?: number;
 
-  cliente?: ICliente;
   productoOrden?: IProductoOrden[];
+
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
 }
 
 export interface IProductoOrden {
@@ -20,12 +25,17 @@ export interface IProductoOrden {
   monto: number;
 
   id_orden?: number;
-  id_producto: number;
-  id_negocio: number;
-
-  producto?: IProduct;
   orden?: IOrden;
+  
+  id_producto: number;
+  producto?: IProduct;
+
+  id_negocio: number;
   negocio?: INegocio;
+
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
 }
 
 export enum EstadoOrden {

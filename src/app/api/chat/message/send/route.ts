@@ -63,7 +63,7 @@ async function sendMessage(req: NextRequest, res: NextResponse) {
     const timestamp = Date.now();
 
     const messageData: IMensaje = {
-      id_mensajes: nanoid(),
+      id_mensaje: nanoid(),
       id_chat: chatId,
       id_user: session.user.id,
       cuerpo_mensaje: text,

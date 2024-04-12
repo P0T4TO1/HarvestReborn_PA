@@ -20,7 +20,7 @@ import { hrApi } from "@/api";
 import { toast } from "sonner";
 import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
 import { useRouter } from "next/navigation";
-import { searchProductByName } from "@/hooks";
+import { searchProductByName } from "@/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FaPlus } from "react-icons/fa";
 

@@ -1,7 +1,7 @@
 import { IUser } from "./user.interface";
 
 export interface IMensaje {
-  id_mensajes: string;
+  id_mensaje: string;
   cuerpo_mensaje: string;
   tipo_mensaje: tipo_mensaje;
   leido: boolean;

@@ -7,10 +7,10 @@ import { hrApi } from "@/api";
 import { CircularProgress } from "@nextui-org/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Input, Button } from "@nextui-org/react";
-import { AsideAccount, SUCCESS_TOAST } from "@/components";
+import { SUCCESS_TOAST } from "@/components";
 import { accountSchema } from "@/validations/profile.validation";
 import { toast } from "sonner";
-import { verifyOldPassword } from "@/hooks";
+import { verifyOldPassword } from "@/helpers";
 
 type Errors = {
   email?: string;

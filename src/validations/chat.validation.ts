@@ -1,12 +1,11 @@
 import { z } from "zod";
-import { IMensaje } from "@/interfaces"
 
 export const addFriendValidator = z.object({
   email: z.string().email(),
 });
 
 export const messageValidator = z.object({
-  id_mensajes: z.string(),
+  id_mensaje: z.string(),
   cuerpo_mensaje: z.string(),
   tipo_mensaje: z.enum(["TEXTO", "IMAGEN", "VIDEO", "AUDIO", "DOCUMENTO"]),
   leido: z.boolean(),

@@ -115,7 +115,12 @@ model m_negocio {
 
   historial     c_historial?
   inventario    c_inventario?
-  prodcutoOrden m_prodcutoOrden[]
+  productosOrden m_prodcutoOrden[]
+  publicaciones m_publicaciones[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
   @@index([id_dueneg])
 }
@@ -132,10 +137,16 @@ model c_inventario {
 model m_lote {
   id_lote           Int      @id @default(autoincrement())
   cantidad_producto Int
+  last_cantidad     Int?     @default(0)
   fecha_entrada     DateTime
   fecha_vencimiento DateTime
   precio_kg         Float
+  last_precio_kg    Float?   @default(0)
   monto_total       Float
+  last_monto_total  Float?   @default(0)
+
+  disponibilidad Disponibilidad @default(EN_VENTA)
+  estado_lote    EstadoLote         @default(ACTIVO)
 
   id_inventario Int
   inventario    c_inventario @relation(fields: [id_inventario], references: [id_inventario], onDelete: Cascade)
@@ -146,9 +157,27 @@ model m_lote {
   id_proveedor Int?
   proveedor    c_proveedor? @relation(fields: [id_proveedor], references: [id_proveedor])
 
+  id_publicacion Int?
+  publicacion    m_publicaciones? @relation(fields: [id_publicacion], references: [id_publicacion])
+
   @@index([id_inventario])
   @@index([id_producto])
   @@index([id_proveedor])
+  @@index([id_publicacion])
+}
+
+enum EstadoLote {
+  ACTIVO
+  VENDIDO
+  VENCIDO
+  TERMINADO
+}
+
+enum Disponibilidad {
+  EN_VENTA
+  DONACION
+  VENDIDO
+  DONADO
 }
 
 model m_producto {
@@ -208,11 +237,11 @@ enum EstadoOrden {
 }
 
 model d_orden {
-  id_orden     String   @id @default(uuid())
+  id_orden     String      @id @default(uuid())
   fecha_orden  DateTime
   hora_orden   DateTime
   monto_total  Float
-  estado_orden EstadoOrden   @default(PENDIENTE)
+  estado_orden EstadoOrden @default(PENDIENTE)
 
   id_cliente Int?
   cliente    d_cliente? @relation(fields: [id_cliente], references: [id_cliente])
@@ -221,6 +250,10 @@ model d_orden {
   historial    c_historial? @relation(fields: [id_historial], references: [id_historial])
 
   productoOrden m_prodcutoOrden[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
   @@index([id_cliente])
   @@index([id_historial])
@@ -245,13 +278,13 @@ enum EstadoTicket {
 }
 
 model m_ticketSoporte {
-  id_ticket      Int      @id @default(autoincrement())
+  id_ticket      Int          @id @default(autoincrement())
   nombre_usuario String
   descripcion    String
-  images         String
+  images         String[]
   fecha_creacion DateTime
   fecha_cierre   DateTime
-  estado_ticket  EstadoTicket  @default(PENDIENTE)
+  estado_ticket  EstadoTicket @default(PENDIENTE)
 
   id_user String
   user    m_user @relation(fields: [id_user], references: [id], onDelete: Cascade)
@@ -305,8 +338,8 @@ model d_participantes {
 }
 
 model m_chat {
-  id_chat        String      @id @default(uuid())
-  nombre_chat    String 
+  id_chat        String   @id @default(uuid())
+  nombre_chat    String
   fecha_creacion DateTime
 
   id_user_creator String
@@ -319,7 +352,7 @@ model m_chat {
 }
 
 model d_mensajes {
-  id_mensajes    String          @id @default(uuid())
+  id_mensaje     String       @id @default(uuid())
   cuerpo_mensaje String       @db.VarChar(400)
   tipo_mensaje   tipo_mensaje @default(TEXTO)
   leido          Boolean      @default(false)
@@ -342,4 +375,25 @@ enum tipo_mensaje {
   VIDEO
   AUDIO
   DOCUMENTO
+}
+
+model m_publicaciones {
+  id_publicacion Int @id @default(autoincrement())
+
+  id_negocio Int
+  negocio    m_negocio @relation(fields: [id_negocio], references: [id_negocio], onDelete: Cascade)
+
+  titulo_publicacion      String
+  descripcion_publicacion String   @db.VarChar(400)
+  images_publicacion      String[] @default([])
+  disponibilidad          Disponibilidad @default(EN_VENTA)
+  estado_publicacion      Estado @default(PENDIENTE)
+
+  lotes m_lote[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([id_negocio])
 }

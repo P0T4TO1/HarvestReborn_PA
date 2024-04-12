@@ -5,7 +5,7 @@ import { AuthContext } from "@/context/auth";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { registerUserDataSchema } from "@/validations/auth.validation";
-import { searchUserByEmail } from "@/hooks";
+import { searchUserByEmail } from "@/helpers";
 import { Input } from "@nextui-org/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DANGER_TOAST } from "@/components";

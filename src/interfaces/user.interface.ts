@@ -2,23 +2,34 @@ import { IDuenoNegocio, ICliente, INegocio } from "@/interfaces";
 
 export interface IUser {
   id: string;
-  email: string;
   password: string;
-  id_rol: number;
-  nombre?: string;
-  apellidos?: string;
+  email: string;
+  estado: Estado;
+
   oAuthId?: string;
 
   emailVerified: boolean;
-  estado: Estado;
 
-  negocio?: INegocio;
-  duenonegocio?: IDuenoNegocio;
+  id_rol: number;
+  rol: IRol;
+
+  nombre?: string;
+  apellidos?: string;
+
   cliente?: ICliente;
+  duenonegocio?: IDuenoNegocio;
+  negocio?: INegocio;
 }
 
 export enum Estado {
   Activo = "ACTIVO",
   Inactivo = "INACTIVO",
   Pendiente = "PENDIENTE",
+}
+
+export interface IRol {
+  id_rol: number;
+  nombre_rol: string;
+
+  user: IUser;
 }

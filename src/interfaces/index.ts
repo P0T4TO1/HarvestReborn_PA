@@ -8,5 +8,6 @@ export * from "./negocio.interface";
 export * from "./orden.interface";
 export * from "./product.interface";
 export * from "./user.interface";
-export * from "./preguntasFaq.interface";
-export * from "./respuestasFaq.interface";
+export * from "./faq.interface";
+export * from "./publicaciones.interface";
+export * from "./ticket.interface";

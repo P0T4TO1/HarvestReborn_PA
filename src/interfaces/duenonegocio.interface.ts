@@ -8,5 +8,6 @@ export interface IDuenoNegocio {
 
   id_user: string;
   user?: IUser;
+  
   negocio: INegocio;
 }

@@ -56,7 +56,7 @@ const Messages: FC<MessagesProps> = ({
         return (
           <div
             className="chat-message"
-            key={`${message.id_mensajes}-${message.createdAt}`}
+            key={`${message.id_mensaje}-${message.createdAt}`}
           >
             <div
               className={cn("flex items-end", {

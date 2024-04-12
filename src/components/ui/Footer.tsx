@@ -44,6 +44,7 @@ export const Footer = () => {
                   >
                     Jaret García
                   </Link>
+                  , Xavier Chanona
                 </p>
               </div>
             </div>
