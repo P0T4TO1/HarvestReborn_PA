@@ -17,6 +17,7 @@ import { SUCCESS_TOAST } from "@/components";
 import { useContext, useState } from "react";
 import { AuthContext } from "@/context/auth";
 import { IProduct } from "@/interfaces";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface IFormData {
   id_producto: number;
@@ -46,27 +47,13 @@ export const AddLoteToInventory = ({
   product,
   useDisclosure: { isOpen, onClose },
 }: Props) => {
-  const methods = useForm<IFormData>();
-  const { handleSubmit, register } = methods;
+  const { handleSubmit, register, formState: { errors } } = useForm<IFormData>({
+    resolver: zodResolver(productSchema),
+  });
   const { user } = useContext(AuthContext);
-
-  const [errors, setErrors] = useState<Errors>(null);
 
   const addProduct: SubmitHandler<IFormData> = async (data) => {
     try {
-      const validations = productSchema.safeParse(data);
-      if (!validations.success) {
-        let newErrors: Errors = {};
-
-        validations.error.issues.forEach((issue) => {
-          newErrors = { ...newErrors, [issue.path[0]]: issue.message };
-        });
-        setErrors(newErrors);
-        return null;
-      } else {
-        setErrors(null);
-      }
-
       const res = await hrApi
         .post(`/negocio/inventory/${id}`, {
           id: id,
@@ -109,26 +96,26 @@ export const AddLoteToInventory = ({
                 label="Cantidad en kg"
                 type="number"
                 {...register("cantidad_producto")}
-                errorMessage={errors?.cantidad_producto}
+                errorMessage={errors?.cantidad_producto?.message}
               />
               <Input
                 label="Precio por kg"
                 type="number"
                 {...register("precio_kg")}
-                errorMessage={errors?.precio_kg}
+                errorMessage={errors?.precio_kg?.message}
               />
               <Input
                 label="Fecha de llegada"
                 type="date"
                 defaultValue={new Date().toISOString().split("T")[0]}
                 {...register("fecha_entrada")}
-                errorMessage={errors?.fecha_entrada}
+                errorMessage={errors?.fecha_entrada?.message}
               />
               <Input
                 label="Fecha de duración aproximada en estado fresco"
                 type="date"
                 {...register("fecha_vencimiento")}
-                errorMessage={errors?.fecha_vencimiento}
+                errorMessage={errors?.fecha_vencimiento?.message}
               />
             </ModalBody>
             <ModalFooter>
