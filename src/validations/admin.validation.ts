@@ -39,7 +39,9 @@ export const adminAddProductValidation = z.object({
   enTemporada: z.boolean({
     required_error: "El campo en temporada es obligatorio",
   }),
-  categoria: z.enum(["FRUTA", "VERDURA"]),
+  categoria: z.enum(["FRUTA", "VERDURA"], {
+    required_error: "La categoría del producto es obligatoria",
+  }),
 });
 
 export const updateProductValidation = adminAddProductValidation
