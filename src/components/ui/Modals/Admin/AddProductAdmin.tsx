@@ -46,6 +46,8 @@ export const AddProductAdminModal = () => {
     formState: { errors },
     setError,
     setValue,
+    getValues,
+    watch,
   } = useForm<IFormData>({
     resolver: zodResolver(adminAddProductValidation),
     defaultValues: {

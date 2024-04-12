@@ -19,9 +19,11 @@ export const adminAddProductValidation = z.object({
     }),
   imagen_producto: z
     .unknown()
+    .optional()
     .refine(
       (file) => {
         if (!file) return false;
+        if (Object.keys(file).length === 0) return true;
         if (file instanceof File) {
           if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) return false;
           if (file.size > MAX_FILE_SIZE) return false;
@@ -31,8 +33,7 @@ export const adminAddProductValidation = z.object({
       {
         message: "La imagen del producto no es válida",
       }
-    )
-    .optional(),
+    ),
   file: z.string(),
   descripcion: z.string().optional(),
   enTemporada: z.boolean({
