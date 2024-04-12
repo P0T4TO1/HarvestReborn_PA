@@ -35,7 +35,6 @@ async function updateLote(
     fecha_entrada,
     fecha_vencimiento,
     precio_kg,
-    monto_total,
   } = body;
 
   try {
@@ -48,12 +47,12 @@ async function updateLote(
 
     const lote = await prisma.m_lote.update({
       where: {
-        id_lote: parseInt(params.id as string, 10),
+        id_lote: parseInt(params.id, 10),
       },
       data: {
         cantidad_producto: parseInt(cantidad_producto, 10),
-        fecha_entrada: new Date(fecha_entrada).toISOString(),
-        fecha_vencimiento: new Date(fecha_vencimiento).toISOString(),
+        fecha_entrada: new Date(fecha_entrada) as any,
+        fecha_vencimiento: new Date(fecha_vencimiento) as any,
         precio_kg: parseFloat(precio_kg),
         monto_total: parseFloat(cantidad_producto) * parseFloat(precio_kg),
       },

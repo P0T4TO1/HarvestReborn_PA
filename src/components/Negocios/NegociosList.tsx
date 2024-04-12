@@ -180,14 +180,14 @@ export const NegociosList = () => {
                   {negocio?.nombre_negocio}
                 </h2>
                 <p>Ve los productos que ofrece </p>
-                <Button color="success" size="md" className="mt-2">
-                  <Link
-                    href={`/negocios/${negocio.id_negocio}/${negocio.nombre_negocio}`}
-                    className="text-gray-700"
-                  >
+                <Link
+                  className="mt-2"
+                  href={`/negocios/${negocio.id_negocio}/${negocio.nombre_negocio}`}
+                >
+                  <Button color="success" size="md">
                     Ver productos
-                  </Link>
-                </Button>
+                  </Button>
+                </Link>
               </CardHeader>
               <Divider />
               <CardBody className="px-4 pb-4 overflow-y-scroll">

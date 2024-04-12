@@ -47,7 +47,11 @@ export const AddLoteToInventory = ({
   product,
   useDisclosure: { isOpen, onClose },
 }: Props) => {
-  const { handleSubmit, register, formState: { errors } } = useForm<IFormData>({
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<IFormData>({
     resolver: zodResolver(productSchema),
   });
   const { user } = useContext(AuthContext);
@@ -62,7 +66,7 @@ export const AddLoteToInventory = ({
           fecha_vencimiento: data.fecha_vencimiento,
           precio_kg: data.precio_kg,
           monto_total: data.cantidad_producto * data.precio_kg,
-          inventory_id: user?.duenonegocio?.negocio?.id_negocio,
+          inventory_id: user?.duenonegocio?.negocio?.inventario?.id_inventario,
         })
         .then(() => {
           toast("Producto agregado a tu inventario", SUCCESS_TOAST);
@@ -95,13 +99,13 @@ export const AddLoteToInventory = ({
               <Input
                 label="Cantidad en kg"
                 type="number"
-                {...register("cantidad_producto")}
+                {...register("cantidad_producto", { valueAsNumber: true })}
                 errorMessage={errors?.cantidad_producto?.message}
               />
               <Input
                 label="Precio por kg"
                 type="number"
-                {...register("precio_kg")}
+                {...register("precio_kg", { valueAsNumber: true })}
                 errorMessage={errors?.precio_kg?.message}
               />
               <Input

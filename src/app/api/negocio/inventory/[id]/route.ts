@@ -19,7 +19,7 @@ async function getLotesFromInventory(
     const lotes = await prisma.m_lote.findMany({
       where: {
         inventario: {
-          id_inventario: parseInt(params.id, 10),
+          id_negocio: parseInt(params.id, 10),
         },
       },
       include: {
@@ -98,6 +98,7 @@ async function addProductToInventory(
 
     return NextResponse.json(product, { status: 200 }) as any;
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       { message: "Error al agregar producto al inventario" },
       { status: 500 }

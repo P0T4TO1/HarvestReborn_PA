@@ -17,7 +17,15 @@ export const oAuthToDb = async (
     include: {
       duenonegocio: {
         include: {
-          negocio: true,
+          negocio: {
+            include: {
+              inventario: {
+                select: {
+                  id_inventario: true,
+                },
+              },
+            },
+          },
         },
       },
       cliente: true,

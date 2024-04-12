@@ -48,14 +48,10 @@ export const EditLoteModal = ({
   } = useForm<IFormData>({
     resolver: zodResolver(productSchema),
     defaultValues: {
-      cantidad_producto: lote?.cantidad_producto || 0,
-      precio_kg: lote?.precio_kg || 0,
-      fecha_entrada: new Date(lote?.fecha_entrada || "")
-        .toString()
-        .split("T")[0] as string,
-      fecha_vencimiento: new Date(lote?.fecha_vencimiento || "")
-        .toString()
-        .split("T")[0] as string,
+      cantidad_producto: lote?.cantidad_producto ?? 0,
+      precio_kg: lote?.precio_kg ?? 0,
+      fecha_entrada: lote?.fecha_entrada ?? "",
+      fecha_vencimiento: lote?.fecha_vencimiento ?? "",
       monto_total: 0,
     },
   });
@@ -111,7 +107,7 @@ export const EditLoteModal = ({
                     <Input
                       label="Cantidad en kg"
                       type="number"
-                      {...register("cantidad_producto")}
+                      {...register("cantidad_producto", { valueAsNumber: true })}
                       defaultValue={lote?.cantidad_producto?.toString()}
                       isDisabled={!isEditing}
                     />
@@ -125,7 +121,7 @@ export const EditLoteModal = ({
                     <Input
                       label="Precio por kg"
                       type="number"
-                      {...register("precio_kg")}
+                      {...register("precio_kg", { valueAsNumber: true })}
                       defaultValue={lote?.precio_kg?.toString()}
                       isDisabled={!isEditing}
                     />
@@ -176,7 +172,7 @@ export const EditLoteModal = ({
                   <Button color="danger" variant="light" onPress={onClose}>
                     Cerrar
                   </Button>
-                  <Button type="submit" className="bg-green-600">
+                  <Button type="submit" className="bg-green-600" isDisabled={!isEditing}>
                     Actualizar
                   </Button>
                 </ModalFooter>
