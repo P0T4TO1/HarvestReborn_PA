@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useContext } from "react";
-import { IDuenoNegocio, IOrden } from "@/interfaces";
+import { IOrden } from "@/interfaces";
 import { chatHrefConstructor } from "@/utils/cn";
 import { hrApi } from "@/api";
 import { FaCheckCircle } from "react-icons/fa";
@@ -17,6 +17,8 @@ import {
 } from "@nextui-org/react";
 import { AuthContext } from "@/context/auth";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { DANGER_TOAST } from "@/components";
 
 type OrdersClienteProps = {
   id_orden: string;
@@ -33,11 +35,17 @@ export const OrderDetails = ({
   const { user } = useContext(AuthContext);
   const router = useRouter();
   useEffect(() => {
-    hrApi.get(`/cliente/order/${id_orden}`).then((res) => {
-      if (res.status === 200) {
-        setOrder(res.data);
-      }
-    });
+    hrApi
+      .get(`/cliente/order/${id_orden}`)
+      .then((res) => {
+        if (res.status === 200) {
+          setOrder(res.data);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        toast("Hubo un error", DANGER_TOAST);
+      });
   }, [id_orden]);
 
   if (!order) {

@@ -78,41 +78,41 @@ export const EditUserForm = ({ user, isEditing }: Props) => {
     resolver: zodResolver(adminEditUserValidation),
     defaultValues: {
       email: user.email,
-      nombre: user.duenonegocio?.nombre_dueneg || user.cliente?.nombre_cliente,
+      nombre: user.duenonegocio?.nombre_dueneg ?? user.cliente?.nombre_cliente ?? "",
       apellidos:
-        user.duenonegocio?.apellidos_dueneg || user.cliente?.apellidos_cliente,
+        user.duenonegocio?.apellidos_dueneg ?? user.cliente?.apellidos_cliente ?? "",
       fecha_nacimiento:
-        user.duenonegocio?.fecha_nacimiento || user.cliente?.fecha_nacimiento,
+        user.duenonegocio?.fecha_nacimiento ?? user.cliente?.fecha_nacimiento ?? "",
       dia_nacimiento:
-        user.duenonegocio?.fecha_nacimiento.split("-")[2].split("T")[0] ||
-        user.cliente?.fecha_nacimiento.split("-")[2].split("T")[0],
+        user.duenonegocio?.fecha_nacimiento.split("-")[2].split("T")[0] ??
+        user.cliente?.fecha_nacimiento.split("-")[2].split("T")[0] ?? "",
       mes_nacimiento:
-        user.duenonegocio?.fecha_nacimiento.split("-")[1] ||
-        user.cliente?.fecha_nacimiento.split("-")[1],
+        user.duenonegocio?.fecha_nacimiento.split("-")[1] ??
+        user.cliente?.fecha_nacimiento.split("-")[1] ?? "",
       year_nacimiento:
-        user.duenonegocio?.fecha_nacimiento.split("-")[0] ||
-        user.cliente?.fecha_nacimiento.split("-")[0],
+        user.duenonegocio?.fecha_nacimiento.split("-")[0] ??
+        user.cliente?.fecha_nacimiento.split("-")[0] ?? "",
       tipo:
         user.id_rol === 1 ? "admin" : user.id_rol === 2 ? "negocio" : "cliente",
       nombre_negocio:
-        user.duenonegocio?.negocio?.nombre_negocio ||
-        user.cliente?.nombre_negocio ||
+        user.duenonegocio?.negocio?.nombre_negocio ??
+        user.cliente?.nombre_negocio ??
         "",
       telefono:
-        user.duenonegocio?.negocio?.telefono_negocio ||
-        user.cliente?.telefono_cliente,
+        user.duenonegocio?.negocio?.telefono_negocio ??
+        user.cliente?.telefono_cliente ?? "",
       calle:
-        user.duenonegocio?.negocio?.direccion_negocio.split(", ")[0] ||
-        user.cliente?.direccion_negocio?.split(", ")[0],
+        user.duenonegocio?.negocio?.direccion_negocio.split(", ")[0] ??
+        user.cliente?.direccion_negocio?.split(", ")[0] ?? "",
       colonia:
-        user.duenonegocio?.negocio?.direccion_negocio.split(", ")[1] ||
-        user.cliente?.direccion_negocio?.split(", ")[1],
+        user.duenonegocio?.negocio?.direccion_negocio.split(", ")[1] ??
+        user.cliente?.direccion_negocio?.split(", ")[1] ?? "",
       alcaldia:
-        user.duenonegocio?.negocio?.direccion_negocio.split(", ")[2] ||
-        user.cliente?.direccion_negocio?.split(", ")[2],
+        user.duenonegocio?.negocio?.direccion_negocio.split(", ")[2] ??
+        user.cliente?.direccion_negocio?.split(", ")[2] ?? "",
       cp:
-        user.duenonegocio?.negocio?.direccion_negocio.split(", ")[3] ||
-        user.cliente?.direccion_negocio?.split(", ")[3],
+        user.duenonegocio?.negocio?.direccion_negocio.split(", ")[3] ??
+        user.cliente?.direccion_negocio?.split(", ")[3] ?? "",
     },
   });
 

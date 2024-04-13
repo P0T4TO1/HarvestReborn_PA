@@ -1,7 +1,6 @@
 "use client";
 
-import { FC, useContext } from "react";
-import { AuthContext } from "@/context/auth";
+import { FC } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { MdOutlineReport, MdBlock, MdDelete } from "react-icons/md";
 

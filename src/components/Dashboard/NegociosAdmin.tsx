@@ -18,14 +18,18 @@ export const NegociosAdmin = () => {
   const [negocios, setNegocios] = React.useState<INegocio[]>([]);
 
   useEffect(() => {
-    hrApi.get("/admin/users/negocios").then((res) => {
-      if (res.status === 200) {
-        setNegocios(res.data);
-      } else {
+    hrApi
+      .get("/admin/users/negocios")
+      .then((res) => {
+        if (res.status === 200) {
+          setNegocios(res.data);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
         setError(true);
-      }
-      setLoading(false);
-    });
+        setLoading(false);
+      });
   }, []);
 
   return (

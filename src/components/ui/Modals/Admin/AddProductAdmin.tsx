@@ -39,6 +39,7 @@ export const AddProductAdminModal = () => {
 
   const [isSelected, setIsSelected] = useState(false);
   const [file, setFile] = useState<File | undefined>();
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -46,8 +47,6 @@ export const AddProductAdminModal = () => {
     formState: { errors },
     setError,
     setValue,
-    getValues,
-    watch,
   } = useForm<IFormData>({
     resolver: zodResolver(adminAddProductValidation),
     defaultValues: {
@@ -66,27 +65,31 @@ export const AddProductAdminModal = () => {
   };
 
   const onSubmit: SubmitHandler<IFormData> = async (data) => {
+    setIsLoading(true);
     try {
       const productExists = await searchProductByName(data.nombre_producto);
       if (productExists.message === "Este producto ya esta registrado") {
         setError("nombre_producto", {
           message: "Este producto ya esta registrado",
         });
+        setIsLoading(false);
         return null;
       }
 
       const dataImage = new FormData();
       dataImage.set("file", file as File);
 
-      await hrApi.post("/admin/upload", dataImage).then((res) => {
-        if (res.status === 200) {
-          console.log("File uploaded successfully");
-          data.file = res.data.secure_url;
-        } else {
-          console.log("Hubo un error al subir la imagen");
-          return null;
-        }
-      });
+      await hrApi
+        .post("/admin/upload", dataImage)
+        .then((res) => {
+          if (res.status === 200) {
+            console.log("File uploaded successfully");
+            data.file = res.data.secure_url;
+          }
+        })
+        .catch((err) => {
+          console.log("Error uploading file", err);
+        });
 
       const res = await hrApi
         .post("/admin/product", data)
@@ -99,6 +102,7 @@ export const AddProductAdminModal = () => {
         })
         .catch((err) => {
           toast("Hubo un error al agregar el producto", DANGER_TOAST);
+          setIsLoading(false);
           console.log(err);
           return null;
         });
@@ -129,6 +133,7 @@ export const AddProductAdminModal = () => {
           onClose={onClose}
           onOpenChange={onOpenChange}
           placement="top-center"
+          closeButton={isLoading ? false : true}
         >
           <ModalContent>
             {(onClose) => (
@@ -213,12 +218,18 @@ export const AddProductAdminModal = () => {
                   </div>
                 </ModalBody>
                 <ModalFooter>
-                  <Button color="danger" variant="flat" onClick={onClose}>
+                  <Button
+                    color="danger"
+                    variant="flat"
+                    onClick={onClose}
+                    isDisabled={isLoading}
+                  >
                     Cerrar
                   </Button>
                   <Button
                     color="primary"
                     type="submit"
+                    isLoading={isLoading}
                     onClick={() => {
                       setValue("imagen_producto", file as File);
                       setValue("enTemporada", isSelected);

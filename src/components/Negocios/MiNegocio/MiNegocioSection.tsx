@@ -2,10 +2,16 @@
 
 import React, { useContext, useEffect, useState } from "react";
 import { Tab, Tabs, CircularProgress } from "@nextui-org/react";
-import { GeneralDataForm, DescriptionForm, ImagesForm } from "@/components";
+import {
+  GeneralDataForm,
+  DescriptionForm,
+  ImagesForm,
+  DANGER_TOAST,
+} from "@/components";
 import { INegocio } from "@/interfaces";
 import { hrApi } from "@/api";
 import { AuthContext } from "@/context/auth";
+import { toast } from "sonner";
 
 export const MiNegocioSection = () => {
   const { user } = useContext(AuthContext);
@@ -22,6 +28,7 @@ export const MiNegocioSection = () => {
       })
       .catch((err) => {
         console.error(err);
+        toast("Hubo un error", DANGER_TOAST);
       });
   }, [user?.duenonegocio?.negocio.id_negocio]);
 

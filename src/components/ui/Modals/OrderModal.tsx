@@ -12,12 +12,13 @@ import {
   Button,
   Image,
   CircularProgress,
-  Link,
   Divider,
 } from "@nextui-org/react";
 import { AuthContext } from "@/context/auth";
 import { hrApi } from "@/api";
 import { chatHrefConstructor } from "@/utils/cn";
+import { toast } from "sonner";
+import { DANGER_TOAST } from "@/components";
 
 interface Props {
   useDisclosure: { isOpen: boolean; onClose: () => void };
@@ -48,7 +49,7 @@ export const OrderModal = ({
         chatId: chatHrefConstructor(id_user, id_cliente),
       })
       .then((res) => {
-        if (res.status === 200 && res.data.message === "El chat ya existe" ){
+        if (res.status === 200 && res.data.message === "El chat ya existe") {
           router.push(
             `/chats/chat/${chatHrefConstructor(id_user, id_cliente)}`
           );
@@ -58,6 +59,10 @@ export const OrderModal = ({
             `/chats/chat/${chatHrefConstructor(id_user, id_cliente)}`
           );
         }
+      })
+      .catch((err) => {
+        console.log(err);
+        toast("Error al intentar contactar al cliente", DANGER_TOAST)
       });
   };
 

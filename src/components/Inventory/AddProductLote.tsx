@@ -29,14 +29,18 @@ export const AddProductLote = () => {
       );
 
   useEffect(() => {
-    hrApi.get("/negocio/inventory/products").then((res) => {
-      if (res.status === 200) {
-        setProducts(res.data);
-      } else {
+    hrApi
+      .get("/negocio/inventory/products")
+      .then((res) => {
+        if (res.status === 200) {
+          setProducts(res.data);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
         setError(true);
-      }
-      setLoading(false);
-    });
+        setLoading(false);
+      });
   }, []);
 
   return (

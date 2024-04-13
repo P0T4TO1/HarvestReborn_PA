@@ -1,5 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
+import { TipoAlmacenaje } from "@/interfaces";
 
 export const dynamic = "force-dynamic";
 
@@ -37,6 +38,16 @@ async function getLotesFromInventory(
   }
 }
 
+type Data = {
+  id: number;
+  cantidad_producto: string;
+  fecha_entrada: string;
+  fecha_vencimiento: string;
+  precio_kg: string;
+  tipo_almacenaje: TipoAlmacenaje;
+  inventory_id: number;
+};
+
 async function addProductToInventory(
   request: Request,
   { params }: { params: { id: string } },
@@ -50,9 +61,9 @@ async function addProductToInventory(
     fecha_entrada,
     fecha_vencimiento,
     precio_kg,
-    monto_total,
+    tipo_almacenaje,
     inventory_id,
-  } = body;
+  } = body as Data;
 
   if (!params.id)
     return NextResponse.json(
@@ -66,7 +77,6 @@ async function addProductToInventory(
     !fecha_entrada ||
     !fecha_vencimiento ||
     !precio_kg ||
-    !monto_total ||
     !inventory_id
   ) {
     return NextResponse.json(
@@ -82,7 +92,8 @@ async function addProductToInventory(
         fecha_entrada: new Date(fecha_entrada).toISOString(),
         fecha_vencimiento: new Date(fecha_vencimiento).toISOString(),
         precio_kg: parseFloat(precio_kg),
-        monto_total: parseFloat(monto_total),
+        monto_total: parseFloat(precio_kg) * parseInt(cantidad_producto, 10),
+        tipo_almacenaje: tipo_almacenaje,
         inventario: {
           connect: {
             id_inventario: inventory_id,

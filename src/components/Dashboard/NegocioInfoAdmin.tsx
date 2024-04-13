@@ -10,9 +10,14 @@ import {
   BreadcrumbItem,
   Breadcrumbs,
 } from "@nextui-org/react";
-import { ProductsCollapsibleTable, EditNegocioAdmin } from "@/components";
+import {
+  ProductsCollapsibleTable,
+  EditNegocioAdmin,
+  DANGER_TOAST,
+} from "@/components";
 import { FaHome, FaEdit } from "react-icons/fa";
 import { MdOutlineStorefront } from "react-icons/md";
+import { toast } from "sonner";
 
 interface NegocioInfoAdminProps {
   id_negocio: number;
@@ -27,31 +32,44 @@ export const NegocioInfoAdmin = ({ id_negocio }: NegocioInfoAdminProps) => {
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    hrApi.get(`/admin/users/negocios/${id_negocio}`).then((res) => {
-      if (res.status === 200) {
-        setNegocio(res.data);
-      } else {
+    hrApi
+      .get(`/admin/users/negocios/${id_negocio}`)
+      .then((res) => {
+        if (res.status === 200) {
+          setNegocio(res.data);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
         setError(true);
-        console.log("Error");
-      }
-      setLoading(false);
-    });
-    hrApi.get(`/negocio/inventory/${id_negocio}`).then((res) => {
-      if (res.status === 200) {
-        setLotesSorted(res.data);
-      } else {
+        toast("Hubo un error", DANGER_TOAST);
+        setLoading(false);
+      });
+    hrApi
+      .get(`/negocio/inventory/${id_negocio}`)
+      .then((res) => {
+        if (res.status === 200) {
+          setLotesSorted(res.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
         setError(true);
-        console.log("Error al obtener productos", res.data);
-      }
-    });
-    hrApi.get(`/negocio/inventory/lotes/${id_negocio}`).then((res) => {
-      if (res.status === 200) {
-        setAllLotes(res.data);
-      } else {
+        toast("Error al obtener productos", DANGER_TOAST);
+      });
+    hrApi
+      .get(`/negocio/inventory/lotes/${id_negocio}`)
+      .then((res) => {
+        if (res.status === 200) {
+          setAllLotes(res.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
         setError(true);
-        console.log("Error al obtener productos", res.data);
-      }
-    });
+        toast("Error al obtener productos", DANGER_TOAST);
+      });
   }, [id_negocio]);
 
   return (

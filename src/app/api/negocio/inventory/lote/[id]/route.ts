@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { TipoAlmacenaje } from "@/interfaces";
 
 async function getLoteById(
   request: Request,
@@ -23,6 +24,14 @@ async function getLoteById(
   return NextResponse.json(lote, { status: 200 });
 }
 
+type Data = {
+  cantidad_producto: string;
+  fecha_entrada: string;
+  fecha_vencimiento: string;
+  precio_kg: string;
+  tipo_almacenaje: TipoAlmacenaje;
+};
+
 async function updateLote(
   request: Request,
   { params }: { params: { id: string } },
@@ -35,7 +44,8 @@ async function updateLote(
     fecha_entrada,
     fecha_vencimiento,
     precio_kg,
-  } = body;
+    tipo_almacenaje,
+  } = body as Data;
 
   try {
     if (!params.id) {
@@ -55,6 +65,7 @@ async function updateLote(
         fecha_vencimiento: new Date(fecha_vencimiento) as any,
         precio_kg: parseFloat(precio_kg),
         monto_total: parseFloat(cantidad_producto) * parseFloat(precio_kg),
+        tipo_almacenaje: tipo_almacenaje,
       },
     });
 

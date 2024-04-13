@@ -49,6 +49,7 @@ export const ImagesForm = ({ negocio }: ImagesDataProps) => {
         );
       }
     } catch (error) {
+      toast("Ocurrió un error al cargar las imágenes", DANGER_TOAST);
       console.log({ error });
     }
   };

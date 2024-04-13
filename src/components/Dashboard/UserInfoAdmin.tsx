@@ -24,15 +24,18 @@ export const UserInfoAdmin = ({ id_user }: UserInfoAdminProps) => {
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    hrApi.get(`/admin/users/${id_user}`).then((res) => {
-      if (res.status === 200) {
-        setUser(res.data);
-      } else {
+    hrApi
+      .get(`/admin/users/${id_user}`)
+      .then((res) => {
+        if (res.status === 200) {
+          setUser(res.data);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
         setError(true);
-        console.log("Error");
-      }
-      setLoading(false);
-    });
+        setLoading(false);
+      });
   }, [id_user]);
 
   return (

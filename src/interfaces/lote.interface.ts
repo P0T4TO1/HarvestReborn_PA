@@ -13,6 +13,7 @@ export interface ILote {
 
   disponibilidad: Disponibilidad;
   estado_lote: EstadoLote;
+  tipo_almacenaje: TipoAlmacenaje;
 
   id_inventario: number;
 
@@ -46,4 +47,12 @@ export enum EstadoLote {
   Vendido = "VENDIDO",
   Vencido = "VENCIDO",
   Terminado = "TERMINADO",
+}
+
+export enum TipoAlmacenaje {
+  Huacal = "HUACAL",
+  Caja = "CAJA",
+  Bolsa = "BOLSA",
+  Canasta = "CANASTA",
+  Otro = "OTRO",
 }

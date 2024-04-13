@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { redirect } from "next/navigation";
-import { SidebarWrapper, ClientesAdmin } from "@/components";
+import { ClientesAdmin } from "@/components";
 
 const ClientesPage = async () => {
   const session = await getServerSession(authOptions);

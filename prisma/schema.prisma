@@ -113,10 +113,10 @@ model m_negocio {
   id_dueneg Int            @unique
   dueneg    d_duenonegocio @relation(fields: [id_dueneg], references: [id_dueneg], onDelete: Cascade)
 
-  historial     c_historial?
-  inventario    c_inventario?
+  historial      c_historial?
+  inventario     c_inventario?
   productosOrden m_prodcutoOrden[]
-  publicaciones m_publicaciones[]
+  publicaciones  m_publicaciones[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -145,8 +145,9 @@ model m_lote {
   monto_total       Float
   last_monto_total  Float?   @default(0)
 
-  disponibilidad Disponibilidad @default(EN_VENTA)
-  estado_lote    EstadoLote         @default(ACTIVO)
+  disponibilidad  Disponibilidad @default(EN_VENTA)
+  estado_lote     EstadoLote     @default(ACTIVO)
+  tipo_almacenaje TipoAlmacenaje
 
   id_inventario Int
   inventario    c_inventario @relation(fields: [id_inventario], references: [id_inventario], onDelete: Cascade)
@@ -178,6 +179,14 @@ enum Disponibilidad {
   DONACION
   VENDIDO
   DONADO
+}
+
+enum TipoAlmacenaje {
+  HUACAL
+  BOLSA
+  CAJA
+  CANASTA
+  OTRO
 }
 
 model m_producto {
@@ -384,10 +393,10 @@ model m_publicaciones {
   negocio    m_negocio @relation(fields: [id_negocio], references: [id_negocio], onDelete: Cascade)
 
   titulo_publicacion      String
-  descripcion_publicacion String   @db.VarChar(400)
-  images_publicacion      String[] @default([])
+  descripcion_publicacion String         @db.VarChar(400)
+  images_publicacion      String[]       @default([])
   disponibilidad          Disponibilidad @default(EN_VENTA)
-  estado_publicacion      Estado @default(PENDIENTE)
+  estado_publicacion      Estado         @default(PENDIENTE)
 
   lotes m_lote[]
 

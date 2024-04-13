@@ -63,13 +63,17 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
     createOrder(
       user?.cliente?.id_cliente!,
       user?.cliente?.historial.id_historial!
-    ).then((res) => {
-      if (res.hasError) {
-        toast(res.message, DANGER_TOAST);
-      }
-      toast(res.message, SUCCESS_TOAST);
-      router.push(`/orders/${res.data.id_orden}?new=true`);
-    });
+    )
+      .then((res) => {
+        if (res.hasError) {
+          toast(res.message, DANGER_TOAST);
+        }
+        toast(res.message, SUCCESS_TOAST);
+        router.push(`/orders/${res.data.id_orden}?new=true`);
+      })
+      .catch(() => {
+        toast("Hubo un error al realizar el pedido", DANGER_TOAST);
+      });
   };
 
   return (

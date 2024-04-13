@@ -25,9 +25,6 @@ export const ProductsListContainer = ({
       .then((res) => {
         if (res.status === 200) {
           setLotes(res.data);
-        } else {
-          setError(true);
-          console.log("Error al obtener negocio", res.data);
         }
         setLoading(false);
       })

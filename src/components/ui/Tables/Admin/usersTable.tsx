@@ -103,6 +103,7 @@ export const TableUsers = ({ users }: Props) => {
       statusFilter !== "all" &&
       Array.from(statusFilter).length !== statusOptions.length
     ) {
+      console.log(statusFilter);
       filteredOrders = filteredOrders.filter((user) =>
         Array.from(statusFilter).includes(user.estado)
       );

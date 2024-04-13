@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { redirect } from "next/navigation";
-import { SidebarWrapper, UserInfoAdmin } from "@/components";
+import { UserInfoAdmin } from "@/components";
 
 interface Props {
   params: { id: string };

@@ -130,7 +130,6 @@ export const AddUserForm = () => {
         return null;
       }
 
-      console.log(data);
       const res = await hrApi
         .post("/admin/users", data)
         .then(() => {
@@ -149,6 +148,7 @@ export const AddUserForm = () => {
         console.log("Hubo un error data");
       }
     } catch (error) {
+      toast("Hubo un error", DANGER_TOAST);
       console.log(error);
       console.log("Hubo un error");
     }

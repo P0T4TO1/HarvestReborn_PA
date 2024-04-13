@@ -4,12 +4,7 @@ import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import { hrApi } from "@/api";
 import { ILote } from "@/interfaces";
 import { AuthContext } from "@/context/auth";
-import {
-  Input,
-  CircularProgress,
-  Button,
-  Link,
-} from "@nextui-org/react";
+import { Input, CircularProgress, Button, Link } from "@nextui-org/react";
 import { ProductsCollapsibleTable } from "@/components";
 import { MdAddCircleOutline } from "react-icons/md";
 import { FaSearch } from "react-icons/fa";
@@ -46,10 +41,11 @@ export const ProductsInventory = () => {
       .then((res) => {
         if (res.status === 200) {
           setAllLotes(res.data);
-        } else {
-          setError(true);
-          console.log("Error al obtener productos", res.data);
         }
+        setLoading(false);
+      })
+      .catch(() => {
+        setError(true);
         setLoading(false);
       });
     hrApi
@@ -57,10 +53,11 @@ export const ProductsInventory = () => {
       .then((res) => {
         if (res.status === 200) {
           setLotes(res.data);
-        } else {
-          setError(true);
-          console.log("Error al obtener productos", res.data);
         }
+        setLoading(false);
+      })
+      .catch(() => {
+        setError(true);
         setLoading(false);
       });
   }, [user?.duenonegocio?.negocio?.id_negocio]);

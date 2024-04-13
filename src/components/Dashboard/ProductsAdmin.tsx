@@ -17,14 +17,18 @@ export const ProductsAdmin = () => {
   const [error, setError] = React.useState(false);
 
   useEffect(() => {
-    hrApi.get("/admin/product").then((res) => {
-      if (res.status === 200) {
-        setProducts(res.data);
-      } else {
+    hrApi
+      .get("/admin/product")
+      .then((res) => {
+        if (res.status === 200) {
+          setProducts(res.data);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
         setError(true);
-      }
-      setLoading(false);
-    });
+        setLoading(false);
+      });
   }, []);
 
   return (
@@ -38,9 +42,7 @@ export const ProductsAdmin = () => {
         </BreadcrumbItem>
         <BreadcrumbItem
           href={"/admin/dashboard/products"}
-          startContent={
-            <FaAppleAlt size={25} />
-          }
+          startContent={<FaAppleAlt size={25} />}
         >
           Productos
         </BreadcrumbItem>

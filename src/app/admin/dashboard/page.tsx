@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { redirect } from "next/navigation";
-import { SidebarWrapper, HomeDashboard } from "@/components";
+import { HomeDashboard } from "@/components";
 
 const AdminDashboardPage = async () => {
   const session = await getServerSession(authOptions);

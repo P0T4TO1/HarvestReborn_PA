@@ -25,7 +25,11 @@ import {
   ModalContent,
 } from "@nextui-org/react";
 import { ILote } from "@/interfaces";
-import { columnsLotes as columns } from "@/utils/data-table";
+import {
+  columnsLotes as columns,
+  storageOptionsLotes,
+  fechasVencimientoOptionsLotes,
+} from "@/utils/data-table";
 import {
   FaChevronDown,
   FaRegTrashAlt,
@@ -44,6 +48,8 @@ interface Props {
 }
 
 const INITIAL_VISIBLE_COLUMNS = [
+  "no_lote",
+  "tipo_almacenaje",
   "fecha_entrada",
   "cantidad_producto",
   "fecha_vencimiento",
@@ -56,21 +62,20 @@ export const TableProductsInventory = ({ lotes }: Props) => {
   const { onOpen, onClose, isOpen, onOpenChange } = useDisclosure();
   const [openInfoModal, setOpenInfoModal] = useState(false);
 
-  const [filterValue, setFilterValue] = useState("");
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
   const [visibleColumns, setVisibleColumns] = useState<Selection>(
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
-  const [statusFilter, setStatusFilter] = useState<Selection>("all");
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [storageFilter, setStorageFilter] = useState<Selection>("all");
+  const [fechaVencimientoFilter, setFechaVencimientoFilter] =
+    useState<Selection>("all");
+  const rowsPerPage = 5;
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: "fecha_orden",
     direction: "ascending",
   });
 
   const [page, setPage] = useState(1);
-
-  const hasSearchFilter = Boolean(filterValue);
 
   const headerColumns = useMemo(() => {
     if (visibleColumns === "all") return columns;
@@ -83,16 +88,27 @@ export const TableProductsInventory = ({ lotes }: Props) => {
   const filteredItems = useMemo(() => {
     let filteredOrders = [...lotes];
 
-    if (hasSearchFilter) {
+    if (
+      storageFilter !== "all" &&
+      Array.from(storageFilter).length !== storageOptionsLotes.length
+    ) {
+      filteredOrders = filteredOrders.filter((lote) => {
+        return Array.from(storageFilter).includes(lote.tipo_almacenaje);
+      });
+    }
+
+    if (
+      fechaVencimientoFilter !== "all" &&
+      Array.from(fechaVencimientoFilter).length !==
+        fechasVencimientoOptionsLotes.length
+    ) {
       filteredOrders = filteredOrders.filter((lote) =>
-        lote.producto.nombre_producto
-          .toLowerCase()
-          .includes(filterValue.toLowerCase())
+        Array.from(fechaVencimientoFilter).includes(lote.fecha_vencimiento)
       );
     }
 
     return filteredOrders;
-  }, [lotes, filterValue, hasSearchFilter]);
+  }, [lotes, storageFilter, fechaVencimientoFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -144,10 +160,25 @@ export const TableProductsInventory = ({ lotes }: Props) => {
   const renderCell = useCallback(
     (lote: ILote, columnKey: Key) => {
       const cellValue = lote[columnKey as keyof ILote];
+      let key = 1;
+      const product_number: number = key++;
 
       switch (columnKey) {
         case "id_lote":
           return <div className="dark:text-gray-300">{lote.id_lote}</div>;
+        case "no_lote":
+          return (
+            <div className="dark:text-gray-300">
+              {product_number.toString()}
+            </div>
+          );
+        case "tipo_almacenaje":
+          return (
+            <div className="dark:text-gray-300">
+              {lote.tipo_almacenaje.charAt(0) +
+                lote.tipo_almacenaje.slice(1).toLowerCase()}
+            </div>
+          );
         case "fecha_entrada":
           return (
             <div className="dark:text-gray-300">
@@ -157,6 +188,17 @@ export const TableProductsInventory = ({ lotes }: Props) => {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
+              })}
+            </div>
+          );
+        case "hora_entrada":
+          return (
+            <div className="dark:text-gray-300">
+              {new Date(
+                lote.fecha_entrada.replace(/-/g, "/").replace(/T.+/, "")
+              ).toLocaleTimeString("es-MX", {
+                hour: "numeric",
+                minute: "numeric",
               })}
             </div>
           );
@@ -252,28 +294,6 @@ export const TableProductsInventory = ({ lotes }: Props) => {
     }
   }, [page]);
 
-  // const onRowsPerPageChange = useCallback(
-  //   (e: ChangeEvent<HTMLSelectElement>) => {
-  //     setRowsPerPage(Number(e.target.value));
-  //     setPage(1);
-  //   },
-  //   []
-  // );
-
-  // const onSearchChange = useCallback((value?: string) => {
-  //   if (value) {
-  //     setFilterValue(value);
-  //     setPage(1);
-  //   } else {
-  //     setFilterValue("");
-  //   }
-  // }, []);
-
-  // const onClear = useCallback(() => {
-  //   setFilterValue("");
-  //   setPage(1);
-  // }, []);
-
   const topContent = useMemo(() => {
     return (
       <div className="flex flex-col gap-4">
@@ -296,6 +316,51 @@ export const TableProductsInventory = ({ lotes }: Props) => {
                 {columns.map((column) => (
                   <DropdownItem key={column.uid} className="capitalize">
                     {capitalize(column.name)}
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
+            <Dropdown>
+              <DropdownTrigger className="hidden sm:flex">
+                <Button endContent={<FaChevronDown size={20} />} variant="flat">
+                  Almacenaje
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                disallowEmptySelection
+                aria-label="Table Columns"
+                closeOnSelect={false}
+                selectedKeys={storageFilter}
+                selectionMode="multiple"
+                onSelectionChange={setStorageFilter}
+              >
+                {storageOptionsLotes.map((option) => {
+                  console.log(option);
+                  return (
+                    <DropdownItem key={option.uid} className="capitalize">
+                      {capitalize(option.name)}
+                    </DropdownItem>
+                  );
+                })}
+              </DropdownMenu>
+            </Dropdown>
+            <Dropdown>
+              <DropdownTrigger className="hidden sm:flex">
+                <Button endContent={<FaChevronDown size={20} />} variant="flat">
+                  Fecha de vencimiento
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                disallowEmptySelection
+                aria-label="Table Columns"
+                closeOnSelect={false}
+                selectedKeys={fechaVencimientoFilter}
+                selectionMode="multiple"
+                onSelectionChange={setFechaVencimientoFilter}
+              >
+                {fechasVencimientoOptionsLotes.map((option) => (
+                  <DropdownItem key={option.uid} className="capitalize">
+                    {capitalize(option.name)}
                   </DropdownItem>
                 ))}
               </DropdownMenu>

@@ -52,7 +52,8 @@ export const UserDataForm = () => {
       setUserData(data);
       setIndexActive(2);
     } catch (error) {
-      toast.error("Error al registrar usuario");
+      console.error(error);
+      toast("Error al registrar usuario", DANGER_TOAST);
     }
   };
 

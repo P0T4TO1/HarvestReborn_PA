@@ -7,8 +7,6 @@ import {
   CardBody,
   Link,
   Divider,
-  Select,
-  SelectItem,
   CircularProgress,
   Button,
   Card,
@@ -45,27 +43,34 @@ export const NegociosList = () => {
       );
 
   useEffect(() => {
-    hrApi.get("/negocio").then((res) => {
-      if (res.status === 200) {
-        setNegocios(res.data);
-      } else {
+    hrApi
+      .get("/negocio")
+      .then((res) => {
+        if (res.status === 200) {
+          setNegocios(res.data);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
         setError(true);
-        console.log("Error al obtener negocios", res.data);
-      }
-      setLoading(false);
-    });
+        setLoading(false);
+      });
   }, []);
 
   const getNegocio = async (id: number | undefined) => {
     setLoadingNegocio(true);
-    await hrApi.get(`/negocio/${id}`).then((res) => {
-      if (res.status === 200) {
-        setNegocio(res.data);
-      } else {
-        console.log("Error al obtener negocio", res.data);
-      }
-      setLoadingNegocio(false);
-    });
+    await hrApi
+      .get(`/negocio/${id}`)
+      .then((res) => {
+        if (res.status === 200) {
+          setNegocio(res.data);
+        }
+        setLoadingNegocio(false);
+      })
+      .catch(() => {
+        setError(true);
+        setLoadingNegocio(false);
+      });
   };
 
   return (

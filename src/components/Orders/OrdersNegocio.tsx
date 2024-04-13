@@ -45,9 +45,11 @@ export const OrdersNegocio = () => {
             }
           });
           setMergedOrders(mergedOrders);
-        } else {
-          setError(true);
         }
+        setLoading(false);
+      })
+      .catch(() => {
+        setError(true);
         setLoading(false);
       });
   }, [user?.duenonegocio?.negocio?.id_negocio, orders]);
