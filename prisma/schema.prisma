@@ -147,7 +147,7 @@ model m_lote {
 
   disponibilidad  Disponibilidad @default(EN_VENTA)
   estado_lote     EstadoLote     @default(ACTIVO)
-  tipo_almacenaje TipoAlmacenaje
+  tipo_almacenaje TipoAlmacenaje @default(OTRO)
 
   id_inventario Int
   inventario    c_inventario @relation(fields: [id_inventario], references: [id_inventario], onDelete: Cascade)
