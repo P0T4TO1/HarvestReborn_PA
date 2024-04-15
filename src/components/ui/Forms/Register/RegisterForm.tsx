@@ -26,7 +26,7 @@ interface RegisterFormProps {
 }
 
 export const RegisterForm = ({ user }: RegisterFormProps) => {
-  const { indexActive, setIndexActive, setPersonalData, setUserData } =
+  const { indexActive, setIndexActive, setPersonalData, setUserData, userData } =
     useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -104,7 +104,7 @@ export const RegisterForm = ({ user }: RegisterFormProps) => {
               </div>
 
               <div className={`${indexActive !== 4 && "hidden"}`}>
-                <EmailVerificationForm />
+                <EmailVerificationForm email={userData.email} />
               </div>
 
               <div>

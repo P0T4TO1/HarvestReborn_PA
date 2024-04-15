@@ -6,6 +6,7 @@ import { toast } from "react-hot-toast";
 import { Button, Textarea } from "@nextui-org/react";
 import { IUser } from "@/interfaces";
 import { IoMdSend } from "react-icons/io";
+import { DANGER_TOAST } from "../ui";
 
 interface ChatInputProps {
   chatPartner: IUser;
@@ -22,14 +23,21 @@ const ChatInput: FC<ChatInputProps> = ({ chatPartner, chatId }) => {
     setIsLoading(true);
 
     try {
-      await hrApi.post("/chat/message/send", {
-        text: input,
-        chatId,
-      });
+      await hrApi
+        .post("/chat/message/send", {
+          text: input,
+          chatId,
+        })
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       setInput("");
       textareaRef.current?.focus();
     } catch {
-      toast.error("Something went wrong. Please try again later.");
+      toast("Error al enviar el mensaje", DANGER_TOAST);
     } finally {
       setIsLoading(false);
     }
@@ -65,7 +73,12 @@ const ChatInput: FC<ChatInputProps> = ({ chatPartner, chatId }) => {
 
         <div className="absolute right-0 bottom-0 flex justify-between py-2 pl-3 pr-2">
           <div className="flex-shrin-0">
-            <Button isLoading={isLoading} onClick={sendMessage} type="submit" startContent={<IoMdSend size={20}/>}>
+            <Button
+              isLoading={isLoading}
+              onClick={sendMessage}
+              type="submit"
+              startContent={<IoMdSend size={20} />}
+            >
               Enviar
             </Button>
           </div>

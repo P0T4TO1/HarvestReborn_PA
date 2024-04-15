@@ -19,6 +19,7 @@ import { AuthContext } from "@/context/auth";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { DANGER_TOAST } from "@/components";
+import * as PusherPushNotifications from "@pusher/push-notifications-web";
 
 type OrdersClienteProps = {
   id_orden: string;
@@ -32,6 +33,7 @@ export const OrderDetails = ({
   detailsNegocio,
 }: OrdersClienteProps) => {
   const [order, setOrder] = useState<IOrden>();
+  const [isLoading, setIsLoading] = useState(false);
   const { user } = useContext(AuthContext);
   const router = useRouter();
   useEffect(() => {
@@ -63,20 +65,56 @@ export const OrderDetails = ({
     );
   }
 
-  const onContact = (
+  const onContact = async (
     id_user: string,
     id_dueneg: string,
     nombre_dueneg: string
   ) => {
-    hrApi
+    setIsLoading(true);
+    await hrApi
       .post(`/chat`, {
         userId: id_user,
         userId2: id_dueneg,
         chatName: `Chat con negocio ${nombre_dueneg}`,
         chatId: chatHrefConstructor(id_user, id_dueneg),
       })
-      .then((res) => {
+      .then(async (res) => {
         if (res.status === 200 && res.data.message === "El chat ya existe") {
+          const beamsTokenProviderUser =
+            new PusherPushNotifications.TokenProvider({
+              url: `${process.env.NEXT_PUBLIC_API_URL}/notifications/token/${id_user}`,
+              headers: {
+                Authorization: `Bearer ${id_user}`,
+              },
+            });
+
+          const beamsTokenProviderCliente =
+            new PusherPushNotifications.TokenProvider({
+              url: `${process.env.NEXT_PUBLIC_API_URL}/notifications/token/${id_dueneg}`,
+              headers: {
+                Authorization: `Bearer ${id_dueneg}`,
+              },
+            });
+          const beamsClient = new PusherPushNotifications.Client({
+            instanceId: process.env
+              .NEXT_PUBLIC_PUSHER_BEAMS_INSTANCE_ID as string,
+          });
+
+          await beamsClient
+            .start()
+            .then(async () => {
+              await beamsClient.addDeviceInterest(
+                `chat-${chatHrefConstructor(id_user, id_dueneg)}`
+              );
+              await beamsClient.setUserId(id_user, beamsTokenProviderUser);
+              await beamsClient.setUserId(id_dueneg, beamsTokenProviderCliente);
+            })
+            .catch((err) => {
+              console.log(err);
+              toast("Error al intentar contactar al cliente", DANGER_TOAST);
+              setIsLoading(false);
+            });
+
           router.push(`/chats/chat/${chatHrefConstructor(id_user, id_dueneg)}`);
         }
         if (res.status === 201) {
@@ -172,6 +210,7 @@ export const OrderDetails = ({
                           <Button
                             color="primary"
                             variant="light"
+                            isLoading={isLoading}
                             onClick={() =>
                               onContact(
                                 user?.id!,

@@ -1,12 +1,15 @@
 "use client";
 
-import React, { ChangeEvent, useContext, useEffect, useState } from "react";
+import React, {
+  ChangeEvent,
+  useContext,
+  useEffect,
+  useState,
+  useMemo,
+  useCallback,
+} from "react";
 import { ILote, IProductoOrden } from "@/interfaces";
-import {
-  Input,
-  Button,
-  Checkbox,
-} from "@nextui-org/react";
+import { Input, Button, Checkbox } from "@nextui-org/react";
 import { ProductCard } from "@/components";
 import { BagContext } from "@/context/order";
 import { FaSearch } from "react-icons/fa";
@@ -23,50 +26,53 @@ export const NegocioProducts = ({
   lotes,
 }: NegocioProductsProps) => {
   const { addProductToBag } = useContext(BagContext);
-  const [items, setItems] = useState<ILote[]>(lotes);
-  const [search, setSearch] = useState("");
   const [isSeletedFrutas, setIsSelectedFrutas] = useState(false);
   const [isSeletedVerduras, setIsSelectedVerduras] = useState(false);
-  // const [value, setValue] = useState("");
+  const [filterValue, setFilterValue] = useState("");
+  const hasSearchFilter = Boolean(filterValue);
 
-  const filterByCategory = (categoria: string) => {
-    if (categoria === "TODOS") {
-      setItems(lotes);
-      return;
+  const filteredItems = useMemo(() => {
+    let filteredLotes = [...lotes];
+
+    if (hasSearchFilter) {
+      filteredLotes = filteredLotes.filter((lote) =>
+        lote.producto.nombre_producto.toLowerCase().includes(filterValue.toLowerCase())
+      );
     }
-    const filteredResults = lotes.filter((lote) => {
-      return lote.producto.categoria === categoria;
-    });
-    return setItems(filteredResults);
-  };
-
-  useEffect(() => {
     if (isSeletedFrutas && isSeletedVerduras) {
-      filterByCategory("TODOS");
+      return filteredLotes;
     } else if (isSeletedFrutas) {
-      filterByCategory("FRUTA");
+      return filteredLotes.filter(
+        (lote) => lote.producto.categoria === "FRUTA"
+      );
     } else if (isSeletedVerduras) {
-      filterByCategory("VERDURA");
-    } else if (!isSeletedFrutas && !isSeletedVerduras) {
-      filterByCategory("TODOS");
+      return filteredLotes.filter(
+        (lote) => lote.producto.categoria === "VERDURA"
+      );
+    } else {
+      return filteredLotes;
     }
-  }, [isSeletedFrutas, isSeletedVerduras]);
+  }, [filterValue, hasSearchFilter, isSeletedFrutas, isSeletedVerduras, lotes]);
+
+  const itemsToDisplay = useMemo(() => {
+    return filteredItems;
+  }, [filteredItems]);
+
+  const onSearchChange = useCallback((value?: string) => {
+    if (value) {
+      setFilterValue(value);
+    } else {
+      setFilterValue("");
+    }
+  }, []);
+
+  const onClear = useCallback(() => {
+    setFilterValue("");
+  }, []);
 
   const onAddProduct = (product: IProductoOrden) => {
     addProductToBag(product);
   };
-
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setSearch(event.target.value);
-  };
-
-  const results = !search
-    ? items
-    : items.filter((lote) =>
-        lote.producto.nombre_producto
-          .toLowerCase()
-          .includes(search.toLowerCase())
-      );
 
   return (
     <div className="pt-16 container mx-auto">
@@ -78,45 +84,18 @@ export const NegocioProducts = ({
       </h1>
       <div className="flex mt-2 w-2/5">
         <Input
-          size="md"
-          radius="lg"
-          placeholder="Buscar productos..."
-          aria-label="Buscar productos..."
-          type="text"
-          startContent={
-            <FaSearch size={25} className="text-gray-500 dark:text-gray-300" />
-          }
-          defaultValue={search}
-          onChange={handleChange}
+          isClearable
+          className="w-full sm:max-w-[44%]"
+          placeholder="Buscar por nombre..."
+          startContent={<FaSearch size={20} />}
+          value={filterValue}
+          onClear={() => onClear()}
+          onValueChange={onSearchChange}
         />
       </div>
 
       <div className="grid lg:grid-cols-6 mt-12 grid-cols-1">
         <div className="lg:col-span-1 block px-4">
-          {/* <div className="flex flex-col gap-4 mt-4 mb-2">
-            <h3>Ordenar por</h3>
-            <Select
-              size="md"
-              selectedKeys={value}
-              onChange={(e) => setValue(e.target.value)}
-              placeholder="Ordenar por"
-              aria-label="Ordenar por"
-            >
-              <SelectItem key="precio-desc" value="precio-desc">
-                Precio de menor a mayor
-              </SelectItem>
-              <SelectItem key="precio-asc" value="precio-asc">
-                Precio de mayor a menor
-              </SelectItem>
-              <SelectItem key="alphabetic-asc" value="alphabetic-asc">
-                Nombre de la A a la Z
-              </SelectItem>
-              <SelectItem key="alphabetic-desc" value="alphabetic-desc">
-                Nombre de la Z a la A
-              </SelectItem>
-            </Select>
-          </div>
-          <Divider /> */}
           <div className="flex flex-col gap-4 mt-4">
             <h3>Filtros</h3>
             <Checkbox
@@ -134,13 +113,12 @@ export const NegocioProducts = ({
           </div>
         </div>
         <div className="lg:col-span-5 flex justify-center lg:block">
-          <ul className="grid lg:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 grid-cols-1 xl:grid-cols-4">
-            {results?.map((lote) => (
+          <ul className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
+            {itemsToDisplay.map((lote) => (
               <li key={lote.id_producto} className="p-2 flex">
                 <ProductCard lote={lote} route={"negocio-prods-cliente"}>
                   <Button
-                    className="w-full"
-                    color="primary"
+                    className="w-full dark:text-gray-200 text-white bg-[#00994F]"
                     size="md"
                     onClick={() => {
                       onAddProduct({

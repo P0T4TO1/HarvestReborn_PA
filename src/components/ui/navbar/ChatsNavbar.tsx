@@ -1,6 +1,6 @@
 "use client";
 
-import { Navbar, NavbarContent, NavbarItem, Tooltip } from "@nextui-org/react";
+import { Navbar, NavbarContent, NavbarItem } from "@nextui-org/react";
 import React, { useContext } from "react";
 import { UiContext } from "@/context/ui";
 import { DropdownChat } from "../Dropdown";
@@ -44,9 +44,7 @@ export const NavbarWrapperChats = ({ partnerName }: Props) => {
         justify="end"
         className="w-fit data-[justify=end]:flex-grow-0"
       >
-        <NavbarItem>
-          <DropdownChat />
-        </NavbarItem>
+        <NavbarItem>{partnerName && <DropdownChat />}</NavbarItem>
       </NavbarContent>
     </Navbar>
   );

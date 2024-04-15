@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { hrApi } from "@/api";
-import { Input, Button } from "@nextui-org/react";
+import { Input, Button, Card, CardBody, CardHeader } from "@nextui-org/react";
 import { toast } from "sonner";
 import { SUCCESS_TOAST } from "@/components";
 import { useRouter } from "next/navigation";
@@ -46,13 +46,13 @@ export const ChangePasswordForm = ({
   return (
     <section className="relative min-h-screen sm:flex sm:flex-row justify-center bg-transparent">
       <div className="flex justify-center self-center z-10 shadow-xl">
-        <div className="p-12 bg-white mx-auto rounded-3xl w-[386px]">
-          <div className="mb-7">
-            <h3 className="font-semibold text-2xl text-gray-800">
+        <Card className="p-6 mx-auto w-[386px]">
+          <CardHeader>
+            <h3 className="font-semibold text-2xl dark:text-gray-200 text-gray-800">
               Cambiar contraseña{" "}
             </h3>
-          </div>
-          <div>
+          </CardHeader>
+          <CardBody>
             <div className="space-y-6">
               <div className="relative">
                 <Input
@@ -106,8 +106,8 @@ export const ChangePasswordForm = ({
               </Button>
               <p>{message}</p>
             </div>
-          </div>
-        </div>
+          </CardBody>
+        </Card>
       </div>
     </section>
   );

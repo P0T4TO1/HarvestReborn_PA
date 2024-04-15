@@ -19,7 +19,6 @@ const Messages: FC<MessagesProps> = ({
   sessionId,
   chatId,
   chatPartner,
-  sessionImg,
 }) => {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
 
@@ -83,7 +82,9 @@ const Messages: FC<MessagesProps> = ({
                   })}
                 >
                   {message.cuerpo_mensaje}{" "}
-                  <span className={`ml-2 text-xs text-gray-400 ${isCurrentUser && "text-gray-300"}`}>
+                  <span
+                    className={`ml-2 text-xs text-gray-400 ${isCurrentUser && "text-gray-300"}`}
+                  >
                     {new Date(message.createdAt).toLocaleTimeString("es-MX", {
                       hour: "2-digit",
                       minute: "2-digit",

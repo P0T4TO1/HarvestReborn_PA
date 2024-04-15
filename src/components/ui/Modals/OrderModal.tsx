@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import { IOrden, IProductoOrden } from "@/interfaces";
 import {
@@ -19,6 +19,7 @@ import { hrApi } from "@/api";
 import { chatHrefConstructor } from "@/utils/cn";
 import { toast } from "sonner";
 import { DANGER_TOAST } from "@/components";
+import * as PusherPushNotifications from "@pusher/push-notifications-web";
 
 interface Props {
   useDisclosure: { isOpen: boolean; onClose: () => void };
@@ -35,21 +36,49 @@ export const OrderModal = ({
 }: Props) => {
   const { user } = useContext(AuthContext);
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const onContact = (
+  const onContact = async (
     id_user: string,
     id_cliente: string,
     nombre_cliente: string
   ) => {
-    hrApi
+    setIsLoading(true);
+    await hrApi
       .post(`/chat`, {
         userId: id_user,
         userId2: id_cliente,
         chatName: `Chat con negocio ${nombre_cliente}`,
         chatId: chatHrefConstructor(id_user, id_cliente),
       })
-      .then((res) => {
+      .then(async (res) => {
         if (res.status === 200 && res.data.message === "El chat ya existe") {
+          const beamsTokenProviderUser =
+            new PusherPushNotifications.TokenProvider({
+              url: `${process.env.NEXT_PUBLIC_API_URL}/notifications/token/${id_user}`,
+              headers: {
+                Authorization: `Bearer ${id_user}`,
+              },
+            });
+
+          const beamsTokenProviderCliente =
+            new PusherPushNotifications.TokenProvider({
+              url: `${process.env.NEXT_PUBLIC_API_URL}/notifications/token/${id_cliente}`,
+              headers: {
+                Authorization: `Bearer ${id_cliente}`,
+              },
+            });
+          const beamsClient = new PusherPushNotifications.Client({
+            instanceId: process.env
+              .NEXT_PUBLIC_PUSHER_BEAMS_INSTANCE_ID as string,
+          });
+
+          await beamsClient.start();
+          await beamsClient.setDeviceInterests([`chat-${id_user}-${id_cliente}`]);
+          await beamsClient.addDeviceInterest(`chat-${id_user}-${id_cliente}`);
+          await beamsClient.setUserId(id_user, beamsTokenProviderUser);
+          await beamsClient.setUserId(id_cliente, beamsTokenProviderCliente);
+
           router.push(
             `/chats/chat/${chatHrefConstructor(id_user, id_cliente)}`
           );
@@ -62,7 +91,8 @@ export const OrderModal = ({
       })
       .catch((err) => {
         console.log(err);
-        toast("Error al intentar contactar al cliente", DANGER_TOAST)
+        toast("Error al intentar contactar al cliente", DANGER_TOAST);
+        setIsLoading(false);
       });
   };
 
@@ -129,6 +159,7 @@ export const OrderModal = ({
                   <Button
                     variant="ghost"
                     color="primary"
+                    isLoading={isLoading}
                     onClick={() =>
                       onContact(
                         user?.id!,
@@ -142,6 +173,7 @@ export const OrderModal = ({
                   <Button
                     onClick={onClose}
                     disabled={loading}
+                    isLoading={isLoading}
                     className="ml-2"
                     color="danger"
                   >

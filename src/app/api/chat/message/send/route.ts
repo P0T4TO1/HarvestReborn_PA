@@ -7,6 +7,12 @@ import { messageValidator } from "@/validations/chat.validation";
 import { nanoid } from "nanoid";
 import { getServerSession } from "next-auth";
 import { IMensaje, tipo_mensaje } from "@/interfaces";
+import PushNotifications from "@pusher/push-notifications-server";
+
+const beamsClient = new PushNotifications({
+  instanceId: <string>process.env.NEXT_PUBLIC_PUSHER_BEAMS_INSTANCE_ID,
+  secretKey: <string>process.env.PUSHER_BEAMS_INSTANCE_PRIMARY_KEY,
+});
 
 async function sendMessage(req: NextRequest, res: NextResponse) {
   try {
@@ -19,24 +25,12 @@ async function sendMessage(req: NextRequest, res: NextResponse) {
     }
 
     const [userId1, userId2] = chatId.split("--");
-    console.log("userId1", userId1, "userId2", userId2);
 
     if (session.user.id !== userId1 && session.user.id !== userId2) {
       return NextResponse.json("Unauthorized", { status: 401 });
     }
 
     const friendId = session.user.id === userId1 ? userId2 : userId1;
-    console.log("friendId", friendId);
-
-    // const friendList = (await fetchRedis(
-    //   "smembers",
-    //   `user:${session.user.id}:friends`
-    // )) as string[];
-    // const isFriend = friendList.includes(friendId);
-
-    // if (!isFriend) {
-    //   return new Response("Unauthorized", { status: 401 });
-    // }
 
     const friendList = (await prisma.d_participantes.findMany({
       where: {
@@ -44,16 +38,31 @@ async function sendMessage(req: NextRequest, res: NextResponse) {
       },
     })) as any[];
     const isFriend = friendList.find((p) => p.id_user === friendId);
+
+    const friend = await prisma.m_user.findUnique({
+      where: { id: friendId },
+      include: {
+        cliente: {
+          select: {
+            nombre_cliente: true,
+          },
+        },
+        duenonegocio: {
+          select: {
+            negocio: {
+              select: {
+                nombre_negocio: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
     if (!isFriend) {
       console.log("Unauthorized friend");
       return NextResponse.json("Unauthorized", { status: 401 });
     }
-
-    // const rawSender = (await fetchRedis(
-    //   "get",
-    //   `user:${session.user.id}`
-    // )) as string;
-    // const sender = JSON.parse(rawSender) as User;
 
     const rawSender = await prisma.m_user.findUnique({
       where: { id: session.user.id },
@@ -91,11 +100,34 @@ async function sendMessage(req: NextRequest, res: NextResponse) {
       }
     );
 
-    // all valid, send the message
-    // await db.zadd(`chat:${chatId}:messages`, {
-    //   score: timestamp,
-    //   member: JSON.stringify(message),
-    // });
+    await beamsClient.publishToInterests([`chat-${userId1}-${userId2}`], {
+      web: {
+        notification: {
+          title: friend?.cliente
+            ? `Nuevo mensaje del cliente ${friend?.cliente?.nombre_cliente}`
+            : friend?.duenonegocio
+              ? `Nuevo mensaje del negocio ${friend?.duenonegocio?.negocio?.nombre_negocio}`
+              : "Nuevo mensaje",
+          body: message.cuerpo_mensaje,
+          deep_link: `https://harvest-reborn.me/chats/chat/${chatId}`,
+        },
+      },
+    });
+    const token = await beamsClient.publishToUsers([friendId], {
+      web: {
+        notification: {
+          title: friend?.cliente
+            ? `Nuevo mensaje del cliente ${friend?.cliente?.nombre_cliente}`
+            : friend?.duenonegocio
+              ? `Nuevo mensaje del negocio ${friend?.duenonegocio?.negocio?.nombre_negocio}`
+              : "Nuevo mensaje",
+          body: message.cuerpo_mensaje,
+          deep_link: `${process.env.NEXTAUTH_URL}/chats/chat/${chatId}`,
+        },
+      },
+    });
+
+    console.log("Beams notification sent", token);
 
     await prisma.d_mensajes.create({
       data: message,

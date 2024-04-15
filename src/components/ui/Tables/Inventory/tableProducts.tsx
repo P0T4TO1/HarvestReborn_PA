@@ -409,7 +409,7 @@ export const TableProductsInventory = ({ lotes }: Props) => {
         </div>
       </div>
     );
-  }, [visibleColumns, lotes.length]);
+  }, [visibleColumns, lotes.length, fechaVencimientoFilter, storageFilter, openInfoModal]);
 
   const bottomContent = useMemo(() => {
     return (

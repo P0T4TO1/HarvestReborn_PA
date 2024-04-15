@@ -1,13 +1,10 @@
 import { SidebarWrapperChats } from "@/components";
 import { ReactNode } from "react";
-import { Inter } from "next/font/google";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { getChatsByUserId } from "@/helpers/get-chats-by-user-id";
 import { IChatWithLastMessage } from "@/interfaces";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export default async function ChatsLayout({
   children,
