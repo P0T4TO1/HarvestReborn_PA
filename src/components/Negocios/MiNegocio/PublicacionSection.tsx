@@ -142,7 +142,7 @@ export const PublicacionSection = () => {
                     isIconOnly
                     size="sm"
                     radius="full"
-                    className="absolute top-0 right-0 p-1 bg-red-500"
+                    className="absolute top-0 right-0 p-1 bg-red-500 z-10"
                   >
                     <FaX />
                   </Button>
