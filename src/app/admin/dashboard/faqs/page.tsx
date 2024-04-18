@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { redirect } from "next/navigation";
-import { SidebarWrapper, FaqsAdmin } from "@/components";
+import { FaqsAdmin } from "@/components";
 
 const AdminDashboardFaqsPage = async () => {
   const session = await getServerSession(authOptions);

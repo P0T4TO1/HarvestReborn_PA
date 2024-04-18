@@ -11,6 +11,7 @@ export interface ICliente {
 
   id_user: string;
   user: IUser;
+
+  orden: IOrden[];
   historial: IHistorial;
-  ordenes: IOrden[];
 }

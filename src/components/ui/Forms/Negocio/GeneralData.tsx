@@ -13,7 +13,7 @@ import {
   CardFooter,
 } from "@nextui-org/react";
 import { toast } from "sonner";
-import { SUCCESS_TOAST } from "@/components";
+import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
 import { hrApi } from "@/api";
 import { INegocio } from "@/interfaces";
 
@@ -61,10 +61,12 @@ export const GeneralDataForm = ({ negocio }: Props) => {
           window.location.reload();
         })
         .catch((error) => {
+          toast("Error al actualizar los datos", DANGER_TOAST);
           console.error(error);
         });
       return;
     } catch (error) {
+      toast("Hubo un error", DANGER_TOAST);
       console.error(error);
       return null;
     }

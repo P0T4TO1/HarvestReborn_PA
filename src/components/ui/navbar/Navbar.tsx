@@ -17,6 +17,7 @@ import {
   Link,
   Badge,
   Image,
+  Button,
 } from "@nextui-org/react";
 import { useTheme as useNextTheme } from "next-themes";
 import { FaShoppingBag } from "react-icons/fa";
@@ -31,7 +32,12 @@ export const NavbarComponent = () => {
 
   return (
     <>
-      <Navbar onMenuOpenChange={setMobileMenuOpen} isBordered className="fixed">
+      <Navbar
+        onMenuOpenChange={setMobileMenuOpen}
+        isBordered
+        className="fixed"
+        maxWidth="xl"
+      >
         {user?.id_rol === 1 ? (
           <NavbarContent>
             <button onClick={toggleSideMenu} className="md:hidden">
@@ -162,14 +168,16 @@ export const NavbarComponent = () => {
                 color="foreground"
                 href={"/bag"}
               >
-                <Badge
-                  color="danger"
-                  content={numberOfProducts}
-                  isInvisible={!numberOfProducts}
-                  shape="circle"
-                >
-                  <FaShoppingBag size={20} />
-                </Badge>
+                <Button variant="light" isIconOnly>
+                  <Badge
+                    color="danger"
+                    content={numberOfProducts}
+                    isInvisible={!numberOfProducts}
+                    shape="circle"
+                  >
+                    <FaShoppingBag size={20} />
+                  </Badge>
+                </Button>
               </Link>
             </NavbarItem>
           ) : null}
@@ -199,12 +207,22 @@ export const NavbarComponent = () => {
                       Pedidos
                     </Link>
                   </NavbarMenuItem>
+                  <NavbarMenuItem>
+                    <Link color="foreground" href={"/chats"}>
+                      Chats
+                    </Link>
+                  </NavbarMenuItem>
                 </>
               ) : user?.id_rol === 3 ? (
                 <>
                   <NavbarMenuItem>
                     <Link color="foreground" href={"/negocios"}>
                       Recauderías
+                    </Link>
+                  </NavbarMenuItem>
+                  <NavbarMenuItem>
+                    <Link color="foreground" href={"/chats"}>
+                      Chats
                     </Link>
                   </NavbarMenuItem>
                 </>

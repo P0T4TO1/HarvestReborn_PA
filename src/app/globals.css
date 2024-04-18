@@ -242,5 +242,9 @@ tr.example-element-row:not(.example-expanded-row):active {
 }
 
 .warning-home-negocio {
-  background-color: hsla(37 91% 55% / 0.2);
+  background-color: hsla(37, 91%, 55%, 0.2);
+}
+
+.danger-home-negocio {
+  background-color: hsla(339, 90%, 51%, 0.2);
 }

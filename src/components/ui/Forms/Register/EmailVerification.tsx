@@ -1,29 +1,46 @@
 "use client";
 
 import React from "react";
-import { Image } from "@nextui-org/react";
+import { Image, Card, CardBody } from "@nextui-org/react";
 
-export const EmailVerificationForm = () => {
+type Props = {
+  email?: string;
+};
+
+export const EmailVerificationForm = ({ email }: Props) => {
   return (
     <section className="relative min-h-screen sm:flex sm:flex-row justify-center bg-transparent">
-      <div className="flex justify-center self-center z-10 shadow-xl">
-        <div className="p-12 bg-white mx-auto rounded-3xl w-[386px]">
-          <div className="mb-7">
+      <div className="flex justify-center self-center z-10">
+        <Card className="w-full max-w-md p-6">
+          <CardBody className="text-center font-light">
             <Image
-              src={"/images/buzon_email.png"}
+              src={"/images/email-send.png"}
               alt="Email Verification"
-              className="w-20 h-20 mx-auto"
+              classNames={{
+                wrapper: "mx-auto mb-4",
+                img: "w-36",
+              }}
             />
-            <h3 className="font-semibold text-2xl text-gray-800">
+            <h3 className="font-semibold text-2xl text-default-800">
               Revise su correo electrónico{" "}
             </h3>
-            <p className="text-gray-500 text-sm mt-4">
-              Hemos enviado un correo electrónico a su dirección de correo
-              electrónico. Haga clic en el enlace de verificación para verificar
-              su cuenta.
+            <p className="text-default-700 text-sm mt-4">
+              Ya casi está listo, solo falta un paso más. Hemos enviado un
+              correo a{" "}
+              <strong className="text-defautl-800 font-semibold">
+                {email}
+              </strong>{" "}
+              con un enlace de verificación.
             </p>
-          </div>
-        </div>
+            <p className="text-default-700 text-sm mt-4">
+              Si no lo encuentra,
+              <strong className="text-defautl-800 font-semibold">
+                {" "}
+                revise su bandeja de correo no deseado.
+              </strong>
+            </p>
+          </CardBody>
+        </Card>
       </div>
     </section>
   );

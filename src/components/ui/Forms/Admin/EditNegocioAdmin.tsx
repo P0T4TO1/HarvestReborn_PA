@@ -68,6 +68,10 @@ export const EditNegocioAdmin = ({ negocio, isEditing }: Props) => {
       if (res.status === 200) {
         toast("Negocio actualizado correctamente", SUCCESS_TOAST);
         window.location.reload();
+      } else {
+        toast("Error al actualizar el negocio", DANGER_TOAST);
+        setError(true);
+        setLoading(false);
       }
     } catch (error) {
       toast("Error al actualizar el negocio", DANGER_TOAST);

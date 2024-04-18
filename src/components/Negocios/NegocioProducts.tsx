@@ -1,125 +1,144 @@
 "use client";
 
-import React, { ChangeEvent, useContext, useEffect, useState } from "react";
+import React, {
+  ChangeEvent,
+  useContext,
+  useEffect,
+  useState,
+  useMemo,
+  useCallback,
+} from "react";
 import { ILote, IProductoOrden } from "@/interfaces";
-import { hrApi } from "@/api";
-import { Input, Button, CircularProgress } from "@nextui-org/react";
+import { Input, Button, Checkbox } from "@nextui-org/react";
 import { ProductCard } from "@/components";
 import { BagContext } from "@/context/order";
 import { FaSearch } from "react-icons/fa";
 
 interface NegocioProductsProps {
-  id_negocio: number;
+  lotes: ILote[];
   nombre_negocio: string;
+  id_negocio: number;
 }
 
 export const NegocioProducts = ({
-  id_negocio,
   nombre_negocio,
+  id_negocio,
+  lotes,
 }: NegocioProductsProps) => {
   const { addProductToBag } = useContext(BagContext);
+  const [isSeletedFrutas, setIsSelectedFrutas] = useState(false);
+  const [isSeletedVerduras, setIsSelectedVerduras] = useState(false);
+  const [filterValue, setFilterValue] = useState("");
+  const hasSearchFilter = Boolean(filterValue);
 
-  const [lotes, setLotes] = useState<ILote[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [search, setSearch] = useState("");
+  const filteredItems = useMemo(() => {
+    let filteredLotes = [...lotes];
+
+    if (hasSearchFilter) {
+      filteredLotes = filteredLotes.filter((lote) =>
+        lote.producto.nombre_producto.toLowerCase().includes(filterValue.toLowerCase())
+      );
+    }
+    if (isSeletedFrutas && isSeletedVerduras) {
+      return filteredLotes;
+    } else if (isSeletedFrutas) {
+      return filteredLotes.filter(
+        (lote) => lote.producto.categoria === "FRUTA"
+      );
+    } else if (isSeletedVerduras) {
+      return filteredLotes.filter(
+        (lote) => lote.producto.categoria === "VERDURA"
+      );
+    } else {
+      return filteredLotes;
+    }
+  }, [filterValue, hasSearchFilter, isSeletedFrutas, isSeletedVerduras, lotes]);
+
+  const itemsToDisplay = useMemo(() => {
+    return filteredItems;
+  }, [filteredItems]);
+
+  const onSearchChange = useCallback((value?: string) => {
+    if (value) {
+      setFilterValue(value);
+    } else {
+      setFilterValue("");
+    }
+  }, []);
+
+  const onClear = useCallback(() => {
+    setFilterValue("");
+  }, []);
 
   const onAddProduct = (product: IProductoOrden) => {
     addProductToBag(product);
   };
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setSearch(event.target.value);
-  };
-
-  const results = !search
-    ? lotes
-    : lotes.filter((lote) =>
-        lote.producto.nombre_producto
-          .toLowerCase()
-          .includes(search.toLowerCase())
-      );
-
-  useEffect(() => {
-    hrApi.get(`/negocio/inventory/${id_negocio}`).then((res) => {
-      if (res.status === 200) {
-        setLotes(res.data);
-      } else {
-        setError(true);
-        console.log("Error al obtener negocio", res.data);
-      }
-      setLoading(false);
-    });
-  }, [id_negocio]);
-
   return (
     <div className="pt-16 container mx-auto">
-      {loading ? (
-        <div className="flex flex-col">
-          <h2 className="text-2xl font-semibold">Cargando...</h2>
-          <CircularProgress size="lg" aria-label="Loading..." />
-        </div>
-      ) : error ? (
-        <p>Hubo un error</p>
-      ) : (
-        <>
-          <h1 className="font-bebas-neue uppercase text-4xl font-black flex flex-col leading-none dark:text-green-600 text-green-900">
-            {nombre_negocio}
-            <span className="text-xl dark:text-gray-300 text-gray-900 font-semibold">
-              Aquí puedes ver los productos disponibles en este negocio
-            </span>
-          </h1>
-          <div className="flex mt-2 w-2/5">
-            <Input
-              size="md"
-              radius="lg"
-              placeholder="Buscar productos..."
-              type="text"
-              startContent={
-                <FaSearch
-                  size={25}
-                  className="text-gray-500 dark:text-gray-300"
-                />
-              }
-              defaultValue={search}
-              onChange={handleChange}
-            />
-          </div>
+      <h1 className="font-bebas-neue uppercase text-4xl font-black flex flex-col leading-none dark:text-green-600 text-green-900">
+        {nombre_negocio}
+        <span className="text-xl dark:text-gray-300 text-gray-900 font-semibold">
+          Aquí puedes ver los productos disponibles en este negocio
+        </span>
+      </h1>
+      <div className="flex mt-2 w-2/5">
+        <Input
+          isClearable
+          className="w-full sm:max-w-[44%]"
+          placeholder="Buscar por nombre..."
+          startContent={<FaSearch size={20} />}
+          value={filterValue}
+          onClear={() => onClear()}
+          onValueChange={onSearchChange}
+        />
+      </div>
 
-          <div className="grid grid-cols-6 mt-12">
-            <div className="col-span-1">
-              <div>Filtros</div>
-            </div>
-            <div className="col-span-5">
-              <ul className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 grid-cols-1 xl:grid-cols-4">
-                {results?.map((lote) => (
-                  <li key={lote.id_producto} className="p-2 flex">
-                    <ProductCard lote={lote} route={"negocio-prods-cliente"}>
-                      <Button
-                        className="w-full"
-                        color="primary"
-                        size="md"
-                        onClick={() => {
-                          onAddProduct({
-                            id_producto: lote.id_producto,
-                            cantidad_orden: 1,
-                            monto: lote.precio_kg,
-                            id_orden: undefined,
-                            id_negocio: id_negocio,
-                            producto: lote.producto,
-                          });
-                        }}
-                      >
-                        Agregar a la bolsa
-                      </Button>
-                    </ProductCard>
-                  </li>
-                ))}
-              </ul>
-            </div>
+      <div className="grid lg:grid-cols-6 mt-12 grid-cols-1">
+        <div className="lg:col-span-1 block px-4">
+          <div className="flex flex-col gap-4 mt-4">
+            <h3>Filtros</h3>
+            <Checkbox
+              isSelected={isSeletedFrutas}
+              onValueChange={setIsSelectedFrutas}
+            >
+              Frutas
+            </Checkbox>
+            <Checkbox
+              isSelected={isSeletedVerduras}
+              onValueChange={setIsSelectedVerduras}
+            >
+              Verduras
+            </Checkbox>
           </div>
-        </>
-      )}
+        </div>
+        <div className="lg:col-span-5 flex justify-center lg:block">
+          <ul className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
+            {itemsToDisplay.map((lote) => (
+              <li key={lote.id_producto} className="p-2 flex">
+                <ProductCard lote={lote} route={"negocio-prods-cliente"}>
+                  <Button
+                    className="w-full dark:text-gray-200 text-white bg-[#00994F]"
+                    size="md"
+                    onClick={() => {
+                      onAddProduct({
+                        id_producto: lote.id_producto,
+                        cantidad_orden: 1,
+                        monto: lote.precio_kg,
+                        id_orden: undefined,
+                        id_negocio: id_negocio,
+                        producto: lote.producto,
+                      });
+                    }}
+                  >
+                    Agregar a la bolsa
+                  </Button>
+                </ProductCard>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 };

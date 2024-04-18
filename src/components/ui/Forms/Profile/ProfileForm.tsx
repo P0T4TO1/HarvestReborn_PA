@@ -11,7 +11,7 @@ import { hrApi } from "@/api";
 import { Button, Select, SelectItem } from "@nextui-org/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Input } from "@nextui-org/input";
-import { SUCCESS_TOAST } from "@/components";
+import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
@@ -229,9 +229,11 @@ export const ProfileForm = ({ profile, isEditing }: ProfileFormProps) => {
         })
         .catch((err) => {
           console.log(err, "hubo un error");
+          toast("Error al actualizar perfil", DANGER_TOAST);
           return null;
         });
     } catch (e) {
+      toast("Hubo un error", DANGER_TOAST);
       console.error(e);
     }
   };

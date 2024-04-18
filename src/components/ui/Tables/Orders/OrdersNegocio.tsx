@@ -86,7 +86,7 @@ export const OrdersTable = ({ orders }: Props) => {
     }
 
     return filteredOrders;
-  }, [orders, filterValue, statusFilter]);
+  }, [orders, filterValue, statusFilter, hasSearchFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -184,7 +184,7 @@ export const OrdersTable = ({ orders }: Props) => {
       default:
         return cellValue;
     }
-  }, []);
+  }, [onOpen]);
 
   const onNextPage = useCallback(() => {
     if (page < pages) {
@@ -290,9 +290,8 @@ export const OrdersTable = ({ orders }: Props) => {
     statusFilter,
     visibleColumns,
     onSearchChange,
-    onRowsPerPageChange,
     orders.length,
-    hasSearchFilter,
+    onClear,
   ]);
 
   const bottomContent = useMemo(() => {
@@ -332,7 +331,7 @@ export const OrdersTable = ({ orders }: Props) => {
         </div>
       </div>
     );
-  }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
+  }, [selectedKeys, page, pages, filteredItems.length, onNextPage, onPreviousPage]);
 
   useEffect(() => {
     if (orderModal) {

@@ -26,15 +26,19 @@ export const OrdersCliente = () => {
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    hrApi.get(`/cliente/orders/${user?.cliente?.id_cliente}`).then((res) => {
-      if (res.status === 200) {
-        setOrders(res.data);
-      } else {
+    hrApi
+      .get(`/cliente/orders/${user?.cliente?.id_cliente}`)
+      .then((res) => {
+        if (res.status === 200) {
+          setOrders(res.data);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
         setError(true);
-      }
-      setLoading(false);
-    });
-  }, [user?.cliente?.id_cliente]);
+        setLoading(false);
+      });
+  }, [user?.cliente?.id_cliente, setOrders]);
 
   return (
     <section className="w-full flex flex-col gap-5 container pt-16 md:flex-row text-[#161931] min-h-screen">
@@ -48,13 +52,15 @@ export const OrdersCliente = () => {
             {loading ? (
               <div className="flex flex-col items-center justify-center">
                 <CircularProgress size="lg" />
-                <p>Cargando ordenes...</p>
+                <p className="dark:text-gray-300 text-gray-800">
+                  Cargando ordenes...
+                </p>
               </div>
             ) : error ? (
               <p>Hubo un error al cargar las ordenes</p>
             ) : (
               <>
-                {orders.length === 0 ? (
+                {!orders ? (
                   <Card className="mt-12">
                     <CardHeader>No tienes ordenes</CardHeader>
                     <CardBody>
@@ -63,9 +69,9 @@ export const OrdersCliente = () => {
                         realizar una?
                       </p>
                       <p className="mt-2">
-                        Si ya ha realizado una orden y no aparece aquí, por favor
-                        refresque la página. Estamos trabajando para solucionar
-                        este problema.
+                        Si ya ha realizado una orden y no aparece aquí, por
+                        favor refresque la página. Estamos trabajando para
+                        solucionar este problema.
                       </p>
                     </CardBody>
                     <CardFooter>

@@ -45,9 +45,11 @@ export const OrdersNegocio = () => {
             }
           });
           setMergedOrders(mergedOrders);
-        } else {
-          setError(true);
         }
+        setLoading(false);
+      })
+      .catch(() => {
+        setError(true);
         setLoading(false);
       });
   }, [user?.duenonegocio?.negocio?.id_negocio, orders]);
@@ -74,13 +76,13 @@ export const OrdersNegocio = () => {
               <CardHeader>No tienes pedidos</CardHeader>
               <CardBody>
                 <p>
-                  No tienes pedidos registradas, si tienes dudas puedes
+                  No tienes pedidos registrados, si tienes dudas puedes
                   contactar a soporte
                 </p>
               </CardBody>
               <CardFooter>
                 <Link href="/contacto">
-                  <Button color="primary">Contactar soporte</Button>
+                  <Button color="primary" size="sm">Contactar soporte</Button>
                 </Link>
               </CardFooter>
             </Card>

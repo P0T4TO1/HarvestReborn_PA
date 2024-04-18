@@ -33,7 +33,7 @@ export const ProductCard: FC<Props> = ({ lote, product, children, route }) => {
       ) : route === "negocio-prods-cliente" ? (
         <Card>
           <CardBody className="overflow-visible p-0 grid grid-cols-2">
-            <div>
+            <div className="flex justify-center">
               <Image
                 shadow="sm"
                 radius="lg"

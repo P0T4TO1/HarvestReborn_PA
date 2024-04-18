@@ -19,15 +19,20 @@ export const UsersAdmin = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [users, setUsers] = React.useState<IUser[]>([]);
+  
   useEffect(() => {
-    hrApi.get("/admin/users").then((res) => {
-      if (res.status === 200) {
-        setUsers(res.data);
-      } else {
+    hrApi
+      .get("/admin/users")
+      .then((res) => {
+        if (res.status === 200) {
+          setUsers(res.data);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
         setError(true);
-      }
-      setLoading(false);
-    });
+        setLoading(false);
+      });
   }, []);
 
   return (

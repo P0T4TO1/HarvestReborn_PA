@@ -19,7 +19,7 @@ async function getAllLotesFromInventory(
     const lotes = await prisma.m_lote.findMany({
       where: {
         inventario: {
-          id_inventario: parseInt(params.id, 10),
+          id_negocio: parseInt(params.id, 10),
         },
       },
       include: {

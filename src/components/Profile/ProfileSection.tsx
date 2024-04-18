@@ -1,6 +1,5 @@
 "use client";
 
-import { AsideAccount } from "@/components";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/auth";
 import { IUser } from "@/interfaces";
@@ -20,14 +19,18 @@ export const ProfileSection = () => {
     if (!user?.id) {
       return;
     }
-    hrApi.get(`/user/profile/${user?.id}`).then((res) => {
-      if (res.status === 200) {
-        setProfile(res.data);
-      } else {
+    hrApi
+      .get(`/user/profile/${user?.id}`)
+      .then((res) => {
+        if (res.status === 200) {
+          setProfile(res.data);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
         setError(true);
-      }
-      setLoading(false);
-    });
+        setLoading(false);
+      });
   }, [user?.id]);
 
   return (

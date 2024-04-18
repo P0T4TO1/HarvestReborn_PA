@@ -123,7 +123,7 @@ export const ContactDataForm = () => {
           logout();
           setIndexActive(1);
         } else {
-          router.push("/auth/email-verification");
+          router.push(`/auth/email-verification?u=${userData.email}`);
           setIndexActive(1);
         }
       }

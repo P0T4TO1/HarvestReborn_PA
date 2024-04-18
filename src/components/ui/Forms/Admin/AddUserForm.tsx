@@ -17,7 +17,7 @@ import { hrApi } from "@/api";
 import { toast } from "sonner";
 import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
 import { useRouter } from "next/navigation";
-import { searchUserByEmail } from "@/hooks";
+import { searchUserByEmail } from "@/helpers";
 import { FaHome } from "react-icons/fa";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { MdOutlineVisibility, MdOutlineVisibilityOff } from "react-icons/md";
@@ -130,7 +130,6 @@ export const AddUserForm = () => {
         return null;
       }
 
-      console.log(data);
       const res = await hrApi
         .post("/admin/users", data)
         .then(() => {
@@ -149,6 +148,7 @@ export const AddUserForm = () => {
         console.log("Hubo un error data");
       }
     } catch (error) {
+      toast("Hubo un error", DANGER_TOAST);
       console.log(error);
       console.log("Hubo un error");
     }

@@ -1,7 +1,7 @@
 export interface IPreguntasFaq {
   id_prefrec: number;
   pregunta: string;
-  respuestas: string[];
+  respuestas: IRespuestasFaq[];
   tipo: TipoPregunta;
 }
 
@@ -15,4 +15,13 @@ export enum TipoPregunta {
   Productos = "PRODUCTOS",
   Inventario = "INVENTARIO",
   Chat = "CHAT",
+}
+
+export interface IRespuestasFaq {
+  id_faqRespuesta: number;
+  
+  id_prefrec: number;
+  pregunta: IPreguntasFaq;
+
+  respuesta: string;
 }

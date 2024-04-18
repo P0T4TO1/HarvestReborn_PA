@@ -73,7 +73,7 @@ export const TableClientes = ({ clientes }: Props) => {
     }
 
     return filteredOrders;
-  }, [clientes, filterValue, statusFilter]);
+  }, [clientes, filterValue, hasSearchFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -217,12 +217,10 @@ export const TableClientes = ({ clientes }: Props) => {
     );
   }, [
     filterValue,
-    statusFilter,
     visibleColumns,
     onSearchChange,
-    onRowsPerPageChange,
     clientes.length,
-    hasSearchFilter,
+    onClear,
   ]);
 
   const bottomContent = useMemo(() => {
@@ -262,7 +260,7 @@ export const TableClientes = ({ clientes }: Props) => {
         </div>
       </div>
     );
-  }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
+  }, [selectedKeys, page, pages, filteredItems.length, onNextPage, onPreviousPage]);
 
   return (
     <div className=" w-full flex flex-col gap-4">

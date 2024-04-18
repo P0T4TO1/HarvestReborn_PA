@@ -7,10 +7,10 @@ import { hrApi } from "@/api";
 import { CircularProgress } from "@nextui-org/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Input, Button } from "@nextui-org/react";
-import { AsideAccount, SUCCESS_TOAST } from "@/components";
+import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
 import { accountSchema } from "@/validations/profile.validation";
 import { toast } from "sonner";
-import { verifyOldPassword } from "@/hooks";
+import { verifyOldPassword } from "@/helpers";
 
 type Errors = {
   email?: string;
@@ -43,14 +43,18 @@ export const AccountForm: FC = () => {
     if (!user?.id) {
       return;
     }
-    hrApi.get(`/user/account/${user?.id}`).then((res) => {
-      if (res.status === 200) {
-        setAccount(res.data);
-      } else {
+    hrApi
+      .get(`/user/account/${user?.id}`)
+      .then((res) => {
+        if (res.status === 200) {
+          setAccount(res.data);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
         setError(true);
-      }
-      setLoading(false);
-    });
+        setLoading(false);
+      });
   }, [user?.id]);
 
   const onSubmitEmail = async (data: IFormData) => {
@@ -61,12 +65,15 @@ export const AccountForm: FC = () => {
           toast("Perfil actualizado", SUCCESS_TOAST);
         })
         .catch((err) => {
+          toast("Error al actualizar perfil", DANGER_TOAST);
+          console.error(err);
           return null;
         });
       if (res) {
         return res;
       }
     } catch (error) {
+      toast("Hubo un error", DANGER_TOAST);
       console.error(error);
     }
   };
@@ -113,136 +120,136 @@ export const AccountForm: FC = () => {
   };
 
   return (
-      <div className="w-full min-h-screen py-1 md:w-2/3 lg:w-3/4">
-        <div className="p-2 md:p-4">
-          <div className="w-full pb-8 mt-8 sm:max-w-3xl sm:rounded-lg">
-            <h2 className="text-2xl font-bold sm:text-xl dark:text-gray-300">Cuenta</h2>
-            {loading ? (
-              <CircularProgress
-                size="lg"
-                aria-label="Loading..."
-                className="mt-4"
-              />
-            ) : error ? (
-              <p>Hubo un error</p>
-            ) : (
-              <>
-                {user?.oAuthId ? (
-                  <>
-                    <div className="flex flex-col items-center mt-8 sm:mt-14 text-[#202142] justify-center w-full gap-4">
-                      <div className="w-full flex flex-col gap-4">
-                        <Input
-                          type="email"
-                          label="Email"
-                          placeholder="Email"
-                          defaultValue={user?.email}
-                          isDisabled
-                        />
-                        <div className="text-red-400">
-                          No puedes cambiar tu correo electrónico porque te
-                          registraste con Google
-                        </div>
-                        <div className="text-red-400">
-                          Si deseas cambiar tu correo electrónico, contacta a
-                          soporte
-                        </div>
+    <div className="w-full min-h-screen py-1 md:w-2/3 lg:w-3/4">
+      <div className="p-2 md:p-4">
+        <div className="w-full pb-8 mt-8 sm:max-w-3xl sm:rounded-lg">
+          <h2 className="text-2xl font-bold sm:text-xl dark:text-gray-300">
+            Cuenta
+          </h2>
+          {loading ? (
+            <CircularProgress
+              size="lg"
+              aria-label="Loading..."
+              className="mt-4"
+            />
+          ) : error ? (
+            <p>Hubo un error</p>
+          ) : (
+            <>
+              {user?.oAuthId ? (
+                <>
+                  <div className="flex flex-col items-center mt-8 sm:mt-14 text-[#202142] justify-center w-full gap-4">
+                    <div className="w-full flex flex-col gap-4">
+                      <Input
+                        type="email"
+                        label="Email"
+                        placeholder="Email"
+                        defaultValue={user?.email}
+                        isDisabled
+                      />
+                      <div className="text-red-400">
+                        No puedes cambiar tu correo electrónico porque te
+                        registraste con Google
+                      </div>
+                      <div className="text-red-400">
+                        Si deseas cambiar tu correo electrónico, contacta a
+                        soporte
                       </div>
                     </div>
-                  </>
-                ) : (
-                  <>
-                    <Button
-                      type="button"
-                      onClick={() => setIsEditing(!isEditing)}
-                      variant="solid"
-                      color="success"
-                    >
-                      {isEditing ? "Cancelar" : "Editar"}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Button
+                    type="button"
+                    onClick={() => setIsEditing(!isEditing)}
+                    variant="solid"
+                    color="success"
+                  >
+                    {isEditing ? "Cancelar" : "Editar"}
+                  </Button>
+                  <form
+                    className="flex flex-col items-center mt-8 sm:mt-14 text-[#202142] justify-center w-full gap-4"
+                    onSubmit={handleSubmit(onSubmitEmail)}
+                  >
+                    <div className="w-full flex flex-col gap-4">
+                      <Input
+                        type="email"
+                        label="Email"
+                        placeholder="Email"
+                        defaultValue={account?.email}
+                        isDisabled={!isEditing}
+                        {...register("email")}
+                      />
+                      {errors?.email && (
+                        <span className="text-red-500">{errors?.email}</span>
+                      )}
+                    </div>
+                    <Button type="submit" color="success" variant="solid">
+                      {loading ? (
+                        <CircularProgress size="md" />
+                      ) : (
+                        "Guardar cambios"
+                      )}
                     </Button>
-                    <form
-                      className="flex flex-col items-center mt-8 sm:mt-14 text-[#202142] justify-center w-full gap-4"
-                      onSubmit={handleSubmit(onSubmitEmail)}
-                    >
-                      <div className="w-full flex flex-col gap-4">
-                        <Input
-                          type="email"
-                          label="Email"
-                          placeholder="Email"
-                          defaultValue={account?.email}
-                          isDisabled={!isEditing}
-                          {...register("email")}
-                        />
-                        {errors?.email && (
-                          <span className="text-red-500">{errors?.email}</span>
-                        )}
-                      </div>
-                      <Button type="submit" color="success" variant="solid">
-                        {loading ? (
-                          <CircularProgress size="md" />
-                        ) : (
-                          "Guardar cambios"
-                        )}
-                      </Button>
-                    </form>
-                    <form
-                      className="flex flex-col items-center mt-8 sm:mt-14 text-[#202142] justify-center w-full gap-4"
-                      onSubmit={handleSubmit(onSubmit)}
-                    >
-                      <div className="w-full flex flex-col gap-4">
-                        <Input
-                          type="password"
-                          label="Contraseña actual  "
-                          {...register("oldPassword")}
-                        />
-                        {errors?.oldPassword && (
-                          <span className="text-red-500">
-                            {errors?.oldPassword}
-                          </span>
-                        )}
-                      </div>
-                      <div className="w-full flex flex-col gap-4">
-                        <Input
-                          type="password"
-                          label="Nueva contraseña"
-                          {...register("password")}
-                        />
-                        {errors?.password && (
-                          <span className="text-red-500">
-                            {errors?.password}
-                          </span>
-                        )}
-                      </div>
-                      <div className="w-full flex flex-col gap-4">
-                        <Input
-                          type="password"
-                          label="Confirmar contraseña"
-                          {...register("confirmPassword")}
-                        />
-                        {errors?.confirmPassword && (
-                          <span className="text-red-500">
-                            {errors?.confirmPassword}
-                          </span>
-                        )}
-                      </div>
-                      <Button type="submit" color="success" variant="solid">
-                        {loading ? (
-                          <CircularProgress size="md" />
-                        ) : (
-                          "Guardar cambios"
-                        )}
-                      </Button>
-                    </form>
-                  </>
-                )}
-              </>
-            )}
-          </div>
-        </div>
-        <div className="flex justify-center items-center">
-          <Button type="button" color="danger">
-            Desactivar cuenta
-          </Button>
+                  </form>
+                  <form
+                    className="flex flex-col items-center mt-8 sm:mt-14 text-[#202142] justify-center w-full gap-4"
+                    onSubmit={handleSubmit(onSubmit)}
+                  >
+                    <div className="w-full flex flex-col gap-4">
+                      <Input
+                        type="password"
+                        label="Contraseña actual  "
+                        {...register("oldPassword")}
+                      />
+                      {errors?.oldPassword && (
+                        <span className="text-red-500">
+                          {errors?.oldPassword}
+                        </span>
+                      )}
+                    </div>
+                    <div className="w-full flex flex-col gap-4">
+                      <Input
+                        type="password"
+                        label="Nueva contraseña"
+                        {...register("password")}
+                      />
+                      {errors?.password && (
+                        <span className="text-red-500">{errors?.password}</span>
+                      )}
+                    </div>
+                    <div className="w-full flex flex-col gap-4">
+                      <Input
+                        type="password"
+                        label="Confirmar contraseña"
+                        {...register("confirmPassword")}
+                      />
+                      {errors?.confirmPassword && (
+                        <span className="text-red-500">
+                          {errors?.confirmPassword}
+                        </span>
+                      )}
+                    </div>
+                    <Button type="submit" color="success" variant="solid">
+                      {loading ? (
+                        <CircularProgress size="md" />
+                      ) : (
+                        "Guardar cambios"
+                      )}
+                    </Button>
+                  </form>
+                </>
+              )}
+            </>
+          )}
         </div>
       </div>
+      <div className="flex justify-center items-center">
+        <Button type="button" color="danger">
+          Desactivar cuenta
+        </Button>
+      </div>
+    </div>
   );
 };

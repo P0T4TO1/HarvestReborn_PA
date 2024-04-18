@@ -20,7 +20,6 @@ import { adminEditProductValidation } from "@/validations/admin.validation";
 import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
 import { useForm } from "react-hook-form";
 import { IProduct } from "@/interfaces";
-import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FaEdit } from "react-icons/fa";
 
@@ -61,7 +60,6 @@ export const EditProductAdminModal = ({
       categoria: product.categoria,
     },
   });
-  const router = useRouter();
 
   const [isSelected, setIsSelected] = useState(product.enTemporada);
   const [isEditing, setIsEditing] = useState(false);
@@ -78,18 +76,22 @@ export const EditProductAdminModal = ({
         const dataImage = new FormData();
         dataImage.set("file", file as File);
 
-        await hrApi.post("/admin/upload", dataImage).then((res) => {
-          if (res.status === 200) {
-            console.log("File uploaded successfully");
-            data.file = res.data.secure_url;
-          } else {
+        await hrApi
+          .post("/admin/upload", dataImage)
+          .then((res) => {
+            if (res.status === 200) {
+              console.log("File uploaded successfully");
+              data.file = res.data.secure_url;
+            }
+          })
+          .catch((error) => {
+            toast("Ocurrió un error al subir la imagen", DANGER_TOAST);
             setError("imagen_producto", {
               message: "Hubo un error al subir la imagen",
             });
-            console.log("Hubo un error al subir la imagen");
+            console.log("Hubo un error al subir la imagen", error);
             return null;
-          }
-        });
+          });
       }
 
       const res = await hrApi.put(`/admin/product`, {

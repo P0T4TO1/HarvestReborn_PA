@@ -21,6 +21,7 @@ import {
   Selection,
   SortDescriptor,
   ChipProps,
+  useDisclosure,
 } from "@nextui-org/react";
 import { IUser } from "@/interfaces";
 import { hrApi } from "@/api";
@@ -31,7 +32,7 @@ import {
   statusOptionsUsuarios as statusOptions,
 } from "@/utils/data-table";
 import { toast } from "sonner";
-import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
+import { DANGER_TOAST, SUCCESS_TOAST, DeleteUserConfirm } from "@/components";
 import {
   FaCheck,
   FaChevronDown,
@@ -47,22 +48,25 @@ interface Props {
 }
 
 const INITIAL_VISIBLE_COLUMNS = [
-  "nombre",
-  "apellido",
+  "duenonegocio?.nombre_dueneg ?? cliente?.nombre_cliente",
+  "duenonegocio?.apellidos_dueneg ?? cliente?.apellidos_cliente",
   "email",
-  "rol",
+  "id_rol",
   "estado",
-  "correo_verificado",
+  "emailVerified",
   "acciones",
 ];
 
 export const TableUsers = ({ users }: Props) => {
+  const { isOpen, onOpenChange, onOpen } = useDisclosure();
+  const [id, setId] = useState("");
   const [filterValue, setFilterValue] = useState("");
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
   const [visibleColumns, setVisibleColumns] = useState<Selection>(
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
   const [statusFilter, setStatusFilter] = useState<Selection>("all");
+  const [roleFilter, setRoleFilter] = useState<Selection>("all");
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: "fecha_orden",
@@ -99,13 +103,22 @@ export const TableUsers = ({ users }: Props) => {
       statusFilter !== "all" &&
       Array.from(statusFilter).length !== statusOptions.length
     ) {
+      console.log(statusFilter);
       filteredOrders = filteredOrders.filter((user) =>
         Array.from(statusFilter).includes(user.estado)
       );
     }
+    if (
+      roleFilter !== "all" &&
+      Array.from(roleFilter).length !== rolOptionsUsuarios.length
+    ) {
+      filteredOrders = filteredOrders.filter((user) =>
+        Array.from(roleFilter).includes(user.id_rol.toString())
+      );
+    }
 
     return filteredOrders;
-  }, [users, filterValue, statusFilter]);
+  }, [users, filterValue, statusFilter, hasSearchFilter, roleFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -130,107 +143,117 @@ export const TableUsers = ({ users }: Props) => {
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = useCallback((user: IUser, columnKey: Key) => {
-    const cellValue = user[columnKey as keyof IUser];
+  const renderCell = useCallback(
+    (user: IUser, columnKey: Key) => {
+      const cellValue = user[columnKey as keyof IUser];
 
-    switch (columnKey) {
-      case "id":
-        return <>{user.id}</>;
-      case "nombre":
-        return (
-          <>
-            {user.duenonegocio?.nombre_dueneg || user.cliente?.nombre_cliente}
-          </>
-        );
-      case "apellido":
-        return (
-          <>
-            {user.duenonegocio?.apellidos_dueneg ||
-              user.cliente?.apellidos_cliente}
-          </>
-        );
-      case "correo":
-        return <>{user.email}</>;
-      case "rol":
-        return (
-          <>
-            {user.id_rol === 1
-              ? "Admin"
-              : user.id_rol === 2
-                ? "Dueño de negocio"
-                : "Cliente"}
-          </>
-        );
-      case "estado":
-        return (
-          <Chip
-            size="sm"
-            variant="flat"
-            color={statusColorMap[user.estado] as ChipProps["color"]}
-          >
-            {user.estado.charAt(0) + user.estado.slice(1).toLowerCase()}
-          </Chip>
-        );
-      case "correo_verificado":
-        return (
-          <Chip
-            size="sm"
-            variant="flat"
-            color={user.emailVerified ? "success" : "danger"}
-          >
-            {user.emailVerified ? "Verificado" : "No verificado"}
-          </Chip>
-        );
-      case "acciones":
-        return (
-          <div className="flex items-center gap-4">
-            <div>
-              <Tooltip content="Editar">
-                <Link href={`/admin/dashboard/users/${user.id}`}>
-                  <Button isIconOnly variant="light">
-                    <FaEdit size={20} />
+      switch (columnKey) {
+        case "id":
+          return <>{user.id}</>;
+        case "duenonegocio?.nombre_dueneg ?? cliente?.nombre_cliente":
+          return (
+            <>
+              {user.duenonegocio?.nombre_dueneg ??
+                user.cliente?.nombre_cliente ??
+                "N/A"}
+            </>
+          );
+        case "duenonegocio?.apellidos_dueneg ?? cliente?.apellidos_cliente":
+          return (
+            <>
+              {user.duenonegocio?.apellidos_dueneg ??
+                user.cliente?.apellidos_cliente ??
+                "N/A"}
+            </>
+          );
+        case "correo":
+          return <>{user.email}</>;
+        case "id_rol":
+          return (
+            <>
+              {user.id_rol === 1
+                ? "Admin"
+                : user.id_rol === 2
+                  ? "Dueño de negocio"
+                  : "Cliente"}
+            </>
+          );
+        case "estado":
+          return (
+            <Chip
+              size="sm"
+              variant="flat"
+              color={statusColorMap[user.estado] as ChipProps["color"]}
+            >
+              {user.estado.charAt(0) + user.estado.slice(1).toLowerCase()}
+            </Chip>
+          );
+        case "emailVerified":
+          return (
+            <Chip
+              size="sm"
+              variant="flat"
+              color={user.emailVerified ? "success" : "danger"}
+            >
+              {user.emailVerified ? "Verificado" : "No verificado"}
+            </Chip>
+          );
+        case "acciones":
+          return (
+            <div className="flex items-center gap-4">
+              <div>
+                <Tooltip content="Editar">
+                  <Link href={`/admin/dashboard/users/${user.id}`}>
+                    <Button isIconOnly variant="light">
+                      <FaEdit size={20} />
+                    </Button>
+                  </Link>
+                </Tooltip>
+              </div>
+              <div>
+                <Tooltip
+                  content={user.estado === "ACTIVO" ? "Desactivar" : "Activar"}
+                  color="warning"
+                >
+                  <Button
+                    isIconOnly
+                    variant="light"
+                    onPress={() => handleChangeStatus(user.id, user.estado)}
+                  >
+                    {user.estado === "ACTIVO" ? (
+                      <MdOutlinePersonOff size={20} />
+                    ) : (
+                      <FaCheck size={20} />
+                    )}
                   </Button>
-                </Link>
-              </Tooltip>
+                </Tooltip>
+              </div>
+              <div>
+                <Tooltip content="Eliminar" color="danger">
+                  <Button
+                    isIconOnly
+                    variant="light"
+                    // onPress={() => handleDelete(user.id)}
+                    onPress={() => {
+                      setId(user.id);
+                      onOpen();
+                    }}
+                  >
+                    <FaRegTrashAlt
+                      className="text-red-800 cursor-pointer"
+                      size={20}
+                    />
+                  </Button>
+                </Tooltip>
+              </div>
             </div>
-            <div>
-              <Tooltip
-                content={user.estado === "ACTIVO" ? "Desactivar" : "Activar"}
-                color="warning"
-              >
-                <Button
-                  isIconOnly
-                  variant="light"
-                  onPress={() => handleChangeStatus(user.id, user.estado)}
-                >
-                  {user.estado === "ACTIVO" ? (
-                    <MdOutlinePersonOff size={20} />
-                  ) : (
-                    <FaCheck size={20} />
-                  )}
-                </Button>
-              </Tooltip>
-            </div>
-            <div>
-              <Tooltip content="Eliminar" color="danger">
-                <Button
-                  isIconOnly
-                  variant="light"
-                  onPress={() => handleDelete(user.id)}
-                >
-                  <FaRegTrashAlt
-                    className="text-red-800 cursor-pointer"
-                    size={20}
-                  />
-                </Button>
-              </Tooltip>
-            </div>
-          </div>
-        );
-      default:
-        return cellValue;
-    }
-  }, []);
+          );
+        default:
+          return cellValue;
+      }
+    },
+    [onOpen]
+  );
 
   const onNextPage = useCallback(() => {
     if (page < pages) {
@@ -243,14 +266,6 @@ export const TableUsers = ({ users }: Props) => {
       setPage(page - 1);
     }
   }, [page]);
-
-  const onRowsPerPageChange = useCallback(
-    (e: ChangeEvent<HTMLSelectElement>) => {
-      setRowsPerPage(Number(e.target.value));
-      setPage(1);
-    },
-    []
-  );
 
   const onSearchChange = useCallback((value?: string) => {
     if (value) {
@@ -280,6 +295,27 @@ export const TableUsers = ({ users }: Props) => {
             onValueChange={onSearchChange}
           />
           <div className="flex gap-3">
+            <Dropdown>
+              <DropdownTrigger className="hidden sm:flex">
+                <Button endContent={<FaChevronDown size={20} />} variant="flat">
+                  Rol
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                disallowEmptySelection
+                aria-label="Table Columns"
+                closeOnSelect={false}
+                selectedKeys={roleFilter}
+                selectionMode="multiple"
+                onSelectionChange={setRoleFilter}
+              >
+                {rolOptionsUsuarios.map((rol) => (
+                  <DropdownItem key={rol.uid} className="capitalize">
+                    {capitalize(rol.name)}
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button endContent={<FaChevronDown size={20} />} variant="flat">
@@ -336,9 +372,9 @@ export const TableUsers = ({ users }: Props) => {
     statusFilter,
     visibleColumns,
     onSearchChange,
-    onRowsPerPageChange,
     users.length,
-    hasSearchFilter,
+    onClear,
+    roleFilter,
   ]);
 
   const bottomContent = useMemo(() => {
@@ -378,19 +414,26 @@ export const TableUsers = ({ users }: Props) => {
         </div>
       </div>
     );
-  }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
+  }, [
+    selectedKeys,
+    page,
+    pages,
+    filteredItems.length,
+    onNextPage,
+    onPreviousPage,
+  ]);
 
-  const handleDelete = async (id: string) => {
-    try {
-      await hrApi.delete(`/admin/users/${id}`).then(() => {
-        toast("Usuario eliminado correctamente", SUCCESS_TOAST);
-        window.location.reload();
-      });
-    } catch (error) {
-      console.log(error);
-      toast("Error al eliminar el usuario", DANGER_TOAST);
-    }
-  };
+  // const handleDelete = async (id: string) => {
+  //   try {
+  //     await hrApi.delete(`/admin/users/${id}`).then(() => {
+  //       toast("Usuario eliminado correctamente", SUCCESS_TOAST);
+  //       window.location.reload();
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast("Error al eliminar el usuario", DANGER_TOAST);
+  //   }
+  // };
 
   const handleChangeStatus = async (id: string, status: string) => {
     try {
@@ -409,6 +452,13 @@ export const TableUsers = ({ users }: Props) => {
 
   return (
     <>
+      {id && (
+        <DeleteUserConfirm
+          useDisclosure={{ isOpen, onOpenChange }}
+          loading={false}
+          id={id}
+        />
+      )}
       <div className=" w-full flex flex-col gap-4">
         <Table
           aria-label="Example table with custom cells, pagination and sorting"
@@ -434,10 +484,7 @@ export const TableUsers = ({ users }: Props) => {
               </TableColumn>
             )}
           </TableHeader>
-          <TableBody
-            emptyContent={"No hay usuarios 😭"}
-            items={sortedItems}
-          >
+          <TableBody emptyContent={"No hay usuarios 😭"} items={sortedItems}>
             {(item) => (
               <TableRow key={item.id}>
                 {(columnKey) => (

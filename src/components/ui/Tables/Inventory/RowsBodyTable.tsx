@@ -1,5 +1,7 @@
+"use client";
+
 import { ILote } from "@/interfaces";
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import {
   TableRow,
   TableCell,
@@ -7,21 +9,26 @@ import {
   Collapse,
   Box,
   Typography,
-  Table,
-  TableHead,
-  TableBody,
 } from "@mui/material";
 import { Image } from "@nextui-org/react";
+import { TableProductsInventory } from "@/components";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 interface RowProps {
   lote: ILote;
   allLotes: ILote[];
-  children: React.ReactNode;
 }
 
-export const Row = ({ lote, allLotes, children }: RowProps) => {
-  const [open, setOpen] = React.useState(false);
+export const Row = ({ lote, allLotes }: RowProps) => {
+  const [open, setOpen] = useState(false);
+  const [mergeLotes, setMergeLotes] = useState<ILote[]>([]);
+
+  useEffect(() => {
+    const mergeLotes = allLotes.filter(
+      (loteFilter) => loteFilter.id_producto === lote.id_producto
+    );
+    setMergeLotes(mergeLotes);
+  }, [allLotes, lote]);
 
   return (
     <React.Fragment>
@@ -64,62 +71,9 @@ export const Row = ({ lote, allLotes, children }: RowProps) => {
                 component="div"
                 className="dark:text-gray-300"
               >
-                Detalles
+                Lotes de {lote.producto?.nombre_producto}
               </Typography>
-              <Table size="small" aria-label="tableproducts">
-                <TableHead>
-                  <TableRow>
-                    <TableCell className="dark:text-gray-300">
-                      Fecha de entrada
-                    </TableCell>
-                    <TableCell className="dark:text-gray-300">
-                      Cantidad en kg
-                    </TableCell>
-                    <TableCell align="right" className="dark:text-gray-300">
-                      Fecha aproximada de vencimiento
-                    </TableCell>
-                    <TableCell align="right" className="dark:text-gray-300">
-                      Acciones
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {allLotes?.map(
-                    (loteMap) =>
-                      loteMap?.id_producto === lote?.id_producto && (
-                        <TableRow key={loteMap.id_lote}>
-                          <TableCell
-                            component="th"
-                            scope="row"
-                            className="dark:text-gray-300"
-                          >
-                            {loteMap?.fecha_entrada
-                              .split("T")[0]
-                              .split("-")
-                              .reverse()
-                              .join(" del ")
-                              .slice(0, 20)}
-                          </TableCell>
-                          <TableCell className="dark:text-gray-300">
-                            {loteMap?.cantidad_producto}
-                          </TableCell>
-                          <TableCell
-                            align="right"
-                            className="dark:text-gray-300"
-                          >
-                            {loteMap?.fecha_vencimiento
-                              .split("T")[0]
-                              .split("-")
-                              .reverse()
-                              .join(" del ")
-                              .slice(0, 20)}
-                          </TableCell>
-                          <TableCell align="right">{children}</TableCell>
-                        </TableRow>
-                      )
-                  )}
-                </TableBody>
-              </Table>
+              <TableProductsInventory lotes={mergeLotes}/>
             </Box>
           </Collapse>
         </TableCell>

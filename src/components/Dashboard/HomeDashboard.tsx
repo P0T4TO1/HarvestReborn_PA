@@ -44,7 +44,7 @@ export const HomeDashboard = () => {
       ) : (
         <>
           <h3 className="text-xl font-semibold">Dashboard</h3>
-          <div className="grid grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <CardUsersAdmin users={users.length} />
             <CardNegociosAdmin negocios={negocios.length} />
             <CardClientesAdmin clientes={clientes.length} />

@@ -101,7 +101,7 @@ export const TableProducts = ({ products }: Props) => {
     }
 
     return filteredOrders;
-  }, [products, filterValue, statusFilter]);
+  }, [products, filterValue, statusFilter, hasSearchFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -209,7 +209,7 @@ export const TableProducts = ({ products }: Props) => {
       default:
         return cellValue;
     }
-  }, []);
+  }, [onOpen, page, rowsPerPage]);
 
   const onNextPage = useCallback(() => {
     if (page < pages) {
@@ -315,9 +315,8 @@ export const TableProducts = ({ products }: Props) => {
     statusFilter,
     visibleColumns,
     onSearchChange,
-    onRowsPerPageChange,
     products.length,
-    hasSearchFilter,
+    onClear,
   ]);
 
   const bottomContent = useMemo(() => {
@@ -357,7 +356,7 @@ export const TableProducts = ({ products }: Props) => {
         </div>
       </div>
     );
-  }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
+  }, [selectedKeys, page, pages, filteredItems.length, onNextPage, onPreviousPage]);
 
   const getProduct = async (id: number) => {
     setLoadingModal(true);

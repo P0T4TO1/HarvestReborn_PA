@@ -3,6 +3,8 @@
 import {
   Button,
   Input,
+  Select,
+  SelectItem,
   Modal,
   ModalBody,
   ModalContent,
@@ -14,26 +16,18 @@ import { productSchema } from "@/validations/products.validation";
 import { hrApi } from "@/api";
 import { toast } from "sonner";
 import { SUCCESS_TOAST } from "@/components";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { AuthContext } from "@/context/auth";
-import { IProduct } from "@/interfaces";
+import { IProduct, TipoAlmacenaje } from "@/interfaces";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface IFormData {
-  id_producto: number;
   cantidad_producto: number;
   fecha_entrada: Date;
   fecha_vencimiento: Date;
   precio_kg: number;
-  monto_total: number;
-  inventory_id: number;
+  tipo_almacenaje: TipoAlmacenaje;
 }
-
-type Errors = {
-  cantidad_producto?: number;
-  fecha_entrada?: string;
-  fecha_vencimiento?: string;
-  precio_kg?: number;
-} | null;
 
 interface Props {
   id: number;
@@ -46,36 +40,22 @@ export const AddLoteToInventory = ({
   product,
   useDisclosure: { isOpen, onClose },
 }: Props) => {
-  const methods = useForm<IFormData>();
-  const { handleSubmit, register } = methods;
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<IFormData>({
+    resolver: zodResolver(productSchema),
+  });
   const { user } = useContext(AuthContext);
-
-  const [errors, setErrors] = useState<Errors>(null);
 
   const addProduct: SubmitHandler<IFormData> = async (data) => {
     try {
-      const validations = productSchema.safeParse(data);
-      if (!validations.success) {
-        let newErrors: Errors = {};
-
-        validations.error.issues.forEach((issue) => {
-          newErrors = { ...newErrors, [issue.path[0]]: issue.message };
-        });
-        setErrors(newErrors);
-        return null;
-      } else {
-        setErrors(null);
-      }
-
       const res = await hrApi
         .post(`/negocio/inventory/${id}`, {
           id: id,
-          cantidad_producto: data.cantidad_producto,
-          fecha_entrada: data.fecha_entrada,
-          fecha_vencimiento: data.fecha_vencimiento,
-          precio_kg: data.precio_kg,
-          monto_total: data.cantidad_producto * data.precio_kg,
-          inventory_id: user?.duenonegocio?.negocio?.id_negocio,
+          inventory_id: user?.duenonegocio?.negocio.inventario?.id_inventario!,
+          ...data,
         })
         .then(() => {
           toast("Producto agregado a tu inventario", SUCCESS_TOAST);
@@ -108,28 +88,64 @@ export const AddLoteToInventory = ({
               <Input
                 label="Cantidad en kg"
                 type="number"
-                {...register("cantidad_producto")}
-                errorMessage={errors?.cantidad_producto}
+                {...register("cantidad_producto", { valueAsNumber: true })}
+                errorMessage={errors?.cantidad_producto?.message}
               />
               <Input
                 label="Precio por kg"
                 type="number"
-                {...register("precio_kg")}
-                errorMessage={errors?.precio_kg}
+                {...register("precio_kg", { valueAsNumber: true })}
+                errorMessage={errors?.precio_kg?.message}
               />
               <Input
                 label="Fecha de llegada"
                 type="date"
                 defaultValue={new Date().toISOString().split("T")[0]}
                 {...register("fecha_entrada")}
-                errorMessage={errors?.fecha_entrada}
+                errorMessage={errors?.fecha_entrada?.message}
               />
               <Input
                 label="Fecha de duración aproximada en estado fresco"
                 type="date"
                 {...register("fecha_vencimiento")}
-                errorMessage={errors?.fecha_vencimiento}
+                errorMessage={errors?.fecha_vencimiento?.message}
               />
+              <Select
+                label="Tipo de almacenaje"
+                {...register("tipo_almacenaje")}
+                errorMessage={errors?.tipo_almacenaje?.message}
+              >
+                <SelectItem
+                  key={TipoAlmacenaje.Huacal}
+                  value={TipoAlmacenaje.Huacal}
+                >
+                  Huacal
+                </SelectItem>
+                <SelectItem
+                  key={TipoAlmacenaje.Bolsa}
+                  value={TipoAlmacenaje.Bolsa}
+                >
+                  Bolsa
+                </SelectItem>
+                <SelectItem
+                  key={TipoAlmacenaje.Canasta}
+                  value={TipoAlmacenaje.Canasta}
+                >
+                  Canasta
+                </SelectItem>
+                <SelectItem
+                  key={TipoAlmacenaje.Caja}
+                  value={TipoAlmacenaje.Caja}
+                >
+                  Caja
+                </SelectItem>
+                <SelectItem
+                  key={TipoAlmacenaje.Otro}
+                  value={TipoAlmacenaje.Otro}
+                >
+                  Otro
+                </SelectItem>
+              </Select>
             </ModalBody>
             <ModalFooter>
               <Button color="danger" variant="light" onPress={onClose}>

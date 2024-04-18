@@ -1,4 +1,5 @@
 // Objetivo: Contiene las constantes que se utilizan en las tablas de datos
+import { TipoAlmacenaje } from "@/interfaces";
 
 // Ordenes de negocio/ejemplo
 export const statusColorMapOrders = {
@@ -91,14 +92,18 @@ export const columnsUsuarios = [
   { name: "ID", uid: "id", sortable: true },
   {
     name: "NOMBRE",
-    uid: "nombre",
+    uid: "duenonegocio?.nombre_dueneg ?? cliente?.nombre_cliente",
     sortable: true,
   },
-  { name: "APELLIDO", uid: "apellido", sortable: true },
+  {
+    name: "APELLIDO",
+    uid: "duenonegocio?.apellidos_dueneg ?? cliente?.apellidos_cliente",
+    sortable: true,
+  },
   { name: "CORREO", uid: "email", sortable: true },
-  { name: "ROL", uid: "rol", sortable: true },
+  { name: "ROL", uid: "id_rol", sortable: true },
   { name: "ESTADO", uid: "estado", sortable: true },
-  { name: "CORREO VERIFICADO", uid: "correo_verificado" },
+  { name: "CORREO VERIFICADO", uid: "emailVerified" },
   { name: "ACCIONES", uid: "acciones" },
 ];
 
@@ -114,7 +119,34 @@ export const statusOptionsUsuarios = [
 ];
 
 export const rolOptionsUsuarios = [
-  { name: "ADMIN", uid: "ADMIN" },
-  { name: "DUEÑO DE NEGOCIO", uid: "DUENEG" },
-  { name: "CLIENTE", uid: "CLIENTE" },
+  { name: "ADMIN", uid: 1 },
+  { name: "DUEÑO DE NEGOCIO", uid: 2 },
+  { name: "CLIENTE", uid: 3 },
+];
+
+// Lotes
+export const columnsLotes = [
+  { name: "ID", uid: "id_lote", sortable: true },
+  { name: "NO. DE LOTE", uid: "no_lote", sortable: true },
+  { name: "FECHA DE ENTRADA", uid: "fecha_entrada", sortable: true },
+  { name: "HORA DE ENTRADA", uid: "hora_entrada", sortable: true },
+  { name: "TIPO DE ALMACENAMIENTO", uid: "tipo_almacenaje", sortable: true },
+  { name: "CANTIDAD EN KG", uid: "cantidad_producto", sortable: true },
+  { name: "FECHA DE VENCIMIENTO", uid: "fecha_vencimiento", sortable: true },
+  { name: "ACCIONES", uid: "acciones" },
+];
+
+export const storageOptionsLotes = [
+  { name: "HUACAL", uid: TipoAlmacenaje.Huacal },
+  { name: "CAJA", uid: TipoAlmacenaje.Caja },
+  { name: "BOLSA", uid: TipoAlmacenaje.Bolsa },
+  { name: "CANASTA", uid: TipoAlmacenaje.Canasta },
+  { name: "OTRO", uid: TipoAlmacenaje.Otro },
+];
+
+export const fechasVencimientoOptionsLotes = [
+  { name: "Lejano", uid: "LEJANO" },
+  { name: "Próximo", uid: "PROXIMO" },
+  { name: "Cercano", uid: "CERCANO" },
+  { name: "Vencido", uid: "VENCIDO" },
 ];

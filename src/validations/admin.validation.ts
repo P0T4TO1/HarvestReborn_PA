@@ -18,10 +18,12 @@ export const adminAddProductValidation = z.object({
       message: "El nombre del producto debe tener menos de 100 caracteres",
     }),
   imagen_producto: z
-    .unknown({ required_error: "La imagen del producto es obligatoria" })
+    .unknown()
+    .optional()
     .refine(
       (file) => {
         if (!file) return false;
+        if (Object.keys(file).length === 0) return true;
         if (file instanceof File) {
           if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) return false;
           if (file.size > MAX_FILE_SIZE) return false;
@@ -31,14 +33,15 @@ export const adminAddProductValidation = z.object({
       {
         message: "La imagen del producto no es válida",
       }
-    )
-    .optional(),
+    ),
   file: z.string(),
   descripcion: z.string().optional(),
   enTemporada: z.boolean({
     required_error: "El campo en temporada es obligatorio",
   }),
-  categoria: z.enum(["FRUTA", "VERDURA"]),
+  categoria: z.enum(["FRUTA", "VERDURA"], {
+    required_error: "La categoría del producto es obligatoria",
+  }),
 });
 
 export const updateProductValidation = adminAddProductValidation

@@ -19,7 +19,7 @@ import {
 } from "@nextui-org/react";
 import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { isEmailVerified } from "@/hooks";
+import { isEmailVerified } from "@/helpers";
 import { MdOutlineVisibility, MdOutlineVisibilityOff } from "react-icons/md";
 
 interface IFormData {

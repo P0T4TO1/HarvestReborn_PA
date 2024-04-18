@@ -4,6 +4,8 @@ import {
   Button,
   CircularProgress,
   Input,
+  Select,
+  SelectItem,
   Modal,
   ModalBody,
   ModalContent,
@@ -15,7 +17,7 @@ import { hrApi } from "@/api";
 import { toast } from "sonner";
 import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { ILote } from "@/interfaces";
+import { ILote, TipoAlmacenaje } from "@/interfaces";
 import { useRouter } from "next/navigation";
 import { productSchema } from "@/validations/products.validation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,7 +28,7 @@ interface IFormData {
   fecha_entrada: string;
   fecha_vencimiento: string;
   precio_kg: number;
-  monto_total: number;
+  tipo_almacenaje: TipoAlmacenaje;
 }
 
 interface Props {
@@ -48,15 +50,11 @@ export const EditLoteModal = ({
   } = useForm<IFormData>({
     resolver: zodResolver(productSchema),
     defaultValues: {
-      cantidad_producto: lote?.cantidad_producto || 0,
-      precio_kg: lote?.precio_kg || 0,
-      fecha_entrada: new Date(lote?.fecha_entrada || "")
-        .toString()
-        .split("T")[0] as string,
-      fecha_vencimiento: new Date(lote?.fecha_vencimiento || "")
-        .toString()
-        .split("T")[0] as string,
-      monto_total: 0,
+      cantidad_producto: lote?.cantidad_producto ?? 0,
+      precio_kg: lote?.precio_kg ?? 0,
+      fecha_entrada: lote?.fecha_entrada ?? "",
+      fecha_vencimiento: lote?.fecha_vencimiento ?? "",
+      tipo_almacenaje: lote?.tipo_almacenaje ?? TipoAlmacenaje.Huacal ?? "",
     },
   });
   const [isEditing, setIsEditing] = useState(false);
@@ -71,10 +69,11 @@ export const EditLoteModal = ({
             window.location.reload();
             router.refresh();
             onClose();
-          } else {
-            toast("Hubo un error al actualizar el producto", DANGER_TOAST);
-            console.log("Error al actualizar producto", res.data);
           }
+        })
+        .catch((error) => {
+          console.log("Error al actualizar producto", error);
+          toast("Hubo un error al actualizar el producto", DANGER_TOAST);
         });
     } catch (error) {
       console.log("Error al actualizar producto", error);
@@ -111,7 +110,9 @@ export const EditLoteModal = ({
                     <Input
                       label="Cantidad en kg"
                       type="number"
-                      {...register("cantidad_producto")}
+                      {...register("cantidad_producto", {
+                        valueAsNumber: true,
+                      })}
                       defaultValue={lote?.cantidad_producto?.toString()}
                       isDisabled={!isEditing}
                     />
@@ -125,7 +126,7 @@ export const EditLoteModal = ({
                     <Input
                       label="Precio por kg"
                       type="number"
-                      {...register("precio_kg")}
+                      {...register("precio_kg", { valueAsNumber: true })}
                       defaultValue={lote?.precio_kg?.toString()}
                       isDisabled={!isEditing}
                     />
@@ -171,12 +172,57 @@ export const EditLoteModal = ({
                       </span>
                     )}
                   </div>
+                  <div className="flex flex-col gap-2">
+                    <Select
+                      label="Tipo de almacenaje"
+                      {...register("tipo_almacenaje")}
+                      defaultSelectedKeys={[
+                        lote?.tipo_almacenaje.toString() as string,
+                      ]}
+                      isDisabled={!isEditing}
+                    >
+                      <SelectItem
+                        key={TipoAlmacenaje.Huacal}
+                        value={TipoAlmacenaje.Huacal}
+                      >
+                        Huacal
+                      </SelectItem>
+                      <SelectItem
+                        key={TipoAlmacenaje.Bolsa}
+                        value={TipoAlmacenaje.Bolsa}
+                      >
+                        Bolsa
+                      </SelectItem>
+                      <SelectItem
+                        key={TipoAlmacenaje.Canasta}
+                        value={TipoAlmacenaje.Canasta}
+                      >
+                        Canasta
+                      </SelectItem>
+                      <SelectItem
+                        key={TipoAlmacenaje.Caja}
+                        value={TipoAlmacenaje.Caja}
+                      >
+                        Caja
+                      </SelectItem>
+                      <SelectItem
+                        key={TipoAlmacenaje.Otro}
+                        value={TipoAlmacenaje.Otro}
+                      >
+                        Otro
+                      </SelectItem>
+                    </Select>
+                  </div>
                 </ModalBody>
                 <ModalFooter>
                   <Button color="danger" variant="light" onPress={onClose}>
                     Cerrar
                   </Button>
-                  <Button type="submit" className="bg-green-600">
+                  <Button
+                    type="submit"
+                    className="bg-green-600"
+                    isDisabled={!isEditing}
+                  >
                     Actualizar
                   </Button>
                 </ModalFooter>

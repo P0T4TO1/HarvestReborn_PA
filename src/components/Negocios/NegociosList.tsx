@@ -1,14 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { Estado, INegocio } from "@/interfaces";
 import { hrApi } from "@/api";
 import {
   CardBody,
   Link,
   Divider,
-  Select,
-  SelectItem,
   CircularProgress,
   Button,
   Card,
@@ -32,44 +30,47 @@ export const NegociosList = () => {
   const [loadingNegocio, setLoadingNegocio] = useState(false);
   const [error, setError] = useState(false);
 
-  // const [search, setSearch] = useState("");
-  //
-  // const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-  //   setSearch(event.target.value);
-  // };
-  //
-  // const results = !search
-  //   ? negocios
-  //   : negocios.filter((dato) =>
-  //       dato.inventario?.lote?.filter((lote) =>
-  //         lote.producto?.nombre_producto
-  //           .toLowerCase()
-  //           .includes(search.toLocaleLowerCase())
-  //       )
-  //     );
+  const [search, setSearch] = useState("");
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearch(event.target.value);
+  };
+
+  const results = !search
+    ? negocios
+    : negocios.filter((dato) =>
+        dato.nombre_negocio.toLowerCase().includes(search.toLowerCase())
+      );
 
   useEffect(() => {
-    hrApi.get("/negocio").then((res) => {
-      if (res.status === 200) {
-        setNegocios(res.data);
-      } else {
+    hrApi
+      .get("/negocio")
+      .then((res) => {
+        if (res.status === 200) {
+          setNegocios(res.data);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
         setError(true);
-        console.log("Error al obtener negocios", res.data);
-      }
-      setLoading(false);
-    });
+        setLoading(false);
+      });
   }, []);
 
   const getNegocio = async (id: number | undefined) => {
     setLoadingNegocio(true);
-    await hrApi.get(`/negocio/${id}`).then((res) => {
-      if (res.status === 200) {
-        setNegocio(res.data);
-      } else {
-        console.log("Error al obtener negocio", res.data);
-      }
-      setLoadingNegocio(false);
-    });
+    await hrApi
+      .get(`/negocio/${id}`)
+      .then((res) => {
+        if (res.status === 200) {
+          setNegocio(res.data);
+        }
+        setLoadingNegocio(false);
+      })
+      .catch(() => {
+        setError(true);
+        setLoadingNegocio(false);
+      });
   };
 
   return (
@@ -88,7 +89,7 @@ export const NegociosList = () => {
               isClearable
               size="md"
               radius="lg"
-              placeholder="Buscar productos..."
+              placeholder="Buscar negocio por nombre..."
               type="text"
               startContent={
                 <FaSearch
@@ -96,12 +97,12 @@ export const NegociosList = () => {
                   className="text-gray-500 dark:text-gray-300"
                 />
               }
-              // defaultValue={search}
-              // onChange={handleChange}
+              defaultValue={search}
+              onChange={handleChange}
             />
           </div>
         </div>
-        <div className="absolute inset-y-0 right-0 flex items-end pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 flex-col">
+        {/* <div className="absolute inset-y-0 right-0 flex items-end pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 flex-col">
           <Select
             placeholder="Filtrar por"
             className="w-60"
@@ -114,7 +115,7 @@ export const NegociosList = () => {
               Nombre
             </SelectItem>
           </Select>
-        </div>
+        </div> */}
       </div>
       <div className="grid grid-cols-5 mt-10 gap-8">
         <div className="col-span-2">
@@ -123,7 +124,7 @@ export const NegociosList = () => {
           ) : error ? (
             <p>Error al cargar los negocios</p>
           ) : (
-            negocios.map(
+            results.map(
               (negocio) =>
                 negocio.estado_negocio === Estado.Activo && (
                   <Card
@@ -184,14 +185,14 @@ export const NegociosList = () => {
                   {negocio?.nombre_negocio}
                 </h2>
                 <p>Ve los productos que ofrece </p>
-                <Button color="success" size="md" className="mt-2">
-                  <Link
-                    href={`/negocios/${negocio.id_negocio}/${negocio.nombre_negocio}`}
-                    className="text-gray-700"
-                  >
+                <Link
+                  className="mt-2"
+                  href={`/negocios/${negocio.id_negocio}/${negocio.nombre_negocio}`}
+                >
+                  <Button color="success" size="md">
                     Ver productos
-                  </Link>
-                </Button>
+                  </Button>
+                </Link>
               </CardHeader>
               <Divider />
               <CardBody className="px-4 pb-4 overflow-y-scroll">

@@ -52,7 +52,7 @@ const VerifyEmailPage = async ({ searchParams }: VerifyEmailPageProps) => {
   } else {
     return (
       <>
-        <EmailVerificationForm />
+        <EmailVerificationForm email={searchParams.u as string} />
       </>
     );
   }

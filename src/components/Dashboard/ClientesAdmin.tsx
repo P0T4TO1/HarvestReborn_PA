@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { TableClientes } from "@/components";
 import { ICliente } from "@/interfaces";
@@ -19,14 +18,18 @@ export const ClientesAdmin = () => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    hrApi.get("/admin/users/clientes").then((res) => {
-      if (res.status === 200) {
-        setClientes(res.data);
-      } else {
+    hrApi
+      .get("/admin/users/clientes")
+      .then((res) => {
+        if (res.status === 200) {
+          setClientes(res.data);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
         setError(true);
-      }
-      setLoading(false);
-    });
+        setLoading(false);
+      });
   }, []);
 
   return (

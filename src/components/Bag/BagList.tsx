@@ -63,13 +63,17 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
     createOrder(
       user?.cliente?.id_cliente!,
       user?.cliente?.historial.id_historial!
-    ).then((res) => {
-      if (res.hasError) {
-        toast(res.message, DANGER_TOAST);
-      }
-      toast(res.message, SUCCESS_TOAST);
-      router.push(`/orders/${res.data.id_orden}?new=true`);
-    });
+    )
+      .then((res) => {
+        if (res.hasError) {
+          toast(res.message, DANGER_TOAST);
+        }
+        toast(res.message, SUCCESS_TOAST);
+        router.push(`/orders/${res.data.id_orden}?new=true`);
+      })
+      .catch(() => {
+        toast("Hubo un error al realizar el pedido", DANGER_TOAST);
+      });
   };
 
   return (
@@ -87,8 +91,8 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
             Limpiar bolsa
           </Button>
         </div>
-        <div className="mt-6 grid grid-cols-3">
-          <div className="col-span-2 pr-6">
+        <div className="mt-6 grid lg:grid-cols-3 grid-cols-1">
+          <div className="lg:col-span-2 pr-6">
             {productsInBag.map((product) => (
               <div key={product.id_productoOrden} className="w-full">
                 <Divider />
@@ -160,7 +164,7 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
               </div>
             ))}
           </div>
-          <div className="col-span-1">
+          <div className="lg:col-span-1">
             <Card
               classNames={{
                 base: "border-1 border-gray-300",

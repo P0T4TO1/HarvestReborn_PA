@@ -64,7 +64,7 @@ export const OrderNotificationEmail = ({
             <Section className="text-center mt-[32px] mb-[32px]">
               <Button
                 className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center px-5 py-3"
-                href={"https://harvest-reborn-pa.vercel.app/orders"}
+                href={"https://www.harvest-reborn.me/orders"}
               >
                 Consultalo aquí
               </Button>

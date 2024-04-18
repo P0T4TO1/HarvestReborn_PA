@@ -4,14 +4,7 @@ import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import { hrApi } from "@/api";
 import { ILote } from "@/interfaces";
 import { AuthContext } from "@/context/auth";
-import {
-  Select,
-  SelectItem,
-  Input,
-  CircularProgress,
-  Button,
-  Link,
-} from "@nextui-org/react";
+import { Input, CircularProgress, Button, Link } from "@nextui-org/react";
 import { ProductsCollapsibleTable } from "@/components";
 import { MdAddCircleOutline } from "react-icons/md";
 import { FaSearch } from "react-icons/fa";
@@ -48,10 +41,11 @@ export const ProductsInventory = () => {
       .then((res) => {
         if (res.status === 200) {
           setAllLotes(res.data);
-        } else {
-          setError(true);
-          console.log("Error al obtener productos", res.data);
         }
+        setLoading(false);
+      })
+      .catch(() => {
+        setError(true);
         setLoading(false);
       });
     hrApi
@@ -59,10 +53,11 @@ export const ProductsInventory = () => {
       .then((res) => {
         if (res.status === 200) {
           setLotes(res.data);
-        } else {
-          setError(true);
-          console.log("Error al obtener productos", res.data);
         }
+        setLoading(false);
+      })
+      .catch(() => {
+        setError(true);
         setLoading(false);
       });
   }, [user?.duenonegocio?.negocio?.id_negocio]);
@@ -100,29 +95,6 @@ export const ProductsInventory = () => {
               onChange={handleChange}
             />
           </div>
-        </div>
-        <div className="absolute inset-y-0 right-0 flex items-end pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 flex-col">
-          <Select
-            placeholder="Filtrar por"
-            className="w-60"
-            onChange={(e) => console.log(e)}
-          >
-            <SelectItem value="0" key="0">
-              -- --
-            </SelectItem>
-            <SelectItem value="1" key="1">
-              Nombre
-            </SelectItem>
-            <SelectItem value="2" key="2">
-              Fecha de entrada
-            </SelectItem>
-            <SelectItem value="3" key="3">
-              Fecha de vencimiento
-            </SelectItem>
-            <SelectItem value="4" key="4">
-              Cantidad
-            </SelectItem>
-          </Select>
         </div>
       </div>
 

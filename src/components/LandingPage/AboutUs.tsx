@@ -14,7 +14,7 @@ export const AboutUsComponent: FC = () => {
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false }}
+          viewport={{ once: true }}
           animate={{
             opacity: 0,
             y: -50,
@@ -42,7 +42,7 @@ export const AboutUsComponent: FC = () => {
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false }}
+          viewport={{ once: true }}
           animate={{
             opacity: 0,
             y: 50,

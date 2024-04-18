@@ -1,4 +1,5 @@
 export * from "./Bag";
+export * from "./Chats";
 export * from "./Dashboard";
 export * from "./email-templates";
 export * from "./Home";

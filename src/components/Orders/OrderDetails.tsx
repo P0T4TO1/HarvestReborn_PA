@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { IOrden } from "@/interfaces";
+import { chatHrefConstructor } from "@/utils/cn";
 import { hrApi } from "@/api";
 import { FaCheckCircle } from "react-icons/fa";
 import {
@@ -14,6 +15,11 @@ import {
   Link,
   Button,
 } from "@nextui-org/react";
+import { AuthContext } from "@/context/auth";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { DANGER_TOAST } from "@/components";
+import * as PusherPushNotifications from "@pusher/push-notifications-web";
 
 type OrdersClienteProps = {
   id_orden: string;
@@ -27,12 +33,21 @@ export const OrderDetails = ({
   detailsNegocio,
 }: OrdersClienteProps) => {
   const [order, setOrder] = useState<IOrden>();
+  const [isLoading, setIsLoading] = useState(false);
+  const { user } = useContext(AuthContext);
+  const router = useRouter();
   useEffect(() => {
-    hrApi.get(`/cliente/order/${id_orden}`).then((res) => {
-      if (res.status === 200) {
-        setOrder(res.data);
-      }
-    });
+    hrApi
+      .get(`/cliente/order/${id_orden}`)
+      .then((res) => {
+        if (res.status === 200) {
+          setOrder(res.data);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        toast("Hubo un error", DANGER_TOAST);
+      });
   }, [id_orden]);
 
   if (!order) {
@@ -49,6 +64,64 @@ export const OrderDetails = ({
       </div>
     );
   }
+
+  const onContact = async (
+    id_user: string,
+    id_dueneg: string,
+    nombre_dueneg: string
+  ) => {
+    setIsLoading(true);
+    await hrApi
+      .post(`/chat`, {
+        userId: id_user,
+        userId2: id_dueneg,
+        chatName: `Chat con negocio ${nombre_dueneg}`,
+        chatId: chatHrefConstructor(id_user, id_dueneg),
+      })
+      .then(async (res) => {
+        if (res.status === 200 && res.data.message === "El chat ya existe") {
+          const beamsTokenProviderUser =
+            new PusherPushNotifications.TokenProvider({
+              url: `${process.env.NEXT_PUBLIC_API_URL}/notifications/token/${id_user}`,
+              headers: {
+                Authorization: `Bearer ${id_user}`,
+              },
+            });
+
+          const beamsTokenProviderCliente =
+            new PusherPushNotifications.TokenProvider({
+              url: `${process.env.NEXT_PUBLIC_API_URL}/notifications/token/${id_dueneg}`,
+              headers: {
+                Authorization: `Bearer ${id_dueneg}`,
+              },
+            });
+          const beamsClient = new PusherPushNotifications.Client({
+            instanceId: process.env
+              .NEXT_PUBLIC_PUSHER_BEAMS_INSTANCE_ID as string,
+          });
+
+          await beamsClient
+            .start()
+            .then(async () => {
+              await beamsClient.addDeviceInterest(
+                `chat-${chatHrefConstructor(id_user, id_dueneg)}`
+              );
+              await beamsClient.setUserId(id_user, beamsTokenProviderUser);
+              await beamsClient.setUserId(id_dueneg, beamsTokenProviderCliente);
+            })
+            .catch((err) => {
+              console.log(err);
+              toast("Error al intentar contactar al cliente", DANGER_TOAST);
+              setIsLoading(false);
+            });
+
+          router.push(`/chats/chat/${chatHrefConstructor(id_user, id_dueneg)}`);
+        }
+        if (res.status === 201) {
+          router.push(`/chats/chat/${chatHrefConstructor(id_user, id_dueneg)}`);
+        }
+      });
+  };
 
   return (
     <div className="pt-16 container mx-auto">
@@ -134,12 +207,20 @@ export const OrderDetails = ({
                           <p className="text-sm font-semibold text-end">
                             ${product.monto} MXN
                           </p>
-                          <Link
-                            href={`/chats/${product.id_negocio}`}
-                            className="text-sm text-end"
+                          <Button
+                            color="primary"
+                            variant="light"
+                            isLoading={isLoading}
+                            onClick={() =>
+                              onContact(
+                                user?.id!,
+                                product.negocio?.dueneg.id_user!,
+                                product.negocio?.dueneg.nombre_dueneg!
+                              )
+                            }
                           >
-                            Contactar negocio
-                          </Link>
+                            Contactar negocio por chat
+                          </Button>
                         </div>
                       </div>
                       <Divider />
@@ -232,12 +313,20 @@ export const OrderDetails = ({
                           <p className="text-sm font-semibold text-end">
                             ${product.monto} MXN
                           </p>
-                          <Link
-                            href={`/chats/${product.id_negocio}`}
-                            className="text-sm text-end"
+                          <Button
+                            color="primary"
+                            variant="light"
+                            onClick={() => {
+                              console.log(product),
+                                onContact(
+                                  user?.id!,
+                                  product.negocio?.dueneg.id_user!,
+                                  product.negocio?.dueneg.nombre_dueneg!
+                                );
+                            }}
                           >
-                            Contactar negocio
-                          </Link>
+                            Contactar negocio por chat
+                          </Button>
                         </div>
                       </div>
                       <Divider />
