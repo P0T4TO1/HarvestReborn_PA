@@ -1,5 +1,6 @@
 // Objetivo: Contiene las constantes que se utilizan en las tablas de datos
 import { TipoAlmacenaje } from "@/interfaces";
+import exp from "constants";
 
 // Ordenes de negocio/ejemplo
 export const statusColorMapOrders = {
@@ -128,11 +129,11 @@ export const rolOptionsUsuarios = [
 export const columnsLotes = [
   { name: "ID", uid: "id_lote", sortable: true },
   { name: "NO. DE LOTE", uid: "no_lote", sortable: true },
-  { name: "FECHA DE ENTRADA", uid: "fecha_entrada", sortable: true },
-  { name: "HORA DE ENTRADA", uid: "hora_entrada", sortable: true },
   { name: "TIPO DE ALMACENAMIENTO", uid: "tipo_almacenaje", sortable: true },
   { name: "CANTIDAD EN KG", uid: "cantidad_producto", sortable: true },
-  { name: "FECHA DE VENCIMIENTO", uid: "fecha_vencimiento", sortable: true },
+  { name: "FECHA DE ENTRADA", uid: "fecha_entrada", sortable: true },
+  { name: "HORA DE ENTRADA", uid: "hora_entrada", sortable: true },
+  { name: "FECHA APROX. DE VENCIMIENTO", uid: "fecha_vencimiento", sortable: true },
   { name: "ACCIONES", uid: "acciones" },
 ];
 
@@ -150,3 +151,11 @@ export const fechasVencimientoOptionsLotes = [
   { name: "Cercano", uid: "CERCANO" },
   { name: "Vencido", uid: "VENCIDO" },
 ];
+
+export const storageColorMapLotes = {
+  HUACAL: "primary",
+  CAJA: "secondary",
+  BOLSA: "success",
+  CANASTA: "warning",
+  OTRO: "error",
+};

@@ -6,7 +6,7 @@ import { ILote } from "@/interfaces";
 import { AuthContext } from "@/context/auth";
 import { Input, CircularProgress, Button, Link } from "@nextui-org/react";
 import { ProductsCollapsibleTable } from "@/components";
-import { MdAddCircleOutline } from "react-icons/md";
+import { MdAddCircleOutline, MdOutlinePostAdd } from "react-icons/md";
 import { FaSearch } from "react-icons/fa";
 
 export const ProductsInventory = () => {
@@ -81,20 +81,30 @@ export const ProductsInventory = () => {
           </Button>
         </Link>
       </div>
-      <div className="flex">
-        <div className="flex flex-1 justify-center sm:justify-start">
-          <div className="mt-4 p-2">
-            <Input
-              isClearable
-              size="md"
-              radius="lg"
-              placeholder="Buscar productos..."
-              type="text"
-              startContent={<FaSearch size={25} />}
-              defaultValue={search}
-              onChange={handleChange}
-            />
-          </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2">
+        <div className="mt-4 p-2 lg:w-1/2">
+          <Input
+            isClearable
+            size="md"
+            radius="lg"
+            placeholder="Buscar productos..."
+            type="text"
+            startContent={<FaSearch size={25} />}
+            defaultValue={search}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="mt-4 p-2 flex justify-end">
+          <Link href={"/mi-negocio/publicacion"}>
+            <Button
+              color="primary"
+              variant="faded"
+              startContent={<MdOutlinePostAdd size={25} />}
+            >
+              <span className="ml-2">Crear publicación de productos</span>
+            </Button>
+          </Link>
         </div>
       </div>
 
