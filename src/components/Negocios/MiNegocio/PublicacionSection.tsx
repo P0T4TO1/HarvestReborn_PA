@@ -1,11 +1,6 @@
 "use client";
 
-import React, {
-  useState,
-  DragEvent,
-  ChangeEvent,
-  useContext,
-} from "react";
+import React, { useState, DragEvent, ChangeEvent, useContext } from "react";
 import {
   Card,
   CardHeader,
@@ -16,13 +11,16 @@ import {
   Button,
   CardBody,
   Divider,
-  Image
+  Image,
 } from "@nextui-org/react";
+import { Paper } from "@mui/material";
+import Carousel from "react-material-ui-carousel";
 import { FaX } from "react-icons/fa6";
 import { AuthContext } from "@/context/auth";
 import { postValidationSchema } from "@/validations/negocio.validation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { IoCloudUploadOutline } from "react-icons/io5";
 
 interface IFormData {
   images_publicacion: string;
@@ -32,16 +30,21 @@ interface IFormData {
   disponibilidad: string;
 }
 
+const Item = ({ item }: any) => {
+  return (
+    <Paper>
+      <Image src={item} alt="Imagen de la publicación" />
+    </Paper>
+  );
+};
+
 export const PublicacionSection = () => {
   const { user } = useContext(AuthContext);
   const {
     handleSubmit,
     register,
     formState: { errors },
-    setError,
-    getValues,
     watch,
-    setValue,
   } = useForm<IFormData>({
     // resolver: zodResolver(postValidationSchema),
   });
@@ -70,7 +73,7 @@ export const PublicacionSection = () => {
 
   return (
     <>
-      <aside className="py-4 w-full md:w-1/3 lg:w-1/4 md:block border-r-1">
+      <aside className="py-4 w-full md:w-1/3 lg:w-1/4 md:block md:min-w-[380px] border-r-1 border-default-500">
         <div className="flex flex-col gap-2 p-4 text-sm top-12">
           <h4 className="text-md dark:text-gray-300">Harvest Reborn</h4>
           <h2 className="mb-4 text-2xl font-semibold dark:text-gray-300">
@@ -82,7 +85,7 @@ export const PublicacionSection = () => {
             Imágenes - {images.length}/10 - (Máximo 10 imágenes)
           </h4>
 
-          {images.length === 0 ? (
+          {images.length < 1 ? (
             <div className="flex items-center justify-center w-full">
               <label
                 htmlFor="dropzone-file"
@@ -93,21 +96,7 @@ export const PublicacionSection = () => {
                   onDrop={handleDrop}
                   onDragOver={(event) => event.preventDefault()}
                 >
-                  <svg
-                    className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 20 16"
-                  >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                    />
-                  </svg>
+                  <IoCloudUploadOutline className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" />
                   <p className="mb-2 text-sm text-gray-500 dark:text-gray-400 text-center">
                     <span className="font-semibold">
                       Agrega imágenes haciendo clic
@@ -130,12 +119,12 @@ export const PublicacionSection = () => {
               {images.map((file, index) => (
                 <div
                   key={index}
-                  className="relative w-28 h-28 bg-gray-300 dark:bg-gray-700 rounded-lg"
+                  className="relative max-w-[6.875rem] max-h-[6.875rem] bg-gray-300 dark:bg-gray-700 rounded-lg"
                 >
                   <Image
                     src={URL.createObjectURL(file)}
                     alt="Imagen de la publicación"
-                    className="object-cover w-full h-full rounded-lg"
+                    className="object-cover w-[6.875rem] h-[6.875rem] rounded-lg"
                   />
                   <Button
                     onClick={() => handleRemoveFile(index)}
@@ -150,28 +139,14 @@ export const PublicacionSection = () => {
               ))}
               <label
                 htmlFor="dropzone-file"
-                className="w-28 h-28 flex flex-col items-center justify-center border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                className="w-[6.875rem] h-[6.875rem] flex flex-col items-center justify-center border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
               >
                 <div
                   className="flex flex-col items-center justify-center w-full h-full"
                   onDrop={handleDrop}
                   onDragOver={(event) => event.preventDefault()}
                 >
-                  <svg
-                    className="w-8 h-8 text-gray-500 dark:text-gray-400"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 20 16"
-                  >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                    />
-                  </svg>
+                  <IoCloudUploadOutline className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" />
                   <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
                     <span className="font-semibold">Agregar más imágenes</span>
                   </p>
@@ -234,11 +209,7 @@ export const PublicacionSection = () => {
             </Select>
           </div>
           <div className="flex flex-col gap-2">
-            <Button
-              color="primary"
-              size="lg"
-              className="w-full"
-            >
+            <Button color="primary" size="lg" className="w-full">
               Publicar
             </Button>
           </div>
@@ -252,19 +223,37 @@ export const PublicacionSection = () => {
             </CardHeader>
             <CardBody className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="col-span-2">
-                {images.length > 0 ? (
-                  images.map((file, index) => (
-                    <div
-                      key={index}
-                      className="w-full h-full bg-gray-300 dark:bg-gray-700 rounded-lg"
-                    >
-                      <Image
-                        src={URL.createObjectURL(file)}
-                        alt="Imagen de la publicación"
-                        className="object-cover w-full h-full rounded-lg"
-                      />
-                    </div>
-                  ))
+                {images.length > 1 ? (
+                  <Carousel
+                    className="w-full h-full max-w-[490px] max-h-[596px] bg-gray-300 dark:bg-gray-700 rounded-lg"
+                    autoPlay={false}
+                    indicators={false}
+                    navButtonsAlwaysVisible={true}
+                    animation="fade"
+                    duration={100}
+                    height={596}
+                  >
+                    {images.map((image, index) => (
+                      <div
+                        className="w-full h-full max-w-[490px] max-h-[596px] bg-gray-300 dark:bg-gray-700 rounded-lg flex items-center justify-center"
+                        key={index}
+                      >
+                        <Image
+                          src={URL.createObjectURL(image)}
+                          alt="Imagen de la publicación"
+                          className="max-w-[490px] max-h-[596px]"
+                        />
+                      </div>
+                    ))}
+                  </Carousel>
+                ) : images.length === 1 ? (
+                  <div className="w-full h-full max-w-[490px] max-h-[596px] bg-gray-300 dark:bg-gray-700 rounded-lg flex items-center justify-center">
+                    <Image
+                      src={URL.createObjectURL(images[0])}
+                      alt="Imagen de la publicación"
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
                 ) : (
                   <div className="w-full h-full bg-gray-300 dark:bg-gray-700 rounded-lg flex items-center justify-center">
                     <p className="text-center text-gray-500 dark:text-gray-400">

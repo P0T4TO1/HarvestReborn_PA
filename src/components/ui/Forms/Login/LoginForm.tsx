@@ -45,8 +45,6 @@ export const LoginForm: FC = () => {
     try {
       const result = await loginUser(data.user_email, data.user_password);
 
-      const isEmailVerifiedRes = await isEmailVerified(data.user_email);
-
       if (!result) {
         setError("user_email", {
           message: "Correo o contraseña inválidos",
@@ -56,6 +54,8 @@ export const LoginForm: FC = () => {
         });
         return null;
       }
+
+      const isEmailVerifiedRes = await isEmailVerified(data.user_email);
 
       if (isEmailVerifiedRes.message === "Este correo no ha sido verificado") {
         setError("user_email", {
@@ -70,6 +70,7 @@ export const LoginForm: FC = () => {
         });
         return null;
       }
+      
       const res: SignInResponse | undefined = await signIn("credentials", {
         ...data,
         redirect: false,

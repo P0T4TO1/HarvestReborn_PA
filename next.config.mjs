@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+const app2Url = process.env.SUPPORT_APP_URL;
 const nextConfig = {
   images: {
     domains: ["res.cloudinary.com", "i.ibb.co"],
@@ -15,6 +16,14 @@ const nextConfig = {
     };
 
     return config;
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/support/:match*",
+        destination: `${app2Url}/:match*`,
+      },
+    ];
   },
 };
 
