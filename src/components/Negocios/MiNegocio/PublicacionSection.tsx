@@ -73,7 +73,7 @@ export const PublicacionSection = () => {
 
   return (
     <>
-      <aside className="py-4 w-full md:w-1/3 lg:w-1/4 md:block md:min-w-[380px] border-r-1 border-default-500">
+      <aside className="pt-16 w-full md:w-1/3 lg:w-1/4 md:block md:min-w-[380px] border-r-1 border-default-500">
         <div className="flex flex-col gap-2 p-4 text-sm top-12">
           <h4 className="text-md dark:text-gray-300">Harvest Reborn</h4>
           <h2 className="mb-4 text-2xl font-semibold dark:text-gray-300">

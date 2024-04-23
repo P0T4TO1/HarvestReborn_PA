@@ -1,7 +1,11 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { redirect } from "next/navigation";
-import { OrdersCliente, OrdersNegocio } from "@/components";
+import {
+  OrdersCliente,
+  OrdersNegocio,
+  SidebarWrapperNegocio,
+} from "@/components";
 
 const OrdersPage = async () => {
   const session = await getServerSession(authOptions);
@@ -11,7 +15,8 @@ const OrdersPage = async () => {
 
   return (
     <>
-      <section className="flex flex-col relative overflow-hidden min-h-screen">
+      <section className="flex">
+        {session?.user.id_rol === 2 && <SidebarWrapperNegocio />}
         {session?.user.id_rol === 3 ? <OrdersCliente /> : <OrdersNegocio />}
       </section>
     </>

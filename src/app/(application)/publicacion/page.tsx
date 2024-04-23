@@ -1,17 +1,17 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { redirect } from "next/navigation";
-import { MiNegocioSection } from "@/components";
+import { PublicacionSection } from "@/components";
 
-const MiNegocioPage = async () => {
+const PublicacionPage = async () => {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/auth/login");
   if (session?.user.id_rol !== 2) redirect("/home");
   return (
-    <section className="flex mt-16 flex-col relative overflow-hidden min-h-screen">
-      <MiNegocioSection />
+    <section className="w-full flex flex-col md:flex-row text-[#161931] min-h-screen">
+      <PublicacionSection />
     </section>
   );
 };
 
-export default MiNegocioPage;
+export default PublicacionPage;
