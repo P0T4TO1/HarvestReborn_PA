@@ -35,12 +35,12 @@ export const MiNegocioSection = () => {
   return (
     <>
       {loading ? (
-        <div className="w-full flex items-center justify-center min-h-screen">
+        <div className="w-full flex flex-col items-center justify-center min-h-screen">
           <h1 className="text-2xl font-semibold py-4">Cargando...</h1>
           <CircularProgress size="lg" />
         </div>
       ) : (
-        <div className="container m-auto mt-12 h-full">
+        <div className="container m-auto mt-8 h-full p-4">
           <div className="p-4">
             <h1 className="text-2xl font-black flex flex-col leading-none dark:text-green-600 text-green-900">
               Tú negocio

@@ -10,9 +10,10 @@ import React, {
 } from "react";
 import { ILote, IProductoOrden } from "@/interfaces";
 import { Input, Button, Checkbox } from "@nextui-org/react";
-import { ProductCard } from "@/components";
+import { ProductCard, DANGER_TOAST } from "@/components";
 import { BagContext } from "@/context/order";
 import { FaSearch } from "react-icons/fa";
+import { toast } from "sonner";
 
 interface NegocioProductsProps {
   lotes: ILote[];
@@ -25,7 +26,7 @@ export const NegocioProducts = ({
   id_negocio,
   lotes,
 }: NegocioProductsProps) => {
-  const { addProductToBag } = useContext(BagContext);
+  const { addProductToBag, idNegocio, bag } = useContext(BagContext);
   const [isSeletedFrutas, setIsSelectedFrutas] = useState(false);
   const [isSeletedVerduras, setIsSelectedVerduras] = useState(false);
   const [filterValue, setFilterValue] = useState("");
@@ -36,7 +37,9 @@ export const NegocioProducts = ({
 
     if (hasSearchFilter) {
       filteredLotes = filteredLotes.filter((lote) =>
-        lote.producto.nombre_producto.toLowerCase().includes(filterValue.toLowerCase())
+        lote.producto.nombre_producto
+          .toLowerCase()
+          .includes(filterValue.toLowerCase())
       );
     }
     if (isSeletedFrutas && isSeletedVerduras) {
@@ -71,6 +74,11 @@ export const NegocioProducts = ({
   }, []);
 
   const onAddProduct = (product: IProductoOrden) => {
+    console.log(idNegocio, id_negocio, bag);
+    if (bag.length > 0 && idNegocio !== parseInt(id_negocio.toString())) {
+      toast("No puedes agregar productos de otro negocio", DANGER_TOAST);
+      return;
+    }
     addProductToBag(product);
   };
 
@@ -126,8 +134,8 @@ export const NegocioProducts = ({
                         cantidad_orden: 1,
                         monto: lote.precio_kg,
                         id_orden: undefined,
-                        id_negocio: id_negocio,
                         producto: lote.producto,
+                        lote: lote,
                       });
                     }}
                   >

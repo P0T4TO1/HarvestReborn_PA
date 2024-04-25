@@ -7,7 +7,7 @@ export const statusColorMapOrders = {
   PENDIENTE: "warning",
   EN_PROCESO: "primary",
   FINALIZADO: "success",
-  CANCELADO: "error",
+  CANCELADO: "danger",
 };
 
 export const columnsOrders = [

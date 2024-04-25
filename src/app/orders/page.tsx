@@ -5,6 +5,9 @@ import {
   OrdersCliente,
   OrdersNegocio,
   SidebarWrapperNegocio,
+  NavbarWrapperNegocio,
+  NavbarComponent,
+  Footer,
 } from "@/components";
 
 const OrdersPage = async () => {
@@ -16,8 +19,21 @@ const OrdersPage = async () => {
   return (
     <>
       <section className="flex">
-        {session?.user.id_rol === 2 && <SidebarWrapperNegocio />}
-        {session?.user.id_rol === 3 ? <OrdersCliente /> : <OrdersNegocio />}
+        {session?.user.id_rol === 2 ? (
+          <>
+            <SidebarWrapperNegocio />
+            <NavbarWrapperNegocio>
+              <OrdersNegocio />
+              <Footer />
+            </NavbarWrapperNegocio>
+          </>
+        ) : (
+          <>
+            <NavbarComponent />
+            <OrdersCliente />
+            <Footer />
+          </>
+        )}
       </section>
     </>
   );

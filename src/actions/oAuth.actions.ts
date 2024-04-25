@@ -28,7 +28,11 @@ export const oAuthToDb = async (
           },
         },
       },
-      cliente: true,
+      cliente: {
+        include: {
+          historial: true,
+        },
+      },
     },
   });
   const [name, lastName] = oAuthName?.split(" ") || ["", ""];

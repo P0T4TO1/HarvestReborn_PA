@@ -6,6 +6,7 @@ type BagAction =
       type: "LOAD_BAG";
       payload: IProductoOrden[];
     }
+  | { type: "LOAD_ID_NEGOCIO"; payload: number }
   | { type: "UPDATE_PRODUCTS_IN_BAG"; payload: IProductoOrden[] }
   | { type: "CHANGE_BAG_QUANTITY"; payload: IProductoOrden }
   | { type: "REMOVE_PRODUCT"; payload: IProductoOrden }
@@ -15,9 +16,11 @@ type BagAction =
       payload: {
         numberOfProducts: number;
         total: number;
+        idNegocio: number;
       };
     }
-  | { type: "ORDER_COMPLETED" };
+  | { type: "ORDER_COMPLETED" }
+  | { type: "SET_ID_NEGOCIO"; payload: number };
 
 export const bagReducer = (state: BagState, action: BagAction): BagState => {
   switch (action.type) {
@@ -32,6 +35,11 @@ export const bagReducer = (state: BagState, action: BagAction): BagState => {
         ...state,
         bag: [...action.payload],
       };
+    case "LOAD_ID_NEGOCIO":
+      return {
+        ...state,
+        idNegocio: action.payload ?? state.idNegocio ?? 0,
+      };
     case "CHANGE_BAG_QUANTITY":
       return {
         ...state,
@@ -45,8 +53,7 @@ export const bagReducer = (state: BagState, action: BagAction): BagState => {
       return {
         ...state,
         bag: state.bag.filter(
-          (product) =>
-            !(product.id_producto === action.payload.id_producto)
+          (product) => !(product.id_producto === action.payload.id_producto)
         ),
       };
     case "UPDATE_ORDER_SUMMARY":
@@ -67,6 +74,11 @@ export const bagReducer = (state: BagState, action: BagAction): BagState => {
         bag: [],
         numberOfProducts: 0,
         total: 0,
+      };
+    case "SET_ID_NEGOCIO":
+      return {
+        ...state,
+        idNegocio: action.payload,
       };
     default:
       return state;

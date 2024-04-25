@@ -3,7 +3,7 @@ import {
   IDuenoNegocio,
   IHistorial,
   IInventario,
-  IProductoOrden,
+  IOrden,
   IPublicacion,
 } from "@/interfaces";
 
@@ -23,7 +23,7 @@ export interface INegocio {
 
   historial?: IHistorial;
   inventario?: IInventario;
-  productosOrden?: IProductoOrden[];
+  ordenes?: IOrden[];
   publicaciones?: IPublicacion[];
 
   created_at?: string;

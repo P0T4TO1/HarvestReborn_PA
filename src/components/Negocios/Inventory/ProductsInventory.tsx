@@ -68,7 +68,7 @@ export const ProductsInventory = () => {
   }, [user?.duenonegocio?.negocio?.id_negocio]);
 
   return (
-    <div className="pt-12 container mx-auto">
+    <div className="pt-8 container mx-auto">
       <div className="p-4 flex flex-col gap-4">
         <h1 className="text-2xl font-black flex flex-col leading-none dark:text-green-600 text-green-900">
           Tú inventario

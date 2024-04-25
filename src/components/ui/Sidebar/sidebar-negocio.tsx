@@ -6,12 +6,9 @@ import { SidebarMenu, SidebarItem } from "@/components";
 import { usePathname } from "next/navigation";
 import { UiContext } from "@/context/ui";
 import { Image } from "@nextui-org/react";
-import {
-  MdOutlineStorefront,
-  MdOutlineInventory2,
-} from "react-icons/md";
+import { MdOutlineStorefront, MdOutlineInventory2 } from "react-icons/md";
 import { IoChatbubblesOutline, IoNotifications } from "react-icons/io5";
-import { FaAppleAlt, FaChartBar, FaHome } from "react-icons/fa";
+import { FaChartBar, FaHome, FaBoxOpen } from "react-icons/fa";
 
 export const SidebarWrapperNegocio = () => {
   const pathname = usePathname();
@@ -59,7 +56,7 @@ export const SidebarWrapperNegocio = () => {
               <SidebarItem
                 isActive={pathname === "/orders"}
                 title="Pedidos"
-                icon={<FaAppleAlt size={24} />}
+                icon={<FaBoxOpen size={24} />}
                 href="/orders"
               />
               <SidebarItem
@@ -72,7 +69,7 @@ export const SidebarWrapperNegocio = () => {
                 isActive={pathname === "/reports"}
                 title="Reportes"
                 icon={<FaChartBar size={24} />}
-                href="/reports"
+                href={"/reports"}
               />
               <SidebarItem
                 isActive={pathname === "/notifications"}

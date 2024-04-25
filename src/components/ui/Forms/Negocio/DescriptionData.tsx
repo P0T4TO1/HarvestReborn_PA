@@ -63,7 +63,7 @@ export const DescriptionForm = ({ negocio }: DescriptionDataProps) => {
   };
 
   return (
-    <>
+    <div id={"descripcion"}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Card className="p-6">
           <CardHeader className="flex justify-between">
@@ -91,6 +91,6 @@ export const DescriptionForm = ({ negocio }: DescriptionDataProps) => {
           </CardFooter>
         </Card>
       </form>
-    </>
+    </div>
   );
 };

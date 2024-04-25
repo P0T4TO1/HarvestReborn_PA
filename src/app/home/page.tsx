@@ -24,24 +24,24 @@ const HomePage = async () => {
           <Spinner size="lg" />
           <p>Cargando...</p>
         </div>
-      ) : (
-        <section className="flex">
-          {session?.user.id_rol === 2 && <SidebarWrapperNegocio />}
-          {session?.user.id_rol === 2 ? (
-            <>
-              <NavbarWrapperNegocio>
-                <HomeNegocio />
-                <Footer />
-              </NavbarWrapperNegocio>
-            </>
-          ) : (
-            <>
-              <NavbarComponent />
-              <HomeCliente />
+      ) : session?.user.id_rol === 2 ? (
+        <>
+          <section className="flex">
+            <SidebarWrapperNegocio />
+            <NavbarWrapperNegocio>
+              <HomeNegocio />
               <Footer />
-            </>
-          )}
-        </section>
+            </NavbarWrapperNegocio>
+          </section>
+        </>
+      ) : (
+        <>
+          <section className="flex mt-16 flex-col relative overflow-hidden min-h-screen">
+            <NavbarComponent />
+            <HomeCliente />
+            <Footer />
+          </section>
+        </>
       )}
     </>
   );

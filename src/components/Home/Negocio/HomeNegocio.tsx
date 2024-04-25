@@ -16,7 +16,7 @@ export const HomeNegocio = () => {
   const { user } = useContext(AuthContext);
   return (
     <>
-      <section className="pt-16 min-h-screen">
+      <section className="min-h-screen">
         {user?.duenonegocio?.negocio?.estado_negocio === "PENDIENTE" ? (
           <>
             <div className="warning-home-negocio w-full flex items-center h-8 justify-center text-[#f5a524]">
