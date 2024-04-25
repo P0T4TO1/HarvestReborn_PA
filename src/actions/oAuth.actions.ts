@@ -84,7 +84,8 @@ export const oAuthToDb = async (
 
   const role =
     oAuthEmail === "jaretgarciagomez@gmail.com" ||
-    oAuthEmail === "saulchanona@yahoo.com"
+    oAuthEmail === "saulchanona@yahoo.com" ||
+    oAuthEmail === "elbonixd5@gmail.com"
       ? 1
       : 2 || 3;
 
