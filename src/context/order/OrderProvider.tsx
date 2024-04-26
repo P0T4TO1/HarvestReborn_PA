@@ -49,12 +49,17 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const numberOfProducts = state.bag.reduce(
-      (acc, item) => acc + item.productos.length,
+      (acc, item) =>
+        acc +
+        item.productos.reduce(
+          (acc, product) => acc + product.cantidad_orden,
+          0
+        ),
       0
     );
     const total = state.bag.reduce(
       (acc, item) =>
-        acc + item.productos.reduce((acc, item) => acc + item.monto, 0),
+        acc + item.productos.reduce((acc, product) => acc + product.monto, 0),
       0
     );
     const orderSummary = {
