@@ -11,10 +11,14 @@ export const BagPageComponent = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (isLoaded && bag.length === 0) router.push("/bag/empty");
+    if (
+      (isLoaded && bag.map((item) => item.productos.length === 0)) ||
+      bag.length === 1
+    )
+      router.push("/bag/empty");
   }, [bag, isLoaded, router]);
 
-  if (!isLoaded && bag.length === 0)
+  if (!isLoaded && bag.map((item) => item.productos.length === 0) || bag.length === 1)
     return (
       <>
         <div className="flex items-center justify-center m-auto">

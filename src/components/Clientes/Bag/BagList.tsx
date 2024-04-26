@@ -3,7 +3,7 @@
 import React, { useContext } from "react";
 import { BagContext } from "@/context/order";
 import { AuthContext } from "@/context/auth";
-import { IProductoOrden } from "@/interfaces";
+import { BagType, IProductoOrden } from "@/interfaces";
 import {
   Divider,
   Image,
@@ -26,7 +26,7 @@ import {
 
 interface BagListProps {
   editable?: boolean;
-  products?: IProductoOrden[];
+  products?: BagType;
 }
 
 export const BagList = ({ editable = false, products }: BagListProps) => {
@@ -95,73 +95,81 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
         <div className="mt-6 grid lg:grid-cols-3 grid-cols-1">
           <div className="lg:col-span-2 pr-6">
             {productsInBag.map((product) => (
-              <div key={product.id_productoOrden} className="w-full">
-                <Divider />
-                <div className="grid grid-cols-4 py-4">
-                  <div>
-                    <Image
-                      src={product.producto?.imagen_producto}
-                      alt={product.producto?.nombre_producto}
-                      width="100"
-                      height="100"
-                    />
-                  </div>
-                  <div className="flex flex-col items justify-center">
-                    <p>{product.producto?.nombre_producto}</p>
-                    <p>${product.monto}</p>
-                  </div>
-                  <div className="flex items-center justify-center">
-                    {editable && (
-                      <>
+              <div
+                key={
+                  product.id_negocio +
+                  product.productos.map((p) => p.id_producto).join("")
+                }
+                className="w-full"
+              >
+                {product.productos.map((p) => (
+                  <>
+                    <Divider />
+                    <div className="grid grid-cols-4 py-4">
+                      <div>
+                        <Image
+                          src={p.producto?.imagen_producto}
+                          alt={p.producto?.nombre_producto}
+                          width="100"
+                          height="100"
+                        />
+                      </div>
+                      <div className="flex flex-col items justify-center">
+                        <p>{p.producto?.nombre_producto}</p>
+                        <p>${p.monto}</p>
+                      </div>
+                      <div className="flex items-center justify-center">
+                        {editable && (
+                          <>
+                            <Button
+                              isIconOnly
+                              onClick={() =>
+                                onNewQuantity(
+                                  p,
+                                  p.cantidad_orden - 1,
+                                  p.monto - p.monto / p.cantidad_orden
+                                )
+                              }
+                              variant="light"
+                              size="sm"
+                            >
+                              <MdOutlineDoNotDisturbOn size={25} />
+                            </Button>
+                            <span className="mx-4">
+                              {p.cantidad_orden.toString()} kg
+                            </span>
+                            <Button
+                              isIconOnly
+                              onClick={() =>
+                                onNewQuantity(
+                                  p,
+                                  p.cantidad_orden + 1,
+                                  p.monto + p.monto / p.cantidad_orden
+                                )
+                              }
+                              variant="light"
+                              size="sm"
+                            >
+                              <MdAddCircleOutline size={25} />
+                            </Button>
+                          </>
+                        )}
+                      </div>
+                      <div className="flex justify-end">
                         <Button
                           isIconOnly
-                          onClick={() =>
-                            onNewQuantity(
-                              product,
-                              product.cantidad_orden - 1,
-                              product.monto -
-                                product.monto / product.cantidad_orden
-                            )
-                          }
+                          onClick={() => removeBagProduct(p)}
+                          color="danger"
                           variant="light"
                           size="sm"
                         >
-                          <MdOutlineDoNotDisturbOn size={25} />
+                          <MdOutlineClose size={25} />
                         </Button>
-                        <span className="mx-4">
-                          {product.cantidad_orden.toString()} kg
-                        </span>
-                        <Button
-                          isIconOnly
-                          onClick={() =>
-                            onNewQuantity(
-                              product,
-                              product.cantidad_orden + 1,
-                              product.monto +
-                                product.monto / product.cantidad_orden
-                            )
-                          }
-                          variant="light"
-                          size="sm"
-                        >
-                          <MdAddCircleOutline size={25} />
-                        </Button>
-                      </>
-                    )}
-                  </div>
-                  <div className="flex justify-end">
-                    <Button
-                      isIconOnly
-                      onClick={() => removeBagProduct(product)}
-                      color="danger"
-                      variant="light"
-                      size="sm"
-                    >
-                      <MdOutlineClose size={25} />
-                    </Button>
-                  </div>
-                </div>
-                <Divider />
+                      </div>
+                    </div>
+                    <Divider />
+                  </>
+                ))}
               </div>
             ))}
           </div>
