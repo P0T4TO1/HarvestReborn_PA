@@ -39,7 +39,7 @@ async function createOrder(req: NextRequest, res: NextResponse) {
     .toString();
 
   try {
-    const order = await prisma.d_orden.create({
+    const orders = await prisma.d_orden.createMany({
       data: {
         id_orden,
         fecha_orden: body.fecha_orden,
@@ -49,67 +49,12 @@ async function createOrder(req: NextRequest, res: NextResponse) {
         id_cliente: body.id_cliente,
         id_historial: body.id_historial,
         id_negocio: body.id_negocio,
-        productoOrden: {
-          createMany: {
-            data: products.map((product) => ({
-              cantidad_orden: product.cantidad_orden,
-              monto: product.monto,
-              id_producto: product.id_producto,
-              id_lote: product.id_lote,
-            })),
-          },
-        },
-      },
-      include: {
-        productoOrden: {
-          include: {
-            producto: true,
-          },
-        },
-        cliente: {
-          include: {
-            user: {
-              select: {
-                email: true,
-              },
-            },
-          },
-        },
       },
     });
 
-    // const emailHtml = render(
-    //   OrderNotificationEmail({
-    //     email_cliente: order.cliente?.user.email!,
-    //     email_negocio: order.productoOrden.map(
-    //       (product) => product.negocio.dueneg.user.email
-    //     ),
-    //     fecha_orden: order.fecha_orden.toISOString(),
-    //     hora_orden: order.hora_orden.toISOString(),
-    //     monto_total: order.monto_total,
-    //   }) as React.ReactElement
-    // );
-
-    // const msgs = order.productoOrden.map((product) => ({
-    //   from: "Harvest Reborn<harvestreborn@gmail.com>",
-    //   to: product.negocio.dueneg.user.email,
-    //   subject: "Nueva orden en Harvest Reborn",
-    //   html: emailHtml,
-    // }));
-
-    // try {
-    //   await sgMail.send(msgs);
-    // } catch (error) {
-    //   console.error(error);
-    //   return NextResponse.json(
-    //     { message: "Error al enviar correo" },
-    //     { status: 400 }
-    //   );
-    // }
-
     return NextResponse.json(
       {
-        order,
+        orders,
         message: "Orden creada con éxito",
       },
       { status: 201 }

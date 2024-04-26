@@ -26,7 +26,7 @@ export const NegocioProducts = ({
   id_negocio,
   lotes,
 }: NegocioProductsProps) => {
-  const { addProductToBag, idNegocio, bag } = useContext(BagContext);
+  const { addProductToBag, bag } = useContext(BagContext);
   const [isSeletedFrutas, setIsSelectedFrutas] = useState(false);
   const [isSeletedVerduras, setIsSelectedVerduras] = useState(false);
   const [filterValue, setFilterValue] = useState("");
@@ -74,11 +74,6 @@ export const NegocioProducts = ({
   }, []);
 
   const onAddProduct = (product: IProductoOrden) => {
-    console.log(idNegocio, id_negocio, bag);
-    if (bag.length > 0 && idNegocio !== parseInt(id_negocio.toString())) {
-      toast("No puedes agregar productos de otro negocio", DANGER_TOAST);
-      return;
-    }
     addProductToBag(product);
   };
 
