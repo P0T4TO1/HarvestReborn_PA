@@ -1,14 +1,17 @@
-import { ICliente, INegocio, IProduct } from "@/interfaces";
+import { ICliente, ILote, INegocio, IProduct } from "@/interfaces";
 
 export interface IOrden {
-  id_orden?: number;
-  fecha_orden: string;
-  hora_orden: string;
+  id_orden?: string;
+  fecha_orden: string | Date;
+  hora_orden: string | Date;
   monto_total: number;
-  estado_orden: EstadoOrden;
+  estado_orden: EstadoOrden | string;
 
   id_cliente?: number;
   cliente?: ICliente;
+
+  id_negocio?: number;
+  negocio?: INegocio;
 
   id_historial?: number;
 
@@ -26,12 +29,12 @@ export interface IProductoOrden {
 
   id_orden?: number;
   orden?: IOrden;
-  
+
   id_producto: number;
   producto?: IProduct;
 
-  id_negocio: number;
-  negocio?: INegocio;
+  id_lote?: number;
+  lote?: ILote;
 
   createdAt?: string;
   updatedAt?: string;

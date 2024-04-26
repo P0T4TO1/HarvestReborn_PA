@@ -60,6 +60,7 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
         WARNING_TOAST
       );
     }
+    console.log(user);
     createOrder(
       user?.cliente?.id_cliente!,
       user?.cliente?.historial.id_historial!

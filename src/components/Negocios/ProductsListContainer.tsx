@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { hrApi } from "@/api";
-import { ILote, IProductoOrden } from "@/interfaces";
+import { ILote } from "@/interfaces";
 import { CircularProgress } from "@nextui-org/react";
 import { NegocioProducts } from "@/components";
 

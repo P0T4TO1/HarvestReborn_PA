@@ -73,7 +73,7 @@ export const GeneralDataForm = ({ negocio }: Props) => {
   };
 
   return (
-    <>
+    <div id={"negocio"}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Card className="p-6">
           <CardHeader className="flex justify-between">
@@ -201,7 +201,7 @@ export const GeneralDataForm = ({ negocio }: Props) => {
       <div className="container mt-4">
         <iframe
           style={{ border: "0" }}
-          width="60%"
+          width="100%"
           height="450"
           loading="lazy"
           allowFullScreen
@@ -209,6 +209,6 @@ export const GeneralDataForm = ({ negocio }: Props) => {
           src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyAIAxu9rSTpzfa_kkep1niIDxKvMtypqXM&q=${negocio?.direccion_negocio}`}
         ></iframe>
       </div>
-    </>
+    </div>
   );
 };

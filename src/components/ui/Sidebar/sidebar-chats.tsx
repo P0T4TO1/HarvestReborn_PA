@@ -12,7 +12,7 @@ import { usePathname } from "next/navigation";
 import { UiContext } from "@/context/ui";
 import { FaSearch, FaChevronLeft } from "react-icons/fa";
 import { Input, Link, Button, Tooltip } from "@nextui-org/react";
-import { IChatWithLastMessage, IMensaje } from "@/interfaces";
+import { IChatWithLastMessage } from "@/interfaces";
 import { useSession } from "next-auth/react";
 
 interface Props {

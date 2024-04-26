@@ -90,3 +90,11 @@ export const negocioDescriptionSchema = z.object({
 export const negocioImagesSchema = z.object({
   images_negocio: z.array(z.string()).optional(),
 });
+
+export const postValidationSchema = z.object({
+  images_publicacion: z.array(z.string()),
+  titulo_publicacion: z.string(),
+  descripcion_publicacion: z.string(),
+  price: z.number().optional(),
+  disponibilidad: z.string(),
+});

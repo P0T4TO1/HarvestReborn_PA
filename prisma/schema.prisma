@@ -113,10 +113,10 @@ model m_negocio {
   id_dueneg Int            @unique
   dueneg    d_duenonegocio @relation(fields: [id_dueneg], references: [id_dueneg], onDelete: Cascade)
 
-  historial      c_historial?
-  inventario     c_inventario?
-  productosOrden m_prodcutoOrden[]
-  publicaciones  m_publicaciones[]
+  historial     c_historial?
+  inventario    c_inventario?
+  ordenes       d_orden[]
+  publicaciones m_publicaciones[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -160,6 +160,8 @@ model m_lote {
 
   id_publicacion Int?
   publicacion    m_publicaciones? @relation(fields: [id_publicacion], references: [id_publicacion])
+
+  productoOrden m_prodcutoOrden[]
 
   @@index([id_inventario])
   @@index([id_producto])
@@ -226,8 +228,8 @@ model m_prodcutoOrden {
   id_producto Int
   producto    m_producto @relation(fields: [id_producto], references: [id_producto], onDelete: Cascade)
 
-  id_negocio Int
-  negocio    m_negocio @relation(fields: [id_negocio], references: [id_negocio], onDelete: Cascade)
+  id_lote Int
+  lote    m_lote @relation(fields: [id_lote], references: [id_lote], onDelete: Cascade)
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -235,7 +237,7 @@ model m_prodcutoOrden {
 
   @@index([id_orden])
   @@index([id_producto])
-  @@index([id_negocio])
+  @@index([id_lote])
 }
 
 enum EstadoOrden {
@@ -252,11 +254,14 @@ model d_orden {
   monto_total  Float
   estado_orden EstadoOrden @default(PENDIENTE)
 
-  id_cliente Int?
-  cliente    d_cliente? @relation(fields: [id_cliente], references: [id_cliente])
+  id_cliente Int
+  cliente    d_cliente @relation(fields: [id_cliente], references: [id_cliente])
 
   id_historial Int?
   historial    c_historial? @relation(fields: [id_historial], references: [id_historial])
+
+  id_negocio Int
+  negocio    m_negocio @relation(fields: [id_negocio], references: [id_negocio])
 
   productoOrden m_prodcutoOrden[]
 
@@ -266,6 +271,7 @@ model d_orden {
 
   @@index([id_cliente])
   @@index([id_historial])
+  @@index([id_negocio])
 }
 
 model c_historial {

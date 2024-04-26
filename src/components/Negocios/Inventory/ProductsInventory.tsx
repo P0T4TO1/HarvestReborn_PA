@@ -4,9 +4,14 @@ import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import { hrApi } from "@/api";
 import { ILote } from "@/interfaces";
 import { AuthContext } from "@/context/auth";
-import { Input, CircularProgress, Button, Link } from "@nextui-org/react";
+import {
+  Input,
+  CircularProgress,
+  Button,
+  Link,
+} from "@nextui-org/react";
 import { ProductsCollapsibleTable } from "@/components";
-import { MdAddCircleOutline } from "react-icons/md";
+import { MdAddCircleOutline, MdOutlinePostAdd } from "react-icons/md";
 import { FaSearch } from "react-icons/fa";
 
 export const ProductsInventory = () => {
@@ -63,14 +68,11 @@ export const ProductsInventory = () => {
   }, [user?.duenonegocio?.negocio?.id_negocio]);
 
   return (
-    <div className="pt-16 container mx-auto">
-      <h1 className="font-bebas-neue uppercase text-4xl font-black flex flex-col leading-none dark:text-green-600 text-green-900">
-        Tú inventario
-        <span className="text-xl text-gray-900 dark:text-gray-300 font-semibold">
-          Aquí puedes ver todos tus productos
-        </span>
-      </h1>
-      <div className="my-4">
+    <div className="pt-8 container mx-auto">
+      <div className="p-4 flex flex-col gap-4">
+        <h1 className="text-2xl font-black flex flex-col leading-none dark:text-green-600 text-green-900">
+          Tú inventario
+        </h1>
         <Link href={"/inventory/add-product"}>
           <Button
             color="primary"
@@ -81,20 +83,30 @@ export const ProductsInventory = () => {
           </Button>
         </Link>
       </div>
-      <div className="flex">
-        <div className="flex flex-1 justify-center sm:justify-start">
-          <div className="mt-4 p-2">
-            <Input
-              isClearable
-              size="md"
-              radius="lg"
-              placeholder="Buscar productos..."
-              type="text"
-              startContent={<FaSearch size={25} />}
-              defaultValue={search}
-              onChange={handleChange}
-            />
-          </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2">
+        <div className="mt-4 p-2 lg:w-1/2">
+          <Input
+            isClearable
+            size="md"
+            radius="lg"
+            placeholder="Buscar productos..."
+            type="text"
+            startContent={<FaSearch size={25} />}
+            defaultValue={search}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="mt-4 p-2 flex justify-end">
+          <Link href={"/publicacion"}>
+            <Button
+              color="primary"
+              variant="faded"
+              startContent={<MdOutlinePostAdd size={25} />}
+            >
+              <span className="ml-2">Crear publicación de productos</span>
+            </Button>
+          </Link>
         </div>
       </div>
 

@@ -45,13 +45,10 @@ export const AddProductLote = () => {
 
   return (
     <>
-      <div className="pt-16 container mx-auto">
-        <h1 className="font-bebas-neue uppercase text-4xl font-black flex flex-col leading-none dark:text-green-600 text-green-900">
+      <div className="pt-8 container mx-auto p-4">
+        <h1 className="text-2xl font-black flex flex-col leading-none dark:text-green-600 text-green-900">
           Agregar productos
         </h1>
-        <p className="text-xl dark:text-gray-300 text-gray-900 font-semibold">
-          Aquí puedes agregar productos a tu inventario
-        </p>
 
         <AddLoteToInventory
           id={productId}
@@ -61,7 +58,7 @@ export const AddProductLote = () => {
 
         <div className="flex mt-12">
           <div className="flex flex-col flex-1 justify-center sm:justify-start">
-            <h1 className="font-bebas-neue uppercase text-xl font-black flex flex-col leading-none dark:text-green-600 text-green-900">
+            <h1 className="font-bebas-neue text-lg font-black flex flex-col leading-none dark:text-green-600 text-green-900">
               Todos los productos registrados
             </h1>
             <div className="flex mt-2 w-2/5">

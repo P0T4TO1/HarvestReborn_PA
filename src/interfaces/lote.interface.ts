@@ -1,4 +1,4 @@
-import { IProduct, IPublicacion } from "@/interfaces";
+import { IProduct, IPublicacion, IInventario } from "@/interfaces";
 
 export interface ILote {
   id_lote: number;
@@ -16,6 +16,7 @@ export interface ILote {
   tipo_almacenaje: TipoAlmacenaje;
 
   id_inventario: number;
+  inventario: IInventario;
 
   id_producto: number;
   producto: IProduct;

@@ -195,9 +195,6 @@ export const OrderDetails = ({
                             <p className="ml-2">
                               {product.producto?.nombre_producto}
                             </p>
-                            <p className="ml-2 text-gray-600 text-sm">
-                              Negocio: {product.negocio?.nombre_negocio}
-                            </p>
                             <p className="ml-2 text-gray-600">
                               x{product.cantidad_orden} kg
                             </p>
@@ -214,8 +211,8 @@ export const OrderDetails = ({
                             onClick={() =>
                               onContact(
                                 user?.id!,
-                                product.negocio?.dueneg.id_user!,
-                                product.negocio?.dueneg.nombre_dueneg!
+                                order.negocio?.dueneg.id_user!,
+                                order.negocio?.dueneg.nombre_dueneg!
                               )
                             }
                           >
@@ -301,9 +298,6 @@ export const OrderDetails = ({
                             <p className="ml-2">
                               {product.producto?.nombre_producto}
                             </p>
-                            <p className="ml-2 text-gray-600 text-sm">
-                              Negocio: {product.negocio?.nombre_negocio}
-                            </p>
                             <p className="ml-2 text-gray-600">
                               x{product.cantidad_orden} kg
                             </p>
@@ -320,8 +314,8 @@ export const OrderDetails = ({
                               console.log(product),
                                 onContact(
                                   user?.id!,
-                                  product.negocio?.dueneg.id_user!,
-                                  product.negocio?.dueneg.nombre_dueneg!
+                                  order.negocio?.dueneg.id_user!,
+                                  order.negocio?.dueneg.nombre_dueneg!
                                 );
                             }}
                           >

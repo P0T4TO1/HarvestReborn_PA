@@ -8,7 +8,7 @@ const MiNegocioPage = async () => {
   if (!session) redirect("/auth/login");
   if (session?.user.id_rol !== 2) redirect("/home");
   return (
-    <section className="flex mt-16 flex-col relative overflow-hidden min-h-screen">
+    <section className="flex flex-col relative overflow-hidden min-h-screen">
       <MiNegocioSection />
     </section>
   );

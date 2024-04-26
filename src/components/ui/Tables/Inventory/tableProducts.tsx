@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useCallback, ChangeEvent, Key } from "react";
+import React, { useState, useMemo, useCallback, Key } from "react";
 import {
   Table,
   TableHeader,
@@ -23,12 +23,15 @@ import {
   ModalBody,
   ModalFooter,
   ModalContent,
+  Chip,
+  ChipProps,
 } from "@nextui-org/react";
 import { ILote } from "@/interfaces";
 import {
   columnsLotes as columns,
   storageOptionsLotes,
   fechasVencimientoOptionsLotes,
+  storageColorMapLotes as storageColorMap,
 } from "@/utils/data-table";
 import {
   FaChevronDown,
@@ -174,10 +177,18 @@ export const TableProductsInventory = ({ lotes }: Props) => {
           );
         case "tipo_almacenaje":
           return (
-            <div className="dark:text-gray-300">
-              {lote.tipo_almacenaje.charAt(0) +
-                lote.tipo_almacenaje.slice(1).toLowerCase()}
-            </div>
+            <>
+              <Chip
+                size="md"
+                variant="flat"
+                color={
+                  storageColorMap[lote.tipo_almacenaje] as ChipProps["color"]
+                }
+              >
+                {lote.tipo_almacenaje.charAt(0) +
+                  lote.tipo_almacenaje.slice(1).toLowerCase()}
+              </Chip>
+            </>
           );
         case "fecha_entrada":
           return (
@@ -334,14 +345,11 @@ export const TableProductsInventory = ({ lotes }: Props) => {
                 selectionMode="multiple"
                 onSelectionChange={setStorageFilter}
               >
-                {storageOptionsLotes.map((option) => {
-                  console.log(option);
-                  return (
-                    <DropdownItem key={option.uid} className="capitalize">
-                      {capitalize(option.name)}
-                    </DropdownItem>
-                  );
-                })}
+                {storageOptionsLotes.map((option) => (
+                  <DropdownItem key={option.uid} className="capitalize">
+                    {capitalize(option.name)}
+                  </DropdownItem>
+                ))}
               </DropdownMenu>
             </Dropdown>
             <Dropdown>
@@ -409,7 +417,13 @@ export const TableProductsInventory = ({ lotes }: Props) => {
         </div>
       </div>
     );
-  }, [visibleColumns, lotes.length, fechaVencimientoFilter, storageFilter, openInfoModal]);
+  }, [
+    visibleColumns,
+    lotes.length,
+    fechaVencimientoFilter,
+    storageFilter,
+    openInfoModal,
+  ]);
 
   const bottomContent = useMemo(() => {
     return (

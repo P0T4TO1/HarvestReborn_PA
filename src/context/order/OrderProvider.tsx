@@ -14,6 +14,7 @@ export interface BagState {
   bag: IProductoOrden[];
   numberOfProducts: number;
   total: number;
+  idNegocio: number;
 }
 
 const BAG_INITIAL_STATE: BagState = {
@@ -21,6 +22,7 @@ const BAG_INITIAL_STATE: BagState = {
   bag: [],
   numberOfProducts: 0,
   total: 0,
+  idNegocio: 0,
 };
 
 export const BagProvider = ({ children }: { children: ReactNode }) => {
@@ -32,7 +34,11 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
         ? JSON.parse(localStorage.getItem("bag")!)
         : [];
       const cookieBag = Cookie.get("bag") ? JSON.parse(Cookie.get("bag")!) : [];
-      dispatch({ type: "LOAD_BAG", payload: localBag || cookieBag });
+      const idNegocio = localStorage.getItem("negocio")
+        ? JSON.parse(localStorage.getItem("negocio")!)
+        : 0;
+      dispatch({ type: "LOAD_ID_NEGOCIO", payload: idNegocio });
+      dispatch({ type: "LOAD_BAG", payload: localBag ?? cookieBag });
     } catch (error) {
       console.log(error);
       dispatch({ type: "LOAD_BAG", payload: [] });
@@ -40,27 +46,36 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   useEffect(() => {
+    localStorage.setItem("negocio", JSON.stringify(state.idNegocio));
+    Cookie.set("negocio", JSON.stringify(state.idNegocio));
     localStorage.setItem("bag", JSON.stringify(state.bag));
     Cookie.set("bag", JSON.stringify(state.bag));
-  }, [state.bag]);
+  }, [state.bag, state.idNegocio]);
 
   useEffect(() => {
     const numberOfProducts = state.bag.reduce(
       (acc, product) => acc + product.cantidad_orden,
       0
     );
-    const total = state.bag.reduce(
-      (acc, product) => acc + product.monto,
-      0
-    );
+    const total = state.bag.reduce((acc, product) => acc + product.monto, 0);
+    const idNegocio = parseInt(state.idNegocio.toFixed());
     const orderSummary = {
       numberOfProducts,
       total,
+      idNegocio,
     };
     dispatch({ type: "UPDATE_ORDER_SUMMARY", payload: orderSummary });
-  }, [state.bag]);
+  }, [state.bag, state.idNegocio]);
 
   const addProductToBag = async (product: IProductoOrden) => {
+    console.log(product.lote?.inventario.id_negocio, state.idNegocio);
+    if (state.bag.length === 0) {
+      dispatch({
+        type: "SET_ID_NEGOCIO",
+        payload: product.lote?.inventario.id_negocio!,
+      });
+    }
+
     const productInBag = state.bag.some(
       (item) => item.id_producto === product.id_producto
     );
@@ -92,6 +107,10 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
     dispatch({ type: "CLEAR_BAG", payload: [] });
   };
 
+  const setIdNegocio = (idNegocio: number) => {
+    dispatch({ type: "SET_ID_NEGOCIO", payload: idNegocio });
+  };
+
   const createOrder = async (id_cliente: number, id_historial: number) => {
     const body: IOrden = {
       fecha_orden: new Date().toISOString(),
@@ -101,6 +120,7 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
       productoOrden: state.bag,
       id_cliente,
       id_historial,
+      id_negocio: state.idNegocio,
     };
 
     const products = state.bag;
@@ -135,6 +155,7 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
     <BagContext.Provider
       value={{
         ...state,
+        setIdNegocio,
         addProductToBag,
         removeBagProduct,
         updateBagQuantity,

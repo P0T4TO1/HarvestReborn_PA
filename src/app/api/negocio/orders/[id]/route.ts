@@ -13,22 +13,22 @@ async function getOrdersByNegocio(
       { status: 400 }
     );
   try {
-    const orders = await prisma.m_prodcutoOrden.findMany({
+    const orders = await prisma.d_orden.findMany({
       where: {
         id_negocio: parseInt(params.id.toString()),
       },
       include: {
         negocio: true,
-        producto: true,
-        orden: {
+        productoOrden: {
           include: {
-            cliente: {
-              include: {
-                user: {
-                  select: {
-                    email: true,
-                  },
-                },
+            producto: true,
+          },
+        },
+        cliente: {
+          include: {
+            user: {
+              select: {
+                email: true,
               },
             },
           },

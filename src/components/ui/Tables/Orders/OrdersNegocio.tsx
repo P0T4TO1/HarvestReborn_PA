@@ -1,6 +1,13 @@
 "use client";
 
-import React, { useState, useMemo, useCallback, ChangeEvent, Key, useEffect } from "react";
+import React, {
+  useState,
+  useMemo,
+  useCallback,
+  ChangeEvent,
+  Key,
+  useEffect,
+} from "react";
 import {
   Table,
   TableHeader,
@@ -22,7 +29,7 @@ import {
   Tooltip,
   useDisclosure,
 } from "@nextui-org/react";
-import { IMergedOrder, IOrden, IProductoOrden } from "@/interfaces";
+import { IOrden, IProductoOrden } from "@/interfaces";
 import {
   columnsOrders,
   statusOptionsOrders,
@@ -34,7 +41,7 @@ import { capitalize } from "@/utils/capitalize";
 import { FaChevronDown, FaSearch, FaEye } from "react-icons/fa";
 
 type Props = {
-  orders: IMergedOrder[];
+  orders: IOrden[];
 };
 
 export const OrdersTable = ({ orders }: Props) => {
@@ -70,8 +77,8 @@ export const OrdersTable = ({ orders }: Props) => {
     let filteredOrders = [...orders];
 
     if (hasSearchFilter) {
-      filteredOrders = filteredOrders.filter((mergeOrder) =>
-        mergeOrder.orden.cliente?.nombre_cliente
+      filteredOrders = filteredOrders.filter((orden) =>
+        orden.cliente?.nombre_cliente
           .toLowerCase()
           .includes(filterValue.toLowerCase())
       );
@@ -80,8 +87,8 @@ export const OrdersTable = ({ orders }: Props) => {
       statusFilter !== "all" &&
       Array.from(statusFilter).length !== statusOptionsOrders.length
     ) {
-      filteredOrders = filteredOrders.filter((mergeOrder) =>
-        Array.from(statusFilter).includes(mergeOrder.orden.estado_orden)
+      filteredOrders = filteredOrders.filter((orden) =>
+        Array.from(statusFilter).includes(orden.estado_orden)
       );
     }
 
@@ -102,14 +109,12 @@ export const OrdersTable = ({ orders }: Props) => {
 
     return items.sort((a, b) => {
       if (
-        (a.orden[column as keyof IOrden] ?? "") <
-        (b.orden[column as keyof IOrden] ?? "")
+        (a[column as keyof IOrden] ?? "") < (b[column as keyof IOrden] ?? "")
       ) {
         return direction === "ascending" ? -1 : 1;
       }
       if (
-        (a.orden[column as keyof IOrden] ?? "") >
-        (b.orden[column as keyof IOrden] ?? "")
+        (a[column as keyof IOrden] ?? "") > (b[column as keyof IOrden] ?? "")
       ) {
         return direction === "ascending" ? 1 : -1;
       }
@@ -123,68 +128,74 @@ export const OrdersTable = ({ orders }: Props) => {
     console.log(order);
   };
 
-  const renderCell = useCallback((order: IMergedOrder, columnKey: Key) => {
-    const cellValue = order[columnKey as keyof IMergedOrder];
+  const renderCell = useCallback(
+    (order: IOrden, columnKey: Key) => {
+      const cellValue = order[columnKey as keyof IOrden];
 
-    switch (columnKey) {
-      case "id_orden":
-        return <>{order.orden.id_orden}</>;
-      case "cliente.nombre_cliente":
-        return <>{order.orden.cliente?.nombre_cliente}</>;
-      case "fecha_orden":
-        return (
-          <div>
-            {new Date(order.orden.fecha_orden).toLocaleDateString("es-ES", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-              hour: "numeric",
-              minute: "numeric",
-            })}
-          </div>
-        );
-      case "monto_total":
-        return (
-          <div>
-            ${order.productos.reduce((acc, curr) => acc + curr.monto, 0)} MXN
-          </div>
-        );
-      case "estado_orden":
-        return (
-          <Chip
-            color={
-              statusColorMap[order.orden.estado_orden] as ChipProps["color"]
-            }
-            variant="flat"
-            size="md"
-            style={{ textTransform: "capitalize" }}
-          >
-            {capitalize(order.orden.estado_orden)}
-          </Chip>
-        );
-      case "acciones":
-        return (
-          <div className="flex items-center gap-4">
-            <Tooltip content="Ver detalles">
-              <Button
-                isIconOnly
-                variant="light"
-                onClick={() => {
-                  setLoading(true);
-                  setOrderModal(order.orden);
-                  setProductsModal(order.productos);
-                  onOpen();
-                }}
-              >
-                <FaEye size={20} />
-              </Button>
-            </Tooltip>
-          </div>
-        );
-      default:
-        return cellValue;
-    }
-  }, [onOpen]);
+      switch (columnKey) {
+        case "id_orden":
+          return <>{order.id_orden}</>;
+        case "cliente.nombre_cliente":
+          return <>{order.cliente?.nombre_cliente}</>;
+        case "fecha_orden":
+          return (
+            <div>
+              {new Date(order.fecha_orden).toLocaleDateString("es-ES", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+              })}
+            </div>
+          );
+        case "monto_total":
+          return (
+            <div>
+              ${order.productoOrden?.reduce((acc, curr) => acc + curr.monto, 0)}{" "}
+              MXN
+            </div>
+          );
+        case "estado_orden":
+          return (
+            <Chip
+              color={
+                statusColorMap[
+                  order.estado_orden as keyof typeof statusColorMap
+                ] as ChipProps["color"]
+              }
+              variant="flat"
+              size="md"
+              style={{ textTransform: "capitalize" }}
+            >
+              {capitalize(order.estado_orden)}
+            </Chip>
+          );
+        case "acciones":
+          return (
+            <div className="flex items-center gap-4">
+              <Tooltip content="Ver detalles">
+                <Button
+                  isIconOnly
+                  variant="light"
+                  onClick={() => {
+                    setLoading(true);
+                    setOrderModal(order);
+                    setProductsModal(order.productoOrden!);
+                    onOpen();
+                  }}
+                >
+                  <FaEye size={20} />
+                </Button>
+              </Tooltip>
+            </div>
+          );
+        default:
+          return cellValue;
+      }
+    },
+    [onOpen]
+  );
 
   const onNextPage = useCallback(() => {
     if (page < pages) {
@@ -331,7 +342,14 @@ export const OrdersTable = ({ orders }: Props) => {
         </div>
       </div>
     );
-  }, [selectedKeys, page, pages, filteredItems.length, onNextPage, onPreviousPage]);
+  }, [
+    selectedKeys,
+    page,
+    pages,
+    filteredItems.length,
+    onNextPage,
+    onPreviousPage,
+  ]);
 
   useEffect(() => {
     if (orderModal) {
@@ -340,7 +358,7 @@ export const OrdersTable = ({ orders }: Props) => {
   }, [orderModal]);
 
   return (
-    <div className=" w-full flex flex-col gap-4 mt-6">
+    <div className=" w-full flex flex-col gap-4 mt-2 p-2 sm:p-4">
       <OrderModal
         loading={loading}
         order={orderModal as IOrden}

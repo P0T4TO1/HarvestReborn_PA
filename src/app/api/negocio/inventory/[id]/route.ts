@@ -25,6 +25,11 @@ async function getLotesFromInventory(
       },
       include: {
         producto: true,
+        inventario: {
+          select: {
+            id_negocio: true,
+          },
+        },
       },
       distinct: ["id_producto"],
     });

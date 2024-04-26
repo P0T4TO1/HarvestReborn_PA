@@ -15,13 +15,14 @@ interface body {
   estado_orden: string;
   id_cliente: number;
   id_historial: number;
+  id_negocio: number;
 }
 
 interface products {
   cantidad_orden: number;
   monto: number;
   id_producto: number;
-  id_negocio: string;
+  id_lote: number;
 }
 
 async function createOrder(req: NextRequest, res: NextResponse) {
@@ -47,13 +48,14 @@ async function createOrder(req: NextRequest, res: NextResponse) {
         estado_orden: Estado.Pendiente,
         id_cliente: body.id_cliente,
         id_historial: body.id_historial,
+        id_negocio: body.id_negocio,
         productoOrden: {
           createMany: {
             data: products.map((product) => ({
               cantidad_orden: product.cantidad_orden,
               monto: product.monto,
               id_producto: product.id_producto,
-              id_negocio: parseInt(product.id_negocio),
+              id_lote: product.id_lote,
             })),
           },
         },
@@ -62,19 +64,6 @@ async function createOrder(req: NextRequest, res: NextResponse) {
         productoOrden: {
           include: {
             producto: true,
-            negocio: {
-              include: {
-                dueneg: {
-                  include: {
-                    user: {
-                      select: {
-                        email: true,
-                      },
-                    },
-                  },
-                },
-              },
-            },
           },
         },
         cliente: {

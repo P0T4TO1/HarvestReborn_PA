@@ -88,7 +88,7 @@ export const ImagesForm = ({ negocio }: ImagesDataProps) => {
   };
 
   return (
-    <>
+    <div id={"imagenes"}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Card className="p-6">
           <CardHeader className="flex justify-between">
@@ -144,6 +144,6 @@ export const ImagesForm = ({ negocio }: ImagesDataProps) => {
           </CardFooter>
         </Card>
       </form>
-    </>
+    </div>
   );
 };
