@@ -423,18 +423,6 @@ export const TableUsers = ({ users }: Props) => {
     onPreviousPage,
   ]);
 
-  // const handleDelete = async (id: string) => {
-  //   try {
-  //     await hrApi.delete(`/admin/users/${id}`).then(() => {
-  //       toast("Usuario eliminado correctamente", SUCCESS_TOAST);
-  //       window.location.reload();
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //     toast("Error al eliminar el usuario", DANGER_TOAST);
-  //   }
-  // };
-
   const handleChangeStatus = async (id: string, status: string) => {
     try {
       await hrApi.patch(`/admin/users/status/${id}`, { status }).then(() => {

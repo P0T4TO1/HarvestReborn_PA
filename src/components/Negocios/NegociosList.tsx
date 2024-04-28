@@ -87,6 +87,7 @@ export const NegociosList = () => {
           <div className="mt-4 p-2">
             <Input
               isClearable
+              aria-label="Buscar negocio por nombre"
               size="md"
               radius="lg"
               placeholder="Buscar negocio por nombre..."
@@ -128,6 +129,7 @@ export const NegociosList = () => {
               (negocio) =>
                 negocio.estado_negocio === Estado.Activo && (
                   <Card
+                    aria-label="Negocio"
                     isPressable
                     isHoverable
                     shadow="lg"
@@ -145,11 +147,11 @@ export const NegociosList = () => {
                           {negocio.nombre_negocio}
                         </h2>
                       </div>
-                      <div>
+                      {/* <div>
                         <Button color="success" variant="light" isIconOnly>
                           <FaRegStar size={25} />
                         </Button>
-                      </div>
+                      </div> */}
                     </CardHeader>
                     <CardBody className="overflow-visible px-5 pb-2">
                       <p className="mb-4">{negocio.direccion_negocio}</p>

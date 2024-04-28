@@ -54,10 +54,11 @@ export interface IMergedOrder {
   productos: IProductoOrden[];
 }
 
-export type BagType = [
-  {
-    id_negocio: number;
-    nombre_negocio: string;
-    productos: IProductoOrden[];
-  },
-];
+export interface ProductsOrder {
+  id_negocio: number;
+  nombre_negocio: string;
+  productos: IProductoOrden[];
+  total: number;
+}
+
+export type BagType = ProductsOrder[];

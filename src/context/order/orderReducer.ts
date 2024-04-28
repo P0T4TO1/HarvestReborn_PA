@@ -25,23 +25,27 @@ export const bagReducer = (state: BagState, action: BagAction): BagState => {
       return {
         ...state,
         isLoaded: true,
-        bag: (action.payload || state.bag) ?? [],
+        bag: [...action.payload, ...state.bag],
       };
     case "UPDATE_PRODUCTS_IN_BAG":
       return {
         ...state,
-        bag: action.payload,
+        bag: [...action.payload],
       };
     case "CHANGE_BAG_QUANTITY":
       return {
         ...state,
         bag: state.bag.map((item) => {
           item.productos = item.productos.map((product) => {
-            if (product.id_producto === action.payload.id_producto) {
+            if (
+              product.id_producto === action.payload.id_producto &&
+              product.lote?.inventario.id_negocio ===
+                action.payload.lote?.inventario.id_negocio
+            ) {
               product.cantidad_orden = action.payload.cantidad_orden;
               product.monto = action.payload.monto;
             }
-            return action.payload;
+            return product;
           });
           return item;
         }) as BagType,
@@ -49,11 +53,15 @@ export const bagReducer = (state: BagState, action: BagAction): BagState => {
     case "REMOVE_PRODUCT":
       return {
         ...state,
-        bag: state.bag.filter((item) =>
-          item.productos
-            .map((product) => product.id_producto)
-            .includes(action.payload.id_producto)
-        ) as BagType,
+        bag: state.bag.map((item) => {
+          item.productos = item.productos.filter(
+            (product) =>
+              product.id_producto !== action.payload.id_producto ||
+              product.lote?.inventario.id_negocio !==
+                action.payload.lote?.inventario.id_negocio
+          );
+          return item;
+        }) as BagType,
       };
     case "UPDATE_ORDER_SUMMARY":
       return {
@@ -70,7 +78,7 @@ export const bagReducer = (state: BagState, action: BagAction): BagState => {
     case "ORDER_COMPLETED":
       return {
         ...state,
-        bag: [{ id_negocio: 0, nombre_negocio: "", productos: [] }],
+        bag: [],
         numberOfProducts: 0,
         total: 0,
       };

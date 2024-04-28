@@ -4,10 +4,8 @@ import { useEffect, useReducer, ReactNode } from "react";
 import Cookie from "js-cookie";
 import { BagContext } from "./OrderContext";
 import { bagReducer } from "./orderReducer";
-
-import { IOrden, IProductoOrden } from "@/interfaces";
+import { IOrden, IProductoOrden, EstadoOrden, BagType } from "@/interfaces";
 import { hrApi } from "@/api";
-import { EstadoOrden, BagType } from "@/interfaces";
 
 export interface BagState {
   isLoaded: boolean;
@@ -18,7 +16,7 @@ export interface BagState {
 
 const BAG_INITIAL_STATE: BagState = {
   isLoaded: false,
-  bag: [{ id_negocio: 0, nombre_negocio: "", productos: [] }],
+  bag: [],
   numberOfProducts: 0,
   total: 0,
 };
@@ -37,7 +35,7 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
       console.log(error);
       dispatch({
         type: "LOAD_BAG",
-        payload: [{ id_negocio: 0, nombre_negocio: "", productos: [] }],
+        payload: [],
       });
     }
   }, []);
@@ -70,6 +68,7 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
   }, [state.bag]);
 
   const addProductToBag = async (product: IProductoOrden) => {
+    console.log(state.bag);
     const productInBag = state.bag.some((item) =>
       item.id_negocio === product.lote?.inventario.id_negocio
         ? item.productos.some(
@@ -77,13 +76,20 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
           )
         : false
     );
-    if (!productInBag) {
+
+    const productInNegocio = state.bag.some(
+      (item) => item.id_negocio === product.lote?.inventario.id_negocio
+    );
+
+    if (!productInBag && !productInNegocio) {
       return dispatch({
         type: "UPDATE_PRODUCTS_IN_BAG",
         payload: [
+          ...state.bag,
           {
             id_negocio: product.lote?.inventario.id_negocio!,
             nombre_negocio: product.lote?.inventario.negocio?.nombre_negocio!,
+            total: product.cantidad_orden * product.producto?.lote?.precio_kg!,
             productos: [product],
           },
         ],
@@ -91,13 +97,23 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
     }
 
     const updatedBag = state.bag.map((item) => {
-      item.productos.map((product) => {
-        if (product.id_producto === product.id_producto) {
-          product.cantidad_orden += product.cantidad_orden;
-          product.monto += product.monto;
-        }
-        return product;
-      });
+      if (item.id_negocio === product.lote?.inventario.id_negocio) {
+        item.productos = item.productos.some(
+          (item) => item.id_producto === product.id_producto
+        )
+          ? item.productos.map((item) => {
+              if (item.id_producto === product.id_producto) {
+                item.cantidad_orden += product.cantidad_orden;
+                item.monto += product.monto;
+              }
+              return item;
+            })
+          : [...item.productos, product];
+        item.total = item.productos.reduce(
+          (acc, product) => acc + product.monto,
+          0
+        );
+      }
       return item;
     }) as BagType;
     dispatch({ type: "UPDATE_PRODUCTS_IN_BAG", payload: updatedBag });
@@ -108,13 +124,20 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const removeBagProduct = async (product: IProductoOrden) => {
+    if (
+      state.bag
+        .map((item) => item.productos.length)
+        .reduce((a, b) => a + b, 0) === 1
+    ) {
+      dispatch({ type: "CLEAR_BAG", payload: [] });
+    }
     dispatch({ type: "REMOVE_PRODUCT", payload: product });
   };
 
   const clearBag = () => {
     dispatch({
       type: "CLEAR_BAG",
-      payload: [{ id_negocio: 0, nombre_negocio: "", productos: [] }],
+      payload: [],
     });
   };
 
@@ -127,8 +150,7 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
       estado_orden: EstadoOrden.PENDIENTE,
       id_cliente,
       id_historial,
-      negocios: state.bag.map((item) => item.id_negocio),
-      products: state.bag.map((item) => item.productos),
+      bag: state.bag,
     };
 
     try {

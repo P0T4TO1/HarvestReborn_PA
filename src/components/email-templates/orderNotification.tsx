@@ -16,15 +16,13 @@ import * as React from "react";
 
 interface OrderNotificationEmailProps {
   email_cliente: string;
-  email_negocio: string[];
+  email_negocio: string;
   fecha_orden: string;
   hora_orden: string;
   monto_total: number;
 }
 
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "";
+const baseUrl = process.env.APP_URL ?? "";
 
 export const OrderNotificationEmail = ({
   email_cliente,
@@ -58,13 +56,27 @@ export const OrderNotificationEmail = ({
             <Text className="text-black text-[14px] leading-[24px]">
               <strong>{email_cliente}</strong> ha realizado un pedido por un
               total de <strong>${monto_total}</strong> el día{" "}
-              <strong>{fecha_orden}</strong> a las <strong>{hora_orden}</strong>
-              .<strong>Vercel</strong>.
+              <strong>
+                {new Date(fecha_orden).toLocaleDateString("es-MX", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </strong>{" "}
+              a las{" "}
+              <strong>
+                {new Date(hora_orden).toLocaleTimeString("es-MX", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </strong>
+              .
             </Text>
             <Section className="text-center mt-[32px] mb-[32px]">
               <Button
                 className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center px-5 py-3"
-                href={"https://www.harvest-reborn.me/orders"}
+                href={`${baseUrl}/orders`}
               >
                 Consultalo aquí
               </Button>

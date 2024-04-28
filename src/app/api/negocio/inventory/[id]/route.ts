@@ -28,6 +28,11 @@ async function getLotesFromInventory(
         inventario: {
           select: {
             id_negocio: true,
+            negocio: {
+              select: {
+                nombre_negocio: true,
+              },
+            },
           },
         },
       },

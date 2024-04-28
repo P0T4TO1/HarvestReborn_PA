@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { BagContext } from "@/context/order";
 import { AuthContext } from "@/context/auth";
 import { BagType, IProductoOrden } from "@/interfaces";
@@ -30,6 +30,7 @@ interface BagListProps {
 }
 
 export const BagList = ({ editable = false, products }: BagListProps) => {
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const {
     bag,
@@ -54,13 +55,13 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
   const productsInBag = products ? products : bag;
 
   const onCreateOrder = () => {
+    setIsLoading(true);
     if (!Session) {
       return toast(
         "Debes iniciar sesión para realizar un pedido",
         WARNING_TOAST
       );
     }
-    console.log(user);
     createOrder(
       user?.cliente?.id_cliente!,
       user?.cliente?.historial.id_historial!
@@ -70,6 +71,7 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
           toast(res.message, DANGER_TOAST);
         }
         toast(res.message, SUCCESS_TOAST);
+        setIsLoading(false);
         router.push(`/orders/${res.data.id_orden}?new=true`);
       })
       .catch(() => {
@@ -102,6 +104,7 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
                 }
                 className="w-full"
               >
+                <h3 className="text-lg mt-4">{product.nombre_negocio}</h3>
                 {product.productos.map((p) => (
                   <>
                     <Divider />
@@ -123,6 +126,7 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
                           <>
                             <Button
                               isIconOnly
+                              isDisabled={p.cantidad_orden === 1}
                               onClick={() =>
                                 onNewQuantity(
                                   p,
@@ -183,16 +187,27 @@ export const BagList = ({ editable = false, products }: BagListProps) => {
                 <h3 className="text-2xl font-semibold">Resumen de pedido</h3>
               </CardHeader>
               <CardBody className="pt-2 px-8 pb-2">
-                <p className="pb-4">Productos: {bag.length}</p>
+                <p className="pb-4">
+                  Productos:{" "}
+                  {productsInBag
+                    .map((product) => product.productos.length)
+                    .reduce((a, b) => a + b, 0)}
+                </p>
                 <p className="pb-4">Cantidad: {numberOfProducts} kg</p>
-                <Divider />
-                <p className="pb-4 pt-4">Total: ${total}</p>
+                <Divider className="mb-4"/>
+                {productsInBag.map((product, index) => (
+                  <p className="pb-2" key={index}>
+                    {product.nombre_negocio}: ${product.total}
+                  </p>
+                ))}
+                <p className="pb-4 pt-2">Total: ${total}</p>
               </CardBody>
               <CardFooter className="p-8 w-full">
                 <Button
                   color="success"
                   className="w-full"
                   onClick={() => onCreateOrder()}
+                  isLoading={isLoading}
                 >
                   Realizar pedido
                 </Button>
