@@ -4,10 +4,10 @@ import prisma from "@/lib/prisma";
 import { IOrden } from "@/interfaces";
 
 export const getOrders = async (id_negocio: number) => {
-  if (!id_negocio) return { message: "Falta id del negocio" };
+  if (!id_negocio) return;
 
   try {
-    const orders = await prisma.d_orden.findMany({
+    const orders = (await prisma.d_orden.findMany({
       where: {
         id_negocio,
       },
@@ -36,10 +36,10 @@ export const getOrders = async (id_negocio: number) => {
           },
         },
       },
-    });
+    })) as unknown as IOrden[];
     return orders;
   } catch (error) {
     console.error(error);
-    return { message: "Error al encontrar ordenes" };
+    return;
   }
 };

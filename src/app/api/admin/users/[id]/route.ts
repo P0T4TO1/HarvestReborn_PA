@@ -137,6 +137,22 @@ async function updateUser(
         },
       });
       return NextResponse.json(user, { status: 200 });
+    } else if (tipo === "soporte") {
+      const user = await prisma.m_user.update({
+        where: {
+          id: params.id,
+        },
+        data: {
+          email,
+          id_rol: 5,
+        },
+      });
+      return NextResponse.json(user, { status: 200 });
+    } else {
+      return NextResponse.json(
+        { message: "Tipo de usuario no válido" },
+        { status: 400 }
+      );
     }
   } catch (error) {
     console.log(error);

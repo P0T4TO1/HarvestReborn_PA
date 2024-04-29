@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardHeader,
@@ -24,7 +24,12 @@ import Slider from "react-slick";
 
 interface ReportsSectionProps {
   orders: IOrden[];
-  lotes: ILote[];
+  lotes: {
+    all: ILote[];
+    lotesVencidos: ILote[];
+    lotesPorVencer: ILote[];
+    lotesVigentes: ILote[];
+  };
 }
 
 const settings = {
@@ -46,7 +51,6 @@ const settings = {
 };
 
 export const ReportsSection = ({ orders, lotes }: ReportsSectionProps) => {
-  // Sort products by the most requested as IProductoOrden[]
   const products = orders.map((order) => order.productoOrden);
 
   const productsMoreRequested = products.reduce((acc, product) => {
@@ -154,7 +158,7 @@ export const ReportsSection = ({ orders, lotes }: ReportsSectionProps) => {
                     Total de lotes
                   </p>
                   <p className="text-default-600 font-semibold text-lg text-center">
-                    {lotes.length}
+                    {lotes.all.length}
                   </p>
                 </div>
               </CardBody>
@@ -171,11 +175,7 @@ export const ReportsSection = ({ orders, lotes }: ReportsSectionProps) => {
                     Lotes en buen estado
                   </p>
                   <p className="text-default-600 font-semibold text-lg text-center">
-                    {
-                      lotes.filter(
-                        (lote) => new Date(lote.fecha_vencimiento) > new Date()
-                      ).length
-                    }
+                    {lotes.lotesVigentes.length}
                   </p>
                 </div>
               </CardBody>
@@ -203,7 +203,7 @@ export const ReportsSection = ({ orders, lotes }: ReportsSectionProps) => {
                       Total de lotes
                     </p>
                     <p className="text-default-600 font-semibold text-lg text-center">
-                      {lotes.length}
+                      {lotes.all.length}
                     </p>
                   </div>
                   <div className="flex justify-between">
@@ -211,12 +211,7 @@ export const ReportsSection = ({ orders, lotes }: ReportsSectionProps) => {
                       Lotes en buen estado
                     </p>
                     <p className="text-default-600 font-semibold text-lg text-center">
-                      {
-                        lotes.filter(
-                          (lote) =>
-                            new Date(lote.fecha_vencimiento) > new Date()
-                        ).length
-                      }
+                      {lotes.lotesVigentes.length}
                     </p>
                   </div>
                   <div className="flex justify-between">
@@ -224,14 +219,7 @@ export const ReportsSection = ({ orders, lotes }: ReportsSectionProps) => {
                       Lotes apunto de vencer
                     </p>
                     <p className="text-yellow-600 font-semibold text-lg text-center">
-                      {
-                        lotes.filter((lote) => {
-                          new Date(lote.fecha_vencimiento) <
-                            new Date(
-                              new Date().setDate(new Date().getDate() + 7)
-                            );
-                        }).length
-                      }
+                      {lotes.lotesPorVencer.length}
                     </p>
                   </div>
                   <div className="flex justify-between">
@@ -239,12 +227,7 @@ export const ReportsSection = ({ orders, lotes }: ReportsSectionProps) => {
                       Lotes vencidos
                     </p>
                     <p className="text-red-600 font-semibold text-lg text-center">
-                      {
-                        lotes.filter(
-                          (lote) =>
-                            new Date(lote.fecha_vencimiento) < new Date()
-                        ).length
-                      }
+                      {lotes.lotesVencidos.length}
                     </p>
                   </div>
                 </div>
@@ -254,11 +237,8 @@ export const ReportsSection = ({ orders, lotes }: ReportsSectionProps) => {
                     width={100}
                     height={100}
                     innerRadius="65%"
-                    value={
-                      lotes.filter((lote) => lote.estado_lote === "ACTIVO")
-                        .length
-                    }
-                    valueMax={lotes.length}
+                    value={lotes.lotesVigentes.length}
+                    valueMax={lotes.all.length}
                     className="text-default-600 text-2xl font-semibold"
                     text={({ value, valueMax }) => `${value} / ${valueMax}`}
                     sx={() => ({
@@ -316,6 +296,9 @@ export const ReportsSection = ({ orders, lotes }: ReportsSectionProps) => {
                           width={80}
                           height={80}
                           className="rounded-lg m-auto"
+                          classNames={{
+                            wrapper: "m-auto",
+                          }}
                         />
                         <div className="flex flex-col gap-2 items-center justify-center">
                           <p className="text-lg font-semibold">

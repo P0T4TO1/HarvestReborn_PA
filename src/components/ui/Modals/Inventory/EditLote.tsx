@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   Button,
   CircularProgress,
@@ -11,28 +12,34 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  DatePicker,
 } from "@nextui-org/react";
-import { useState } from "react";
+import { getLocalTimeZone, parseDate, today } from "@internationalized/date";
+import { useDateFormatter, I18nProvider } from "@react-aria/i18n";
+
 import { hrApi } from "@/api";
+
 import { toast } from "sonner";
 import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
+
 import { SubmitHandler, useForm } from "react-hook-form";
-import { ILote, TipoAlmacenaje } from "@/interfaces";
-import { useRouter } from "next/navigation";
 import { productSchema } from "@/validations/products.validation";
+import { ILote, TipoAlmacenaje } from "@/interfaces";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import { useRouter } from "next/navigation";
 import { FaEdit } from "react-icons/fa";
 
 interface IFormData {
   cantidad_producto: number;
-  fecha_entrada: string;
-  fecha_vencimiento: string;
+  fecha_entrada: Date;
+  fecha_vencimiento: Date;
   precio_kg: number;
   tipo_almacenaje: TipoAlmacenaje;
 }
 
 interface Props {
-  lote: ILote | undefined;
+  lote: ILote;
   useDisclosure: { isOpen: boolean; onClose: () => void };
   loading: boolean;
 }
@@ -47,17 +54,25 @@ export const EditLoteModal = ({
     handleSubmit,
     register,
     formState: { errors },
+    setValue,
   } = useForm<IFormData>({
     resolver: zodResolver(productSchema),
     defaultValues: {
-      cantidad_producto: lote?.cantidad_producto ?? 0,
-      precio_kg: lote?.precio_kg ?? 0,
-      fecha_entrada: lote?.fecha_entrada ?? "",
-      fecha_vencimiento: lote?.fecha_vencimiento ?? "",
-      tipo_almacenaje: lote?.tipo_almacenaje ?? TipoAlmacenaje.Huacal ?? "",
+      cantidad_producto: lote.cantidad_producto ?? 0,
+      precio_kg: lote.precio_kg ?? 0,
+      fecha_entrada: new Date(lote.fecha_entrada) ?? new Date(),
+      fecha_vencimiento: new Date(lote.fecha_vencimiento) ?? new Date(),
+      tipo_almacenaje: lote.tipo_almacenaje ?? TipoAlmacenaje.Huacal ?? "",
     },
   });
   const [isEditing, setIsEditing] = useState(false);
+  const [valueFechaEntrada, setValueFechaEntrada] = useState(
+    parseDate(lote.fecha_entrada.split("T")[0])
+  );
+  const [valueFechaVencimiento, setValueFechaVencimiento] = useState(
+    parseDate(lote.fecha_vencimiento.split("T")[0])
+  );
+  let formatter = useDateFormatter({ dateStyle: "full" });
 
   const onSubmit: SubmitHandler<IFormData> = async (data) => {
     try {
@@ -82,7 +97,14 @@ export const EditLoteModal = ({
   };
 
   return (
-    <Modal backdrop="blur" isOpen={isOpen} onClose={onClose}>
+    <Modal
+      backdrop="blur"
+      isOpen={isOpen}
+      onClose={() => {
+        onClose();
+        setIsEditing(false);
+      }}
+    >
       <ModalContent>
         {(onClose) => (
           <>
@@ -95,14 +117,14 @@ export const EditLoteModal = ({
             ) : (
               <form onSubmit={handleSubmit(onSubmit)}>
                 <ModalHeader className="flex flex-col">
-                  Editar {lote?.producto?.nombre_producto}
+                  Editar {lote.producto.nombre_producto}
                   <Button
                     type="button"
                     className="mt-2"
                     onClick={() => setIsEditing(!isEditing)}
                     startContent={<FaEdit size={20} />}
                   >
-                    Editar
+                    {isEditing ? "Cancelar" : "Editar"}
                   </Button>
                 </ModalHeader>
                 <ModalBody>
@@ -113,7 +135,7 @@ export const EditLoteModal = ({
                       {...register("cantidad_producto", {
                         valueAsNumber: true,
                       })}
-                      defaultValue={lote?.cantidad_producto?.toString()}
+                      defaultValue={lote.cantidad_producto.toString()}
                       isDisabled={!isEditing}
                     />
                     {errors?.cantidad_producto && (
@@ -137,17 +159,25 @@ export const EditLoteModal = ({
                     )}
                   </div>
                   <div className="flex flex-col gap-2">
-                    <Input
-                      label="Fecha de llegada"
-                      type="date"
-                      {...register("fecha_entrada")}
-                      defaultValue={
-                        new Date(lote?.fecha_entrada || "")
-                          .toISOString()
-                          .split("T")[0]
-                      }
-                      isDisabled={!isEditing}
-                    />
+                    <I18nProvider locale="es-MX">
+                      <DatePicker
+                        label="Fecha de llegada"
+                        showMonthAndYearPickers
+                        minValue={today(getLocalTimeZone())}
+                        defaultValue={parseDate(
+                          lote.fecha_entrada.split("T")[0]
+                        )}
+                        value={valueFechaEntrada}
+                        onChange={(date) => {
+                          setValueFechaEntrada(date);
+                          setValue(
+                            "fecha_entrada",
+                            date.toDate(getLocalTimeZone())
+                          );
+                        }}
+                        isDisabled={!isEditing}
+                      />
+                    </I18nProvider>
                     {errors?.fecha_entrada && (
                       <span className="text-red-500">
                         {errors?.fecha_entrada?.message}
@@ -155,17 +185,25 @@ export const EditLoteModal = ({
                     )}
                   </div>
                   <div className="flex flex-col gap-2">
-                    <Input
-                      label="Fecha de duración aproximada en estado fresco"
-                      type="date"
-                      {...register("fecha_vencimiento")}
-                      defaultValue={
-                        new Date(lote?.fecha_vencimiento || "")
-                          .toISOString()
-                          .split("T")[0]
-                      }
-                      isDisabled={!isEditing}
-                    />
+                    <I18nProvider locale="es-MX">
+                      <DatePicker
+                        label="Fecha de duración aproximada en estado fresco"
+                        showMonthAndYearPickers
+                        minValue={today(getLocalTimeZone())}
+                        defaultValue={parseDate(
+                          lote.fecha_vencimiento.split("T")[0]
+                        )}
+                        value={valueFechaVencimiento}
+                        onChange={(date) => {
+                          setValueFechaVencimiento(date);
+                          setValue(
+                            "fecha_vencimiento",
+                            date.toDate(getLocalTimeZone())
+                          );
+                        }}
+                        isDisabled={!isEditing}
+                      />
+                    </I18nProvider>
                     {errors?.fecha_vencimiento && (
                       <span className="text-red-500">
                         {errors?.fecha_vencimiento?.message}
@@ -215,7 +253,14 @@ export const EditLoteModal = ({
                   </div>
                 </ModalBody>
                 <ModalFooter>
-                  <Button color="danger" variant="light" onPress={onClose}>
+                  <Button
+                    color="danger"
+                    variant="light"
+                    onPress={() => {
+                      onClose();
+                      setIsEditing(false);
+                    }}
+                  >
                     Cerrar
                   </Button>
                   <Button

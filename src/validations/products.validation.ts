@@ -10,10 +10,10 @@ export const productSchema = z.object({
     required_error: "El precio es requerido",
     invalid_type_error: "El precio debe ser un número",
   }),
-  fecha_entrada: z.string({
+  fecha_entrada: z.date({
     required_error: "La fecha de entrada es requerida",
   }),
-  fecha_vencimiento: z.string({
+  fecha_vencimiento: z.date({
     required_error: "La fecha de vencimiento es requerida",
   }),
   tipo_almacenaje: z.nativeEnum(TipoAlmacenaje, {

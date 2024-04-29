@@ -175,7 +175,11 @@ export const TableUsers = ({ users }: Props) => {
                 ? "Admin"
                 : user.id_rol === 2
                   ? "Dueño de negocio"
-                  : "Cliente"}
+                  : user.id_rol === 3
+                    ? "Cliente"
+                    : user.id_rol === 4
+                      ? "Registro oAuth"
+                      : "Soporte"}
             </>
           );
         case "estado":

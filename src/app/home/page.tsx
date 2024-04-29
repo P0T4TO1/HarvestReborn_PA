@@ -14,8 +14,9 @@ import { Spinner } from "@nextui-org/react";
 const HomePage = async () => {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/auth/login");
-  if (session?.user.id_rol === 4) redirect("/auth/register?oauth=true");
-  if (session?.user.id_rol === 1) redirect("/admin/dashboard");
+  if (session.user.id_rol === 4) redirect("/auth/register?oauth=true");
+  if (session.user.id_rol === 1) redirect("/admin/dashboard");
+  // if (session.user.id_rol === 5) redirect("/support/dashboard");
 
   return (
     <>

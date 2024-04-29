@@ -61,8 +61,8 @@ async function updateLote(
       },
       data: {
         cantidad_producto: parseInt(cantidad_producto, 10),
-        fecha_entrada: new Date(fecha_entrada) as any,
-        fecha_vencimiento: new Date(fecha_vencimiento) as any,
+        fecha_entrada: new Date(fecha_entrada).toISOString(),
+        fecha_vencimiento: new Date(fecha_vencimiento).toISOString(),
         precio_kg: parseFloat(precio_kg),
         monto_total: parseFloat(cantidad_producto) * parseFloat(precio_kg),
         tipo_almacenaje: tipo_almacenaje,

@@ -3,7 +3,6 @@ import { authOptions } from "@/lib/authOptions";
 import { redirect, notFound } from "next/navigation";
 import { ReportsSection } from "@/components";
 import { getOrders, getLotes } from "@/actions/negocio";
-import { IOrden, ILote } from "@/interfaces";
 import prisma from "@/lib/prisma";
 
 export const revalidate = 3600;
@@ -23,12 +22,11 @@ const ReportsPage = async () => {
   const orders = await getOrders(user?.negocio?.id_negocio);
   const lotes = await getLotes(user?.negocio?.id_negocio);
 
+  if (!orders || !lotes) notFound();
+
   return (
     <section className="flex flex-col relative overflow-hidden min-h-screen">
-      <ReportsSection
-        orders={orders as IOrden[] | any}
-        lotes={lotes as ILote[] | any}
-      />
+      <ReportsSection orders={orders} lotes={lotes} />
     </section>
   );
 };

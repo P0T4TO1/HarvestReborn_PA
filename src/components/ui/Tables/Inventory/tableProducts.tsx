@@ -26,6 +26,8 @@ import {
   Chip,
   ChipProps,
 } from "@nextui-org/react";
+import { today, getLocalTimeZone } from "@internationalized/date";
+
 import { ILote } from "@/interfaces";
 import {
   columnsLotes as columns,
@@ -33,6 +35,7 @@ import {
   fechasVencimientoOptionsLotes,
   storageColorMapLotes as storageColorMap,
 } from "@/utils/data-table";
+
 import {
   FaChevronDown,
   FaRegTrashAlt,
@@ -42,6 +45,7 @@ import {
 } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { capitalize } from "@/utils/capitalize";
+
 import { hrApi } from "@/api";
 import { toast } from "sonner";
 import { DANGER_TOAST, EditLoteModal, SUCCESS_TOAST } from "@/components";
@@ -64,6 +68,7 @@ export const TableProductsInventory = ({ lotes }: Props) => {
   const [loading, setLoading] = useState(false);
   const { onOpen, onClose, isOpen, onOpenChange } = useDisclosure();
   const [openInfoModal, setOpenInfoModal] = useState(false);
+  console.log(lote);
 
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
   const [visibleColumns, setVisibleColumns] = useState<Selection>(
@@ -164,17 +169,12 @@ export const TableProductsInventory = ({ lotes }: Props) => {
     (lote: ILote, columnKey: Key) => {
       const cellValue = lote[columnKey as keyof ILote];
       let key = 1;
-      const product_number: number = key++;
 
       switch (columnKey) {
         case "id_lote":
           return <div className="dark:text-gray-300">{lote.id_lote}</div>;
         case "no_lote":
-          return (
-            <div className="dark:text-gray-300">
-              {product_number.toString()}
-            </div>
-          );
+          return <div className="dark:text-gray-300">{key++}</div>;
         case "tipo_almacenaje":
           return (
             <>
@@ -236,15 +236,27 @@ export const TableProductsInventory = ({ lotes }: Props) => {
               <span className="flex items-center gap-2 ml-2">
                 {new Date(
                   lote.fecha_vencimiento.replace(/-/g, "/").replace(/T.+/, "")
-                ) < new Date() ? (
+                ) < new Date(today(getLocalTimeZone()).toString()) ? (
                   <FaCircle className="text-red-500" size={20} />
                 ) : new Date(
                     lote.fecha_vencimiento.replace(/-/g, "/").replace(/T.+/, "")
-                  ) < new Date(new Date().setDate(new Date().getDate() + 3)) ? (
+                  ) <
+                  new Date(
+                    new Date().setDate(
+                      new Date(today(getLocalTimeZone()).toString()).getDate() +
+                        3
+                    )
+                  ) ? (
                   <FaCircle className="text-[#CC4E00]" size={20} />
                 ) : new Date(
                     lote.fecha_vencimiento.replace(/-/g, "/").replace(/T.+/, "")
-                  ) < new Date(new Date().setDate(new Date().getDate() + 7)) ? (
+                  ) <
+                  new Date(
+                    new Date().setDate(
+                      new Date(today(getLocalTimeZone()).toString()).getDate() +
+                        7
+                    )
+                  ) ? (
                   <FaCircle className="text-yellow-500" size={20} />
                 ) : (
                   <FaCircle className="text-green-500" size={20} />
