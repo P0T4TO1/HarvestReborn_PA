@@ -81,6 +81,7 @@ async function addProductToInventory(
       { status: 400 }
     );
 
+  console.log(body);
   if (
     !id ||
     !cantidad_producto ||
