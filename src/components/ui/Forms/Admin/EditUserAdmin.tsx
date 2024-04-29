@@ -78,20 +78,28 @@ export const EditUserForm = ({ user, isEditing }: Props) => {
     resolver: zodResolver(adminEditUserValidation),
     defaultValues: {
       email: user.email,
-      nombre: user.duenonegocio?.nombre_dueneg ?? user.cliente?.nombre_cliente ?? "",
+      nombre:
+        user.duenonegocio?.nombre_dueneg ?? user.cliente?.nombre_cliente ?? "",
       apellidos:
-        user.duenonegocio?.apellidos_dueneg ?? user.cliente?.apellidos_cliente ?? "",
+        user.duenonegocio?.apellidos_dueneg ??
+        user.cliente?.apellidos_cliente ??
+        "",
       fecha_nacimiento:
-        user.duenonegocio?.fecha_nacimiento ?? user.cliente?.fecha_nacimiento ?? "",
+        user.duenonegocio?.fecha_nacimiento ??
+        user.cliente?.fecha_nacimiento ??
+        "",
       dia_nacimiento:
         user.duenonegocio?.fecha_nacimiento.split("-")[2].split("T")[0] ??
-        user.cliente?.fecha_nacimiento.split("-")[2].split("T")[0] ?? "",
+        user.cliente?.fecha_nacimiento.split("-")[2].split("T")[0] ??
+        "",
       mes_nacimiento:
         user.duenonegocio?.fecha_nacimiento.split("-")[1] ??
-        user.cliente?.fecha_nacimiento.split("-")[1] ?? "",
+        user.cliente?.fecha_nacimiento.split("-")[1] ??
+        "",
       year_nacimiento:
         user.duenonegocio?.fecha_nacimiento.split("-")[0] ??
-        user.cliente?.fecha_nacimiento.split("-")[0] ?? "",
+        user.cliente?.fecha_nacimiento.split("-")[0] ??
+        "",
       tipo:
         user.id_rol === 1 ? "admin" : user.id_rol === 2 ? "negocio" : "cliente",
       nombre_negocio:
@@ -100,19 +108,24 @@ export const EditUserForm = ({ user, isEditing }: Props) => {
         "",
       telefono:
         user.duenonegocio?.negocio?.telefono_negocio ??
-        user.cliente?.telefono_cliente ?? "",
+        user.cliente?.telefono_cliente ??
+        "",
       calle:
         user.duenonegocio?.negocio?.direccion_negocio.split(", ")[0] ??
-        user.cliente?.direccion_negocio?.split(", ")[0] ?? "",
+        user.cliente?.direccion_negocio?.split(", ")[0] ??
+        "",
       colonia:
         user.duenonegocio?.negocio?.direccion_negocio.split(", ")[1] ??
-        user.cliente?.direccion_negocio?.split(", ")[1] ?? "",
+        user.cliente?.direccion_negocio?.split(", ")[1] ??
+        "",
       alcaldia:
         user.duenonegocio?.negocio?.direccion_negocio.split(", ")[2] ??
-        user.cliente?.direccion_negocio?.split(", ")[2] ?? "",
+        user.cliente?.direccion_negocio?.split(", ")[2] ??
+        "",
       cp:
         user.duenonegocio?.negocio?.direccion_negocio.split(", ")[3] ??
-        user.cliente?.direccion_negocio?.split(", ")[3] ?? "",
+        user.cliente?.direccion_negocio?.split(", ")[3] ??
+        "",
     },
   });
 
@@ -313,8 +326,12 @@ export const EditUserForm = ({ user, isEditing }: Props) => {
                 user.id_rol === 1
                   ? "admin"
                   : user.id_rol === 2
-                  ? "negocio"
-                  : "cliente",
+                    ? "negocio"
+                    : user.id_rol === 3
+                      ? "cliente"
+                      : user.id_rol === 5
+                        ? "soporte"
+                        : "oauth",
               ]}
             >
               <SelectItem value="admin" key="admin">
@@ -325,6 +342,9 @@ export const EditUserForm = ({ user, isEditing }: Props) => {
               </SelectItem>
               <SelectItem value="cliente" key="cliente">
                 Cliente
+              </SelectItem>
+              <SelectItem value="soporte" key="soporte">
+                Soporte
               </SelectItem>
             </Select>
             {errors?.tipo && (

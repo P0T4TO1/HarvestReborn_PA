@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardHeader,
@@ -9,19 +9,65 @@ import {
   Divider,
   Select,
   SelectItem,
-  Link,
+  Image,
+  Button,
 } from "@nextui-org/react";
-import { IOrden, ILote } from "@/interfaces";
-import { FaRegCheckCircle } from "react-icons/fa";
+import { IOrden, ILote, IProductoOrden } from "@/interfaces";
+import {
+  FaRegCheckCircle,
+  FaChevronLeft,
+  FaChevronRight,
+} from "react-icons/fa";
+import { MdOutlinePendingActions, MdDownloading } from "react-icons/md";
 import { Gauge, gaugeClasses } from "@mui/x-charts/Gauge";
+import Slider from "react-slick";
 
 interface ReportsSectionProps {
   orders: IOrden[];
-  lotes: ILote[];
+  lotes: {
+    all: ILote[];
+    lotesVencidos: ILote[];
+    lotesPorVencer: ILote[];
+    lotesVigentes: ILote[];
+  };
 }
 
+const settings = {
+  dots: false,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 3,
+  slidesToScroll: 3,
+  nextArrow: (
+    <Button variant="light" size="sm" isIconOnly>
+      <FaChevronRight />
+    </Button>
+  ),
+  prevArrow: (
+    <Button variant="light" size="sm" isIconOnly>
+      <FaChevronLeft />
+    </Button>
+  ),
+};
+
 export const ReportsSection = ({ orders, lotes }: ReportsSectionProps) => {
-  console.log(lotes);
+  const products = orders.map((order) => order.productoOrden);
+
+  const productsMoreRequested = products.reduce((acc, product) => {
+    product.forEach((product) => {
+      const found = acc.find(
+        (item) => item.id_producto === product.id_producto
+      );
+      if (!found) {
+        acc.push(product);
+      } else {
+        found.cantidad_orden += product.cantidad_orden;
+      }
+      return acc;
+    });
+    return acc;
+  }, []);
+
   return (
     <div className="pt-8 container mx-auto p-4">
       <div>
@@ -71,7 +117,7 @@ export const ReportsSection = ({ orders, lotes }: ReportsSectionProps) => {
                 </p>
               </CardBody>
               <CardFooter>
-                <FaRegCheckCircle size={21} />
+                <MdDownloading size={21} />
                 <span>En proceso</span>
               </CardFooter>
             </Card>
@@ -91,7 +137,7 @@ export const ReportsSection = ({ orders, lotes }: ReportsSectionProps) => {
                 </p>
               </CardBody>
               <CardFooter>
-                <FaRegCheckCircle size={21} />
+                <MdOutlinePendingActions size={21} />
                 <span>Pendientes</span>
               </CardFooter>
             </Card>
@@ -112,7 +158,7 @@ export const ReportsSection = ({ orders, lotes }: ReportsSectionProps) => {
                     Total de lotes
                   </p>
                   <p className="text-default-600 font-semibold text-lg text-center">
-                    {lotes.length}
+                    {lotes.all.length}
                   </p>
                 </div>
               </CardBody>
@@ -129,10 +175,7 @@ export const ReportsSection = ({ orders, lotes }: ReportsSectionProps) => {
                     Lotes en buen estado
                   </p>
                   <p className="text-default-600 font-semibold text-lg text-center">
-                    {
-                      lotes.filter((lote) => lote.estado_lote === "ACTIVO")
-                        .length
-                    }
+                    {lotes.lotesVigentes.length}
                   </p>
                 </div>
               </CardBody>
@@ -152,15 +195,15 @@ export const ReportsSection = ({ orders, lotes }: ReportsSectionProps) => {
               <p className="text-lg font-semibold">Productos</p>
             </CardHeader>
             <Divider />
-            <CardBody>
+            <CardBody className="justify-center">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
+                <div className="flex flex-col gap-4">
                   <div className="flex justify-between">
                     <p className="text-default-500 text-lg text-center">
                       Total de lotes
                     </p>
                     <p className="text-default-600 font-semibold text-lg text-center">
-                      {lotes.length}
+                      {lotes.all.length}
                     </p>
                   </div>
                   <div className="flex justify-between">
@@ -168,10 +211,7 @@ export const ReportsSection = ({ orders, lotes }: ReportsSectionProps) => {
                       Lotes en buen estado
                     </p>
                     <p className="text-default-600 font-semibold text-lg text-center">
-                      {
-                        lotes.filter((lote) => lote.estado_lote === "ACTIVO")
-                          .length
-                      }
+                      {lotes.lotesVigentes.length}
                     </p>
                   </div>
                   <div className="flex justify-between">
@@ -179,14 +219,7 @@ export const ReportsSection = ({ orders, lotes }: ReportsSectionProps) => {
                       Lotes apunto de vencer
                     </p>
                     <p className="text-yellow-600 font-semibold text-lg text-center">
-                      {
-                        lotes.filter((lote) => {
-                          new Date(lote.fecha_vencimiento) <
-                            new Date(
-                              new Date().setDate(new Date().getDate() + 7)
-                            );
-                        }).length
-                      }
+                      {lotes.lotesPorVencer.length}
                     </p>
                   </div>
                   <div className="flex justify-between">
@@ -194,10 +227,7 @@ export const ReportsSection = ({ orders, lotes }: ReportsSectionProps) => {
                       Lotes vencidos
                     </p>
                     <p className="text-red-600 font-semibold text-lg text-center">
-                      {
-                        lotes.filter((lote) => lote.estado_lote === "VENCIDO")
-                          .length
-                      }
+                      {lotes.lotesVencidos.length}
                     </p>
                   </div>
                 </div>
@@ -207,11 +237,9 @@ export const ReportsSection = ({ orders, lotes }: ReportsSectionProps) => {
                     width={100}
                     height={100}
                     innerRadius="65%"
-                    value={
-                      lotes.filter((lote) => lote.estado_lote === "ACTIVO")
-                        .length
-                    }
-                    valueMax={lotes.length}
+                    value={lotes.lotesVigentes.length}
+                    valueMax={lotes.all.length}
+                    className="text-default-600 text-2xl font-semibold"
                     text={({ value, valueMax }) => `${value} / ${valueMax}`}
                     sx={() => ({
                       [`& .${gaugeClasses.valueArc}`]: {
@@ -254,8 +282,39 @@ export const ReportsSection = ({ orders, lotes }: ReportsSectionProps) => {
             </CardHeader>
             <Divider />
             <CardBody>
-              <div className="flex gap-2">
-                
+              <div className="px-4">
+                <div className="slider-container">
+                  <Slider {...settings}>
+                    {productsMoreRequested.map((product) => (
+                      <div
+                        key={product.id_producto}
+                        className="flex flex-col gap-4 p-4 items-center justify-center"
+                      >
+                        <Image
+                          src={product.producto?.imagen_producto}
+                          alt={product.producto?.nombre_producto}
+                          width={80}
+                          height={80}
+                          className="rounded-lg m-auto"
+                          classNames={{
+                            wrapper: "m-auto",
+                          }}
+                        />
+                        <div className="flex flex-col gap-2 items-center justify-center">
+                          <p className="text-lg font-semibold">
+                            {product.producto?.nombre_producto}
+                          </p>
+                          <p className="text-default-500">
+                            {product.producto?.descripcion}
+                          </p>
+                          <p className="text-default-600 font-semibold">
+                            {product.cantidad_orden} pedidos
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </Slider>
+                </div>
               </div>
             </CardBody>
           </Card>

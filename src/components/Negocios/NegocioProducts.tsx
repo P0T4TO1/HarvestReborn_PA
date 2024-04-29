@@ -18,15 +18,13 @@ import { toast } from "sonner";
 interface NegocioProductsProps {
   lotes: ILote[];
   nombre_negocio: string;
-  id_negocio: number;
 }
 
 export const NegocioProducts = ({
   nombre_negocio,
-  id_negocio,
   lotes,
 }: NegocioProductsProps) => {
-  const { addProductToBag, idNegocio, bag } = useContext(BagContext);
+  const { addProductToBag, bag } = useContext(BagContext);
   const [isSeletedFrutas, setIsSelectedFrutas] = useState(false);
   const [isSeletedVerduras, setIsSelectedVerduras] = useState(false);
   const [filterValue, setFilterValue] = useState("");
@@ -74,18 +72,13 @@ export const NegocioProducts = ({
   }, []);
 
   const onAddProduct = (product: IProductoOrden) => {
-    console.log(idNegocio, id_negocio, bag);
-    if (bag.length > 0 && idNegocio !== parseInt(id_negocio.toString())) {
-      toast("No puedes agregar productos de otro negocio", DANGER_TOAST);
-      return;
-    }
     addProductToBag(product);
   };
 
   return (
     <div className="pt-16 container mx-auto">
       <h1 className="font-bebas-neue uppercase text-4xl font-black flex flex-col leading-none dark:text-green-600 text-green-900">
-        {nombre_negocio}
+        {nombre_negocio.replace("%20", " ")}
         <span className="text-xl dark:text-gray-300 text-gray-900 font-semibold">
           Aquí puedes ver los productos disponibles en este negocio
         </span>
@@ -93,6 +86,7 @@ export const NegocioProducts = ({
       <div className="flex mt-2 w-2/5">
         <Input
           isClearable
+          area-label="Buscar productos"
           className="w-full sm:max-w-[44%]"
           placeholder="Buscar por nombre..."
           startContent={<FaSearch size={20} />}

@@ -4,17 +4,14 @@ import { useEffect, useReducer, ReactNode } from "react";
 import Cookie from "js-cookie";
 import { BagContext } from "./OrderContext";
 import { bagReducer } from "./orderReducer";
-
-import { IOrden, IProductoOrden } from "@/interfaces";
+import { IOrden, IProductoOrden, EstadoOrden, BagType } from "@/interfaces";
 import { hrApi } from "@/api";
-import { EstadoOrden } from "@/interfaces";
 
 export interface BagState {
   isLoaded: boolean;
-  bag: IProductoOrden[];
+  bag: BagType;
   numberOfProducts: number;
   total: number;
-  idNegocio: number;
 }
 
 const BAG_INITIAL_STATE: BagState = {
@@ -22,7 +19,6 @@ const BAG_INITIAL_STATE: BagState = {
   bag: [],
   numberOfProducts: 0,
   total: 0,
-  idNegocio: 0,
 };
 
 export const BagProvider = ({ children }: { children: ReactNode }) => {
@@ -34,64 +30,92 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
         ? JSON.parse(localStorage.getItem("bag")!)
         : [];
       const cookieBag = Cookie.get("bag") ? JSON.parse(Cookie.get("bag")!) : [];
-      const idNegocio = localStorage.getItem("negocio")
-        ? JSON.parse(localStorage.getItem("negocio")!)
-        : 0;
-      dispatch({ type: "LOAD_ID_NEGOCIO", payload: idNegocio });
       dispatch({ type: "LOAD_BAG", payload: localBag ?? cookieBag });
     } catch (error) {
       console.log(error);
-      dispatch({ type: "LOAD_BAG", payload: [] });
+      dispatch({
+        type: "LOAD_BAG",
+        payload: [],
+      });
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("negocio", JSON.stringify(state.idNegocio));
-    Cookie.set("negocio", JSON.stringify(state.idNegocio));
     localStorage.setItem("bag", JSON.stringify(state.bag));
     Cookie.set("bag", JSON.stringify(state.bag));
-  }, [state.bag, state.idNegocio]);
+  }, [state.bag]);
 
   useEffect(() => {
     const numberOfProducts = state.bag.reduce(
-      (acc, product) => acc + product.cantidad_orden,
+      (acc, item) =>
+        acc +
+        item.productos.reduce(
+          (acc, product) => acc + product.cantidad_orden,
+          0
+        ),
       0
     );
-    const total = state.bag.reduce((acc, product) => acc + product.monto, 0);
-    const idNegocio = parseInt(state.idNegocio.toFixed());
+    const total = state.bag.reduce(
+      (acc, item) =>
+        acc + item.productos.reduce((acc, product) => acc + product.monto, 0),
+      0
+    );
     const orderSummary = {
       numberOfProducts,
       total,
-      idNegocio,
     };
     dispatch({ type: "UPDATE_ORDER_SUMMARY", payload: orderSummary });
-  }, [state.bag, state.idNegocio]);
+  }, [state.bag]);
 
   const addProductToBag = async (product: IProductoOrden) => {
-    console.log(product.lote?.inventario.id_negocio, state.idNegocio);
-    if (state.bag.length === 0) {
-      dispatch({
-        type: "SET_ID_NEGOCIO",
-        payload: product.lote?.inventario.id_negocio!,
-      });
-    }
-
-    const productInBag = state.bag.some(
-      (item) => item.id_producto === product.id_producto
+    console.log(state.bag);
+    const productInBag = state.bag.some((item) =>
+      item.id_negocio === product.lote?.inventario.id_negocio
+        ? item.productos.some(
+            (item) => item.id_producto === product.id_producto
+          )
+        : false
     );
-    if (!productInBag) {
+
+    const productInNegocio = state.bag.some(
+      (item) => item.id_negocio === product.lote?.inventario.id_negocio
+    );
+
+    if (!productInBag && !productInNegocio) {
       return dispatch({
         type: "UPDATE_PRODUCTS_IN_BAG",
-        payload: [...state.bag, product],
+        payload: [
+          ...state.bag,
+          {
+            id_negocio: product.lote?.inventario.id_negocio!,
+            nombre_negocio: product.lote?.inventario.negocio?.nombre_negocio!,
+            total: product.cantidad_orden * product.producto?.lote?.precio_kg!,
+            productos: [product],
+          },
+        ],
       });
     }
 
     const updatedBag = state.bag.map((item) => {
-      if (item.id_producto !== product.id_producto) return item;
-      item.cantidad_orden += product.cantidad_orden;
-      item.monto += product.monto;
+      if (item.id_negocio === product.lote?.inventario.id_negocio) {
+        item.productos = item.productos.some(
+          (item) => item.id_producto === product.id_producto
+        )
+          ? item.productos.map((item) => {
+              if (item.id_producto === product.id_producto) {
+                item.cantidad_orden += product.cantidad_orden;
+                item.monto += product.monto;
+              }
+              return item;
+            })
+          : [...item.productos, product];
+        item.total = item.productos.reduce(
+          (acc, product) => acc + product.monto,
+          0
+        );
+      }
       return item;
-    });
+    }) as BagType;
     dispatch({ type: "UPDATE_PRODUCTS_IN_BAG", payload: updatedBag });
   };
 
@@ -100,33 +124,37 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const removeBagProduct = async (product: IProductoOrden) => {
+    if (
+      state.bag
+        .map((item) => item.productos.length)
+        .reduce((a, b) => a + b, 0) === 1
+    ) {
+      dispatch({ type: "CLEAR_BAG", payload: [] });
+    }
     dispatch({ type: "REMOVE_PRODUCT", payload: product });
   };
 
   const clearBag = () => {
-    dispatch({ type: "CLEAR_BAG", payload: [] });
-  };
-
-  const setIdNegocio = (idNegocio: number) => {
-    dispatch({ type: "SET_ID_NEGOCIO", payload: idNegocio });
+    dispatch({
+      type: "CLEAR_BAG",
+      payload: [],
+    });
   };
 
   const createOrder = async (id_cliente: number, id_historial: number) => {
-    const body: IOrden = {
+    const body = {
       fecha_orden: new Date().toISOString(),
       hora_orden: new Date().toISOString(),
+      monto_subtotal: state.total,
       monto_total: state.total,
       estado_orden: EstadoOrden.PENDIENTE,
-      productoOrden: state.bag,
       id_cliente,
       id_historial,
-      id_negocio: state.idNegocio,
+      bag: state.bag,
     };
 
-    const products = state.bag;
-
     try {
-      const { data } = await hrApi.post("/cliente/order", { body, products });
+      const { data } = await hrApi.post("/cliente/order", { body });
       console.log(data);
       if (data.error) {
         return {
@@ -155,7 +183,6 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
     <BagContext.Provider
       value={{
         ...state,
-        setIdNegocio,
         addProductToBag,
         removeBagProduct,
         updateBagQuantity,

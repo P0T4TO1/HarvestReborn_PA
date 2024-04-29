@@ -18,23 +18,23 @@ const OrdersPage = async () => {
 
   return (
     <>
-      <section className="flex">
-        {session?.user.id_rol === 2 ? (
-          <>
+      {session?.user.id_rol === 2 ? (
+        <>
+          <section className="flex">
             <SidebarWrapperNegocio />
             <NavbarWrapperNegocio>
               <OrdersNegocio />
               <Footer />
             </NavbarWrapperNegocio>
-          </>
-        ) : (
-          <>
-            <NavbarComponent />
-            <OrdersCliente />
-            <Footer />
-          </>
-        )}
-      </section>
+          </section>
+        </>
+      ) : (
+        <>
+          <NavbarComponent />
+          <OrdersCliente />
+          <Footer />
+        </>
+      )}
     </>
   );
 };

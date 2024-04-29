@@ -26,6 +26,7 @@ export const OrdersCliente = () => {
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
+    if (!user?.cliente?.id_cliente) return;
     hrApi
       .get(`/cliente/orders/${user?.cliente?.id_cliente}`)
       .then((res) => {

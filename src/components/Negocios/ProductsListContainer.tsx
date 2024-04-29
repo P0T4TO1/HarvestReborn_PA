@@ -46,7 +46,6 @@ export const ProductsListContainer = ({
       ) : (
         <>
           <NegocioProducts
-            id_negocio={id_negocio}
             nombre_negocio={nombre_negocio}
             lotes={lotes}
           />

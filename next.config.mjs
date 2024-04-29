@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
-const app2Url = process.env.SUPPORT_APP_URL;
+// const app2Url = process.env.SUPPORT_APP_URL;
+
 const nextConfig = {
+  reactStrictMode: true,
   images: {
     domains: ["res.cloudinary.com", "i.ibb.co"],
   },
@@ -14,17 +16,16 @@ const nextConfig = {
       // by next.js will be dropped. Doesn't make much sense, but how it is
       fs: false, // the solution
     };
-
     return config;
   },
-  async rewrites() {
-    return [
-      {
-        source: "/support/:match*",
-        destination: `${app2Url}/:match*`,
-      },
-    ];
-  },
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: "/support/dashboard/:match*",
+  //       destination: `${app2Url}/:match*`,
+  //     },
+  //   ];
+  // },
 };
 
 export default nextConfig;

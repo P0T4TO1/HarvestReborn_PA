@@ -1,13 +1,6 @@
 "use client";
 
-import React, {
-  useState,
-  useMemo,
-  useCallback,
-  ChangeEvent,
-  Key,
-  useEffect,
-} from "react";
+import React, { useState, useMemo, useCallback, Key, useEffect } from "react";
 import {
   Table,
   TableHeader,
@@ -28,6 +21,7 @@ import {
   SortDescriptor,
   Tooltip,
   useDisclosure,
+  User,
 } from "@nextui-org/react";
 import { IOrden, IProductoOrden } from "@/interfaces";
 import {
@@ -38,7 +32,8 @@ import {
 } from "@/utils/data-table";
 import { OrderModal } from "@/components";
 import { capitalize } from "@/utils/capitalize";
-import { FaChevronDown, FaSearch, FaEye } from "react-icons/fa";
+import { FaChevronDown, FaSearch, FaEye, FaCheck } from "react-icons/fa";
+import { FaX } from "react-icons/fa6";
 
 type Props = {
   orders: IOrden[];
@@ -51,7 +46,7 @@ export const OrdersTable = ({ orders }: Props) => {
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
   const [statusFilter, setStatusFilter] = useState<Selection>("all");
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const rowsPerPage = 10;
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: "fecha_orden",
     direction: "ascending",
@@ -136,7 +131,14 @@ export const OrdersTable = ({ orders }: Props) => {
         case "id_orden":
           return <>{order.id_orden}</>;
         case "cliente.nombre_cliente":
-          return <>{order.cliente?.nombre_cliente}</>;
+          return (
+            <>
+              <User
+                name={order.cliente?.nombre_cliente}
+                description={order.cliente?.user.email}
+              />
+            </>
+          );
         case "fecha_orden":
           return (
             <div>
@@ -166,9 +168,8 @@ export const OrdersTable = ({ orders }: Props) => {
               }
               variant="flat"
               size="md"
-              style={{ textTransform: "capitalize" }}
             >
-              {capitalize(order.estado_orden)}
+              {order.estado_orden.charAt(0) + order.estado_orden.slice(1).toLowerCase()}
             </Chip>
           );
         case "acciones":
@@ -186,6 +187,16 @@ export const OrdersTable = ({ orders }: Props) => {
                   }}
                 >
                   <FaEye size={20} />
+                </Button>
+              </Tooltip>
+              <Tooltip content="Aceptar pedido" color="success">
+                <Button isIconOnly variant="light">
+                  <FaCheck size={20} className="text-green-700" />
+                </Button>
+              </Tooltip>
+              <Tooltip content="Rechazar pedido" color="danger">
+                <Button isIconOnly variant="light">
+                  <FaX size={20} className="text-red-600" />
                 </Button>
               </Tooltip>
             </div>
@@ -208,14 +219,6 @@ export const OrdersTable = ({ orders }: Props) => {
       setPage(page - 1);
     }
   }, [page]);
-
-  const onRowsPerPageChange = useCallback(
-    (e: ChangeEvent<HTMLSelectElement>) => {
-      setRowsPerPage(Number(e.target.value));
-      setPage(1);
-    },
-    []
-  );
 
   const onSearchChange = useCallback((value?: string) => {
     if (value) {

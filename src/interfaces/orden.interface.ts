@@ -7,15 +7,15 @@ export interface IOrden {
   monto_total: number;
   estado_orden: EstadoOrden | string;
 
-  id_cliente?: number;
+  id_cliente: number;
   cliente?: ICliente;
 
-  id_negocio?: number;
+  id_negocio: number;
   negocio?: INegocio;
 
   id_historial?: number;
 
-  productoOrden?: IProductoOrden[];
+  productoOrden: IProductoOrden[];
 
   createdAt?: string;
   updatedAt?: string;
@@ -53,3 +53,12 @@ export interface IMergedOrder {
   orden: IOrden;
   productos: IProductoOrden[];
 }
+
+export interface ProductsOrder {
+  id_negocio: number;
+  nombre_negocio: string;
+  productos: IProductoOrden[];
+  total: number;
+}
+
+export type BagType = ProductsOrder[];

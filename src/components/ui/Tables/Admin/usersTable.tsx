@@ -175,7 +175,11 @@ export const TableUsers = ({ users }: Props) => {
                 ? "Admin"
                 : user.id_rol === 2
                   ? "Dueño de negocio"
-                  : "Cliente"}
+                  : user.id_rol === 3
+                    ? "Cliente"
+                    : user.id_rol === 4
+                      ? "Registro oAuth"
+                      : "Soporte"}
             </>
           );
         case "estado":
@@ -422,18 +426,6 @@ export const TableUsers = ({ users }: Props) => {
     onNextPage,
     onPreviousPage,
   ]);
-
-  // const handleDelete = async (id: string) => {
-  //   try {
-  //     await hrApi.delete(`/admin/users/${id}`).then(() => {
-  //       toast("Usuario eliminado correctamente", SUCCESS_TOAST);
-  //       window.location.reload();
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //     toast("Error al eliminar el usuario", DANGER_TOAST);
-  //   }
-  // };
 
   const handleChangeStatus = async (id: string, status: string) => {
     try {

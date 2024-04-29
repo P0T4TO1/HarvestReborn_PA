@@ -1,16 +1,13 @@
 "use client";
 
 import { createContext } from "react";
-import { IOrden, IProductoOrden } from "@/interfaces";
+import { IOrden, IProductoOrden, BagType } from "@/interfaces";
 
 interface BagContextProps {
   isLoaded: boolean;
-  bag: IProductoOrden[];
+  bag: BagType;
   numberOfProducts: number;
   total: number;
-  idNegocio: number;
-
-  setIdNegocio: (idNegocio: number) => void;
 
   addProductToBag: (product: IProductoOrden) => void;
   updateBagQuantity: (product: IProductoOrden) => void;

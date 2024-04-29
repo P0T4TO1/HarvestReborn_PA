@@ -68,8 +68,8 @@ export const RegisterForm = ({ user }: RegisterFormProps) => {
             shadow="lg"
             className={`p-6 ${
               indexActive === 1
-                ? "xl:w-[396px] sm:w-full md:w-[428px]"
-                : "xl:w-[542px] sm:w-full md:w-[620px]"
+                ? "xl:w-[396px] w-96 sm:w-full md:w-[428px]"
+                : "xl:w-[542px] w-96 sm:w-full md:w-[620px]"
             }`}
           >
             <CardHeader className="flex flex-col items-start">

@@ -1,5 +1,6 @@
 "use client";
 
+import { useContext, useState } from "react";
 import {
   Button,
   Input,
@@ -10,16 +11,25 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  DatePicker,
 } from "@nextui-org/react";
+import {
+  today,
+  getLocalTimeZone,
+} from "@internationalized/date";
+import { useDateFormatter, I18nProvider } from "@react-aria/i18n";
+
 import { SubmitHandler, useForm } from "react-hook-form";
 import { productSchema } from "@/validations/products.validation";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import { hrApi } from "@/api";
+
 import { toast } from "sonner";
 import { SUCCESS_TOAST } from "@/components";
-import { useContext } from "react";
+
 import { AuthContext } from "@/context/auth";
 import { IProduct, TipoAlmacenaje } from "@/interfaces";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 interface IFormData {
   cantidad_producto: number;
@@ -44,12 +54,26 @@ export const AddLoteToInventory = ({
     handleSubmit,
     register,
     formState: { errors },
+    watch,
+    setValue,
+    reset,
   } = useForm<IFormData>({
     resolver: zodResolver(productSchema),
   });
   const { user } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(false);
+  const [valueFechaEntrada, setValueFechaEntrada] = useState(
+    today(getLocalTimeZone())
+  );
+  const [valueFechaVencimiento, setValueFechaVencimiento] = useState(
+    today(getLocalTimeZone())
+  );
+
+  let formatter = useDateFormatter({ dateStyle: "full" });
+  console.log(today(getLocalTimeZone()));
 
   const addProduct: SubmitHandler<IFormData> = async (data) => {
+    setIsLoading(true);
     try {
       const res = await hrApi
         .post(`/negocio/inventory/${id}`, {
@@ -60,9 +84,12 @@ export const AddLoteToInventory = ({
         .then(() => {
           toast("Producto agregado a tu inventario", SUCCESS_TOAST);
           onClose();
+          setIsLoading(false);
+          reset();
           return true;
         })
         .catch((err) => {
+          setIsLoading(false);
           console.log(err);
           return null;
         });
@@ -77,7 +104,14 @@ export const AddLoteToInventory = ({
   };
 
   return (
-    <Modal backdrop="blur" isOpen={isOpen} onClose={onClose}>
+    <Modal
+      backdrop="blur"
+      isOpen={isOpen}
+      onClose={() => {
+        onClose();
+        reset();
+      }}
+    >
       <ModalContent>
         {(onClose) => (
           <form onSubmit={handleSubmit(addProduct)}>
@@ -97,19 +131,51 @@ export const AddLoteToInventory = ({
                 {...register("precio_kg", { valueAsNumber: true })}
                 errorMessage={errors?.precio_kg?.message}
               />
-              <Input
-                label="Fecha de llegada"
-                type="date"
-                defaultValue={new Date().toISOString().split("T")[0]}
-                {...register("fecha_entrada")}
-                errorMessage={errors?.fecha_entrada?.message}
-              />
-              <Input
-                label="Fecha de duración aproximada en estado fresco"
-                type="date"
-                {...register("fecha_vencimiento")}
-                errorMessage={errors?.fecha_vencimiento?.message}
-              />
+              <div>
+                <I18nProvider locale="es-MX">
+                  <DatePicker
+                    label="Fecha de llegada"
+                    showMonthAndYearPickers
+                    minValue={today(getLocalTimeZone())}
+                    defaultValue={today(getLocalTimeZone())}
+                    value={valueFechaEntrada}
+                    onChange={(date) => {
+                      setValueFechaEntrada(date);
+                      setValue(
+                        "fecha_entrada",
+                        date.toDate(getLocalTimeZone())
+                      );
+                    }}
+                  />
+                </I18nProvider>
+                {errors?.fecha_entrada && (
+                  <span className="text-red-500 text-sm">
+                    {errors?.fecha_entrada?.message}
+                  </span>
+                )}
+              </div>
+              <div>
+                <I18nProvider locale="es-MX">
+                  <DatePicker
+                    label="Fecha de duración aproximada en estado fresco"
+                    showMonthAndYearPickers
+                    minValue={today(getLocalTimeZone())}
+                    value={valueFechaVencimiento}
+                    onChange={(date) => {
+                      setValueFechaVencimiento(date);
+                      setValue(
+                        "fecha_vencimiento",
+                        date.toDate(getLocalTimeZone())
+                      );
+                    }}
+                  />
+                </I18nProvider>
+                {errors?.fecha_vencimiento && (
+                  <span className="text-red-500 text-sm">
+                    {errors?.fecha_vencimiento?.message}
+                  </span>
+                )}
+              </div>
               <Select
                 label="Tipo de almacenaje"
                 {...register("tipo_almacenaje")}
@@ -148,10 +214,40 @@ export const AddLoteToInventory = ({
               </Select>
             </ModalBody>
             <ModalFooter>
-              <Button color="danger" variant="light" onPress={onClose}>
+              <Button
+                color="danger"
+                variant="light"
+                onPress={() => {
+                  onClose();
+                  reset();
+                }}
+                isLoading={isLoading}
+              >
                 Cerrar
               </Button>
-              <Button type="submit" className="bg-green-600">
+              <Button
+                type="submit"
+                onPress={() => {
+                  setValue(
+                    "fecha_entrada",
+                    new Date(
+                      formatter.format(
+                        valueFechaEntrada.toDate(getLocalTimeZone())
+                      )
+                    )
+                  );
+                  setValue(
+                    "fecha_vencimiento",
+                    new Date(
+                      formatter.format(
+                        valueFechaVencimiento.toDate(getLocalTimeZone())
+                      )
+                    )
+                  );
+                }}
+                className="bg-green-600"
+                isLoading={isLoading}
+              >
                 Agregar
               </Button>
             </ModalFooter>
