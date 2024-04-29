@@ -66,6 +66,11 @@ export const authOptions: NextAuthOptions = {
               negocio: {
                 include: {
                   historial: true,
+                  inventario: {
+                    select: {
+                      id_inventario: true,
+                    },
+                  },
                 },
               },
             },
