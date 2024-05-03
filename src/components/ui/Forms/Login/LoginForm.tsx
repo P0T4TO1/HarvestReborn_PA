@@ -40,8 +40,10 @@ export const LoginForm: FC = () => {
     resolver: zodResolver(loginSchema),
   });
   const [visible, setVisible] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
 
   const clientAction: SubmitHandler<IFormData> = async (data) => {
+    setLoading(true);
     try {
       const result = await loginUser(data.user_email, data.user_password);
 
@@ -52,6 +54,7 @@ export const LoginForm: FC = () => {
         setError("user_password", {
           message: "Correo o contraseña inválidos",
         });
+        setLoading(false);
         return null;
       }
 
@@ -61,6 +64,7 @@ export const LoginForm: FC = () => {
         setError("user_email", {
           message: "Este correo no ha sido verificado",
         });
+        setLoading(false);
         return null;
       } else if (
         isEmailVerifiedRes.message === "Este usuario se encuentra inactivo"
@@ -68,9 +72,10 @@ export const LoginForm: FC = () => {
         setError("user_email", {
           message: "Este usuario se encuentra inactivo",
         });
+        setLoading(false);
         return null;
       }
-      
+
       const res: SignInResponse | undefined = await signIn("credentials", {
         ...data,
         redirect: false,
@@ -83,14 +88,17 @@ export const LoginForm: FC = () => {
         setError("user_password", {
           message: "Correo o contraseña inválidos",
         });
+        setLoading(false);
       }
       if (res && res.ok && res.status === 200) {
         toast("¡Bienvenido!", SUCCESS_TOAST);
+        setLoading(false);
         router.push("/home");
         router.refresh();
         return;
       }
     } catch (e) {
+      setLoading(false);
       console.info("[ERROR_CLIENT_ACTION]", e);
       toast("¡Algo salio mal!", DANGER_TOAST);
     }
