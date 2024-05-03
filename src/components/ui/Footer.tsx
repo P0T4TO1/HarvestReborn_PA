@@ -46,6 +46,23 @@ export const Footer = () => {
                   </Link>
                   , Xavier Chanona
                 </p>
+                <p className="mt-6 text-sm text-blueGray-500">
+                  Built with{" "}
+                  <Link
+                    href={"https://nextui.org"}
+                    target="_blank"
+                    color="foreground"
+                  >
+                    NextUI
+                  </Link>{" "}
+                  <Link
+                    href={"https://github.com/nextui-org/nextui/blob/main/LICENSE"}
+                    target="_blank"
+                    color="foreground"
+                  >
+                    ©
+                  </Link>
+                </p>
               </div>
             </div>
             <div className="w-full lg:w-6/12 px-4">
@@ -85,7 +102,7 @@ export const Footer = () => {
                     <li>
                       <Link
                         className="font-semibold mb-2 text-sm"
-                        href={process.env.SUPPORT_APP_URL}
+                        href={process.env.NEXT_PUBLIC_SUPPORT_APP_URL}
                         color="foreground"
                       >
                         Soporte
@@ -128,7 +145,7 @@ export const Footer = () => {
             <div className="text-sm text-blueGray-500 font-semibold py-1">
               Copyright © <span id="get-current-year">2024</span>
               <Link
-                href={process.env.APP_URL}
+                href={process.env.NEXT_PUBLIC_APP_URL}
                 target="_blank"
                 color="foreground"
               >

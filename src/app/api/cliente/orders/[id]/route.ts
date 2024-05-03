@@ -14,6 +14,8 @@ async function getOrdersById(
       { message: "Falta id del cliente" },
       { status: 400 }
     );
+
+
   try {
     const orders = await prisma.d_orden.findMany({
       where: {

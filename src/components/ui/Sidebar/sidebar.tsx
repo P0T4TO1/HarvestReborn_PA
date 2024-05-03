@@ -83,6 +83,14 @@ export const SidebarWrapper = () => {
                 href="/admin/dashboard/chats"
               />
             </SidebarMenu>
+            <SidebarMenu title="Dashboard soporte">
+              <SidebarItem
+                isActive={pathname === "/dashboard/admin"}
+                title="Soporte"
+                icon={<FaTicket size={24} />}
+                href={`${process.env.NEXT_PUBLIC_SUPPORT_APP_URL}/dashboard/admin`}
+              />
+            </SidebarMenu>
           </div>
         </div>
       </div>

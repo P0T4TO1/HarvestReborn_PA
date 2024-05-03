@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
-import { getSession } from "@/lib/authOptions";
 import prisma from "@/lib/prisma";
 import { Category } from "@/interfaces";
 import {
@@ -52,10 +51,7 @@ interface Data {
 
 async function updateProduct(req: NextRequest, res: NextResponse) {
   try {
-    const session = await getSession();
-    // const body = await req.json();
-    const body = await new Response(req.body).json();
-
+    const body = await new Response(req.body).json()
     const { id, nombre_producto, file, descripcion, enTemporada, categoria } =
       validateUpdateProduct(body);
 

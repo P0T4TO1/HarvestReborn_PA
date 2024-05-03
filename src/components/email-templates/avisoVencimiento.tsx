@@ -21,7 +21,7 @@ interface AvisoNotificationEmailProps {
   lote: ILote;
 }
 
-const baseUrl = process.env.APP_URL ?? "";
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
 
 export const VencimientoNotificationEmail = ({
   email_negocio,

@@ -9,27 +9,31 @@ import { AuthContext } from "@/context/auth";
 import { IOrden } from "@/interfaces";
 import { hrApi } from "@/api";
 
-export const OrdersNegocio = () => {
+interface OrdersNegocioProps {
+  orders: IOrden[];
+}
+
+export const OrdersNegocio = ({ orders }: OrdersNegocioProps) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [orders, setOrders] = useState<IOrden[]>([]);
+  // const [orders, setOrders] = useState<IOrden[]>([]);
   const { user } = useContext(AuthContext);
 
-  useEffect(() => {
-    if (!user?.duenonegocio?.negocio?.id_negocio) return;
-    hrApi
-      .get(`/negocio/orders/${user?.duenonegocio?.negocio?.id_negocio}`)
-      .then((res) => {
-        if (res.status === 200) {
-          setOrders(res.data);
-        }
-        setLoading(false);
-      })
-      .catch(() => {
-        setError(true);
-        setLoading(false);
-      });
-  }, [user?.duenonegocio?.negocio?.id_negocio, orders]);
+  // useEffect(() => {
+  //   if (!user?.duenonegocio?.negocio?.id_negocio) return;
+  //   hrApi
+  //     .get(`/negocio/orders/${user?.duenonegocio?.negocio?.id_negocio}`)
+  //     .then((res) => {
+  //       if (res.status === 200) {
+  //         setOrders(res.data);
+  //       }
+  //       setLoading(false);
+  //     })
+  //     .catch(() => {
+  //       setError(true);
+  //       setLoading(false);
+  //     });
+  // }, [user?.duenonegocio?.negocio?.id_negocio, orders]);
 
   return (
     <div className="pt-12 container mx-auto min-h-screen">

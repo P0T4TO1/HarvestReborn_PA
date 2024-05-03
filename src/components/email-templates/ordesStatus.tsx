@@ -22,7 +22,7 @@ interface OrderStatusEmailProps {
   estado_orden: string;
 }
 
-const baseUrl = process.env.APP_URL ?? "";
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
 
 export const OrderStatusEmail = ({
   id_orden,
