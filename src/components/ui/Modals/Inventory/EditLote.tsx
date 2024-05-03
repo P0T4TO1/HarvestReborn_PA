@@ -34,6 +34,7 @@ interface IFormData {
   cantidad_producto: number;
   fecha_entrada: Date;
   fecha_vencimiento: Date;
+  dias_aviso: number;
   precio_kg: number;
   tipo_almacenaje: TipoAlmacenaje;
 }
@@ -62,6 +63,7 @@ export const EditLoteModal = ({
       precio_kg: lote.precio_kg ?? 0,
       fecha_entrada: new Date(lote.fecha_entrada) ?? new Date(),
       fecha_vencimiento: new Date(lote.fecha_vencimiento) ?? new Date(),
+      dias_aviso: lote.dias_aviso ?? 0,
       tipo_almacenaje: lote.tipo_almacenaje ?? TipoAlmacenaje.Huacal ?? "",
     },
   });
@@ -210,6 +212,22 @@ export const EditLoteModal = ({
                       </span>
                     )}
                   </div>
+                  <div>
+                    <Input
+                      label="Dias de aviso antes de vencimiento"
+                      type="number"
+                      defaultValue={lote.dias_aviso.toString()}
+                      isDisabled={!isEditing}
+                      {...register("dias_aviso", {
+                        valueAsNumber: true,
+                      })}
+                    />
+                    {errors?.dias_aviso && (
+                      <span className="text-red-500 text-sm">
+                        {errors?.dias_aviso?.message}
+                      </span>
+                    )}
+                  </div>
                   <div className="flex flex-col gap-2">
                     <Select
                       label="Tipo de almacenaje"
@@ -219,36 +237,11 @@ export const EditLoteModal = ({
                       ]}
                       isDisabled={!isEditing}
                     >
-                      <SelectItem
-                        key={TipoAlmacenaje.Huacal}
-                        value={TipoAlmacenaje.Huacal}
-                      >
-                        Huacal
-                      </SelectItem>
-                      <SelectItem
-                        key={TipoAlmacenaje.Bolsa}
-                        value={TipoAlmacenaje.Bolsa}
-                      >
-                        Bolsa
-                      </SelectItem>
-                      <SelectItem
-                        key={TipoAlmacenaje.Canasta}
-                        value={TipoAlmacenaje.Canasta}
-                      >
-                        Canasta
-                      </SelectItem>
-                      <SelectItem
-                        key={TipoAlmacenaje.Caja}
-                        value={TipoAlmacenaje.Caja}
-                      >
-                        Caja
-                      </SelectItem>
-                      <SelectItem
-                        key={TipoAlmacenaje.Otro}
-                        value={TipoAlmacenaje.Otro}
-                      >
-                        Otro
-                      </SelectItem>
+                      {Object.values(TipoAlmacenaje).map((tipo) => (
+                        <SelectItem key={tipo} value={tipo}>
+                          {tipo.charAt(0) + tipo.slice(1).toLowerCase()}
+                        </SelectItem>
+                      ))}
                     </Select>
                   </div>
                 </ModalBody>

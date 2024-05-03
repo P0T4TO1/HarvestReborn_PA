@@ -1,14 +1,22 @@
 /** @type {import('next').NextConfig} */
-// const app2Url = process.env.SUPPORT_APP_URL;
 
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["res.cloudinary.com", "i.ibb.co"],
-  },
-  future: {
-    webpack5: true, // by default, if you customize webpack config, they switch back to version 4.
-    // Looks like backward compatibility approach.
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "i.ibb.co",
+        port: "",
+        pathname: "/**",
+      },
+    ],
   },
   webpack(config) {
     config.resolve.fallback = {
@@ -18,14 +26,6 @@ const nextConfig = {
     };
     return config;
   },
-  // async rewrites() {
-  //   return [
-  //     {
-  //       source: "/support/dashboard/:match*",
-  //       destination: `${app2Url}/:match*`,
-  //     },
-  //   ];
-  // },
 };
 
 export default nextConfig;

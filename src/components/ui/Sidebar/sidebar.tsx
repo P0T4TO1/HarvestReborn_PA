@@ -83,18 +83,6 @@ export const SidebarWrapper = () => {
                 href="/admin/dashboard/chats"
               />
             </SidebarMenu>
-            <SidebarMenu title={"Soporte"}>
-              <SidebarItem
-                title="Tickets"
-                icon={<FaTicket size={24} />}
-                href="/admin/dashboard/tickets"
-              />
-              <SidebarItem
-                title="Preguntas Frecuentes"
-                icon={<MdOutlineQuiz size={24} />}
-                href="/admin/dashboard/faqs"
-              />
-            </SidebarMenu>
           </div>
         </div>
       </div>

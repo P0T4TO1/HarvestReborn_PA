@@ -6,6 +6,7 @@ import exp from "constants";
 export const statusColorMapOrders = {
   PENDIENTE: "warning",
   EN_PROCESO: "primary",
+  RECHAZADO: "danger",
   FINALIZADO: "success",
   CANCELADO: "danger",
 };
@@ -27,6 +28,7 @@ export const statusOptionsOrders = [
 ];
 
 export const INITIAL_VISIBLE_COLUMNS = [
+  "id_orden",
   "cliente.nombre_cliente",
   "fecha_orden",
   "monto_total",

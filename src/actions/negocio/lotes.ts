@@ -24,7 +24,7 @@ export const getLotes = async (id_negocio: number) => {
     const lotesVencidos = lotes.filter((lote) => {
       return (
         new Date(lote.fecha_vencimiento) <
-        new Date(today(getLocalTimeZone()).toString())
+        today(getLocalTimeZone()).toDate(getLocalTimeZone())
       );
     });
 
@@ -33,13 +33,13 @@ export const getLotes = async (id_negocio: number) => {
         new Date(lote.fecha_vencimiento) >
           new Date(
             new Date().setDate(
-              new Date(today(getLocalTimeZone()).toString()).getDate() + 3
+              today(getLocalTimeZone()).toDate(getLocalTimeZone()).getDate() + 3
             )
           ) &&
         new Date(lote.fecha_vencimiento) <
           new Date(
             new Date().setDate(
-              new Date(today(getLocalTimeZone()).toString()).getDate() + 7
+              today(getLocalTimeZone()).toDate(getLocalTimeZone()).getDate() + 7
             )
           )
       );
@@ -50,7 +50,7 @@ export const getLotes = async (id_negocio: number) => {
         new Date(lote.fecha_vencimiento) >
         new Date(
           new Date().setDate(
-            new Date(today(getLocalTimeZone()).toString()).getDate() + 7
+            today(getLocalTimeZone()).toDate(getLocalTimeZone()).getDate() + 7
           )
         )
       );
@@ -61,6 +61,52 @@ export const getLotes = async (id_negocio: number) => {
       lotesVencidos,
       lotesPorVencer,
       lotesVigentes,
+    };
+  } catch (error) {
+    console.error(error);
+    return;
+  }
+};
+
+export const getLotesForPosts = async (id_negocio: number) => {
+  if (!id_negocio) return;
+
+  try {
+    const lotes = (await prisma.m_lote.findMany({
+      where: {
+        inventario: {
+          id_negocio,
+        },
+      },
+      include: {
+        producto: true,
+      },
+    })) as unknown as ILote[];
+
+    const lotesBuenEstado = lotes.filter((lote) => {
+      return (
+        new Date(lote.fecha_vencimiento) >
+        new Date(
+          new Date().setDate(
+            today(getLocalTimeZone()).toDate(getLocalTimeZone()).getDate() + 7
+          )
+        )
+      );
+    });
+
+    const lotesRecomendados = lotes.filter((lote) => {
+      const fechaVencimiento = new Date(lote.fecha_vencimiento);
+      const fechaHoy = today(getLocalTimeZone()).toDate(getLocalTimeZone());
+      const diferencia = fechaVencimiento.getTime() - fechaHoy.getTime();
+      const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+
+      return dias <= lote.dias_aviso;
+    });
+
+    return {
+      todos: lotes,
+      buenEstado: lotesBuenEstado,
+      apuntoVencer: lotesRecomendados,
     };
   } catch (error) {
     console.error(error);

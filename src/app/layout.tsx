@@ -4,7 +4,7 @@ import "./globals.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ReactNode } from "react";
-import Providers from "@/components/providers";
+import { Providers } from "@/components";
 import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });

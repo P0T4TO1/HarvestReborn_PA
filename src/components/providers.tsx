@@ -8,7 +8,7 @@ import { UiProvider } from "@/context/ui";
 import { BagProvider } from "@/context/order";
 import { AuthProvider } from "@/context/auth";
 
-const Providers = ({ children }: { children: React.ReactNode }) => {
+export const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <SessionProvider>
       <NextUIProvider>
@@ -23,5 +23,3 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
     </SessionProvider>
   );
 };
-
-export default Providers;

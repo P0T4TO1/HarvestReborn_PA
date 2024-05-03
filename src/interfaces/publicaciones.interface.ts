@@ -8,10 +8,11 @@ export interface IPublicacion {
 
   titulo_publicacion: string;
   descripcion_publicacion: string;
+  precio_publicacion?: number;
   images_publicacion: string[];
 
-  disponibilidad: Disponibilidad;
-  estado_publicacion: Estado;
+  disponibilidad: DisponibilidadPublicacion;
+  estado_publicacion: EstadoPublicacion;
 
   lotes?: ILote[];
 
@@ -20,9 +21,16 @@ export interface IPublicacion {
   deletedAt?: string;
 }
 
-enum Disponibilidad {
+export enum DisponibilidadPublicacion {
   En_venta = "EN_VENTA",
   Donacion = "DONACION",
+}
+
+export enum EstadoPublicacion {
+  Activo = "ACTIVO",
+  Inactiva = "INACTIVA",
+  Pendiente = "PENDIENTE",
+  Rechazada = "RECHAZADA",
   Vendido = "VENDIDO",
   Donado = "DONADO",
 }

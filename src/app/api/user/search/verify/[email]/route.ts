@@ -24,7 +24,17 @@ async function searchIfEmailVerified(
       },
     });
 
-    if (user?.estado === "INACTIVO") {
+    if (!user) {
+      return NextResponse.json(
+        {
+          error: "Internal Server Error",
+          message: "Este correo no está registrado",
+        },
+        { status: 200 }
+      );
+    }
+
+    if (user.estado === "INACTIVO") {
       return NextResponse.json(
         {
           error: "Internal Server Error",
@@ -34,7 +44,7 @@ async function searchIfEmailVerified(
       );
     }
 
-    if (!user?.emailVerified) {
+    if (!user.emailVerified) {
       return NextResponse.json(
         {
           error: "Internal Server Error",

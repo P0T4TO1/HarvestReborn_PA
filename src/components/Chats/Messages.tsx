@@ -14,7 +14,7 @@ interface MessagesProps {
   chatPartner: IUser;
 }
 
-const Messages: FC<MessagesProps> = ({
+export const Messages: FC<MessagesProps> = ({
   initialMessages,
   sessionId,
   chatId,
@@ -114,5 +114,3 @@ const Messages: FC<MessagesProps> = ({
     </div>
   );
 };
-
-export default Messages;

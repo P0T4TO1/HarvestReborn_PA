@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/@internal/prisma-second/client"
+}
+
+datasource db {
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Ticket {
+  id_ticket Int       @id @default(autoincrement())
+  tipo      Tipo
+  estado    Estado
+  prioridad Prioridad
+
+  motivo       String
+  descripcion  String    @db.Text
+  fecha_inicio DateTime
+  fecha_cierre DateTime?
+
+  respuesta String? @db.Text
+
+  id_user String
+  user    User   @relation(fields: [id_user], references: [id])
+
+  @@index([id_user])
+}
+
+enum Tipo {
+  INCIDENCIA
+  PETICION
+  QUEJA
+  RECLAMACION
+}
+
+enum Estado {
+  ABIERTO
+  EN_PROCESO
+  CERRADO
+}
+
+enum Prioridad {
+  BAJA
+  MEDIA
+  ALTA
+  INMEDIATA
+}
+
+model User {
+  id        String @id @default(uuid())
+  nombre    String
+  apellidos String
+  email     String
+
+  tickets Ticket[]
+}

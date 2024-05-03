@@ -9,11 +9,9 @@ export const revalidate = 3600;
 
 const ReportsPage = async () => {
   const session = await getServerSession(authOptions);
-  if (!session) redirect("/auth/login");
-  if (session?.user.id_rol !== 2) redirect("/home");
 
   const user = await prisma.d_duenonegocio.findUnique({
-    where: { id_user: session.user.id },
+    where: { id_user: session?.user.id },
     include: { negocio: true },
   });
 
@@ -22,7 +20,11 @@ const ReportsPage = async () => {
   const orders = await getOrders(user?.negocio?.id_negocio);
   const lotes = await getLotes(user?.negocio?.id_negocio);
 
-  if (!orders || !lotes) notFound();
+  if (!orders || !lotes) return (
+    <section className="flex flex-col relative overflow-hidden min-h-screen">
+      <h1>No hay datos</h1>
+    </section>
+  );
 
   return (
     <section className="flex flex-col relative overflow-hidden min-h-screen">

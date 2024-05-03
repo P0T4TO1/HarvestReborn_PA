@@ -68,7 +68,6 @@ export const TableProductsInventory = ({ lotes }: Props) => {
   const [loading, setLoading] = useState(false);
   const { onOpen, onClose, isOpen, onOpenChange } = useDisclosure();
   const [openInfoModal, setOpenInfoModal] = useState(false);
-  console.log(lote);
 
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
   const [visibleColumns, setVisibleColumns] = useState<Selection>(
@@ -236,15 +235,18 @@ export const TableProductsInventory = ({ lotes }: Props) => {
               <span className="flex items-center gap-2 ml-2">
                 {new Date(
                   lote.fecha_vencimiento.replace(/-/g, "/").replace(/T.+/, "")
-                ) < new Date(today(getLocalTimeZone()).toString()) ? (
+                ) < today(getLocalTimeZone()).toDate(getLocalTimeZone()) ? (
                   <FaCircle className="text-red-500" size={20} />
                 ) : new Date(
                     lote.fecha_vencimiento.replace(/-/g, "/").replace(/T.+/, "")
                   ) <
                   new Date(
-                    new Date().setDate(
-                      new Date(today(getLocalTimeZone()).toString()).getDate() +
-                        3
+                    new Date(
+                      new Date().setDate(
+                        today(getLocalTimeZone())
+                          .toDate(getLocalTimeZone())
+                          .getDate() + 3
+                      )
                     )
                   ) ? (
                   <FaCircle className="text-[#CC4E00]" size={20} />
@@ -253,8 +255,9 @@ export const TableProductsInventory = ({ lotes }: Props) => {
                   ) <
                   new Date(
                     new Date().setDate(
-                      new Date(today(getLocalTimeZone()).toString()).getDate() +
-                        7
+                      today(getLocalTimeZone())
+                        .toDate(getLocalTimeZone())
+                        .getDate() + 7
                     )
                   ) ? (
                   <FaCircle className="text-yellow-500" size={20} />

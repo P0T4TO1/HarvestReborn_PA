@@ -1,12 +1,6 @@
-import { authOptions } from "@/lib/authOptions";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
 import { NavbarWrapperChats } from "@/components";
 
-const page = async ({}) => {
-  const session = await getServerSession(authOptions);
-  if (!session) return redirect("/auth/login");
-
+const page = async () => {
   return (
     <>
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">

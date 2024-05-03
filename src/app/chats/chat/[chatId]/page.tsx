@@ -1,5 +1,4 @@
-import ChatInput from "@/components/Chats/ChatInput";
-import Messages from "@/components/Chats/Messages";
+import { ChatInput, Messages } from "@/components";
 import prisma from "@/lib/prisma";
 import { authOptions } from "@/lib/authOptions";
 import { messageArrayValidator } from "@/validations/chat.validation";
