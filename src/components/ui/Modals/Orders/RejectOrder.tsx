@@ -127,7 +127,7 @@ export const RejectOrder = ({
                         : handleCancelOrder(order.id_orden!);
                     }}
                   >
-                    Rechazar
+                    {tipo === "rechazar" ? "Rechazar" : "Cancelar"}
                   </Button>
                 </ModalFooter>
               </>

@@ -1,7 +1,7 @@
 import { ICliente, ILote, INegocio, IProduct } from "@/interfaces";
 
 export interface IOrden {
-  id_orden?: string;
+  id_orden: string;
   fecha_orden: string | Date;
   hora_orden: string | Date;
   monto_total: number;

@@ -22,10 +22,24 @@ model Ticket {
 
   respuesta String? @db.Text
 
+  comentarios TicketComentario[]
+
   id_user String
   user    User   @relation(fields: [id_user], references: [id])
 
   @@index([id_user])
+}
+
+model TicketComentario {
+  id_comentario Int @id @default(autoincrement())
+
+  id_ticket Int
+  ticket    Ticket @relation(fields: [id_ticket], references: [id_ticket])
+
+  comentario String   @db.Text
+  fecha      DateTime
+
+  @@index([id_ticket])
 }
 
 enum Tipo {
@@ -56,3 +70,38 @@ model User {
 
   tickets Ticket[]
 }
+
+model RespuestasFaq {
+  id_faqRespuesta Int @id @default(autoincrement())
+
+  id_prefrec Int
+  pregunta   PreguntasFrecuentes @relation(fields: [id_prefrec], references: [id_prefrec])
+
+  respuesta String
+
+  @@index([id_prefrec])
+}
+
+model PreguntasFrecuentes {
+  id_prefrec Int @id @default(autoincrement())
+
+  pregunta String
+
+  respuestas RespuestasFaq[]
+  tipo       TipoPregunta    @default(GENERAL)
+}
+
+enum TipoPregunta {
+  GENERAL
+  CUENTA
+  NEGOCIO
+  CLIENTE
+  DUENONEGOCIO
+  ORDENES
+  PRODUCTOS
+  INVENTARIO
+  CHAT
+  PUBLICACIONES
+  TECNICO
+}
+
