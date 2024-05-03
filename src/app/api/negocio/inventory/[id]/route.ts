@@ -53,6 +53,7 @@ type Data = {
   cantidad_producto: string;
   fecha_entrada: string;
   fecha_vencimiento: string;
+  dias_aviso: string;
   precio_kg: string;
   tipo_almacenaje: TipoAlmacenaje;
   inventory_id: number;
@@ -70,6 +71,7 @@ async function addProductToInventory(
     cantidad_producto,
     fecha_entrada,
     fecha_vencimiento,
+    dias_aviso,
     precio_kg,
     tipo_almacenaje,
     inventory_id,
@@ -81,12 +83,12 @@ async function addProductToInventory(
       { status: 400 }
     );
 
-  console.log(body);
   if (
     !id ||
     !cantidad_producto ||
     !fecha_entrada ||
     !fecha_vencimiento ||
+    !dias_aviso ||
     !precio_kg ||
     !inventory_id
   ) {
@@ -102,6 +104,7 @@ async function addProductToInventory(
         cantidad_producto: parseInt(cantidad_producto, 10),
         fecha_entrada: new Date(fecha_entrada).toISOString(),
         fecha_vencimiento: new Date(fecha_vencimiento).toISOString(),
+        dias_aviso: parseInt(dias_aviso, 10),
         precio_kg: parseFloat(precio_kg),
         monto_total: parseFloat(precio_kg) * parseInt(cantidad_producto, 10),
         tipo_almacenaje: tipo_almacenaje,

@@ -4,6 +4,7 @@ import { BagType, Estado } from "@/interfaces";
 import sgMail from "@sendgrid/mail";
 import { render } from "@react-email/render";
 import { OrderNotificationEmail } from "@/components";
+import { today, getLocalTimeZone } from "@internationalized/date";
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY || "");
 
@@ -22,8 +23,7 @@ async function createOrder(req: NextRequest, res: NextResponse) {
   const { body } = (await new Response(req.body).json()) as {
     body: body;
   };
-  // make an id for the order
-  let now = new Date().toString();
+  let now = today(getLocalTimeZone()).toDate(getLocalTimeZone()).toString();
   now += now + Math.floor(Math.random() * 10);
   const id_orden = now
     .replace(/[^0-9]/g, "")
@@ -76,7 +76,13 @@ async function createOrder(req: NextRequest, res: NextResponse) {
     });
 
     if (!emailCliente) {
-      throw new Error("Cliente no encontrado");
+      return NextResponse.json(
+        {
+          error: true,
+          message: "No se encontró el cliente",
+        },
+        { status: 404 }
+      );
     }
 
     const emailsPromise = body.bag.map(async (item) => {
@@ -106,10 +112,15 @@ async function createOrder(req: NextRequest, res: NextResponse) {
     const emails = await Promise.all(emailsPromise);
 
     if (!emails) {
-      throw new Error("No se encontraron correos de negocio");
+      return NextResponse.json(
+        {
+          error: true,
+          message: "No se encontraron los correos de los negocios",
+        },
+        { status: 404 }
+      );
     }
 
-    // send email to all the businesses
     const emailsHTML = emails.map((email) => {
       return render(
         OrderNotificationEmail({

@@ -28,6 +28,7 @@ type Data = {
   cantidad_producto: string;
   fecha_entrada: string;
   fecha_vencimiento: string;
+  dias_aviso: string;
   precio_kg: string;
   tipo_almacenaje: TipoAlmacenaje;
 };
@@ -43,6 +44,7 @@ async function updateLote(
     cantidad_producto,
     fecha_entrada,
     fecha_vencimiento,
+    dias_aviso,
     precio_kg,
     tipo_almacenaje,
   } = body as Data;
@@ -63,6 +65,7 @@ async function updateLote(
         cantidad_producto: parseInt(cantidad_producto, 10),
         fecha_entrada: new Date(fecha_entrada).toISOString(),
         fecha_vencimiento: new Date(fecha_vencimiento).toISOString(),
+        dias_aviso: parseInt(dias_aviso, 10),
         precio_kg: parseFloat(precio_kg),
         monto_total: parseFloat(cantidad_producto) * parseFloat(precio_kg),
         tipo_almacenaje: tipo_almacenaje,

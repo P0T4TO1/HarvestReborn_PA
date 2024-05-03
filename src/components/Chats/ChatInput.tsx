@@ -13,7 +13,7 @@ interface ChatInputProps {
   chatId: string;
 }
 
-const ChatInput: FC<ChatInputProps> = ({ chatPartner, chatId }) => {
+export const ChatInput: FC<ChatInputProps> = ({ chatPartner, chatId }) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [input, setInput] = useState<string>("");
@@ -87,5 +87,3 @@ const ChatInput: FC<ChatInputProps> = ({ chatPartner, chatId }) => {
     </div>
   );
 };
-
-export default ChatInput;

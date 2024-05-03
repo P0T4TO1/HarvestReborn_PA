@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState, useContext, useEffect } from "react";
-import { IOrden } from "@/interfaces";
+
+import { IOrden, EstadoOrden } from "@/interfaces";
 import { hrApi } from "@/api";
 import { AuthContext } from "@/context/auth";
+
 import {
   CircularProgress,
   Card,
@@ -13,11 +15,20 @@ import {
   Link,
   Button,
   Chip,
+  ChipProps,
   Divider,
   Accordion,
   AccordionItem,
 } from "@nextui-org/react";
 import { AsideAccount } from "@/components";
+
+const statusColorMap = {
+  PENDIENTE: "warning",
+  EN_PROCESO: "primary",
+  RECHAZADO: "danger",
+  FINALIZADO: "success",
+  CANCELADO: "danger",
+};
 
 export const OrdersCliente = () => {
   const [loading, setLoading] = useState(true);
@@ -113,15 +124,17 @@ export const OrdersCliente = () => {
                             </Link>
                             <Button
                               color={
-                                order.estado_orden === "FINALIZADO"
+                                order.estado_orden === EstadoOrden.FINALIZADO
                                   ? "default"
                                   : "danger"
                               }
                               size="md"
-                              disabled={order.estado_orden === "FINALIZADO"}
+                              disabled={
+                                order.estado_orden === EstadoOrden.FINALIZADO
+                              }
                               className="ml-2 hidden md:block"
                             >
-                              {order.estado_orden === "FINALIZADO"
+                              {order.estado_orden === EstadoOrden.FINALIZADO
                                 ? "Finalizado"
                                 : "Cancelar orden"}
                             </Button>
@@ -173,24 +186,26 @@ export const OrdersCliente = () => {
                           <Chip
                             variant="flat"
                             color={
-                              order.estado_orden === "FINALIZADO"
-                                ? "success"
-                                : "warning"
+                              statusColorMap[
+                                order.estado_orden as keyof typeof statusColorMap
+                              ] as ChipProps["color"]
                             }
                           >
                             {order.estado_orden}
                           </Chip>
                           <Button
                             color={
-                              order.estado_orden === "FINALIZADO"
+                              order.estado_orden === EstadoOrden.FINALIZADO
                                 ? "default"
                                 : "danger"
                             }
                             size="md"
-                            disabled={order.estado_orden === "FINALIZADO"}
+                            disabled={
+                              order.estado_orden === EstadoOrden.FINALIZADO
+                            }
                             className="ml-2 md:hidden block"
                           >
-                            {order.estado_orden === "FINALIZADO"
+                            {order.estado_orden === EstadoOrden.FINALIZADO
                               ? "Finalizado"
                               : "Cancelar orden"}
                           </Button>

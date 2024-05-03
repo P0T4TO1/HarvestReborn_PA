@@ -152,7 +152,7 @@ export const LoginForm: FC = () => {
                     }
                   />
                   {errors?.user_password && (
-                    <p className="text-red-700 text-xs">
+                    <p className="text-red-500 text-xs">
                       {errors?.user_password.message}
                     </p>
                   )}

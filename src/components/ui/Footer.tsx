@@ -85,10 +85,10 @@ export const Footer = () => {
                     <li>
                       <Link
                         className="font-semibold mb-2 text-sm"
-                        href={`${process.env.SUPPORT_APP_URL}`}
+                        href={process.env.SUPPORT_APP_URL}
                         color="foreground"
                       >
-                        Contacto
+                        Soporte
                       </Link>
                     </li>
                   </ul>
@@ -128,7 +128,7 @@ export const Footer = () => {
             <div className="text-sm text-blueGray-500 font-semibold py-1">
               Copyright © <span id="get-current-year">2024</span>
               <Link
-                href={"https://harvest-reborn-pa.vercel.app/"}
+                href={process.env.APP_URL}
                 target="_blank"
                 color="foreground"
               >

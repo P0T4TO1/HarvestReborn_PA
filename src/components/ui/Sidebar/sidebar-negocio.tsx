@@ -1,14 +1,17 @@
 "use client";
 
 import React, { useContext } from "react";
+import { usePathname } from "next/navigation";
+
+import { Image } from "@nextui-org/react";
 import { Sidebar } from "./sidebar.styles";
 import { SidebarMenu, SidebarItem } from "@/components";
-import { usePathname } from "next/navigation";
 import { UiContext } from "@/context/ui";
-import { Image } from "@nextui-org/react";
+
 import { MdOutlineStorefront, MdOutlineInventory2 } from "react-icons/md";
 import { IoChatbubblesOutline, IoNotifications } from "react-icons/io5";
 import { FaChartBar, FaHome, FaBoxOpen } from "react-icons/fa";
+import { BsPostcard } from "react-icons/bs";
 
 export const SidebarWrapperNegocio = () => {
   const pathname = usePathname();
@@ -58,6 +61,12 @@ export const SidebarWrapperNegocio = () => {
                 title="Pedidos"
                 icon={<FaBoxOpen size={24} />}
                 href="/orders"
+              />
+              <SidebarItem
+                isActive={pathname === "/mis-publicaciones"}
+                title="Mis Publicaciones"
+                icon={<BsPostcard size={24} />}
+                href="/mis-publicaciones"
               />
               <SidebarItem
                 isActive={pathname === "/chats"}

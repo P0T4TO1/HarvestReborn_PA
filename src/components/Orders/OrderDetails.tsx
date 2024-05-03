@@ -1,9 +1,13 @@
 "use client";
 
 import React, { useState, useEffect, useContext } from "react";
-import { IOrden } from "@/interfaces";
+import { useRouter } from "next/navigation";
+import { AuthContext } from "@/context/auth";
+
+import { EstadoOrden, IOrden } from "@/interfaces";
 import { chatHrefConstructor } from "@/utils/cn";
 import { hrApi } from "@/api";
+
 import { FaCheckCircle } from "react-icons/fa";
 import {
   Card,
@@ -14,17 +18,24 @@ import {
   Image,
   Link,
   Button,
+  ChipProps,
 } from "@nextui-org/react";
-import { AuthContext } from "@/context/auth";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import { DANGER_TOAST } from "@/components";
+import { toast } from "sonner";
 import * as PusherPushNotifications from "@pusher/push-notifications-web";
 
 type OrdersClienteProps = {
   id_orden: string;
   newOrder?: boolean;
   detailsNegocio?: boolean;
+};
+
+const statusColorMap = {
+  PENDIENTE: "warning",
+  EN_PROCESO: "primary",
+  RECHAZADO: "danger",
+  FINALIZADO: "success",
+  CANCELADO: "danger",
 };
 
 export const OrderDetails = ({
@@ -162,7 +173,9 @@ export const OrderDetails = ({
                   <Chip
                     variant="flat"
                     color={
-                      order.estado_orden === "PENDIENTE" ? "warning" : "danger"
+                      statusColorMap[
+                        order.estado_orden as keyof typeof statusColorMap
+                      ] as ChipProps["color"]
                     }
                   >
                     {order.estado_orden}
@@ -265,7 +278,9 @@ export const OrderDetails = ({
                   <Chip
                     variant="flat"
                     color={
-                      order.estado_orden === "PENDIENTE" ? "warning" : "danger"
+                      statusColorMap[
+                        order.estado_orden as keyof typeof statusColorMap
+                      ] as ChipProps["color"]
                     }
                   >
                     {order.estado_orden}

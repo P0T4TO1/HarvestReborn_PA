@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo, useCallback, Key, useEffect } from "react";
+
 import {
   Table,
   TableHeader,
@@ -23,6 +24,18 @@ import {
   useDisclosure,
   User,
 } from "@nextui-org/react";
+import { toast } from "sonner";
+import {
+  OrderModal,
+  SUCCESS_TOAST,
+  DANGER_TOAST,
+  RejectOrder,
+} from "@/components";
+import { FaX } from "react-icons/fa6";
+import { FaChevronDown, FaSearch, FaEye, FaCheck } from "react-icons/fa";
+import { MdCancelPresentation } from "react-icons/md";
+
+import { hrApi } from "@/api";
 import { IOrden, IProductoOrden } from "@/interfaces";
 import {
   columnsOrders,
@@ -30,10 +43,8 @@ import {
   statusColorMapOrders as statusColorMap,
   INITIAL_VISIBLE_COLUMNS,
 } from "@/utils/data-table";
-import { OrderModal } from "@/components";
 import { capitalize } from "@/utils/capitalize";
-import { FaChevronDown, FaSearch, FaEye, FaCheck } from "react-icons/fa";
-import { FaX } from "react-icons/fa6";
+import { EstadoOrden } from "@/interfaces";
 
 type Props = {
   orders: IOrden[];
@@ -51,10 +62,11 @@ export const OrdersTable = ({ orders }: Props) => {
     column: "fecha_orden",
     direction: "ascending",
   });
-
+  const [tipoModal, setTipoModal] = useState("");
   const [orderModal, setOrderModal] = useState<IOrden | undefined>();
   const [productsModal, setProductsModal] = useState<IProductoOrden[]>([]);
   const [loading, setLoading] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   const [page, setPage] = useState(1);
 
@@ -119,8 +131,24 @@ export const OrdersTable = ({ orders }: Props) => {
 
   const { onOpen, onClose, isOpen } = useDisclosure();
 
-  const setOrder = (order: IOrden) => {
-    console.log(order);
+  const handleAcceptOrder = (id_orden: string) => {
+    try {
+      hrApi
+        .put(`/negocio/orders/estado/${id_orden}`, {
+          estado: "EN_PROCESO",
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            toast("Pedido aceptado", SUCCESS_TOAST);
+          }
+        })
+        .catch(() => {
+          toast("Error al aceptar el pedido", DANGER_TOAST);
+        });
+    } catch (error) {
+      console.error(error);
+      toast("Error al aceptar el pedido", DANGER_TOAST);
+    }
   };
 
   const renderCell = useCallback(
@@ -169,7 +197,8 @@ export const OrdersTable = ({ orders }: Props) => {
               variant="flat"
               size="md"
             >
-              {order.estado_orden.charAt(0) + order.estado_orden.slice(1).toLowerCase()}
+              {order.estado_orden.charAt(0) +
+                order.estado_orden.slice(1).toLowerCase()}
             </Chip>
           );
         case "acciones":
@@ -189,23 +218,67 @@ export const OrdersTable = ({ orders }: Props) => {
                   <FaEye size={20} />
                 </Button>
               </Tooltip>
-              <Tooltip content="Aceptar pedido" color="success">
-                <Button isIconOnly variant="light">
-                  <FaCheck size={20} className="text-green-700" />
-                </Button>
-              </Tooltip>
-              <Tooltip content="Rechazar pedido" color="danger">
-                <Button isIconOnly variant="light">
-                  <FaX size={20} className="text-red-600" />
-                </Button>
-              </Tooltip>
+
+              {order.estado_orden === EstadoOrden.EN_PROCESO ? (
+                <>
+                  <Tooltip content="Completar pedido" color="success">
+                    <Button isIconOnly variant="light">
+                      <FaCheck size={20} className="text-green-700" />
+                    </Button>
+                  </Tooltip>
+                  <Tooltip content="Cancelar pedido" color="danger">
+                    <Button
+                      isIconOnly
+                      variant="light"
+                      onPress={() => {
+                        setTipoModal("cancelar");
+                        setLoading(true);
+                        setOrderModal(order);
+                        setOpenModal(!openModal);
+                      }}
+                    >
+                      <MdCancelPresentation
+                        size={20}
+                        className="text-red-600"
+                      />
+                    </Button>
+                  </Tooltip>
+                </>
+              ) : (
+                <Tooltip content="Aceptar pedido" color="success">
+                  <Button
+                    isIconOnly
+                    variant="light"
+                    onPress={() => handleAcceptOrder(order.id_orden!)}
+                  >
+                    <FaCheck size={20} className="text-green-700" />
+                  </Button>
+                </Tooltip>
+              )}
+
+              {order.estado_orden === EstadoOrden.PENDIENTE && (
+                <Tooltip content="Rechazar pedido" color="danger">
+                  <Button
+                    isIconOnly
+                    variant="light"
+                    onPress={() => {
+                      setTipoModal("rechazar");
+                      setLoading(true);
+                      setOrderModal(order);
+                      setOpenModal(!openModal);
+                    }}
+                  >
+                    <FaX size={20} className="text-red-600" />
+                  </Button>
+                </Tooltip>
+              )}
             </div>
           );
         default:
           return cellValue;
       }
     },
-    [onOpen]
+    [onOpen, openModal]
   );
 
   const onNextPage = useCallback(() => {
@@ -368,6 +441,17 @@ export const OrdersTable = ({ orders }: Props) => {
         products={productsModal}
         useDisclosure={{ isOpen, onClose }}
       />
+
+      <RejectOrder
+        useDisclosure={{
+          isOpen: openModal,
+          onClose: () => setOpenModal(!openModal),
+        }}
+        order={orderModal as IOrden}
+        loading={loading}
+        tipo={tipoModal}
+      />
+
       <Table
         aria-label="Example table with custom cells, pagination and sorting"
         isHeaderSticky

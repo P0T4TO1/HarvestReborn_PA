@@ -144,6 +144,7 @@ model m_lote {
   last_precio_kg    Float?   @default(0)
   monto_total       Float
   last_monto_total  Float?   @default(0)
+  dias_aviso        Int      @default(0)
 
   disponibilidad  Disponibilidad @default(EN_VENTA)
   estado_lote     EstadoLote     @default(ACTIVO)
@@ -243,6 +244,7 @@ model m_prodcutoOrden {
 enum EstadoOrden {
   PENDIENTE
   EN_PROCESO
+  RECHAZADO
   FINALIZADO
   CANCELADO
 }
@@ -399,10 +401,11 @@ model m_publicaciones {
   negocio    m_negocio @relation(fields: [id_negocio], references: [id_negocio], onDelete: Cascade)
 
   titulo_publicacion      String
-  descripcion_publicacion String         @db.VarChar(400)
-  images_publicacion      String[]       @default([])
-  disponibilidad          Disponibilidad @default(EN_VENTA)
-  estado_publicacion      Estado         @default(PENDIENTE)
+  descripcion_publicacion String                    @db.VarChar(400)
+  precio_publicacion      Float?
+  images_publicacion      String[]                  @default([])
+  disponibilidad          DisponibilidadPublicacion @default(EN_VENTA)
+  estado_publicacion      EstadoPublicacion         @default(PENDIENTE)
 
   lotes m_lote[]
 
@@ -411,4 +414,19 @@ model m_publicaciones {
   deletedAt DateTime?
 
   @@index([id_negocio])
+}
+
+enum EstadoPublicacion {
+  PENDIENTE
+  ACTIVO
+  INACTIVO
+  RECHAZADO
+  ELIMINADO
+  VENDIDO
+  DONADO
+}
+
+enum DisponibilidadPublicacion {
+  EN_VENTA
+  DONACION
 }

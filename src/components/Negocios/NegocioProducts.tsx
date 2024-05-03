@@ -24,7 +24,7 @@ export const NegocioProducts = ({
   nombre_negocio,
   lotes,
 }: NegocioProductsProps) => {
-  const { addProductToBag, bag } = useContext(BagContext);
+  const { addProductToBag } = useContext(BagContext);
   const [isSeletedFrutas, setIsSelectedFrutas] = useState(false);
   const [isSeletedVerduras, setIsSelectedVerduras] = useState(false);
   const [filterValue, setFilterValue] = useState("");

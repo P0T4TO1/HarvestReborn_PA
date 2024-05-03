@@ -1,19 +1,13 @@
 "use client";
 
 import React, { useState, useContext, useEffect } from "react";
+
+import { CircularProgress } from "@nextui-org/react";
+import { OrdersTable } from "@/components";
+
+import { AuthContext } from "@/context/auth";
 import { IOrden } from "@/interfaces";
 import { hrApi } from "@/api";
-import { AuthContext } from "@/context/auth";
-import { OrdersTable } from "@/components";
-import {
-  CircularProgress,
-  Card,
-  CardFooter,
-  CardBody,
-  CardHeader,
-  Link,
-  Button,
-} from "@nextui-org/react";
 
 export const OrdersNegocio = () => {
   const [loading, setLoading] = useState(true);
@@ -39,7 +33,7 @@ export const OrdersNegocio = () => {
 
   return (
     <div className="pt-12 container mx-auto min-h-screen">
-      <div className="p-4 flex flex-col gap-4">
+      <div className="flex flex-col gap-4">
         <h1 className="text-2xl font-black flex flex-col leading-none dark:text-green-600 text-green-900">
           Pedidos
         </h1>
@@ -54,26 +48,7 @@ export const OrdersNegocio = () => {
         <p>Hubo un error al cargar los pedidos</p>
       ) : (
         <>
-          {orders.length === 0 ? (
-            <Card className="mt-12">
-              <CardHeader>No tienes pedidos</CardHeader>
-              <CardBody>
-                <p>
-                  No tienes pedidos registrados, si tienes dudas puedes
-                  contactar a soporte
-                </p>
-              </CardBody>
-              <CardFooter>
-                <Link href="/contacto">
-                  <Button color="primary" size="sm">
-                    Contactar soporte
-                  </Button>
-                </Link>
-              </CardFooter>
-            </Card>
-          ) : (
-            <OrdersTable orders={orders} />
-          )}
+          <OrdersTable orders={orders} />
         </>
       )}
     </div>

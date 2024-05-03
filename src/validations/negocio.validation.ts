@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Disponibilidad } from "@/interfaces";
 
 export const negocioGeneralDataSchema = z.object({
   nombre_negocio: z
@@ -91,10 +92,97 @@ export const negocioImagesSchema = z.object({
   images_negocio: z.array(z.string()).optional(),
 });
 
+const MAX_FILE_SIZE = 500000;
+const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];
+
 export const postValidationSchema = z.object({
-  images_publicacion: z.array(z.string()),
-  titulo_publicacion: z.string(),
-  descripcion_publicacion: z.string(),
-  price: z.number().optional(),
-  disponibilidad: z.string(),
+  images_publicacion: z
+    .array(
+      z
+        .unknown()
+        .transform((value) => {
+          if (value instanceof FileList) {
+            return Array.from(value);
+          }
+          return value;
+        })
+        .refine(
+          (files) => {
+            if (!files) return false;
+            if (Object.keys(files).length === 0) return true;
+            if (files instanceof File) {
+              if (!ACCEPTED_IMAGE_TYPES.includes(files.type)) return false;
+              if (files.size > MAX_FILE_SIZE) return false;
+            }
+            if (Array.isArray(files)) {
+              for (const file of files) {
+                if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) return false;
+                if (file.size > MAX_FILE_SIZE) return false;
+              }
+            }
+            return true;
+          },
+          {
+            message: "La imagen del producto no es válida",
+          }
+        )
+    )
+    .min(1, {
+      message: "La imagen de la publicación es requerida",
+    })
+    .max(10, {
+      message: "Máximo 10 imágenes por publicación",
+    }),
+  titulo_publicacion: z
+    .string({
+      required_error: "El título de la publicación es requerido",
+      invalid_type_error: "El título de la publicación debe ser de tipo texto",
+    })
+    .min(3, {
+      message: "El título de la publicación debe tener al menos 3 caracteres",
+    })
+    .max(255, {
+      message: "El título de la publicación debe tener menos de 255 caracteres",
+    }),
+  descripcion_publicacion: z
+    .string({
+      required_error: "La descripción de la publicación es requerida",
+      invalid_type_error:
+        "La descripción de la publicación debe ser de tipo texto",
+    })
+    .min(3, {
+      message:
+        "La descripción de la publicación debe tener al menos 3 caracteres",
+    })
+    .max(400, {
+      message:
+        "La descripción de la publicación debe tener menos de 400 caracteres",
+    }),
+  price: z
+    .number({
+      invalid_type_error: "El precio debe ser de tipo numérico",
+    })
+    .optional(),
+  disponibilidad: z.nativeEnum(Disponibilidad, {
+    errorMap: (issue, ctx) => {
+      if (issue.code === "invalid_enum_value") {
+        return {
+          message: "El tipo de disponibilidad no es valido o esta vacio",
+        };
+      }
+      return { message: issue.message ?? "" };
+    },
+  }),
+  lotes: z
+    .array(z.number(), {
+      required_error: "Los lotes son requeridos",
+    })
+    .min(1, {
+      message: "Los lotes son requeridos",
+    }),
 });

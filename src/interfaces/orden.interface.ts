@@ -44,6 +44,7 @@ export interface IProductoOrden {
 export enum EstadoOrden {
   PENDIENTE = "PENDIENTE",
   EN_PROCESO = "EN_PROCESO",
+  RECHAZADO = "RECHAZADO",
   FINALIZADO = "FINALIZADO",
   CANCELADO = "CANCELADO",
 }

@@ -1,6 +1,14 @@
 "use client";
 
-import React, { useState, DragEvent, ChangeEvent, useContext } from "react";
+import React, {
+  useState,
+  DragEvent,
+  ChangeEvent,
+  useContext,
+  useMemo,
+  useCallback,
+} from "react";
+
 import {
   Card,
   CardHeader,
@@ -12,43 +20,103 @@ import {
   CardBody,
   Divider,
   Image,
+  Accordion,
+  AccordionItem,
 } from "@nextui-org/react";
-import { Paper } from "@mui/material";
 import Carousel from "react-material-ui-carousel";
 import { FaX } from "react-icons/fa6";
+import { FaSearch } from "react-icons/fa";
+import { toast } from "sonner";
+import { SUCCESS_TOAST, DANGER_TOAST } from "@/components/ui";
+
+import { IoCloudUploadOutline } from "react-icons/io5";
+
+import { useRouter } from "next/navigation";
 import { AuthContext } from "@/context/auth";
+import { ILote } from "@/interfaces";
+import { hrApi } from "@/api";
+
 import { postValidationSchema } from "@/validations/negocio.validation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IoCloudUploadOutline } from "react-icons/io5";
 
 interface IFormData {
-  images_publicacion: string;
+  images_publicacion: File[];
   titulo_publicacion: string;
   descripcion_publicacion: string;
   price?: number;
   disponibilidad: string;
+  lotes: number[];
 }
 
-const Item = ({ item }: any) => {
-  return (
-    <Paper>
-      <Image src={item} alt="Imagen de la publicación" />
-    </Paper>
-  );
+type Props = {
+  lotes: {
+    todos: ILote[];
+    buenEstado: ILote[];
+    apuntoVencer: ILote[];
+  };
 };
 
-export const PublicacionSection = () => {
+export const PublicacionSection = ({ lotes }: Props) => {
   const { user } = useContext(AuthContext);
   const {
     handleSubmit,
     register,
     formState: { errors },
     watch,
+    setValue,
   } = useForm<IFormData>({
-    // resolver: zodResolver(postValidationSchema),
+    resolver: zodResolver(postValidationSchema),
   });
   const [images, setImages] = useState<File[]>([]);
+  const [asideProducts, setAsideProducts] = useState(false);
+  const [lotesSelected, setLotesSelected] = useState<number[]>([]);
+  const [filterValue, setFilterValue] = useState("");
+  const [searchValue, setSearchValue] = useState("");
+  const hasSearchFilter = Boolean(searchValue);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const router = useRouter();
+
+  const filteredItems = useMemo(() => {
+    let filteredLotes = [...lotes.todos];
+
+    if (hasSearchFilter) {
+      filteredLotes = filteredLotes.filter((lote) =>
+        lote.producto.nombre_producto
+          .toLowerCase()
+          .includes(searchValue.toLowerCase())
+      );
+    } else if (filterValue === "") {
+      filteredLotes = lotes.todos;
+    } else if (filterValue === "all") {
+      filteredLotes = lotes.todos;
+    } else if (filterValue === "relevant") {
+      filteredLotes = lotes.apuntoVencer;
+    } else if (filterValue === "aboutToExpire") {
+      filteredLotes = lotes.apuntoVencer;
+    } else if (filterValue === "goodState") {
+      filteredLotes = lotes.buenEstado;
+    }
+
+    return filteredLotes;
+  }, [filterValue, lotes, hasSearchFilter, searchValue]);
+
+  const itemsToDisplay = useMemo(() => {
+    return filteredItems;
+  }, [filteredItems]);
+
+  const onSearchChange = useCallback((value?: string) => {
+    if (value) {
+      setSearchValue(value);
+    } else {
+      setSearchValue("");
+    }
+  }, []);
+
+  const onClear = useCallback(() => {
+    setSearchValue("");
+  }, []);
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files;
@@ -69,6 +137,59 @@ export const PublicacionSection = () => {
 
   const handleRemoveFile = (index: number) => {
     setImages((prevFiles) => prevFiles.filter((_, i) => i !== index));
+  };
+
+  const handleRemoveLote = (id: number) => {
+    setLotesSelected((prev) => prev.filter((lote) => lote !== id));
+  };
+
+  const onSubmit: SubmitHandler<IFormData> = async (data) => {
+    console.log(data);
+    setIsLoading(true);
+    const imagesURLs: string[] = [];
+    try {
+      const formData = new FormData();
+      data.images_publicacion.forEach((file) => {
+        formData.append("files", file);
+      });
+
+      await hrApi
+        .post("/negocio/publication/upload", formData)
+        .then((response) => {
+          console.log("File uploaded successfully");
+          imagesURLs.push(...response.data.secure_urls);
+          console.log(imagesURLs);
+        })
+        .catch((error) => {
+          console.error(error, "Error al subir las imágenes a la API");
+          toast("Ocurrió un error al crear la publicación", DANGER_TOAST);
+        });
+
+      if (!user?.duenonegocio?.negocio.id_negocio) {
+        toast("No se encontró el negocio del usuario", DANGER_TOAST);
+        return;
+      }
+      await hrApi
+        .post("/negocio/publication", {
+          ...data,
+          images_urls: imagesURLs,
+          id_negocio: user.duenonegocio.negocio.id_negocio,
+        })
+        .then((response) => {
+          console.log(response);
+          toast("Publicación creada con éxito", SUCCESS_TOAST);
+          router.push("/mis-publicaciones");
+        })
+        .catch((error) => {
+          console.error(error, "Error al crear la publicación en la API");
+          toast("Ocurrió un error al crear la publicación", DANGER_TOAST);
+        });
+    } catch (error) {
+      console.error(error);
+      toast("Ocurrió un error al crear la publicación", DANGER_TOAST);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -162,8 +283,16 @@ export const PublicacionSection = () => {
               </label>
             </div>
           )}
+          {errors.images_publicacion && (
+            <p className="text-xs text-red-500 dark:text-red-400 text-sm">
+              {errors.images_publicacion.message}
+            </p>
+          )}
         </div>
-        <form className="flex flex-col gap-2 p-4 text-sm top-12">
+        <form
+          className="flex flex-col gap-2 p-4 text-sm top-12"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <h4 className="text-lg dark:text-gray-300">
             Información de la publicación
           </h4>
@@ -175,6 +304,11 @@ export const PublicacionSection = () => {
               className="input"
               {...register("titulo_publicacion")}
             />
+            {errors.titulo_publicacion && (
+              <p className="text-xs text-red-500 dark:text-red-400 text-sm">
+                {errors.titulo_publicacion.message}
+              </p>
+            )}
           </div>
           <div className="flex flex-col gap-2">
             <Textarea
@@ -183,15 +317,11 @@ export const PublicacionSection = () => {
               className="input"
               {...register("descripcion_publicacion")}
             />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Input
-              label="Precio"
-              type="number"
-              id="price"
-              className="input"
-              {...register("price")}
-            />
+            {errors.descripcion_publicacion && (
+              <p className="text-xs text-red-500 dark:text-red-400 text-sm">
+                {errors.descripcion_publicacion.message}
+              </p>
+            )}
           </div>
           <div className="flex flex-col gap-2">
             <Select
@@ -200,16 +330,62 @@ export const PublicacionSection = () => {
               className="input"
               {...register("disponibilidad")}
             >
-              <SelectItem key="1" value="1">
+              <SelectItem key="EN_VENTA" value="EN_VENTA">
                 Venta
               </SelectItem>
-              <SelectItem key="2" value="2">
+              <SelectItem key="DONACION" value="DONACION">
                 Donación
               </SelectItem>
             </Select>
+            {errors.disponibilidad && (
+              <p className="text-xs text-red-500 dark:text-red-400 text-sm">
+                {errors.disponibilidad.message}
+              </p>
+            )}
+          </div>
+          {watch("disponibilidad") === "EN_VENTA" && (
+            <div className="flex flex-col gap-2">
+              <Input
+                label="Precio"
+                type="number"
+                id="price"
+                className="input"
+                startContent={
+                  <div className="pointer-events-none flex items-center">
+                    <span className="text-default-400 text-small">$</span>
+                  </div>
+                }
+                {...register("price", { valueAsNumber: true })}
+              />
+              {errors.price && (
+                <p className="text-xs text-red-500 dark:text-red-400 text-sm">
+                  {errors.price.message}
+                </p>
+              )}
+            </div>
+          )}
+          <div>
+            <Button
+              color="default"
+              size="md"
+              className="w-full"
+              onPress={() => setAsideProducts(true)}
+            >
+              Seleccionar productos
+            </Button>
           </div>
           <div className="flex flex-col gap-2">
-            <Button color="primary" size="lg" className="w-full">
+            <Button
+              type="submit"
+              color="primary"
+              size="lg"
+              className="w-full"
+              isLoading={isLoading}
+              onPress={() => {
+                setValue("images_publicacion", images);
+                setValue("lotes", lotesSelected);
+              }}
+            >
               Publicar
             </Button>
           </div>
@@ -269,8 +445,10 @@ export const PublicacionSection = () => {
                       ? watch("titulo_publicacion")
                       : "Título de la publicación"}
                   </h2>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {watch("price") ? `$${watch("price")}` : "Precio"}
+                  <p className="text-md font-semibold text-default-600">
+                    {watch("disponibilidad") === "EN_VENTA" && watch("price")
+                      ? `$${watch("price")}`
+                      : ""}
                   </p>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
                     Publicado hace unos segundos
@@ -286,12 +464,50 @@ export const PublicacionSection = () => {
                 </div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
                   Disponible para:{" "}
-                  {watch("disponibilidad") === "1"
+                  {watch("disponibilidad") === "EN_VENTA"
                     ? "Venta"
-                    : watch("disponibilidad") === "2"
+                    : watch("disponibilidad") === "DONACION"
                       ? "Donación"
                       : "Venta/Donación"}
                 </p>
+                <div>
+                  <Accordion>
+                    <AccordionItem title="Productos">
+                      {lotesSelected.map((id) => {
+                        const lote = lotes.todos.find((l) => l.id_lote === id);
+                        if (!lote)
+                          return (
+                            <AccordionItem key={id}>
+                              Producto no encontrado
+                            </AccordionItem>
+                          );
+                        return (
+                          <div
+                            key={lote.id_lote}
+                            className="flex justify-between mt-2"
+                          >
+                            <p>{lote.producto.nombre_producto}</p>
+                            <div>
+                              <p className="text-sm text-gray-500 dark:text-gray-400">
+                                <span className="font-semibold">
+                                  {lote.last_cantidad !== 0
+                                    ? lote.last_cantidad
+                                    : lote.cantidad_producto}{" "}
+                                  kg
+                                </span>
+                              </p>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </AccordionItem>
+                  </Accordion>
+                  {errors.lotes && (
+                    <p className="text-xs text-red-500 dark:text-red-400 text-sm">
+                      {errors.lotes.message}
+                    </p>
+                  )}
+                </div>
                 <Divider className="my-4" />
                 <div className="flex flex-col gap-2">
                   <h2 className="text-lg">Información del vendedor</h2>
@@ -313,6 +529,115 @@ export const PublicacionSection = () => {
           </Card>
         </div>
       </div>
+      {asideProducts && (
+        <aside className="pt-16 w-full md:w-1/3 lg:w-1/4 md:block md:min-w-[380px] border-l-1 border-default-500">
+          <div>
+            <div className="flex items-center justify-between p-4">
+              <h2 className="text-lg">Seleccionar productos</h2>
+              <Button
+                color="default"
+                size="sm"
+                onClick={() => setAsideProducts(false)}
+              >
+                Cerrar
+              </Button>
+            </div>
+            <div className="pb-4 px-4">
+              <Select
+                label="Filtrar"
+                size="sm"
+                className="w-full sm:max-w-[44%]"
+                selectedKeys={[filterValue]}
+                onChange={(e) => setFilterValue(e.target.value)}
+              >
+                <SelectItem key="all" value="1">
+                  Todos
+                </SelectItem>
+                <SelectItem key="relevant" value="2">
+                  Relevancia
+                </SelectItem>
+                <SelectItem key="aboutToExpire" value="3">
+                  Apunto de vencer
+                </SelectItem>
+                <SelectItem key="goodState" value="4">
+                  En buen estado
+                </SelectItem>
+              </Select>
+            </div>
+          </div>
+          <Divider />
+          <div className="p-4">
+            <h3 className="text-lg">Productos recomendados</h3>
+            <Input
+              isClearable
+              area-label="Buscar productos"
+              className="w-full"
+              placeholder="Buscar por nombre..."
+              startContent={<FaSearch size={20} />}
+              value={searchValue}
+              onClear={() => onClear()}
+              onValueChange={onSearchChange}
+            />
+            <div className="grid grid-cols-1 gap-4 mt-4">
+              {itemsToDisplay.map((lote) => (
+                <Card key={lote.id_lote} className="w-full">
+                  <CardHeader>
+                    <h2 className="text-md">{lote.producto.nombre_producto}</h2>
+                  </CardHeader>
+                  <CardBody>
+                    <div className="grid grid-cols-1 md:grid-cols-2">
+                      <div>
+                        <Image
+                          src={lote.producto.imagen_producto}
+                          alt="Imagen del producto"
+                          className="object-cover w-16 h-16 rounded-lg"
+                        />
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          Quedan:{" "}
+                          <span className="font-semibold">
+                            {lote.last_cantidad !== 0
+                              ? lote.last_cantidad
+                              : lote.cantidad_producto}{" "}
+                            kg
+                          </span>
+                        </p>
+                        <div className="flex gap-2">
+                          <Button
+                            color="default"
+                            size="sm"
+                            className="w-1/2"
+                            isDisabled={lotesSelected.includes(lote.id_lote)}
+                            onPress={() =>
+                              setLotesSelected((prev) => [
+                                ...prev,
+                                lote.id_lote,
+                              ])
+                            }
+                          >
+                            Seleccionar
+                          </Button>
+                          {lotesSelected.includes(lote.id_lote) && (
+                            <Button
+                              color="danger"
+                              onClick={() => handleRemoveLote(lote.id_lote)}
+                              size="sm"
+                              className="w-1/2"
+                            >
+                              Quitar lote
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </CardBody>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </aside>
+      )}
     </>
   );
 };

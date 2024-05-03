@@ -31,7 +31,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
   } catch (err) {
     console.log(err);
     return NextResponse.json(
-      { message: "Subir imagen a cloudinary" },
+      { message: "Error al subir imagen a cloudinary" },
       { status: 500 }
     );
   }
