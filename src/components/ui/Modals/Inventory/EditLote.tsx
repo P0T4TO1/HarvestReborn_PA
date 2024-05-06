@@ -100,7 +100,6 @@ export const EditLoteModal = ({
 
   return (
     <Modal
-      backdrop="blur"
       isOpen={isOpen}
       onClose={() => {
         onClose();

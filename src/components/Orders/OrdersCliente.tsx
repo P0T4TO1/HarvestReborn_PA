@@ -144,7 +144,7 @@ export const OrdersCliente = ({ orders }: OrdersClienteProps) => {
                 }
               />
               <Tab
-                key="pendientes"
+                key="pendiente"
                 title={
                   <div className="flex items-center space-x-2">
                     <span>Pendientes</span>
@@ -166,7 +166,7 @@ export const OrdersCliente = ({ orders }: OrdersClienteProps) => {
                 }
               />
               <Tab
-                key="finalizados"
+                key="finalizado"
                 title={
                   <div className="flex items-center space-x-2">
                     <span>Finalizadas</span>
@@ -177,7 +177,7 @@ export const OrdersCliente = ({ orders }: OrdersClienteProps) => {
                 }
               />
               <Tab
-                key="cancelados"
+                key="cancelado"
                 title={
                   <div className="flex items-center space-x-2">
                     <span>Canceladas</span>
@@ -188,7 +188,7 @@ export const OrdersCliente = ({ orders }: OrdersClienteProps) => {
                 }
               />
               <Tab
-                key="rechazados"
+                key="rechazado"
                 title={
                   <div className="flex items-center space-x-2">
                     <span>Rechazadas</span>

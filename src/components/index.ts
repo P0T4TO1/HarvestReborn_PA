@@ -4,6 +4,7 @@ export * from "./Dashboard";
 export * from "./email-templates";
 export * from "./Home";
 export * from "./LandingPage";
+export * from "./Market";
 export * from "./Negocios";
 export * from "./Orders";
 export * from "./Profile";

@@ -219,7 +219,7 @@ export const PublicacionModal = ({
                         </div>
                         <div className="flex flex-col items-center">
                           <Link
-                            href={`/publicacion/edit/${publicacion.id_publicacion}`}
+                            href={`market/publicacion/edit/${publicacion.id_publicacion}`}
                           >
                             <Button
                               isIconOnly

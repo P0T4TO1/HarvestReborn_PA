@@ -1,7 +1,7 @@
 import { INegocio, Estado, ILote } from "@/interfaces";
 
 export interface IPublicacion {
-  id_publicacion?: number;
+  id_publicacion: number;
 
   id_negocio: number;
   negocio: INegocio;
@@ -13,6 +13,7 @@ export interface IPublicacion {
 
   disponibilidad: DisponibilidadPublicacion;
   estado_publicacion: EstadoPublicacion;
+  estado_general: Estado;
 
   lotes?: ILote[];
 

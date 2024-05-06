@@ -84,7 +84,6 @@ export const RejectOrder = ({
 
   return (
     <Modal
-      backdrop="blur"
       isOpen={isOpen}
       onClose={onClose}
       size="lg"

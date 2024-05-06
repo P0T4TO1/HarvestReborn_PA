@@ -98,7 +98,7 @@ export const ProductsInventory = () => {
           />
         </div>
         <div className="mt-4 p-2 flex justify-end">
-          <Link href={"/publicacion"}>
+          <Link href={"/market/publicacion/create"}>
             <Button
               color="primary"
               variant="faded"

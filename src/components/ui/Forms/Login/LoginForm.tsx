@@ -16,6 +16,7 @@ import {
   CardBody,
   CardHeader,
   CardFooter,
+  Button,
 } from "@nextui-org/react";
 import { DANGER_TOAST, SUCCESS_TOAST } from "@/components";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -178,12 +179,13 @@ export const LoginForm: FC = () => {
                   </div>
                 </div>
                 <div>
-                  <button
+                  <Button
                     type="submit"
+                    isLoading={loading}
                     className="w-full flex justify-center bg-green-800 hover:bg-green-700 text-gray-100 p-3  rounded-lg tracking-wide font-semibold  cursor-pointer transition ease-in duration-500"
                   >
                     Iniciar sesión
-                  </button>
+                  </Button>
                 </div>
                 <div className="flex items-center justify-center space-x-2 my-5">
                   <span className="h-px w-16 bg-gray-400"></span>

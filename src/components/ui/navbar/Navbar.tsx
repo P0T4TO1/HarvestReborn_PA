@@ -127,6 +127,11 @@ export const NavbarComponent = () => {
                       </Link>
                     </NavbarItem>
                     <NavbarItem>
+                      <Link color="foreground" href={"/market"}>
+                        Publicaciones
+                      </Link>
+                    </NavbarItem>
+                    <NavbarItem>
                       <Link color="foreground" href={"/chats"}>
                         Chats
                       </Link>
@@ -155,6 +160,11 @@ export const NavbarComponent = () => {
               <NavbarItem>
                 <Link color="foreground" href={"/negocios"}>
                   Recauderías
+                </Link>
+              </NavbarItem>
+              <NavbarItem>
+                <Link color="foreground" href={"/market"}>
+                  Publicaciones
                 </Link>
               </NavbarItem>
             </>
@@ -221,6 +231,11 @@ export const NavbarComponent = () => {
                     </Link>
                   </NavbarMenuItem>
                   <NavbarMenuItem>
+                    <Link color="foreground" href={"/market"}>
+                      Publicaciones
+                    </Link>
+                  </NavbarMenuItem>
+                  <NavbarMenuItem>
                     <Link color="foreground" href={"/chats"}>
                       Chats
                     </Link>
@@ -266,6 +281,11 @@ export const NavbarComponent = () => {
               <NavbarMenuItem>
                 <Link color="foreground" href={"/negocios"}>
                   Recauderías
+                </Link>
+              </NavbarMenuItem>
+              <NavbarMenuItem>
+                <Link color="foreground" href={"/market"}>
+                  Publicaciones
                 </Link>
               </NavbarMenuItem>
               <NavbarMenuItem>

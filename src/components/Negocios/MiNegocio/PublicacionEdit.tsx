@@ -231,7 +231,7 @@ export const PublicacionEdit = ({ lotes, publicacion }: Props) => {
         <div className="flex flex-col gap-2 p-4 text-sm top-12">
           <h4 className="text-md dark:text-gray-300">Harvest Reborn</h4>
           <h2 className="mb-4 text-2xl font-semibold dark:text-gray-300">
-            Crear publicación
+            Editar publicación
           </h2>
         </div>
         <div className="p-4">

@@ -9,8 +9,6 @@ generator client {
 }
 
 datasource db {
-  // provider = "mysql"
-  // url      = env("LOCAL_MYSQL_DATABASE")
   provider     = "postgresql"
   url          = env("AZURE_POSTGRES_URL")
   relationMode = "prisma"
@@ -87,25 +85,12 @@ model d_duenonegocio {
   @@index([id_user])
 }
 
-// // mysql
-// model Images {
-//   id      Int    @id @default(autoincrement())
-//   url     String
-//   altText String
-
-//   id_negocio Int
-//   negocio    m_negocio @relation(fields: [id_negocio], references: [id_negocio], onDelete: Cascade)
-
-//   @@index([id_negocio])
-// }
-
 model m_negocio {
   id_negocio          Int      @id @default(autoincrement())
   nombre_negocio      String
   direccion_negocio   String
   telefono_negocio    String
   email_negocio       String?
-  // images_negocio      Images[]
   images_negocio      String[] @default([])
   descripcion_negocio String?
   estado_negocio      Estado   @default(PENDIENTE)
@@ -407,6 +392,8 @@ model m_publicaciones {
   disponibilidad          DisponibilidadPublicacion @default(EN_VENTA)
   estado_publicacion      EstadoPublicacion         @default(PENDIENTE)
 
+  estado_general EstadoGeneral @default(PENDIENTE)
+
   lotes m_lote[]
 
   createdAt DateTime  @default(now())
@@ -416,12 +403,16 @@ model m_publicaciones {
   @@index([id_negocio])
 }
 
+enum EstadoGeneral {
+  ACTIVO
+  INACTIVO
+  PENDIENTE
+}
+
 enum EstadoPublicacion {
   PENDIENTE
   ACTIVO
   INACTIVO
-  RECHAZADO
-  ELIMINADO
   VENDIDO
   DONADO
 }
