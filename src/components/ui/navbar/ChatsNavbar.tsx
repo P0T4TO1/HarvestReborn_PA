@@ -3,7 +3,7 @@
 import { Navbar, NavbarContent, NavbarItem } from "@nextui-org/react";
 import React, { useContext } from "react";
 import { UiContext } from "@/context/ui";
-import { DropdownChat } from "../Dropdown";
+import { DropdownChat } from "../dropdown";
 
 type Props = {
   partnerName?: string;

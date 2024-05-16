@@ -46,6 +46,16 @@ interface IFormData {
   cp: string;
 }
 
+const roles = [
+  { name: "Admin", id_rol: 1 },
+  { name: "Negocio", id_rol: 2 },
+  { name: "Cliente", id_rol: 3 },
+  { name: "oAuth", id_rol: 4 },
+  { name: "Soporte", id_rol: 5 },
+  { name: "Admin soporte", id_rol: 6 },
+  { name: "Super admin", id_rol: 7 },
+];
+
 const months = [
   { key: "01", value: "Enero" },
   { key: "02", value: "Febrero" },
@@ -165,7 +175,6 @@ export const EditUserForm = ({ user, isEditing }: Props) => {
   const onSubmit: SubmitHandler<IFormData> = async (data) => {
     try {
       data.fecha_nacimiento = `${data.dia_nacimiento}-${data.mes_nacimiento}-${data.year_nacimiento}`;
-      console.log(data);
       const res = await hrApi
         .put(`/admin/users/${user.id}`, data)
         .then(() => {
@@ -322,30 +331,15 @@ export const EditUserForm = ({ user, isEditing }: Props) => {
               variant="bordered"
               {...register("tipo")}
               isDisabled={!isEditing}
-              defaultSelectedKeys={[
-                user.id_rol === 1
-                  ? "admin"
-                  : user.id_rol === 2
-                    ? "negocio"
-                    : user.id_rol === 3
-                      ? "cliente"
-                      : user.id_rol === 5
-                        ? "soporte"
-                        : "oauth",
-              ]}
+              defaultSelectedKeys={
+                roles.find((role) => role.id_rol === user.id_rol)?.name
+              }
             >
-              <SelectItem value="admin" key="admin">
-                Administrador
-              </SelectItem>
-              <SelectItem value="negocio" key="negocio">
-                Negocio local
-              </SelectItem>
-              <SelectItem value="cliente" key="cliente">
-                Cliente
-              </SelectItem>
-              <SelectItem value="soporte" key="soporte">
-                Soporte
-              </SelectItem>
+              {roles.map((role) => (
+                <SelectItem key={role.name} value={role.name}>
+                  {role.name}
+                </SelectItem>
+              ))}
             </Select>
             {errors?.tipo && (
               <p className="text-red-700 text-xs">{errors?.tipo.message}</p>

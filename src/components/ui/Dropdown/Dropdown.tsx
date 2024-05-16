@@ -44,7 +44,7 @@ export const DropdownComponent: FC = () => {
               </DropdownItem>
               <DropdownItem
                 key="settings"
-                href={`/user/profile/${user?.id}`}
+                href={`/settings/profile`}
                 startContent={<MdOutlineSettings size={20} />}
               >
                 Cuenta

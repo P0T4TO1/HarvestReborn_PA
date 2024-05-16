@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useContext, useState } from "react";
-import { useRouter } from "next/navigation";
 
 import { IOrden, IProductoOrden } from "@/interfaces";
 import { AuthContext } from "@/context/auth";
@@ -13,17 +12,13 @@ import {
   ModalHeader,
   ModalContent,
   Button,
+  Link,
   Image,
   CircularProgress,
   Divider,
 } from "@nextui-org/react";
 
-import * as PusherPushNotifications from "@pusher/push-notifications-web";
 import { chatHrefConstructor } from "@/utils/cn";
-import { hrApi } from "@/api";
-
-import { toast } from "sonner";
-import { DANGER_TOAST } from "@/components";
 
 interface Props {
   useDisclosure: { isOpen: boolean; onClose: () => void };
@@ -39,66 +34,6 @@ export const OrderModal = ({
   loading,
 }: Props) => {
   const { user } = useContext(AuthContext);
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-
-  const onContact = async (
-    id_user: string,
-    id_cliente: string,
-    nombre_cliente: string
-  ) => {
-    setIsLoading(true);
-    await hrApi
-      .post(`/chat`, {
-        userId: id_user,
-        userId2: id_cliente,
-        chatName: `Chat con negocio ${nombre_cliente}`,
-        chatId: chatHrefConstructor(id_user, id_cliente),
-      })
-      .then(async (res) => {
-        if (res.status === 200 && res.data.message === "El chat ya existe") {
-          const beamsTokenProviderUser =
-            new PusherPushNotifications.TokenProvider({
-              url: `${process.env.NEXT_PUBLIC_API_URL}/notifications/token/${id_user}`,
-              headers: {
-                Authorization: `Bearer ${id_user}`,
-              },
-            });
-
-          const beamsTokenProviderCliente =
-            new PusherPushNotifications.TokenProvider({
-              url: `${process.env.NEXT_PUBLIC_API_URL}/notifications/token/${id_cliente}`,
-              headers: {
-                Authorization: `Bearer ${id_cliente}`,
-              },
-            });
-          const beamsClient = new PusherPushNotifications.Client({
-            instanceId: process.env
-              .NEXT_PUBLIC_PUSHER_BEAMS_INSTANCE_ID as string,
-          });
-
-          await beamsClient.start();
-          await beamsClient.setDeviceInterests([`chat-${id_user}-${id_cliente}`]);
-          await beamsClient.addDeviceInterest(`chat-${id_user}-${id_cliente}`);
-          await beamsClient.setUserId(id_user, beamsTokenProviderUser);
-          await beamsClient.setUserId(id_cliente, beamsTokenProviderCliente);
-
-          router.push(
-            `/chats/chat/${chatHrefConstructor(id_user, id_cliente)}`
-          );
-        }
-        if (res.status === 201) {
-          router.push(
-            `/chats/chat/${chatHrefConstructor(id_user, id_cliente)}`
-          );
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        toast("Error al intentar contactar al cliente", DANGER_TOAST);
-        setIsLoading(false);
-      });
-  };
 
   return (
     <Modal backdrop="blur" isOpen={isOpen} onClose={onClose} size="lg">
@@ -123,11 +58,8 @@ export const OrderModal = ({
                     <h3 className="text-lg font-semibold">Productos</h3>
                     <div className="flex flex-col">
                       {products.map((product, index) => (
-                        <>
-                          <div
-                            key={product.id_producto}
-                            className="flex justify-between py-4"
-                          >
+                        <div key={product.id_producto}>
+                          <div className="flex justify-between py-4">
                             <div className="flex">
                               <Image
                                 src={product.producto?.imagen_producto}
@@ -154,30 +86,25 @@ export const OrderModal = ({
                             </div>
                           </div>
                           <Divider />
-                        </>
+                        </div>
                       ))}
                     </div>
                   </div>
                 </ModalBody>
                 <ModalFooter>
-                  <Button
-                    variant="ghost"
-                    color="primary"
-                    isLoading={isLoading}
-                    onClick={() =>
-                      onContact(
-                        user?.id!,
-                        order?.cliente?.id_user!,
-                        order?.cliente?.nombre_cliente!
-                      )
-                    }
+                  <Link
+                    href={`/chats/chat/${chatHrefConstructor(
+                      user?.id!,
+                      order?.cliente?.id_user!
+                    )}`}
                   >
-                    Contactar al cliente por chat
-                  </Button>
+                    <Button color="primary">
+                      Contactar al cliente por chat
+                    </Button>
+                  </Link>
                   <Button
                     onClick={onClose}
                     disabled={loading}
-                    isLoading={isLoading}
                     className="ml-2"
                     color="danger"
                   >

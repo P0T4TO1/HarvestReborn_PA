@@ -2,10 +2,12 @@
 
 import { useEffect, useReducer, ReactNode } from "react";
 import Cookie from "js-cookie";
+import { today, getLocalTimeZone } from "@internationalized/date";
 import { BagContext } from "./OrderContext";
 import { bagReducer } from "./orderReducer";
 import { IOrden, IProductoOrden, EstadoOrden, BagType } from "@/interfaces";
 import { hrApi } from "@/api";
+import { chatHrefConstructor } from "@/utils/cn";
 
 export interface BagState {
   isLoaded: boolean;
@@ -68,7 +70,6 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
   }, [state.bag]);
 
   const addProductToBag = async (product: IProductoOrden) => {
-    console.log(state.bag);
     const productInBag = state.bag.some((item) =>
       item.id_negocio === product.lote?.inventario.id_negocio
         ? item.productos.some(
@@ -143,38 +144,52 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
 
   const createOrder = async (id_cliente: number, id_historial: number) => {
     const body = {
-      fecha_orden: new Date().toISOString(),
-      hora_orden: new Date().toISOString(),
-      monto_subtotal: state.total,
+      fecha_orden: today(getLocalTimeZone())
+        .toDate(getLocalTimeZone())
+        .toISOString(),
+      hora_orden: today(getLocalTimeZone())
+        .toDate(getLocalTimeZone())
+        .toISOString(),
       monto_total: state.total,
-      estado_orden: EstadoOrden.PENDIENTE,
       id_cliente,
       id_historial,
       bag: state.bag,
     };
 
     try {
-      const { data } = await hrApi.post("/cliente/order", { body });
-      console.log(data);
+      const { data } = await hrApi.post("/customer/order", body);
+      const orders = data.orders as IOrden[];
+      orders.map(async(order) => {
+        if(!order.negocio?.dueneg.id_user || !order.cliente?.id_user){
+          return;
+        }
+        await hrApi.post(`/chat`, {
+          userId: order.cliente.id_user,
+          userId2: order.negocio.dueneg.id_user,
+          chatName: `Chat entre ${order.cliente.nombre_cliente} y ${order.negocio.nombre_negocio}`,
+          chatId: chatHrefConstructor(order.cliente.id_user, order.negocio.dueneg.id_user),
+        });
+      });
+
       if (data.error) {
         return {
           hasError: true,
           message: data.message,
-          data: {} as IOrden,
+          data: [],
         };
       }
       dispatch({ type: "ORDER_COMPLETED" });
       return {
         hasError: false,
         message: "Orden creada con éxito",
-        data: data as IOrden,
+        data: orders,
       };
     } catch (error) {
       console.log(error);
       return {
         hasError: true,
         message: "Error no controlado, hable con el administrador",
-        data: {} as IOrden,
+        data: [],
       };
     }
   };

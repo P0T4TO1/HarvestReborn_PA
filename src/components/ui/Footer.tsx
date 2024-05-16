@@ -84,7 +84,7 @@ export const Footer = () => {
                     <li>
                       <Link
                         className="font-semibold mb-2 text-sm"
-                        href={"/negocios"}
+                        href={"/stores"}
                         color="foreground"
                       >
                         Recauderías

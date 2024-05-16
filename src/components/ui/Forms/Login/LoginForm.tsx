@@ -93,7 +93,6 @@ export const LoginForm: FC = () => {
       }
       if (res && res.ok && res.status === 200) {
         toast("¡Bienvenido!", SUCCESS_TOAST);
-        setLoading(false);
         router.push("/home");
         router.refresh();
         return;

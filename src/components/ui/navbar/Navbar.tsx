@@ -122,7 +122,7 @@ export const NavbarComponent = () => {
                 user?.id_rol === 3 && (
                   <>
                     <NavbarItem>
-                      <Link color="foreground" href={"/negocios"}>
+                      <Link color="foreground" href={"/stores"}>
                         Recauderías
                       </Link>
                     </NavbarItem>
@@ -158,7 +158,7 @@ export const NavbarComponent = () => {
                 </Link>
               </NavbarItem>
               <NavbarItem>
-                <Link color="foreground" href={"/negocios"}>
+                <Link color="foreground" href={"/stores"}>
                   Recauderías
                 </Link>
               </NavbarItem>
@@ -226,7 +226,7 @@ export const NavbarComponent = () => {
               ) : user?.id_rol === 3 ? (
                 <>
                   <NavbarMenuItem>
-                    <Link color="foreground" href={"/negocios"}>
+                    <Link color="foreground" href={"/stores"}>
                       Recauderías
                     </Link>
                   </NavbarMenuItem>
@@ -279,7 +279,7 @@ export const NavbarComponent = () => {
                 </Link>
               </NavbarMenuItem>
               <NavbarMenuItem>
-                <Link color="foreground" href={"/negocios"}>
+                <Link color="foreground" href={"/stores"}>
                   Recauderías
                 </Link>
               </NavbarMenuItem>

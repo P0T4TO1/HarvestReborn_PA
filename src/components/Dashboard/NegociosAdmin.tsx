@@ -19,7 +19,7 @@ export const NegociosAdmin = () => {
 
   useEffect(() => {
     hrApi
-      .get("/admin/users/negocios")
+      .get("/admin/users/stores")
       .then((res) => {
         if (res.status === 200) {
           setNegocios(res.data);
@@ -42,7 +42,7 @@ export const NegociosAdmin = () => {
           Home
         </BreadcrumbItem>
         <BreadcrumbItem
-          href={"/admin/dashboard/negocios"}
+          href={"/admin/dashboard/stores"}
           startContent={<MdOutlineStorefront size={25} />}
         >
           Negocios

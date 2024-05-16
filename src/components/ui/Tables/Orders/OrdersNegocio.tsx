@@ -29,7 +29,7 @@ import {
   OrderModal,
   SUCCESS_TOAST,
   DANGER_TOAST,
-  RejectOrder,
+  ChangeStatus,
 } from "@/components";
 import { FaX } from "react-icons/fa6";
 import { FaChevronDown, FaSearch, FaEye, FaCheck } from "react-icons/fa";
@@ -134,7 +134,7 @@ export const OrdersTable = ({ orders }: Props) => {
   const handleAcceptOrder = (id_orden: string) => {
     try {
       hrApi
-        .put(`/negocio/orders/estado/${id_orden}`, {
+        .put(`/store/orders/status/${id_orden}`, {
           estado: "EN_PROCESO",
         })
         .then((res) => {
@@ -442,7 +442,7 @@ export const OrdersTable = ({ orders }: Props) => {
         useDisclosure={{ isOpen, onClose }}
       />
 
-      <RejectOrder
+      <ChangeStatus
         useDisclosure={{
           isOpen: openModal,
           onClose: () => setOpenModal(!openModal),

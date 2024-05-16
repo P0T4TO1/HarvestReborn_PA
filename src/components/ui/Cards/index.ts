@@ -1,3 +1,3 @@
 export * from "./ProductCard";
-export * from "./Admin";
-export * from "./Home";
+export * from "./admin";
+export * from "./home";

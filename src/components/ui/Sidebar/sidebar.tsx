@@ -59,16 +59,16 @@ export const SidebarWrapper = () => {
                 href="/admin/dashboard/products"
               />
               <SidebarItem
-                isActive={pathname === "/admin/dashboard/negocios"}
+                isActive={pathname === "/admin/dashboard/stores"}
                 title="Negocios"
                 icon={<MdOutlineStorefront size={24} />}
-                href="/admin/dashboard/negocios"
+                href="/admin/dashboard/stores"
               />
               <SidebarItem
-                isActive={pathname === "/admin/dashboard/clientes"}
+                isActive={pathname === "/admin/dashboard/customers"}
                 title="Clientes"
                 icon={<FaUserGroup size={24} />}
-                href="/admin/dashboard/clientes"
+                href="/admin/dashboard/customers"
               />
               <SidebarItem
                 isActive={pathname === "/admin/dashboard/orders"}

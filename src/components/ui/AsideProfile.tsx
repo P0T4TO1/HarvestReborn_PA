@@ -13,14 +13,14 @@ export const AsideAccount = () => {
           Cuenta
         </h2>
         <div>
-          <Link href={`/user/profile/${user?.id}`}>
+          <Link href={`/settings/profile`}>
             <button className="flex items-center text-gray-800 dark:text-gray-300 px-3 py-2.5 font-semibold hover:text-cyan-900 hover:border hover:rounded-full">
               Perfil
             </button>
           </Link>
         </div>
         <div>
-          <Link href={`/user/profile/account/${user?.id}`}>
+          <Link href={`/settings/account`}>
             <button className="flex items-center text-gray-800 dark:text-gray-300 px-3 py-2.5 font-semibold hover:text-cyan-900 hover:border hover:rounded-full">
               Cuenta
             </button>

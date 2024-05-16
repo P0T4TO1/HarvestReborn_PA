@@ -45,10 +45,10 @@ export const SidebarWrapperNegocio = () => {
             />
             <SidebarMenu title="Menu Principal">
               <SidebarItem
-                isActive={pathname === "/mi-negocio"}
+                isActive={pathname === "/store/settings"}
                 title="Mi Negocio"
                 icon={<MdOutlineStorefront size={24} />}
-                href="/mi-negocio"
+                href="/store/settings"
               />
               <SidebarItem
                 isActive={pathname === "/inventory"}
@@ -63,10 +63,10 @@ export const SidebarWrapperNegocio = () => {
                 href="/orders"
               />
               <SidebarItem
-                isActive={pathname === "/mis-publicaciones"}
+                isActive={pathname === "/store/publications"}
                 title="Mis Publicaciones"
                 icon={<BsPostcard size={24} />}
-                href="/mis-publicaciones"
+                href="/store/publications"
               />
               <SidebarItem
                 isActive={pathname === "/chats"}

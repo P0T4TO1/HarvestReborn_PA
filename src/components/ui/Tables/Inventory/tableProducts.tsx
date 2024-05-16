@@ -142,7 +142,7 @@ export const TableProductsInventory = ({ lotes }: Props) => {
 
   const getLote = async (id: number) => {
     setLoading(true);
-    await hrApi.get(`/negocio/inventory/lote/${id}`).then((res) => {
+    await hrApi.get(`/store/inventory/batch/${id}`).then((res) => {
       if (res.status === 200) {
         setLote(res.data);
       } else {
@@ -153,7 +153,7 @@ export const TableProductsInventory = ({ lotes }: Props) => {
   };
 
   const handleDelete = async (id: number) => {
-    await hrApi.delete(`/negocio/inventory/${id}`).then((res) => {
+    await hrApi.delete(`/store/inventory/${id}`).then((res) => {
       if (res.status === 200) {
         toast("Producto eliminado con éxito", SUCCESS_TOAST);
         window.location.reload();

@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { redirect } from "next/navigation";
-import { getActivePublications } from "@/helpers";
+import { getActivePublications } from "@/actions";
 import { AllPublications } from "@/components";
 
 interface Props {

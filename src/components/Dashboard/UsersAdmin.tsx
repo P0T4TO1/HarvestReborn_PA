@@ -57,7 +57,7 @@ export const UsersAdmin = () => {
       <div className="flex justify-between flex-wrap gap-4 items-center">
         <div className="flex flex-row gap-3.5 flex-wrap">
           {/*<AddUser />*/}
-          <Link href={"/admin/dashboard/users/add-user"}>
+          <Link href={"/admin/dashboard/users/add"}>
             <Button
               color="primary"
               variant="faded"

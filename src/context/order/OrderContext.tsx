@@ -17,7 +17,7 @@ interface BagContextProps {
   createOrder: (
     id_cliente: number,
     id_historial: number
-  ) => Promise<{ hasError: boolean; message: string; data: IOrden }>;
+  ) => Promise<{ hasError: boolean; message: string; data: IOrden[] }>;
 }
 
 export const BagContext = createContext<BagContextProps>({} as BagContextProps);

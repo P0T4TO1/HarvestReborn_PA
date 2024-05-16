@@ -77,7 +77,7 @@ export const EditProductAdminModal = ({
         dataImage.set("file", file as File);
 
         await hrApi
-          .post("/admin/upload", dataImage)
+          .post("/admin/product/upload", dataImage)
           .then((res) => {
             if (res.status === 200) {
               console.log("File uploaded successfully");

@@ -19,7 +19,7 @@ export const ClientesAdmin = () => {
 
   useEffect(() => {
     hrApi
-      .get("/admin/users/clientes")
+      .get("/admin/users/customers")
       .then((res) => {
         if (res.status === 200) {
           setClientes(res.data);
@@ -42,7 +42,7 @@ export const ClientesAdmin = () => {
           Home
         </BreadcrumbItem>
         <BreadcrumbItem
-          href={"/admin/dashboard/clientes"}
+          href={"/admin/dashboard/customers"}
           startContent={<FaUserGroup size={25} />}
         >
           Clientes

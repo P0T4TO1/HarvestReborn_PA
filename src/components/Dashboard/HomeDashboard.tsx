@@ -21,9 +21,9 @@ export const HomeDashboard = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    hrApi.get("/negocio").then((res) => setNegocios(res.data));
+    hrApi.get("/store").then((res) => setNegocios(res.data));
     hrApi.get("/admin/users").then((res) => setUsers(res.data));
-    hrApi.get("/admin/users/clientes").then((res) => setClientes(res.data));
+    hrApi.get("/admin/users/customers").then((res) => setClientes(res.data));
     hrApi.get("/admin/product").then((res) => {
       setProducts(res.data);
       setLoading(false);

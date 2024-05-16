@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 
 import { IPublicacion } from "@/interfaces";
@@ -8,7 +8,7 @@ import { Image, Input, Link } from "@nextui-org/react";
 import { FaSearch } from "react-icons/fa";
 import { useInView } from "react-intersection-observer";
 
-import { getActivePublications } from "@/helpers";
+import { getActivePublications } from "@/actions";
 import { Disponibilidad } from "@prisma/client";
 
 interface Props {
@@ -37,7 +37,7 @@ export const AllPublications = ({ initialPublications }: Props) => {
     window.location.reload();
   };
 
-  const loadMorePublications = async () => {
+  const loadMorePublications = useCallback(async () => {
     const newPublications = await getActivePublications(
       offset,
       NUMBER_OF_ITEMS_TO_FETCH,
@@ -46,13 +46,24 @@ export const AllPublications = ({ initialPublications }: Props) => {
     if (!newPublications) return setMessage("No hay más publicaciones");
     setPublications((prev) => [...prev, ...newPublications]);
     setOffset((prev) => prev + NUMBER_OF_ITEMS_TO_FETCH);
-  };
+  }, [offset, search]);
+
+  // const loadMorePublications = async () => {
+  //   const newPublications = await getActivePublications(
+  //     offset,
+  //     NUMBER_OF_ITEMS_TO_FETCH,
+  //     search
+  //   );
+  //   if (!newPublications) return setMessage("No hay más publicaciones");
+  //   setPublications((prev) => [...prev, ...newPublications]);
+  //   setOffset((prev) => prev + NUMBER_OF_ITEMS_TO_FETCH);
+  // };
 
   useEffect(() => {
     if (inView) {
       loadMorePublications();
     }
-  }, [inView]);
+  }, [inView, loadMorePublications]);
 
   return (
     <div className="container mx-auto mt-12">
@@ -75,7 +86,7 @@ export const AllPublications = ({ initialPublications }: Props) => {
       <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
         {publications.map((publication) => (
           <Link
-            href={`/market/publicacion/${publication.id_publicacion}`}
+            href={`/market/item/${publication.id_publicacion}`}
             key={publication.id_publicacion}
             color="foreground"
             underline="hover"

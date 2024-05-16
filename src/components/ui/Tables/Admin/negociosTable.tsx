@@ -162,7 +162,7 @@ export const TableNegocios = ({ negocios }: Props) => {
                   size="sm"
                   variant="light"
                   onPress={() =>
-                    router.push(`/admin/dashboard/negocios/${negocio.id_negocio}`)
+                    router.push(`/admin/dashboard/stores/${negocio.id_negocio}`)
                   }
                 >
                   <MdOutlineInfo size={20} />

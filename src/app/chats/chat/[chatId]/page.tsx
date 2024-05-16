@@ -7,7 +7,6 @@ import { redirect, notFound } from "next/navigation";
 import { IUser } from "@/interfaces";
 import { NavbarWrapperChats } from "@/components";
 
-// The following generateMetadata functiion was written after the video and is purely optional
 export async function generateMetadata({
   params,
 }: {
@@ -80,7 +79,6 @@ const page = async ({ params }: PageProps) => {
   }
 
   const chatPartnerId = user.id === userId1 ? userId2 : userId1;
-  // new
 
   const chatPartnerRaw = (await prisma.m_user.findUnique({
     where: { id: chatPartnerId },
@@ -107,32 +105,6 @@ const page = async ({ params }: PageProps) => {
 
   return (
     <>
-      {/* <div className="flex-1 justify-between flex flex-col h-full max-h-[calc(100vh-6rem)]">
-        <div className="flex sm:items-center justify-between py-3 border-b-2 border-gray-200">
-          <div className="relative flex items-center space-x-4">
-            <div className="flex flex-col leading-tight">
-              <div className="text-xl flex items-center">
-                <span className="text-gray-700 mr-3 font-semibold">
-                  {chatPartner.duenonegocio?.nombre_dueneg ??
-                    chatPartner.cliente?.nombre_cliente ??
-                    chatPartner.email}
-                </span>
-              </div>
-
-              <span className="text-sm text-gray-600">{chatPartner.email}</span>
-            </div>
-          </div>
-        </div>
-
-        <Messages
-          chatId={chatId}
-          chatPartner={chatPartner}
-          sessionImg={session.user.image}
-          sessionId={session.user.id}
-          initialMessages={initialMessages}
-        />
-        <ChatInput chatId={chatId} chatPartner={chatPartner} />
-      </div> */}
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
         <NavbarWrapperChats
           partnerName={

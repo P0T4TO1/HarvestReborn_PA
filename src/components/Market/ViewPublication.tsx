@@ -1,6 +1,8 @@
 "use client";
 
+import React, { useState } from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 import {
   Image,
@@ -18,6 +20,7 @@ import { IoMdMore } from "react-icons/io";
 
 import { DisponibilidadPublicacion, IPublicacion } from "@/interfaces";
 import { chatHrefConstructor } from "@/utils/cn";
+import { hrApi } from "@/api";
 
 interface Props {
   publication: IPublicacion;
@@ -25,6 +28,23 @@ interface Props {
 
 export const ViewPublication = ({ publication }: Props) => {
   const { data: session } = useSession();
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onContact = async (id_user: string, id_dueneg: string) => {
+    setIsLoading(true);
+    await hrApi
+      .post(`/chat`, {
+        userId: id_user,
+        userId2: id_dueneg,
+        chatName: `Chat entre ${id_user} y ${id_dueneg}`,
+        chatId: chatHrefConstructor(id_user, id_dueneg),
+      })
+      .then(() => {
+        router.push(`/chats/chat/${chatHrefConstructor(id_user, id_dueneg)}`);
+      });
+  };
+
   return (
     <div className="md:flex h-full">
       <div className="lg:w-4/5 mx-auto h-full">
@@ -61,13 +81,11 @@ export const ViewPublication = ({ publication }: Props) => {
           </h3>
           <div className="flex items-center justify-between mt-4">
             <Button
-              as={Link}
-              href={chatHrefConstructor(
-                publication.negocio.dueneg.id_user,
-                session?.user.id
-              )}
               className="mr-2"
               startContent={<IoChatbubbleEllipsesOutline size={21} />}
+              onClick={() =>
+                onContact(session?.user.id!, publication.negocio.dueneg.id_user)
+              }
             >
               Enviar mensaje
             </Button>

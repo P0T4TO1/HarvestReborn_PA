@@ -33,7 +33,7 @@ export const NegocioInfoAdmin = ({ id_negocio }: NegocioInfoAdminProps) => {
 
   useEffect(() => {
     hrApi
-      .get(`/admin/users/negocios/${id_negocio}`)
+      .get(`/admin/users/stores/${id_negocio}`)
       .then((res) => {
         if (res.status === 200) {
           setNegocio(res.data);
@@ -47,7 +47,7 @@ export const NegocioInfoAdmin = ({ id_negocio }: NegocioInfoAdminProps) => {
         setLoading(false);
       });
     hrApi
-      .get(`/negocio/inventory/${id_negocio}`)
+      .get(`/store/inventory/batch/all/distinct/${id_negocio}`)
       .then((res) => {
         if (res.status === 200) {
           setLotesSorted(res.data);
@@ -59,7 +59,7 @@ export const NegocioInfoAdmin = ({ id_negocio }: NegocioInfoAdminProps) => {
         toast("Error al obtener productos", DANGER_TOAST);
       });
     hrApi
-      .get(`/negocio/inventory/lotes/${id_negocio}`)
+      .get(`/store/inventory/batch/all/${id_negocio}`)
       .then((res) => {
         if (res.status === 200) {
           setAllLotes(res.data);
@@ -82,12 +82,12 @@ export const NegocioInfoAdmin = ({ id_negocio }: NegocioInfoAdminProps) => {
           Home
         </BreadcrumbItem>
         <BreadcrumbItem
-          href={"/admin/dashboard/negocios"}
+          href={"/admin/dashboard/stores"}
           startContent={<MdOutlineStorefront size={25} />}
         >
           Negocios
         </BreadcrumbItem>
-        <BreadcrumbItem href={"/admin/dashboard/negocios"}>
+        <BreadcrumbItem href={"/admin/dashboard/stores"}>
           Listado
         </BreadcrumbItem>
         <BreadcrumbItem>Info</BreadcrumbItem>

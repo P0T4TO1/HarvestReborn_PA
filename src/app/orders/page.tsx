@@ -9,8 +9,8 @@ import {
   NavbarComponent,
   Footer,
 } from "@/components";
-import { getOrders as getOrdersNegocio } from "@/actions/negocio";
-import { getOrdersById as getOrdersCliente } from "@/actions/cliente";
+import { getOrders as getOrdersNegocio } from "@/actions";
+import { getOrdersById as getOrdersCliente } from "@/actions";
 import prisma from "@/lib/prisma";
 
 const OrdersPage = async () => {

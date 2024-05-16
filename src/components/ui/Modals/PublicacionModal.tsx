@@ -55,13 +55,13 @@ export const PublicacionModal = ({
       return;
     }
     await hrApi
-      .put(`/negocio/publication/estado/${id_publicacion}`, {
+      .put(`/store/publication/estado/${id_publicacion}`, {
         estado,
       })
       .then((res) => {
         if (res.status === 200) {
           toast("Estado de la publicación actualizado", SUCCESS_TOAST);
-          router.push("/mis-publicaciones");
+          router.push("/store/publications");
         }
       })
       .catch(() => {
@@ -80,11 +80,11 @@ export const PublicacionModal = ({
       return;
     }
     await hrApi
-      .delete(`/negocio/publication/${id_publicacion}`)
+      .delete(`/store/publication/${id_publicacion}`)
       .then((res) => {
         if (res.status === 200) {
           toast("Publicación eliminada", SUCCESS_TOAST);
-          router.push("/mis-publicaciones");
+          router.push("/store/publications");
         }
       })
       .catch(() => {
@@ -219,7 +219,7 @@ export const PublicacionModal = ({
                         </div>
                         <div className="flex flex-col items-center">
                           <Link
-                            href={`market/publicacion/edit/${publicacion.id_publicacion}`}
+                            href={`market/item/edit/${publicacion.id_publicacion}`}
                           >
                             <Button
                               isIconOnly

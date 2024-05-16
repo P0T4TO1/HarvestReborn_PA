@@ -62,7 +62,7 @@ export const EditNegocioAdmin = ({ negocio, isEditing }: Props) => {
     setLoading(true);
     try {
       const res = await hrApi.put(
-        `/admin/users/negocios/${negocio.id_negocio}`,
+        `/admin/users/stores/${negocio.id_negocio}`,
         data
       );
       if (res.status === 200) {

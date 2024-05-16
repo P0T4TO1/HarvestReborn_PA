@@ -21,7 +21,7 @@ import {
   Tabs,
   useDisclosure,
 } from "@nextui-org/react";
-import { AsideAccount, RejectOrder } from "@/components";
+import { AsideAccount, ChangeStatus } from "@/components";
 import { FaSearch } from "react-icons/fa";
 
 const statusColorMap = {
@@ -90,7 +90,7 @@ export const OrdersCliente = ({ orders }: OrdersClienteProps) => {
   return (
     <section className="w-full flex flex-col gap-5 pt-16 md:flex-row min-h-screen">
       {orderToCancel && (
-        <RejectOrder
+        <ChangeStatus
           order={orderToCancel}
           tipo="cancelar"
           useDisclosure={{ isOpen, onClose }}
@@ -230,19 +230,19 @@ export const OrdersCliente = ({ orders }: OrdersClienteProps) => {
                       </Button>
                     </Link>
                     {order.estado_orden === EstadoOrden.PENDIENTE ||
-                      (order.estado_orden === EstadoOrden.EN_PROCESO && (
-                        <Button
-                          color="danger"
-                          size="md"
-                          onClick={() => {
-                            setOrderToCancel(order);
-                            onOpen();
-                          }}
-                          className="ml-2 hidden md:block"
-                        >
-                          Cancelar orden
-                        </Button>
-                      ))}
+                    order.estado_orden === EstadoOrden.EN_PROCESO ? (
+                      <Button
+                        color="danger"
+                        size="md"
+                        onClick={() => {
+                          setOrderToCancel(order);
+                          onOpen();
+                        }}
+                        className="ml-2 hidden md:block"
+                      >
+                        Cancelar orden
+                      </Button>
+                    ) : null}
                   </div>
                 </CardHeader>
                 <Divider />
@@ -296,19 +296,19 @@ export const OrdersCliente = ({ orders }: OrdersClienteProps) => {
                     {order.estado_orden}
                   </Chip>
                   {order.estado_orden === EstadoOrden.PENDIENTE ||
-                    (order.estado_orden === EstadoOrden.EN_PROCESO && (
-                      <Button
-                        color="danger"
-                        size="md"
-                        onClick={() => {
-                          setOrderToCancel(order);
-                          onOpen();
-                        }}
-                        className="ml-2 block md:hidden"
-                      >
-                        Cancelar orden
-                      </Button>
-                    ))}
+                  order.estado_orden === EstadoOrden.EN_PROCESO ? (
+                    <Button
+                      color="danger"
+                      size="md"
+                      onClick={() => {
+                        setOrderToCancel(order);
+                        onOpen();
+                      }}
+                      className="ml-2 block md:hidden"
+                    >
+                      Cancelar orden
+                    </Button>
+                  ) : null}
                 </CardFooter>
               </Card>
             ))}

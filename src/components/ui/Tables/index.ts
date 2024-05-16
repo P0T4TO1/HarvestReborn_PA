@@ -1,3 +1,3 @@
-export * from "./Inventory";
-export * from "./Admin";
-export * from "./Orders";
+export * from "./inventory";
+export * from "./admin";
+export * from "./orders";
